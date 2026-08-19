@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" fill="#1a1a1a"/>
+  <!-- The goggles, flattened: two rings and a bridge. Same mark as the hero. -->
+  <g fill="none" stroke="#d9d9d9" stroke-width="5">
+    <circle cx="22" cy="34" r="13"/>
+    <circle cx="47" cy="34" r="9"/>
+    <path d="M35 34h3"/>
+    <path d="M12 22c4-6 12-8 18-5"/>
+  </g>
+</svg>

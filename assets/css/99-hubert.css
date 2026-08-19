@@ -1,0 +1,252 @@
+/* 99-hubert.css — the only stylesheet in site/ that is ours.
+   Everything before it in the cascade is ported verbatim from the reference
+   (docs/PXPUSH-CLONE-SPEC.md §4.1). This file adds what the transposition
+   needs and nothing else: the wordmark, the subscribe form inside a package
+   box, and the safety net that keeps copy visible if the motion layer fails.
+   If a rule here overrides a ported rule, that is a bug in the port — fix it
+   there, not here. */
+
+/* ── no sideways scroll ──────────────────────────────────────────────
+   The design overflows horizontally on purpose in several places: the marquee
+   tracks run to 17,000px, the document header is pulled out into the margins
+   with negative margins, and .layout is a full-bleed 100vw device. The port sets
+   overflow-x: hidden on <body>, but the viewport propagates from <html>, so the
+   root still scrolled — measured at 4,244px sideways on the homepage and 184px
+   on the guide. A screenshot cannot show that, which is why three visual review
+   passes missed it.
+
+   `clip` rather than `hidden`: hidden would make the root a scroll container and
+   break the position: sticky backdrops that keep copy off the header. */
+html { overflow-x: clip; }
+
+/* ── the wordmark ────────────────────────────────────────────────────
+   The reference's logotype is drawn as paths. Ours is set live in the
+   display face and stretched to the exact viewBox width, so the header and
+   footer marks stay identical at any size. */
+.logotype {
+  font-family: SemiSqueezed, "Arial Narrow", sans-serif;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/* ── subscribe form, inside the List package ─────────────────────────
+   The reference's package boxes end in a link. Ours ends in the only form on
+   the page, so it inherits the box's rhythm rather than introducing a new
+   one. */
+.sub-form { display: block; width: 100%; }
+.sub-form .field {
+  align-items: center;
+  border-bottom: var(--borderFade);
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+}
+.sub-form input[type="email"] {
+  background: none;
+  border: 0;
+  color: inherit;
+  flex: 1 1 auto;
+  font: inherit;
+  min-width: 0;
+  padding: 6px 0;
+}
+.sub-form input[type="email"]:focus { outline: none; }
+.sub-form input[type="email"]::placeholder { color: currentColor; opacity: .4; }
+.sub-form .field:focus-within { border-bottom-color: var(--primarycolor); }
+.sub-form button {
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  padding: 6px 0;
+  white-space: nowrap;
+}
+.sub-form .consent {
+  align-items: flex-start;
+  cursor: pointer;
+  display: flex;
+  gap: 12px;
+  min-height: 44px;          /* the whole row is the tap target */
+  opacity: .6;
+  padding-top: 4px;
+}
+/* A native checkbox renders at 11px here, which is a quarter of the 44px
+   guideline on the only conversion the page has. */
+.sub-form .consent input {
+  accent-color: var(--primarycolor);
+  flex: 0 0 auto;
+  height: 20px;
+  margin: 2px 0 0;
+  width: 20px;
+}
+
+/* The reference's mobile breakpoint. Below it the field and the button stop
+   sharing a line: at 390px they left a ~180px input with no visible boundary
+   between typing and submitting. */
+@media screen and (max-width: 600px) {
+  .sub-form .field {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0;
+  }
+  .sub-form input[type="email"] { padding: 12px 0; }
+  .sub-form button {
+    border-top: var(--borderFade);
+    min-height: 44px;
+    padding: 12px 0;
+    text-align: left;
+  }
+}
+
+/* ── the second deliberate deviation: diagrams on phones ─────────────
+   The reference floats its method-row images at 35% of the column with the text
+   held at 60% beside them, and that is right for photography. Ours are dense
+   technical diagrams: at the 136px this produces, their internal labels land at
+   three or four pixels and cannot be read — on a page whose own copy says every
+   diagram is built for the guide it appears in.
+
+   So below the reference's own 600px breakpoint the panel stops floating and
+   takes the full column under the text. Desktop is untouched and stays 1:1.
+   Founder's call, 2026-08-18. */
+@media screen and (max-width: 600px) {
+  section .benefits__items--text {
+    padding-bottom: 24px;
+    width: 100%;
+  }
+  section .benefits__items--image {
+    margin-top: 16px;
+    position: static;
+    right: auto;
+    top: auto;
+    width: 100%;
+  }
+  section .benefits__items--image img {
+    height: auto;
+    width: 100%;
+  }
+}
+
+/* The guide's video sits in a banner slot like the map does. */
+.guideVideo video {
+  background: #04111f;
+  border-radius: var(--radius);
+  display: block;
+  height: auto;
+  max-height: 80vh;
+  width: 100%;
+}
+.guideVideo figcaption { margin-top: 12px; }
+
+/* ── the one deliberate deviation from the port ──────────────────────
+   The reference fades its header backdrop from the field colour at 2% to
+   transparent over 20vh. Measured against our content that leaves copy
+   passing under the header at 1.29:1 to 1.73:1 — destroyed as prose, but
+   still solid enough to interleave with the wordmark's own glyphs, so the
+   two read as one tangle. The header itself is never the victim; it sits
+   around 8:1 throughout.
+
+   Holding the field colour to 34% before the fade begins gives roughly 86px
+   of solid backdrop — enough to cover the header band outright — and keeps
+   the same colour, the same height and the same soft tail. Copy goes under
+   it cleanly instead of through it.
+
+   This is the only rule in this file that overrides the port. It is here
+   because our sections carry longer running copy at the top than the
+   reference's do, not because the port is wrong. */
+.topOverlay {
+  background: linear-gradient(180deg,
+              var(--background, var(--bgcolor)) 34%,
+              transparent 100%);
+}
+
+/* ── the system map ──────────────────────────────────────────────────
+   The drawing itself carries its own styles: the page inlines them straight out
+   of the poster file, so a geometry or colour fix has exactly one home and the
+   page cannot drift from the file people download. What is left here is only
+   how the figure sits on the page.
+
+   It was made for a dark plate and its colours are contrast-checked against
+   one, so it brings its own field rather than sitting on the article's grey —
+   the same background as the exported file, for the same reason. */
+.map {
+  background: #04111f;
+  border-radius: var(--radius);
+  padding: 3vw;
+}
+.map svg { display: block; height: auto; width: 100%; }
+
+.map .legend {
+  border-top: var(--borderFade);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  margin-top: 24px;
+  padding-top: 12px;
+}
+.map .legend div { align-items: center; color: #abbac2; display: flex; gap: 10px; }
+.map .legend i {
+  border-radius: 2px;
+  border-top: 4px solid #79b0cc;
+  height: 0;
+  width: 26px;
+}
+.map .legend i.dash { border-top: 2px dashed #7a8990; }
+
+/* The reference table. The port styles lists and rules but not tables, so this
+   is the same hairline language applied to rows. */
+.journalArticle__article table {
+  border-collapse: collapse;
+  margin: 2vw 0 3vw;
+  width: 100%;
+}
+.journalArticle__article th,
+.journalArticle__article td {
+  border-bottom: 1px solid rgba(0, 0, 0, .35);
+  padding: 12px 16px 12px 0;
+  text-align: left;
+  vertical-align: baseline;
+}
+.journalArticle__article th {
+  font-family: Mono, ui-monospace, monospace;
+  font-size: 13px;
+  letter-spacing: -0.048em;
+  opacity: .55;
+  text-transform: uppercase;
+}
+.journalArticle__article td:first-child {
+  font-family: Mono, ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── safety net ──────────────────────────────────────────────────────
+   The ported CSS parks every [data-splitting] element at opacity 0 because
+   the reveal is animated. If the motion layer throws, or a browser refuses
+   the module, that would leave a page of invisible copy — so the script sets
+   .motion-ready on <html> the moment it has taken control, and until then a
+   short timer un-hides everything. */
+html.motion-failed .hover_effect,
+html.motion-failed .splitting,
+html.motion-failed [data-splitting],
+html.motion-failed section .banner__hero,
+html.motion-failed section .banner__hero [data-splitting],
+html.motion-failed .homeMiniVideo video { opacity: 1 !important; }
+
+/* Reduced motion is a request, not a preference to route around: hold every
+   reveal open and let the marquees sit still. */
+@media (prefers-reduced-motion: reduce) {
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, .homeMiniVideo video { opacity: 1 !important; }
+  .marqueeText__track { transform: none !important; }
+}
+
+/* ── guide video captions vs native controls ──────────────────────────
+   Default WebVTT caption position sits at the bottom of the frame, the same
+   band the browser's own play/scrub/volume controls occupy — the two overlap
+   and the caption becomes unreadable while controls are visible. Lift the
+   caption track clear of that band. Chrome/Safari support this pseudo-element;
+   Firefox has no equivalent hook, but its native caption placement does not
+   collide with its own controls the same way, so this is additive, not a
+   regression there. */
+video::-webkit-media-text-track-display { transform: translateY(-44px); }

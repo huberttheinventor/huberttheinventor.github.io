@@ -1,0 +1,307 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:02.833
+Netflix is two machines
+wearing one coat.
+
+2
+00:00:03.100 --> 00:00:06.049
+Good news, everyone, today
+we take both of them apart!
+
+3
+00:00:06.211 --> 00:00:07.628
+It sounds simple:
+
+4
+00:00:07.721 --> 00:00:10.136
+pick a movie, press play, watch.
+
+5
+00:00:10.298 --> 00:00:13.351
+But behind that one
+click hide some truly
+
+6
+00:00:13.468 --> 00:00:15.139
+enormous problems.
+
+7
+00:00:15.337 --> 00:00:18.274
+First, where do we
+keep all these movies?
+
+8
+00:00:18.471 --> 00:00:21.745
+A single film can take several
+gigabytes, and there are
+
+9
+00:00:21.815 --> 00:00:22.860
+thousands of them.
+
+10
+00:00:22.976 --> 00:00:26.610
+So the originals live
+in big object storage.
+
+11
+00:00:26.773 --> 00:00:30.151
+We do not fling one colossal
+file at your television.
+
+12
+00:00:30.244 --> 00:00:31.835
+That would be idiotic!
+
+13
+00:00:32.148 --> 00:00:33.251
+No no no.
+
+14
+00:00:33.448 --> 00:00:36.629
+My transcoding apparatus
+grinds every movie into
+
+15
+00:00:36.722 --> 00:00:37.588
+many versions.
+
+16
+00:00:37.628 --> 00:00:39.195
+There's 4K, 1080p,
+
+17
+00:00:39.253 --> 00:00:43.015
+720p, and 480p, different bitrates,
+
+18
+00:00:43.154 --> 00:00:44.617
+different codecs.
+
+19
+00:00:44.768 --> 00:00:45.390
+Why?
+
+20
+00:00:45.430 --> 00:00:48.727
+Because fiber and a 4K
+television get a glorious
+
+21
+00:00:48.774 --> 00:00:51.931
+stream, while the poor
+soul on wobbly mobile data
+
+22
+00:00:52.047 --> 00:00:53.382
+gets a smaller one.
+
+23
+00:00:53.498 --> 00:00:56.087
+We call it adaptive bitrate streaming.
+
+24
+00:00:56.203 --> 00:00:57.162
+I invented it!
+
+25
+00:00:57.202 --> 00:00:58.202
+Possibly.
+
+26
+00:00:58.258 --> 00:01:00.151
+Now, delivery!
+
+27
+00:01:00.267 --> 00:01:03.553
+If Europe streamed from one
+American data center, every
+
+28
+00:01:03.645 --> 00:01:05.840
+bit would schlep across an ocean.
+
+29
+00:01:06.002 --> 00:01:08.557
+Slow and monstrously expensive.
+
+30
+00:01:08.696 --> 00:01:12.527
+So we use a CDN, which puts
+copies on servers near the
+
+31
+00:01:12.574 --> 00:01:13.184
+viewers.
+
+32
+00:01:13.224 --> 00:01:14.582
+Watching from Paris?
+
+33
+00:01:14.698 --> 00:01:17.345
+Then your movie comes from Paris!
+
+34
+00:01:17.543 --> 00:01:21.246
+Netflix even built its
+own, called Open Connect.
+
+35
+00:01:21.478 --> 00:01:23.777
+Now the viewer presses play.
+
+36
+00:01:23.940 --> 00:01:27.074
+The backend does the
+boring paperwork, like
+
+37
+00:01:27.132 --> 00:01:30.430
+authentication, subscriptions,
+and choosing which
+
+38
+00:01:30.499 --> 00:01:31.637
+file you deserve.
+
+39
+00:01:31.718 --> 00:01:35.468
+But the video never squeezes
+through those servers.
+
+40
+00:01:35.631 --> 00:01:37.558
+What a bottleneck!
+
+41
+00:01:37.674 --> 00:01:41.552
+The app takes its instructions
+and streams straight from the CDN.
+
+42
+00:01:41.668 --> 00:01:45.117
+But your internet speed flails
+about, so the player keeps
+
+43
+00:01:45.256 --> 00:01:46.063
+measuring it.
+
+44
+00:01:46.103 --> 00:01:48.634
+Speed drops, you get lower quality.
+
+45
+00:01:48.774 --> 00:01:51.189
+It recovers, back up you go!
+
+46
+00:01:51.351 --> 00:01:54.486
+And since videos come in
+little chunks, we swap
+
+47
+00:01:54.579 --> 00:01:57.760
+quality mid-stream without you noticing.
+
+48
+00:01:58.027 --> 00:02:01.336
+Now a new season drops,
+and millions press
+
+49
+00:02:01.406 --> 00:02:02.474
+play at once.
+
+50
+00:02:02.636 --> 00:02:04.146
+One server for all that?
+
+51
+00:02:04.238 --> 00:02:05.446
+Preposterous!
+
+52
+00:02:05.562 --> 00:02:08.581
+So the system splits
+into many services, for
+
+53
+00:02:08.697 --> 00:02:12.040
+users, billing, playback,
+and search, each
+
+54
+00:02:12.273 --> 00:02:13.654
+scaling alone.
+
+55
+00:02:13.770 --> 00:02:17.056
+The databases are
+distributed and replicated.
+
+56
+00:02:17.207 --> 00:02:19.877
+Losing your watch
+history is annoying, but
+
+57
+00:02:19.970 --> 00:02:22.246
+losing playback is catastrophic!
+
+58
+00:02:22.443 --> 00:02:23.627
+Simplified, then:
+
+59
+00:02:23.860 --> 00:02:25.926
+Netflix is two machines.
+
+60
+00:02:26.124 --> 00:02:29.328
+One runs the application,
+with users, payments,
+
+61
+00:02:29.409 --> 00:02:30.466
+and metadata.
+
+62
+00:02:30.535 --> 00:02:32.463
+The other hauls the video.
+
+63
+00:02:32.602 --> 00:02:35.934
+Storage prepares it,
+the CDN spreads it, and
+
+64
+00:02:36.004 --> 00:02:38.001
+adaptive streaming picks the quality.
+
+65
+00:02:38.082 --> 00:02:41.565
+You see, the hard part
+was never the play button.
+
+66
+00:02:41.646 --> 00:02:44.607
+It's delivering billions
+of chunks to every last
+
+67
+00:02:44.665 --> 00:02:48.311
+person on this miserable,
+wonderful planet.
+
+68
+00:02:48.624 --> 00:02:49.924
+Good night, everyone!
+
+69
+00:02:50.004 --> 00:02:52.790
+Comment NETFLIX and I'll
+send you the schematic.

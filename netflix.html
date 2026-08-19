@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Netflix actually works — Hubert's field guides</title>
+<meta name="description" content="Field guide Nº001. One master file, and every decision that stands between it and your screen: renditions, origin, edge caches, and the choice your player makes every few seconds.">
+<meta name="theme-color" content="#1a1a1a">
+<link rel="icon" href="img/favicon.svg?v=msz0l00s" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="How Netflix actually works">
+<meta property="og:description" content="The whole system as one map, then six annotations that zoom into named regions of it.">
+<meta property="og:image" content="artifacts/netflix-system-map.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="stylesheet" href="assets/css/00-critical.css?v=msz0l00s">
+<link rel="stylesheet" href="assets/css/entry.CQSbLAcy.css?v=msz0l00s">
+<link rel="stylesheet" href="assets/css/default.Z9wDiTTt.css?v=msz0l00s">
+<link rel="stylesheet" href="assets/css/_slug_.DENrRFxM.css?v=msz0l00s">
+<link rel="stylesheet" href="assets/css/Industries.BJpTkmyx.css?v=msz0l00s">
+<link rel="stylesheet" href="assets/css/Footer.MRJrKAf5.css?v=msz0l00s">
+<link rel="stylesheet" href="assets/css/99-hubert.css?v=headerfix02">
+
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  .journalArticle__article { opacity: 1 !important; }
+</style></noscript>
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="index.html" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second">
+      <a href="index.html" class="hover_effect"><span>Index</span></a>
+      <a aria-current="page" href="netflix.html" class="active router-link-exact-active hover_effect"><span>Guide 01</span></a>
+      <a href="#sources" class="hover_effect"><span>Sources</span></a>
+      <a href="index.html#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">●</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Menu</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav">
+  <div class="mobilenav__main">
+    <a href="index.html"><span>Index</span></a>
+    <a href="netflix.html"><span>Guide 01</span></a>
+    <a href="netflix.html#sources"><span>Sources</span></a>
+    <a href="index.html#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<main class="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Field guide</span><strong>Nº001</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>System</span><strong>Netflix</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Runtime</span><strong>2:53</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Annotations</span><strong>Six, keyed to the map</strong>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp">Filed</span>
+        </div>
+      </div>
+
+      <div class="journalArticle__article" id="guide">
+        <h1 data-splitting="lines">The play button was never the hard part.</h1>
+        <p class="lead" data-splitting>Netflix is two machines wearing one coat. One answers questions about you.
+          The other moves several gigabytes across an ocean before you finish reading this sentence.</p>
+
+        <figure class="journalArticle__banner guideVideo">
+          <video controls preload="metadata" playsinline
+                 poster="img/guide/guide-01-poster.jpg"
+                 aria-label="Field guide Nº001: how Netflix actually works">
+            <source src="img/guide/guide-01.mp4" type="video/mp4">
+            <track kind="subtitles" src="artifacts/guide-01.vtt" srclang="en" label="English">
+            <p class="monospace monospace__p">Your browser will not play this. The whole guide is written
+              out below, and <a href="artifacts/transcript.md">the transcript</a> has every word of it.</p>
+          </video>
+          <figcaption class="monospace monospace__p opacity__50">Nº001 · 2:53 · watch it first, then read the map</figcaption>
+        </figure>
+
+        <figure class="journalArticle__banner map">
+<svg viewBox="0 0 1200 430" role="img"
+             aria-label="System map: a master file is encoded into a ladder of renditions, stored at origin, pushed to edge caches near viewers, and requested segment by segment by the player, while a separate dashed path carries account metadata from the application services.">
+            <style>.m-line   { stroke: #7a8990; stroke-width: 1.2; fill: none; } .m-edge   { stroke: #79b0cc; stroke-width: 1.6; fill: none; } .m-video  { stroke: #79b0cc; stroke-width: 5; fill: none; stroke-linecap: round; } .m-meta   { stroke: #7a8990; stroke-width: 1.6; fill: none; stroke-dasharray: 7 6; } .m-box    { stroke: #79b0cc; stroke-width: 1.4; fill: none; } .m-fill   { fill: #79b0cc; } .m-dim    { fill: #79b0cc7d; } .m-t      { font-family: Mono, ui-monospace, monospace; font-size: 11px; letter-spacing: 1.1px; fill: #abbac2; } .m-n      { font-family: Mono, ui-monospace, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.7px; fill: #faf6af; } .label    { font-family: Mono, ui-monospace, monospace; font-size: 13px; letter-spacing: 2.1px; fill: #7a8990; } .title    { font-family: "Archivo", "Helvetica Neue", Arial, sans-serif; font-size: 54px; font-weight: 500; letter-spacing: -1.4px; fill: #d8e7f0; } .sub      { font-family: "Newsreader", Georgia, serif; font-size: 21px; fill: #abbac2; } .foot     { font-family: Mono, ui-monospace, monospace; font-size: 12px; letter-spacing: 1.2px; fill: #7a8990; } .rule     { stroke: #d8e7f04d; stroke-width: 1; }</style>
+    <!-- master -->
+    <ellipse class="m-edge" cx="70" cy="120" rx="34" ry="12"/>
+    <path class="m-edge" d="M36 120v66c0 7 15 12 34 12s34-5 34-12v-66"/>
+    <text class="m-t" x="18" y="222">MASTER</text>
+    <text class="m-n" x="18" y="96">01</text>
+
+    <!-- ladder -->
+    <path class="m-edge" d="M108 155h54"/>
+    <path class="m-edge" d="M162 155V78h34M162 155v20.5h34M162 155v37.5h34M162 155v61h34"/>
+    <rect class="m-fill" x="196" y="68" width="70" height="20"/>
+    <rect class="m-dim"  x="196" y="167" width="54" height="17"/>
+    <rect class="m-dim"  x="196" y="185" width="42" height="15"/>
+    <rect class="m-dim"  x="196" y="209" width="30" height="14"/>
+    <text class="m-t" x="196" y="250">RENDITIONS</text>
+    <text class="m-n" x="196" y="56">02</text>
+
+    <!-- origin -->
+    <rect class="m-box" x="330" y="118" width="104" height="74"/>
+    <path class="m-edge" d="M266 155h64"/>
+    <text class="m-t" x="330" y="212">ORIGIN STORE</text>
+    <text class="m-n" x="330" y="106">03</text>
+
+    <!-- push to edges -->
+    <path class="m-video" d="M434 155h64"/>
+    <path class="m-video" d="M498 155q86-74 172 0"/>
+    <text class="m-t" x="512" y="86">PUSHED AHEAD OF DEMAND</text>
+
+    <!-- edge caches -->
+    <rect class="m-box" x="672" y="132" width="42" height="42"/>
+    <rect class="m-box" x="726" y="132" width="42" height="42"/>
+    <rect class="m-box" x="780" y="132" width="42" height="42"/>
+    <rect class="m-box" x="834" y="132" width="42" height="42"/>
+    <text class="m-t" x="672" y="196">EDGE CACHES, NEAR YOU</text>
+    <text class="m-n" x="672" y="120">04</text>
+
+    <!-- player -->
+    <rect class="m-edge" x="1006" y="112" width="150" height="94"/>
+    <path class="m-edge" d="M1064 206h34v10h-34z"/>
+    <text class="m-t" x="1006" y="240">YOUR PLAYER</text>
+    <text class="m-n" x="1006" y="100">05</text>
+
+    <!-- video path -->
+    <path class="m-video" d="M876 153h130"/>
+    <text class="m-t" x="890" y="138" fill="#79b0cc">VIDEO</text>
+
+    <!-- segments -->
+    <rect class="m-fill" x="672" y="286" width="20" height="34"/>
+    <rect class="m-fill" x="698" y="286" width="20" height="34"/>
+    <rect class="m-dim"  x="724" y="294" width="20" height="26"/>
+    <rect class="m-dim"  x="750" y="294" width="20" height="26"/>
+    <rect class="m-fill" x="776" y="286" width="20" height="34"/>
+    <rect class="m-fill" x="802" y="286" width="20" height="34"/>
+    <path class="m-line" d="M666 330h166"/>
+    <text class="m-t" x="672" y="352">SEGMENTS · QUALITY DECIDED PER SEGMENT</text>
+    <text class="m-n" x="672" y="274">06</text>
+    <path class="m-line" d="M832 303h158v-97" stroke-dasharray="3 5"/>
+
+    <!-- application plane -->
+    <rect class="m-line" x="330" y="300" width="250" height="72" fill="none"/>
+    <text class="m-t" x="330" y="392">APPLICATION SERVICES</text>
+    <text class="m-t" x="344" y="332" fill="#7a8990">ACCOUNTS · BILLING</text>
+    <text class="m-t" x="344" y="352" fill="#7a8990">RECOMMENDATIONS</text>
+    <path class="m-meta" d="M580 336h410v-130"/>
+    <text class="m-t" x="646" y="322">METADATA</text>
+  
+          </svg>
+          <div class="legend monospace">
+            <div><i aria-hidden="true"></i>Video path — enormous, goes the short way</div>
+            <div><i class="dash" aria-hidden="true"></i>Metadata path — small, answers questions about you</div>
+          </div>
+        </figure>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">The whole system, one picture. Everything after it is annotation.</p>
+
+        <p class="monospace monospace__p" data-splitting>Take it with you:
+          <a href="artifacts/netflix-system-map.png" download>the map as an image</a> ·
+          <a href="artifacts/netflix-system-map.svg" download>as a vector</a></p>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº001</p>
+        <h4 data-splitting="lines">The original file never reaches you</h4>
+        <p data-splitting>A feature film in mastering quality is enormous — far larger than anything
+          you would ever stream. Those masters sit in bulk object storage and are never
+          what gets sent to a television.</p>
+        <p data-splitting>What ships instead is a set of <em>renditions</em>: the same film encoded
+          many times over, at different resolutions and bitrates, with different codecs
+          for different devices. The library you browse is not a library of films. It
+          is a library of encodes.</p>
+
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº002</p>
+        <h4 data-splitting="lines">The ladder is computed, not chosen</h4>
+        <p data-splitting>An animated short and a grain-heavy war film should not be encoded to the
+          same bitrates. A simple image compresses beautifully; a noisy one does not.
+          Encoding both at a fixed ladder wastes bandwidth on one and starves the other.</p>
+        <p data-splitting>So the ladder is derived from the title's own complexity. Netflix published
+          this approach as per-title encode optimisation, and later refined it further.
+          It is the reason any table claiming fixed bitrates per resolution is
+          describing something the industry deliberately moved away from.</p>
+
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº003</p>
+        <h4 data-splitting="lines">The largest lever in the whole system</h4>
+        <p data-splitting>If every stream in Europe were served from a datacentre in the United States,
+          every byte would cross an ocean. That is slow, and at scale it is punishing —
+          you would pay transit on the same popular film millions of times over.</p>
+        <p data-splitting>So copies are pushed outward before anyone asks for them, onto caching
+          servers close to viewers and often inside the viewer's own internet provider.
+          Netflix built its own network for this: Open Connect. Watching from Paris
+          usually means streaming from Paris.</p>
+        <p data-splitting>Everything else in this map optimises bytes. This one removes the distance
+          they travel, which is why it matters more than the rest combined.</p>
+
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº004</p>
+        <h4 data-splitting="lines">Small messages go one way, enormous files go another</h4>
+        <p data-splitting>Press play and two systems wake up. The application handles everything about
+          <em>you</em>: identity, subscription, recommendations, where you left off,
+          which rendition you should receive. Then it steps out of the way.</p>
+        <p data-splitting>The video does not flow through those servers. It streams from the nearest
+          cache. Routing petabytes of video through the same service that renders your
+          homepage would be a bottleneck of spectacular proportions.</p>
+        <p data-splitting>Once you see this split, the architecture stops looking complicated. It is
+          a control plane and a data plane, and almost every large media system
+          converges on the same shape eventually.</p>
+
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº005</p>
+        <h4 data-splitting="lines">Why quality can change mid-scene</h4>
+        <p data-splitting>Video is not delivered as one long stream. It is cut into short segments —
+          a handful of seconds each — and every segment exists at every rung of the
+          ladder.</p>
+        <p data-splitting>That is what makes switching possible. The player is not committed to a
+          quality when it presses play; it makes a fresh decision for every segment.
+          Bandwidth drops mid-scene, the next segment arrives smaller, and playback
+          never pauses. You experience it as "it went blurry for a second" rather
+          than as a spinner, which is entirely the point.</p>
+
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº006</p>
+        <h4 data-splitting="lines">Not all outages are equal</h4>
+        <p data-splitting>A hit series drops and millions press play within the same hour. No single
+          database survives that, so the application is split into many services —
+          accounts, billing, recommendations, playback, search — each scaling on its
+          own and, more importantly, each failing on its own.</p>
+        <p data-splitting>That separation buys graded failure. Losing your watch history is an
+          annoyance. Losing recommendations is a worse evening. Losing playback is the
+          product being down. Ranking those, then protecting them differently, is most
+          of what reliability engineering means here.</p>
+
+
+        <hr>
+
+        <h4 data-splitting="lines">An illustrative ladder</h4>
+        <p class="monospace monospace__p opacity__50" data-splitting>Reference · orders of magnitude</p>
+<table>
+      <thead><tr><th scope="col">Rendition</th><th scope="col">Typical use</th><th scope="col">Order of magnitude</th></tr></thead>
+      <tbody>
+        <tr><td>4K</td><td>Large panel, fibre or fast cable</td><td>Tens of Mbps</td></tr>
+        <tr><td>1080p</td><td>The common case on home broadband</td><td>Single-digit Mbps</td></tr>
+        <tr><td>720p</td><td>Smaller screens, congested links</td><td>A few Mbps</td></tr>
+        <tr><td>480p</td><td>Weak mobile data, poor coverage</td><td>Around 1 Mbps</td></tr>
+      </tbody>
+    </table>
+
+        <hr>
+
+        <h4 data-splitting="lines" id="sources">Take it with you</h4>
+        <div class="buttons">
+          <a href="artifacts/reading-list.md" class="button button__big hover_effect"><span>The reading list</span> <span class="arrow">↗</span></a>
+          <a href="artifacts/transcript.md" class="button button__big hover_effect"><span>Full transcript</span> <span class="arrow">↗</span></a>
+          <a href="#map" class="button button__big hover_effect"><span>The system map</span> <span class="arrow">↗</span></a>
+        </div>
+
+        <div class="article__footer">
+          <p class="monospace monospace__p opacity__50" data-splitting>Independent field guide. Not affiliated with,
+            endorsed by, or connected to Netflix. The reference table gives orders of magnitude rather than exact
+            bitrates because real encoding ladders are computed per title and change constantly.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="section no__p footer section__blue">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="artifacts/netflix-system-map.png" class="button button__half hover_effect" title="The schematic, as an image"><span>The schematic</span> <span class="arrow">↗</span></a>
+          <a href="artifacts/transcript.md" class="button button__half hover_effect" title="Full narration, by section"><span>Transcript</span><span class="arrow">↗</span></a>
+          <a href="artifacts/reading-list.md" class="button button__half hover_effect" title="Six primary sources"><span>Sources</span><span class="arrow">↗</span></a>
+          <a href="privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+<script src="assets/js/gsap.min.js?v=msz0l00s"></script>
+<script src="assets/js/ScrollTrigger.min.js?v=msz0l00s"></script>
+<script src="assets/js/splitting.min.js?v=msz0l00s"></script>
+<script src="assets/js/site.js?v=msz0l00s" type="module"></script>
+</body>
+</html>

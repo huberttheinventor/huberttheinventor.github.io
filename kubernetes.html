@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kubernetes has never started a container — Hubert's field guides</title>
+<meta name="description" content="Field guide Nº002. A control plane that decides and never once touches a container, the kubelet that actually starts one, and why Docker and Kubernetes were never competing for the same job.">
+<meta name="theme-color" content="#1a1a1a">
+<link rel="icon" href="img/favicon.svg?v=msz1k8sd" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes has never started a container">
+<meta property="og:description" content="The whole system as one map, then three annotations that zoom into named regions of it.">
+<meta property="og:image" content="artifacts/kubernetes-system-map.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="stylesheet" href="assets/css/00-critical.css?v=msz1k8sd">
+<link rel="stylesheet" href="assets/css/entry.CQSbLAcy.css?v=msz1k8sd">
+<link rel="stylesheet" href="assets/css/default.Z9wDiTTt.css?v=msz1k8sd">
+<link rel="stylesheet" href="assets/css/_slug_.DENrRFxM.css?v=msz1k8sd">
+<link rel="stylesheet" href="assets/css/Industries.BJpTkmyx.css?v=msz1k8sd">
+<link rel="stylesheet" href="assets/css/Footer.MRJrKAf5.css?v=msz1k8sd">
+<link rel="stylesheet" href="assets/css/99-hubert.css?v=headerfix02">
+
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  .journalArticle__article { opacity: 1 !important; }
+</style></noscript>
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="index.html" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second">
+      <a href="index.html" class="hover_effect"><span>Index</span></a>
+      <a href="netflix.html" class="hover_effect"><span>Guide 01</span></a>
+      <a aria-current="page" href="kubernetes.html" class="active router-link-exact-active hover_effect"><span>Guide 02</span></a>
+      <a href="#sources" class="hover_effect"><span>Sources</span></a>
+      <a href="index.html#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">●</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Menu</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav">
+  <div class="mobilenav__main">
+    <a href="index.html"><span>Index</span></a>
+    <a href="netflix.html"><span>Guide 01</span></a>
+    <a href="kubernetes.html"><span>Guide 02</span></a>
+    <a href="kubernetes.html#sources"><span>Sources</span></a>
+    <a href="index.html#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<main class="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Field guide</span><strong>Nº002</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>System</span><strong>Kubernetes / Docker</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Model</span><strong>Control plane vs. kubelet</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Annotations</span><strong>Three, keyed to the map</strong>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp">Filed</span>
+        </div>
+      </div>
+
+      <div class="journalArticle__article" id="guide">
+        <h1 data-splitting="lines">Kubernetes has never started a container.</h1>
+        <p class="lead" data-splitting>Not once. It is a control plane — the part of the system that decides
+          and gives orders. Somewhere below it, on a machine it never touches, a much smaller program does
+          the only real work in the whole picture: it starts the container.</p>
+
+        <figure class="journalArticle__banner guideVideo">
+          <video controls preload="metadata" playsinline
+                 poster="img/guide/guide-02-poster.jpg"
+                 aria-label="Field guide Nº002: Kubernetes has never started a container">
+            <source src="img/guide/guide-02.mp4" type="video/mp4">
+            <track kind="subtitles" src="artifacts/guide-02.vtt" srclang="en" label="English">
+            <p class="monospace monospace__p">Your browser will not play this. The whole guide is written
+              out below, and <a href="artifacts/transcript-kubernetes.md">the transcript</a> has every word of it.</p>
+          </video>
+          <figcaption class="monospace monospace__p opacity__50">Nº002 · 1:42 · watch it first, then read the map</figcaption>
+        </figure>
+
+        <figure class="journalArticle__banner map" id="map">
+<svg viewBox="0 0 1200 480" role="img"
+             aria-label="System map: a control plane sends order instructions, shown dashed, down to a kubelet running on each of three machines. Each kubelet, over a short solid execution path, is the only thing that actually starts that machine's container. The control plane never touches a container directly.">
+            <style>.m-line   { stroke: #7a8990; stroke-width: 1.2; fill: none; } .m-edge   { stroke: #79b0cc; stroke-width: 1.6; fill: none; } .m-video  { stroke: #79b0cc; stroke-width: 5; fill: none; stroke-linecap: round; } .m-meta   { stroke: #7a8990; stroke-width: 1.6; fill: none; stroke-dasharray: 7 6; } .m-box    { stroke: #79b0cc; stroke-width: 1.4; fill: none; } .m-fill   { fill: #79b0cc; } .m-dim    { fill: #79b0cc7d; } .m-t      { font-family: Mono, ui-monospace, monospace; font-size: 11px; letter-spacing: 1.1px; fill: #abbac2; } .m-n      { font-family: Mono, ui-monospace, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.7px; fill: #faf6af; } .label    { font-family: Mono, ui-monospace, monospace; font-size: 13px; letter-spacing: 2.1px; fill: #7a8990; } .title    { font-family: "Archivo", "Helvetica Neue", Arial, sans-serif; font-size: 54px; font-weight: 500; letter-spacing: -1.4px; fill: #d8e7f0; } .sub      { font-family: "Newsreader", Georgia, serif; font-size: 21px; fill: #abbac2; } .foot     { font-family: Mono, ui-monospace, monospace; font-size: 12px; letter-spacing: 1.2px; fill: #7a8990; } .rule     { stroke: #d8e7f04d; stroke-width: 1; }</style>
+
+    <!-- control plane -->
+    <circle class="m-edge" cx="600" cy="95" r="52"/>
+    <text class="m-n" x="600" y="34" text-anchor="middle">01</text>
+    <text class="m-t" x="600" y="172" text-anchor="middle">CONTROL PLANE</text>
+    <text class="m-t" x="600" y="188" text-anchor="middle">DECIDES · NEVER TOUCHES A CONTAINER</text>
+
+    <!-- order paths — start below the control-plane caption so the dashed
+         lines never run behind the "CONTROL PLANE / DECIDES..." text -->
+    <path class="m-meta" d="M600 198 C600 250, 220 250, 220 300"/>
+    <path class="m-meta" d="M600 198 L600 300"/>
+    <path class="m-meta" d="M600 198 C600 250, 980 250, 980 300"/>
+    <text class="m-t" x="666" y="100">ORDERS · PLACEMENT, REPLICAS, HEALING</text>
+
+    <!-- machine 01 -->
+    <rect class="m-box" x="110" y="300" width="220" height="150" rx="12"/>
+    <text class="m-t" x="122" y="292">MACHINE 01</text>
+    <rect class="m-line" x="140" y="326" width="160" height="40" rx="8" stroke-dasharray="5 5"/>
+    <text class="m-t" x="220" y="350" text-anchor="middle">KUBELET</text>
+    <path class="m-video" d="M220 366 L220 398"/>
+
+    <!-- machine 02 -->
+    <rect class="m-box" x="490" y="300" width="220" height="150" rx="12"/>
+    <text class="m-t" x="502" y="292">MACHINE 02</text>
+    <rect class="m-line" x="520" y="326" width="160" height="40" rx="8" stroke-dasharray="5 5"/>
+    <text class="m-t" x="600" y="350" text-anchor="middle">KUBELET</text>
+    <path class="m-video" d="M600 366 L600 398"/>
+
+    <!-- machine 03 -->
+    <rect class="m-box" x="870" y="300" width="220" height="150" rx="12"/>
+    <text class="m-t" x="882" y="292">MACHINE 03</text>
+    <rect class="m-line" x="900" y="326" width="160" height="40" rx="8" stroke-dasharray="5 5"/>
+    <text class="m-t" x="980" y="350" text-anchor="middle">KUBELET</text>
+    <path class="m-video" d="M980 366 L980 398"/>
+
+    <text class="m-n" x="20" y="345">02</text>
+
+    <!-- containers -->
+    <rect class="m-fill" x="150" y="398" width="140" height="40" rx="8"/>
+    <rect class="m-fill" x="530" y="398" width="140" height="40" rx="8"/>
+    <rect class="m-fill" x="910" y="398" width="140" height="40" rx="8"/>
+    <text class="m-t" x="600" y="468" text-anchor="middle">CONTAINER · THE ONLY STEP THAT IS REAL WORK</text>
+    <text class="m-n" x="20" y="422">03</text>
+
+          </svg>
+          <div class="legend monospace">
+            <div><i aria-hidden="true"></i>Execution path — short, solid, the only step that starts anything</div>
+            <div><i class="dash" aria-hidden="true"></i>Order path — long, dashed, an instruction, not an action</div>
+          </div>
+        </figure>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">The whole mental model, one picture. Everything after it is annotation.</p>
+
+        <p class="monospace monospace__p" data-splitting>Take it with you:
+          <a href="artifacts/kubernetes-system-map.png" download>the map as an image</a> ·
+          <a href="artifacts/kubernetes-system-map.svg" download>as a vector</a></p>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº001</p>
+        <h4 data-splitting="lines">It decides. It never touches a container.</h4>
+        <p data-splitting>The control plane is the brain of the cluster: it watches everything, holds the
+          plan, and decides which containers should exist, where, and how many copies. When something dies,
+          it notices and issues a new order. What it never does, under any circumstance, is run a container
+          itself. That part of the job belongs entirely to something else.</p>
+        <p data-splitting>That split has a name — control plane and data plane — and it shows up in almost
+          every large distributed system, not only Kubernetes: one part decides, a different part executes,
+          and the two are built, scaled, and allowed to fail separately.</p>
+
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº002</p>
+        <h4 data-splitting="lines">The hands are local, one pair per machine</h4>
+        <p data-splitting>Every machine in the cluster runs a small agent called a kubelet. It takes orders
+          from the control plane over the network, and it is the only thing standing close enough to a
+          container to actually start one. The order can travel from anywhere; the starting always happens
+          on the spot.</p>
+        <p data-splitting>On the map, the dashed line is the order arriving from far away. The short solid
+          line is the kubelet doing the one thing the control plane cannot: reaching down and touching the
+          container.</p>
+
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº003</p>
+        <h4 data-splitting="lines">Different jobs, not competing tools</h4>
+        <p data-splitting>Docker builds a container image and can run it, on one machine, right there. That
+          is the entire job, and it does it well. Kubernetes doesn't replace that step — it sits above many
+          machines, each already capable of running containers, and decides which one runs what, and what
+          happens the moment one of them fails.</p>
+        <p data-splitting>Docker executes. Kubernetes orchestrates. The kubelet on each machine drives the
+          same kind of container engine Docker itself is built on, so even inside a cluster, Docker's job
+          never went away. It just stopped being the thing deciding where anything runs.</p>
+
+
+        <hr>
+
+        <h4 data-splitting="lines">Who actually does what</h4>
+        <p class="monospace monospace__p opacity__50" data-splitting>Reference · the core components</p>
+<table>
+      <thead><tr><th scope="col">Component</th><th scope="col">Layer</th><th scope="col">What it actually does</th></tr></thead>
+      <tbody>
+        <tr><td>API server</td><td>Control plane</td><td>Accepts the desired state; never touches a container</td></tr>
+        <tr><td>Scheduler</td><td>Control plane</td><td>Decides which machine a container should run on</td></tr>
+        <tr><td>Controller manager</td><td>Control plane</td><td>Notices drift from the plan and issues corrections</td></tr>
+        <tr><td>Kubelet</td><td>Per machine</td><td>Talks to the local container engine — the only thing that starts anything</td></tr>
+        <tr><td>Container engine</td><td>Per machine</td><td>Actually creates and runs the container process</td></tr>
+      </tbody>
+    </table>
+
+        <hr>
+
+        <h4 data-splitting="lines" id="sources">Take it with you</h4>
+        <div class="buttons">
+          <a href="artifacts/reading-list-kubernetes.md" class="button button__big hover_effect"><span>The reading list</span> <span class="arrow">↗</span></a>
+          <a href="artifacts/transcript-kubernetes.md" class="button button__big hover_effect"><span>Full transcript</span> <span class="arrow">↗</span></a>
+          <a href="#map" class="button button__big hover_effect"><span>The system map</span> <span class="arrow">↗</span></a>
+        </div>
+
+        <div class="article__footer">
+          <p class="monospace monospace__p opacity__50" data-splitting>Independent field guide. Not affiliated with,
+            endorsed by, or connected to Docker, Inc., the Kubernetes project, or the Cloud Native Computing
+            Foundation. All trademarks belong to their respective owners. Written to explain a publicly
+            documented architectural pattern, not any specific deployment.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="section no__p footer section__blue">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="artifacts/kubernetes-system-map.png" class="button button__half hover_effect" title="The schematic, as an image"><span>The schematic</span> <span class="arrow">↗</span></a>
+          <a href="artifacts/transcript-kubernetes.md" class="button button__half hover_effect" title="Full narration, by section"><span>Transcript</span><span class="arrow">↗</span></a>
+          <a href="artifacts/reading-list-kubernetes.md" class="button button__half hover_effect" title="Primary sources"><span>Sources</span><span class="arrow">↗</span></a>
+          <a href="privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+<script src="assets/js/gsap.min.js?v=msz1k8sd"></script>
+<script src="assets/js/ScrollTrigger.min.js?v=msz1k8sd"></script>
+<script src="assets/js/splitting.min.js?v=msz1k8sd"></script>
+<script src="assets/js/site.js?v=msz1k8sd" type="module"></script>
+</body>
+</html>

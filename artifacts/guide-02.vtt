@@ -1,0 +1,167 @@
+WEBVTT
+
+1
+00:00:00.119 --> 00:00:03.500
+Kubernetes has never once
+started a container.
+
+2
+00:00:03.959 --> 00:00:04.239
+Not
+
+3
+00:00:04.739 --> 00:00:05.099
+one.
+
+4
+00:00:05.420 --> 00:00:08.380
+Yet everyone credits it for the
+whole show.
+
+5
+00:00:08.800 --> 00:00:12.619
+Docker takes your code, stuffs
+it into a tidy little box called
+
+6
+00:00:12.659 --> 00:00:13.500
+a container,
+
+7
+00:00:13.859 --> 00:00:15.379
+and can run that box
+
+8
+00:00:15.819 --> 00:00:18.979
+right there on one single
+machine.
+
+9
+00:00:19.459 --> 00:00:21.819
+That part everyone gets right.
+
+10
+00:00:22.139 --> 00:00:25.739
+But what happens when you have
+four hundred of these boxes
+
+11
+00:00:25.899 --> 00:00:28.139
+scattered across sixty machines?
+
+12
+00:00:28.500 --> 00:00:31.099
+Who decides which box goes
+where?
+
+13
+00:00:31.479 --> 00:00:35.799
+Who notices when one dies in the
+night and quietly wheels in a
+
+14
+00:00:35.860 --> 00:00:36.899
+replacement?
+
+15
+00:00:37.319 --> 00:00:38.819
+Docker has no idea.
+
+16
+00:00:39.139 --> 00:00:42.219
+Docker only knows the one box in
+front of it.
+
+17
+00:00:42.559 --> 00:00:44.180
+That's Kubernetes,
+
+18
+00:00:44.559 --> 00:00:48.719
+a great glowing brain in the
+sky, deciding placement,
+
+19
+00:00:48.819 --> 00:00:49.919
+counting replicas,
+
+20
+00:00:50.319 --> 00:00:53.479
+rerouting traffic, resurrecting
+the dead.
+
+21
+00:00:53.899 --> 00:00:55.239
+Magnificent.
+
+22
+00:00:55.680 --> 00:00:56.379
+Except,
+
+23
+00:00:56.959 --> 00:00:59.439
+and here's the part that keeps
+me up at night,
+
+24
+00:00:59.859 --> 00:01:02.439
+Kubernetes has no hands.
+
+25
+00:01:02.859 --> 00:01:05.500
+It cannot start a container
+itself.
+
+26
+00:01:05.779 --> 00:01:10.139
+It simply barks an order at a
+small assistant living on each
+
+27
+00:01:10.220 --> 00:01:14.619
+machine, and that assistant,
+using the same container engine
+
+28
+00:01:14.699 --> 00:01:15.559
+Docker uses,
+
+29
+00:01:15.939 --> 00:01:18.000
+does the actual starting.
+
+30
+00:01:18.279 --> 00:01:21.059
+So Kubernetes doesn't replace
+Docker.
+
+31
+00:01:21.339 --> 00:01:22.699
+It never did.
+
+32
+00:01:22.959 --> 00:01:27.139
+It just stands on a balcony
+pointing while somebody else's
+
+33
+00:01:27.180 --> 00:01:31.159
+hands do the work and somehow
+gets all of the credit.
+
+34
+00:01:31.599 --> 00:01:33.319
+Typical management.
+
+35
+00:01:33.659 --> 00:01:34.659
+Good night, everyone.
+
+36
+00:01:35.623 --> 00:01:38.563
+Comment Kubernetes and I'll send
+you the diagram.
+
+37
+00:01:38.903 --> 00:01:40.743
+Don't make me repeat myself

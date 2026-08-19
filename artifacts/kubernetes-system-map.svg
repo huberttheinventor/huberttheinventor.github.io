@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1000" width="1400" height="1000"
+     role="img" aria-labelledby="title desc">
+  <title id="title">Kubernetes has never started a container — the system map</title>
+  <desc id="desc">System map: a control plane sends order instructions, shown dashed, down to a
+    kubelet running on each of three machines. Each kubelet, over a short solid execution path,
+    is the only thing that actually starts that machine's container. The control plane never
+    touches a container directly.</desc>
+
+  <!-- Colours are the site's midnight plate, resolved from oklch to sRGB so this file
+       renders identically in browsers, image viewers and print. Do not re-theme it
+       independently: it is the same object as the page and the film. -->
+  <style>
+    .m-line   { stroke: #7a8990; stroke-width: 1.2; fill: none; }
+    .m-edge   { stroke: #79b0cc; stroke-width: 1.6; fill: none; }
+    .m-video  { stroke: #79b0cc; stroke-width: 5; fill: none; stroke-linecap: round; }
+    .m-meta   { stroke: #7a8990; stroke-width: 1.6; fill: none; stroke-dasharray: 7 6; }
+    .m-box    { stroke: #79b0cc; stroke-width: 1.4; fill: none; }
+    .m-fill   { fill: #79b0cc; }
+    .m-dim    { fill: #79b0cc7d; }
+    .m-t      { font-family: "JetBrains Mono", ui-monospace, "DejaVu Sans Mono", monospace;
+                font-size: 11px; letter-spacing: 1.1px; fill: #abbac2; }
+    .m-n      { font-family: "JetBrains Mono", ui-monospace, "DejaVu Sans Mono", monospace;
+                font-size: 12px; font-weight: 500; letter-spacing: 0.7px; fill: #faf6af; }
+    .label    { font-family: "JetBrains Mono", ui-monospace, "DejaVu Sans Mono", monospace;
+                font-size: 13px; letter-spacing: 2.1px; fill: #7a8990; }
+    .title    { font-family: "Archivo", "Helvetica Neue", Arial, sans-serif;
+                font-size: 54px; font-weight: 500; letter-spacing: -1.4px; fill: #d8e7f0; }
+    .sub      { font-family: "Newsreader", Georgia, serif; font-size: 21px; fill: #abbac2; }
+    .foot     { font-family: "JetBrains Mono", ui-monospace, "DejaVu Sans Mono", monospace;
+                font-size: 12px; letter-spacing: 1.2px; fill: #7a8990; }
+    .rule     { stroke: #d8e7f04d; stroke-width: 1; }
+  </style>
+
+  <rect width="1400" height="1000" fill="#04111f"/>
+
+  <!-- ══ header ══ -->
+  <text class="label" x="100" y="96">FIELD GUIDE 02 · @HUBERTTHEINVENTOR</text>
+  <text class="title" x="100" y="168">Kubernetes has never started a container</text>
+  <text class="sub"   x="100" y="214">A control plane that decides, a kubelet on every machine</text>
+  <text class="sub"   x="100" y="244">that actually does it.</text>
+  <line class="rule" x1="100" y1="290" x2="1300" y2="290"/>
+
+  <!-- ══ the map — coordinates identical to the inline SVG on kubernetes.html ══ -->
+  <g transform="translate(100, 300)">
+    <!-- control plane -->
+    <circle class="m-edge" cx="600" cy="95" r="52"/>
+    <text class="m-n" x="600" y="34" text-anchor="middle">01</text>
+    <text class="m-t" x="600" y="172" text-anchor="middle">CONTROL PLANE</text>
+    <text class="m-t" x="600" y="188" text-anchor="middle">DECIDES · NEVER TOUCHES A CONTAINER</text>
+
+    <!-- order paths — start below the control-plane caption so the dashed
+         lines never run behind the "CONTROL PLANE / DECIDES..." text -->
+    <path class="m-meta" d="M600 198 C600 250, 220 250, 220 300"/>
+    <path class="m-meta" d="M600 198 L600 300"/>
+    <path class="m-meta" d="M600 198 C600 250, 980 250, 980 300"/>
+    <text class="m-t" x="666" y="100">ORDERS · PLACEMENT, REPLICAS, HEALING</text>
+
+    <!-- machine 01 -->
+    <rect class="m-box" x="110" y="300" width="220" height="150" rx="12"/>
+    <text class="m-t" x="122" y="292">MACHINE 01</text>
+    <rect class="m-line" x="140" y="326" width="160" height="40" rx="8" stroke-dasharray="5 5"/>
+    <text class="m-t" x="220" y="350" text-anchor="middle">KUBELET</text>
+    <path class="m-video" d="M220 366 L220 398"/>
+
+    <!-- machine 02 -->
+    <rect class="m-box" x="490" y="300" width="220" height="150" rx="12"/>
+    <text class="m-t" x="502" y="292">MACHINE 02</text>
+    <rect class="m-line" x="520" y="326" width="160" height="40" rx="8" stroke-dasharray="5 5"/>
+    <text class="m-t" x="600" y="350" text-anchor="middle">KUBELET</text>
+    <path class="m-video" d="M600 366 L600 398"/>
+
+    <!-- machine 03 -->
+    <rect class="m-box" x="870" y="300" width="220" height="150" rx="12"/>
+    <text class="m-t" x="882" y="292">MACHINE 03</text>
+    <rect class="m-line" x="900" y="326" width="160" height="40" rx="8" stroke-dasharray="5 5"/>
+    <text class="m-t" x="980" y="350" text-anchor="middle">KUBELET</text>
+    <path class="m-video" d="M980 366 L980 398"/>
+
+    <text class="m-n" x="20" y="345">02</text>
+
+    <!-- containers -->
+    <rect class="m-fill" x="150" y="398" width="140" height="40" rx="8"/>
+    <rect class="m-fill" x="530" y="398" width="140" height="40" rx="8"/>
+    <rect class="m-fill" x="910" y="398" width="140" height="40" rx="8"/>
+    <text class="m-t" x="600" y="452" text-anchor="middle">CONTAINER · THE ONLY STEP THAT IS REAL WORK</text>
+    <text class="m-n" x="20" y="422">03</text>
+  </g>
+
+  <!-- ══ legend ══ -->
+  <line class="rule" x1="100" y1="800" x2="1300" y2="800"/>
+  <path d="M100 838h26" stroke="#79b0cc" stroke-width="4" stroke-linecap="round"/>
+  <text class="m-t" x="138" y="842">EXECUTION PATH — SHORT, SOLID, THE ONLY STEP THAT STARTS ANYTHING</text>
+  <path d="M700 838h26" stroke="#7a8990" stroke-width="2" stroke-dasharray="5 4"/>
+  <text class="m-t" x="738" y="842">ORDER PATH — LONG, DASHED, AN INSTRUCTION, NOT AN ACTION</text>
+
+  <!-- ══ footer ══ -->
+  <line class="rule" x1="100" y1="890" x2="1300" y2="890"/>
+  <text class="foot" x="100" y="924">huberttheinventor.github.io/kubernetes.html</text>
+  <text class="foot" x="100" y="948">INDEPENDENT FIELD GUIDE. NOT AFFILIATED WITH, ENDORSED BY, OR CONNECTED TO DOCKER, INC. OR THE KUBERNETES PROJECT.</text>
+</svg>

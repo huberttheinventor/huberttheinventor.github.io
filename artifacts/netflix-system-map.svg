@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1000" width="1400" height="1000"
+     role="img" aria-labelledby="title desc">
+  <title id="title">How Netflix actually works — the system map</title>
+  <desc id="desc">System map: a master file is encoded into a ladder of renditions, stored at
+    origin, pushed to edge caches near viewers, and requested segment by segment by the player,
+    while a separate dashed path carries account metadata from the application services.</desc>
+
+  <!-- Colours are the site's midnight plate, resolved from oklch to sRGB so this file
+       renders identically in browsers, image viewers and print. Do not re-theme it
+       independently: it is the same object as the page and the film. -->
+  <style>
+    .m-line   { stroke: #7a8990; stroke-width: 1.2; fill: none; }
+    .m-edge   { stroke: #79b0cc; stroke-width: 1.6; fill: none; }
+    .m-video  { stroke: #79b0cc; stroke-width: 5; fill: none; stroke-linecap: round; }
+    .m-meta   { stroke: #7a8990; stroke-width: 1.6; fill: none; stroke-dasharray: 7 6; }
+    .m-box    { stroke: #79b0cc; stroke-width: 1.4; fill: none; }
+    .m-fill   { fill: #79b0cc; }
+    .m-dim    { fill: #79b0cc7d; }
+    .m-t      { font-family: "JetBrains Mono", ui-monospace, "DejaVu Sans Mono", monospace;
+                font-size: 11px; letter-spacing: 1.1px; fill: #abbac2; }
+    .m-n      { font-family: "JetBrains Mono", ui-monospace, "DejaVu Sans Mono", monospace;
+                font-size: 12px; font-weight: 500; letter-spacing: 0.7px; fill: #faf6af; }
+    .label    { font-family: "JetBrains Mono", ui-monospace, "DejaVu Sans Mono", monospace;
+                font-size: 13px; letter-spacing: 2.1px; fill: #7a8990; }
+    .title    { font-family: "Archivo", "Helvetica Neue", Arial, sans-serif;
+                font-size: 54px; font-weight: 500; letter-spacing: -1.4px; fill: #d8e7f0; }
+    .sub      { font-family: "Newsreader", Georgia, serif; font-size: 21px; fill: #abbac2; }
+    .foot     { font-family: "JetBrains Mono", ui-monospace, "DejaVu Sans Mono", monospace;
+                font-size: 12px; letter-spacing: 1.2px; fill: #7a8990; }
+    .rule     { stroke: #d8e7f04d; stroke-width: 1; }
+  </style>
+
+  <rect width="1400" height="1000" fill="#04111f"/>
+
+  <!-- ══ header ══ -->
+  <text class="label" x="100" y="96">FIELD GUIDE 01 · @HUBERTTHEINVENTOR</text>
+  <text class="title" x="100" y="168">How Netflix actually works</text>
+  <text class="sub"   x="100" y="214">One master file, and every decision that stands between it</text>
+  <text class="sub"   x="100" y="244">and your screen.</text>
+  <line class="rule" x1="100" y1="290" x2="1300" y2="290"/>
+
+  <!-- ══ the map — coordinates identical to the inline SVG on netflix.html ══ -->
+  <g transform="translate(100, 330)">
+    <!-- master -->
+    <ellipse class="m-edge" cx="70" cy="120" rx="34" ry="12"/>
+    <path class="m-edge" d="M36 120v66c0 7 15 12 34 12s34-5 34-12v-66"/>
+    <text class="m-t" x="18" y="222">MASTER</text>
+    <text class="m-n" x="18" y="96">01</text>
+
+    <!-- ladder -->
+    <path class="m-edge" d="M108 155h54"/>
+    <path class="m-edge" d="M162 155V78h34M162 155v20.5h34M162 155v37.5h34M162 155v61h34"/>
+    <rect class="m-fill" x="196" y="68" width="70" height="20"/>
+    <rect class="m-dim"  x="196" y="167" width="54" height="17"/>
+    <rect class="m-dim"  x="196" y="185" width="42" height="15"/>
+    <rect class="m-dim"  x="196" y="209" width="30" height="14"/>
+    <text class="m-t" x="196" y="250">RENDITIONS</text>
+    <text class="m-n" x="196" y="56">02</text>
+
+    <!-- origin -->
+    <rect class="m-box" x="330" y="118" width="104" height="74"/>
+    <path class="m-edge" d="M266 155h64"/>
+    <text class="m-t" x="330" y="212">ORIGIN STORE</text>
+    <text class="m-n" x="330" y="106">03</text>
+
+    <!-- push to edges -->
+    <path class="m-video" d="M434 155h64"/>
+    <path class="m-video" d="M498 155q86-74 172 0"/>
+    <text class="m-t" x="512" y="86">PUSHED AHEAD OF DEMAND</text>
+
+    <!-- edge caches -->
+    <rect class="m-box" x="672" y="132" width="42" height="42"/>
+    <rect class="m-box" x="726" y="132" width="42" height="42"/>
+    <rect class="m-box" x="780" y="132" width="42" height="42"/>
+    <rect class="m-box" x="834" y="132" width="42" height="42"/>
+    <text class="m-t" x="672" y="196">EDGE CACHES, NEAR YOU</text>
+    <text class="m-n" x="672" y="120">04</text>
+
+    <!-- player -->
+    <rect class="m-edge" x="1006" y="112" width="150" height="94"/>
+    <path class="m-edge" d="M1064 206h34v10h-34z"/>
+    <text class="m-t" x="1006" y="240">YOUR PLAYER</text>
+    <text class="m-n" x="1006" y="100">05</text>
+
+    <!-- video path -->
+    <path class="m-video" d="M876 153h130"/>
+    <text class="m-t" x="890" y="138" fill="#79b0cc">VIDEO</text>
+
+    <!-- segments -->
+    <rect class="m-fill" x="672" y="286" width="20" height="34"/>
+    <rect class="m-fill" x="698" y="286" width="20" height="34"/>
+    <rect class="m-dim"  x="724" y="294" width="20" height="26"/>
+    <rect class="m-dim"  x="750" y="294" width="20" height="26"/>
+    <rect class="m-fill" x="776" y="286" width="20" height="34"/>
+    <rect class="m-fill" x="802" y="286" width="20" height="34"/>
+    <path class="m-line" d="M666 330h166"/>
+    <text class="m-t" x="672" y="352">SEGMENTS · QUALITY DECIDED PER SEGMENT</text>
+    <text class="m-n" x="672" y="274">06</text>
+    <path class="m-line" d="M832 303h158v-97" stroke-dasharray="3 5"/>
+
+    <!-- application plane -->
+    <rect class="m-line" x="330" y="300" width="250" height="72" fill="none"/>
+    <text class="m-t" x="330" y="392">APPLICATION SERVICES</text>
+    <text class="m-t" x="344" y="332" fill="#7a8990">ACCOUNTS · BILLING</text>
+    <text class="m-t" x="344" y="352" fill="#7a8990">RECOMMENDATIONS</text>
+    <path class="m-meta" d="M580 336h410v-130"/>
+    <text class="m-t" x="646" y="322">METADATA</text>
+  </g>
+
+  <!-- ══ legend ══ -->
+  <line class="rule" x1="100" y1="800" x2="1300" y2="800"/>
+  <path d="M100 838h26" stroke="#79b0cc" stroke-width="4" stroke-linecap="round"/>
+  <text class="m-t" x="138" y="842">VIDEO PATH — ENORMOUS, GOES THE SHORT WAY</text>
+  <path d="M540 838h26" stroke="#7a8990" stroke-width="2" stroke-dasharray="5 4"/>
+  <text class="m-t" x="578" y="842">METADATA PATH — SMALL, ANSWERS QUESTIONS ABOUT YOU</text>
+
+  <!-- ══ footer ══ -->
+  <line class="rule" x1="100" y1="890" x2="1300" y2="890"/>
+  <text class="foot" x="100" y="924">huberttheinventor.github.io/netflix.html</text>
+  <text class="foot" x="100" y="948">INDEPENDENT FIELD GUIDE. NOT AFFILIATED WITH, ENDORSED BY, OR CONNECTED TO NETFLIX.</text>
+</svg>
