@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Google doesn't search the internet, it searches a copy — Hubert's field guides</title>
-<meta name="description" content="Field guide Nº004. Google does not look at the web when you type. It looks at a copy it finished building before you had the question, and a second system that has never fetched a page works out what you meant.">
+<title>Zero bars. Still found. — Hubert's field guides</title>
+<meta name="description" content="Field guide Nº005. Four satellites broadcast one thing each: who they are and exactly what time it is. Your phone never replies — it just times the gap between when a shout was sent and when it landed.">
 <meta name="theme-color" content="#1a1a1a">
 <link rel="icon" href="img/favicon.svg?v=msz1k8sd" type="image/svg+xml">
 
 <meta property="og:type" content="article">
-<meta property="og:title" content="Google doesn't search the internet. It searches a copy.">
-<meta property="og:description" content="Retrieval and ranking as one map, then three annotations. Two systems, and neither one is the search.">
-<meta property="og:image" content="artifacts/google-search-system-map.png">
+<meta property="og:title" content="Zero bars. Still found.">
+<meta property="og:description" content="Four satellites, one broadcast each, and the one thing your phone never does — talk back.">
+<meta property="og:image" content="artifacts/gps-system-map.png">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="stylesheet" href="assets/css/00-critical.css?v=msz1k8sd">
@@ -43,8 +43,8 @@
       <a href="netflix.html" class="hover_effect"><span>Guide 01</span></a>
       <a href="kubernetes.html" class="hover_effect"><span>Guide 02</span></a>
       <a href="whatsapp.html" class="hover_effect"><span>Guide 03</span></a>
-      <a aria-current="page" href="google-search.html" class="active router-link-exact-active hover_effect"><span>Guide 04</span></a>
-      <a href="gps.html" class="hover_effect"><span>Guide 05</span></a>
+      <a href="google-search.html" class="hover_effect"><span>Guide 04</span></a>
+      <a aria-current="page" href="gps.html" class="active router-link-exact-active hover_effect"><span>Guide 05</span></a>
       <a href="#sources" class="hover_effect"><span>Sources</span></a>
       <a href="index.html#pricing" class="start hover_effect"><span>The List</span></a>
       <span class="rec">●</span>
@@ -61,7 +61,7 @@
     <a href="whatsapp.html"><span>Guide 03</span></a>
     <a href="google-search.html"><span>Guide 04</span></a>
     <a href="gps.html"><span>Guide 05</span></a>
-    <a href="google-search.html#sources"><span>Sources</span></a>
+    <a href="gps.html#sources"><span>Sources</span></a>
     <a href="index.html#pricing" class="start"><span>The List</span></a>
   </div>
   <div class="mobilenav__social">
@@ -77,13 +77,13 @@
     <section class="section section__lightgrey">
       <div class="journalArticle__documentHeader">
         <div class="journalArticle__documentCell monospace">
-          <span>Field guide</span><strong>Nº004</strong>
+          <span>Field guide</span><strong>Nº005</strong>
         </div>
         <div class="journalArticle__documentCell monospace">
-          <span>System</span><strong>Google Search</strong>
+          <span>System</span><strong>GPS</strong>
         </div>
         <div class="journalArticle__documentCell monospace">
-          <span>Model</span><strong>Retrieval vs. ranking</strong>
+          <span>Model</span><strong>Broadcast vs. conversation</strong>
         </div>
         <div class="journalArticle__documentCell monospace">
           <span>Annotations</span><strong>Three, keyed to the map</strong>
@@ -95,33 +95,33 @@
       </div>
 
       <div class="journalArticle__article" id="guide">
-        <h1 data-splitting="lines">It doesn't search the internet. It searches a copy.</h1>
-        <p class="lead" data-splitting>By the time you finish typing, the work is already done. Your question
-          goes to a list built years in advance of which words appear on which pages, and a second system,
-          which has never fetched a page in its life, decides what you actually meant.</p></p>
+        <h1 data-splitting="lines">Zero bars. Still found.</h1>
+        <p class="lead" data-splitting>Four satellites broadcast one thing each: who they are and exactly what
+          time it is. Your phone never replies — it just times the gap between when a shout was sent and when
+          it landed.</p>
 
         <figure class="journalArticle__banner guideVideo">
           <video controls preload="metadata" playsinline
-                 poster="img/guide/guide-04-poster.jpg"
-                 aria-label="Field guide Nº004: Google searches a copy of the web, not the web">
-            <source src="img/guide/guide-04.mp4" type="video/mp4">
-            <track kind="subtitles" src="artifacts/guide-04.vtt" srclang="en" label="English">
+                 poster="img/guide/guide-05-poster.jpg"
+                 aria-label="Field guide Nº005: zero bars, still found — how GPS works without a network">
+            <source src="img/guide/guide-05.mp4" type="video/mp4">
+            <track kind="subtitles" src="artifacts/guide-05.vtt" srclang="en" label="English">
             <p class="monospace monospace__p">Your browser will not play this. The whole guide is written
-              out below, and <a href="artifacts/transcript-google-search.md">the transcript</a> has every word of it.</p>
+              out below, and <a href="artifacts/transcript-gps.md">the transcript</a> has every word of it.</p>
           </video>
-          <figcaption class="monospace monospace__p opacity__50">Nº004 · 1:31 · watch it first, then read the map</figcaption>
+          <figcaption class="monospace monospace__p opacity__50">Nº005 · 1:44 · watch it first, then read the map</figcaption>
         </figure>
 
         <figure class="journalArticle__banner map" id="map">
 <svg viewBox="0 0 1200 480" role="img"
-             aria-label="System map: a crawler reads the live web continuously and writes an inverted index, a list of which words appear on which pages. When you search, your query goes to a query-understanding system and then to a ranker, which reads that index. Your query never travels to the live web; that path is drawn and marked never taken.">
+             aria-label="System map: four satellites each broadcast their own identity and the exact time, continuously, into the void. Your phone receives all four broadcasts and computes the arrival-time gap for each, which places it on a sphere, then a circle, then a point, and corrects its own clock. A dashed path from the phone back to a satellite is drawn and marked never taken — the phone never transmits.">
             <style>.m-line { stroke: #7a8990; stroke-width: 1.2; fill: none; } .m-edge { stroke: #79b0cc; stroke-width: 1.6; fill: none; } .m-video { stroke: #79b0cc; stroke-width: 5; fill: none; stroke-linecap: round; } .m-meta { stroke: #7a8990; stroke-width: 1.6; fill: none; stroke-dasharray: 7 6; } .m-box { stroke: #79b0cc; stroke-width: 1.4; fill: none; } .m-grey { stroke: #7a8990; stroke-width: 1.4; fill: none; } .m-fill { fill: #79b0cc; } .m-t { font-family: Mono, ui-monospace, monospace; font-size: 11px; letter-spacing: 1.1px; fill: #abbac2; } .m-g { font-family: Mono, ui-monospace, monospace; font-size: 11px; letter-spacing: 1.1px; fill: #7a8990; } .m-n { font-family: Mono, ui-monospace, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.7px; fill: #faf6af; } .rule { stroke: #d8e7f04d; stroke-width: 1; }</style>
 
-    <!-- built before you asked -->
+    <!-- constantly, into the void -->
     <text class="m-n" x="40" y="40">01</text>
-    <text class="m-t" x="70" y="40">BUILT BEFORE YOU ASKED — CONTINUOUSLY, YEARS AHEAD OF YOU</text>
+    <text class="m-t" x="70" y="40">FOUR SATELLITES, EACH DOING ONE JOB — SHOUTING THE TIME, CONSTANTLY</text>
 
-    <text class="m-g" x="40" y="76">THE LIVE WEB</text>
+    <text class="m-g" x="40" y="76">THE FLEET</text>
     <rect class="m-grey" x="40" y="90" width="86" height="62" rx="6"/>
     <rect class="m-grey" x="140" y="90" width="86" height="62" rx="6"/>
     <rect class="m-grey" x="240" y="90" width="86" height="62" rx="6"/>
@@ -133,114 +133,115 @@
 
     <path class="m-edge" d="M426 121 L534 121"/>
     <path class="m-fill" d="M534 121 l-9 -5 v10 z"/>
-    <text class="m-t" x="480" y="108" text-anchor="middle">CRAWL · PARSE</text>
+    <text class="m-t" x="480" y="108" text-anchor="middle">SHOUT · INTO THE VOID</text>
 
     <rect class="m-box" x="540" y="80" width="320" height="82" rx="8"/>
-    <text class="m-n" x="700" y="106" text-anchor="middle">INVERTED INDEX</text>
-    <text class="m-t" x="700" y="128" text-anchor="middle">TERM → POSTINGS LIST</text>
-    <text class="m-t" x="700" y="148" text-anchor="middle">NOT THE PAGES. WHICH WORDS ARE ON WHICH PAGES.</text>
+    <text class="m-n" x="700" y="106" text-anchor="middle">SATELLITE ID + TIMESTAMP</text>
+    <text class="m-t" x="700" y="128" text-anchor="middle">NO ADDRESSEE. NO ACKNOWLEDGEMENT.</text>
+    <text class="m-t" x="700" y="148" text-anchor="middle">THE SATELLITE HAS NO IDEA YOU EXIST.</text>
 
-    <!-- runs when you ask -->
+    <!-- your phone, when you ask -->
     <text class="m-n" x="40" y="268">02</text>
-    <text class="m-t" x="70" y="268">RUNS WHEN YOU ASK — AND HAS TO FINISH BEFORE YOU LEAVE</text>
+    <text class="m-t" x="70" y="268">YOUR PHONE — RECEIVE ONLY, AND ONLY WHEN YOU ASK</text>
 
     <rect class="m-box" x="40" y="300" width="190" height="70" rx="8"/>
-    <text class="m-n" x="135" y="330" text-anchor="middle">YOUR QUERY</text>
-    <text class="m-t" x="135" y="352" text-anchor="middle">FOUR WORDS, ONE TYPO</text>
+    <text class="m-n" x="135" y="330" text-anchor="middle">YOUR PHONE</text>
+    <text class="m-t" x="135" y="352" text-anchor="middle">LISTENS. NEVER SPEAKS.</text>
 
     <path class="m-edge" d="M230 335 L264 335"/>
     <path class="m-fill" d="M264 335 l-9 -5 v10 z"/>
 
     <rect class="m-box" x="270" y="300" width="230" height="70" rx="8"/>
-    <text class="m-n" x="385" y="330" text-anchor="middle">QUERY UNDERSTANDING</text>
-    <text class="m-t" x="385" y="352" text-anchor="middle">SPELLING · SYNONYMY · INTENT</text>
+    <text class="m-n" x="385" y="330" text-anchor="middle">TIMES THE GAP</text>
+    <text class="m-t" x="385" y="352" text-anchor="middle">SENT AT · LANDED AT · DISTANCE</text>
 
     <path class="m-edge" d="M500 335 L534 335"/>
     <path class="m-fill" d="M534 335 l-9 -5 v10 z"/>
 
     <rect class="m-box" x="540" y="300" width="320" height="70" rx="8"/>
-    <text class="m-n" x="700" y="330" text-anchor="middle">RANKER</text>
-    <text class="m-t" x="700" y="352" text-anchor="middle">READS THE COPY, NEVER THE WEB</text>
+    <text class="m-n" x="700" y="330" text-anchor="middle">SPHERE → CIRCLE → POINT</text>
+    <text class="m-t" x="700" y="352" text-anchor="middle">4TH SATELLITE FIXES THE CLOCK</text>
 
     <path class="m-edge" d="M860 335 L894 335"/>
     <path class="m-fill" d="M894 335 l-9 -5 v10 z"/>
 
     <rect class="m-box" x="900" y="300" width="180" height="70" rx="8"/>
-    <text class="m-n" x="990" y="330" text-anchor="middle">RESULTS</text>
-    <text class="m-t" x="990" y="352" text-anchor="middle">ON YOUR SCREEN</text>
+    <text class="m-n" x="990" y="330" text-anchor="middle">YOU ARE HERE</text>
+    <text class="m-t" x="990" y="352" text-anchor="middle">ON THE SCREEN</text>
 
-    <!-- the ranker consults the index: the only vertical link on the map -->
+    <!-- the phone reads all four broadcasts -->
     <path class="m-video" d="M700 300 L700 162"/>
-    <text class="m-t" x="716" y="238">THE ONLY THING IT CONSULTS</text>
+    <text class="m-t" x="716" y="238">FOUR BROADCASTS, READ AT ONCE</text>
 
     <!-- the path everyone assumes exists, drawn and cancelled -->
     <path class="m-meta" d="M135 300 L135 152"/>
     <path class="m-meta" d="M118 236 L152 212"/>
     <path class="m-meta" d="M118 212 L152 236"/>
-    <text class="m-g" x="164" y="220">NEVER TAKEN</text>
+    <text class="m-g" x="164" y="220">NEVER TAKEN — YOUR PHONE NEVER TRANSMITS</text>
 
     <line class="rule" x1="40" y1="404" x2="1160" y2="404"/>
     <text class="m-n" x="40" y="432">03</text>
-    <text class="m-t" x="70" y="432">ONE READ EVERYTHING AND UNDERSTANDS NOTHING · THE OTHER UNDERSTANDS YOU AND HAS READ NOTHING</text>
-    <text class="m-n" x="1160" y="432" text-anchor="end">BOTH HAVE TO BE RIGHT.</text>
+    <text class="m-t" x="70" y="432">ONE SATELLITE PUTS YOU ON A SPHERE · A FOURTH FIXES THE POINT AND THE CLOCK</text>
+    <text class="m-n" x="1160" y="432" text-anchor="end">BARS ARE TWO-WAY. THIS IS ONE-WAY.</text>
 
           </svg>
           <div class="legend monospace">
-            <div><i aria-hidden="true"></i>Solid — the path your question actually takes, and the copy it lands on</div>
-            <div><i class="dash" aria-hidden="true"></i>Dashed — the path to the live web, drawn because everyone assumes it, and never taken</div>
+            <div><i aria-hidden="true"></i>Solid — what a satellite actually sends, and the phone's own calculation</div>
+            <div><i class="dash" aria-hidden="true"></i>Dashed — the reply path everyone assumes exists, and never taken</div>
           </div>
         </figure>
 
         <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">The whole mental model, one picture. Everything after it is annotation.</p>
 
         <p class="monospace monospace__p" data-splitting>Take it with you:
-          <a href="artifacts/google-search-system-map.png" download>the map as an image</a></p>
+          <a href="artifacts/gps-system-map.png" download>the map as an image</a></p>
 
         <hr>
 
         <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº001</p>
-        <h4 data-splitting="lines">The copy is a list of words, not a pile of pages</h4>
-        <p data-splitting>A crawler has been out there for years. It fetches a page, takes it apart, writes
-          down every word and where it found it, and then throws the page away. What is kept is an
-          <em>inverted index</em>: for each term, the list of documents that contain it. That list is the
-          whole of what gets searched.</p>
-        <p data-splitting>Which is why an answer arrives as fast as it does. Looking a word up in a list you
-          already built is a different kind of work from going and reading the internet, and only one of
-          those could ever happen between you pressing a key and letting go of it.</p>
+        <h4 data-splitting="lines">The satellite has no idea you exist</h4>
+        <p data-splitting>Each satellite in the fleet does exactly one job: it broadcasts its own identity and
+          the exact time, on a fixed schedule, into open space. It is not addressed to you. It is not waiting
+          for a reply. It has no way of knowing whether a single receiver on the ground is listening, or a
+          hundred million.</p>
+        <p data-splitting>That is the whole trick of "zero bars, still found." A broadcast does not need a
+          connection to the thing receiving it — only a receiver capable of listening. Your phone qualifies.
+          Nothing else about the network has to.</p>
 
         <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº002</p>
-        <h4 data-splitting="lines">Your question never leaves for the web</h4>
-        <p data-splitting>The path everyone imagines — your query going out to the internet and coming back
-          with pages — does not exist. It is on the map because the assumption is so common, and it is
-          crossed out because nothing travels it. Your query goes to the copy.</p>
-        <p data-splitting>Which makes the freshness of an answer a property of the crawl rather than of the
-          search. If a page changed an hour ago and the crawler has not been back, the list still says what
-          it said before, and nothing about the speed of the lookup can fix that.</p>
+        <h4 data-splitting="lines">Your phone is the finest eavesdropper ever built</h4>
+        <p data-splitting>Consumer GPS receivers are passive. Your phone never transmits a request to a
+          satellite and never confirms receipt — it only listens, which is also why GPS keeps working with no
+          signal bars and no data plan. There is nothing to authenticate, register, or pay for on the way in.</p>
+        <p data-splitting>What it does with what it hears is the actual computation: each satellite's timestamp,
+          compared against the moment its shout arrived, gives one distance. One distance narrows you to a
+          sphere. A second narrows that to a circle. A third pins a point on the circle, and a fourth exists
+          almost entirely to correct your phone's own cheap, sloppy internal clock.</p>
 
         <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº003</p>
-        <h4 data-splitting="lines">The second system has read nothing at all</h4>
-        <p data-splitting>A list of words is not an answer, because you do not type what you mean. You type
-          four words with a spelling mistake in one of them. The job of query understanding is to work out
-          the intent behind that — spelling, synonyms, what you were actually after — and it does that on the
-          query itself, not by fetching anything.</p>
-        <p data-splitting>So there are two of them, and the honest version is narrower than "Google searches
-          the internet". One read everything and understands nothing. The other understands you and has read
-          nothing. Neither can do the other's job, both have to be right, and they have to finish before you
-          get bored and leave.</p>
+        <h4 data-splitting="lines">Wifi only ever makes it faster, never possible</h4>
+        <p data-splitting>A GPS fix works with genuinely nothing else — no cellular, no internet, no prior
+          contact with the network at all. When a phone does reach for the internet during a fix, it is asking
+          for the almanac: which satellites are overhead right now, so it is not left scanning empty sky for
+          the first one it can hear. That shortcut is called assisted GPS, and it only ever shortens the wait.
+          It never substitutes for the broadcast itself.</p>
+        <p data-splitting>Which is the honest version of "GPS doesn't need a network." Bars are a two-way
+          conversation between your phone and a tower, each side confirming the other heard it. A GPS fix is a
+          one-way sermon — the satellites shout on a schedule whether or not anyone is listening, and your
+          phone is merely in the congregation.</p>
 
         <hr>
 
         <h4 data-splitting="lines">Who actually does what</h4>
         <p class="monospace monospace__p opacity__50" data-splitting>Reference · the core components</p>
 <table>
-      <thead><tr><th scope="col">Component</th><th scope="col">Runs when</th><th scope="col">What it knows</th></tr></thead>
+      <thead><tr><th scope="col">Component</th><th scope="col">Sends / receives</th><th scope="col">What it knows</th></tr></thead>
       <tbody>
-        <tr><td>Crawler</td><td>Continuously, years ahead of you</td><td>What is on a page, once, at the moment it fetched it</td></tr>
-        <tr><td>Parser</td><td>Continuously</td><td>Which words a page contains, and where</td></tr>
-        <tr><td>Inverted index</td><td>Built before you asked</td><td>For each term, which pages contain it. Not the pages</td></tr>
-        <tr><td>Query understanding</td><td>When you ask</td><td>What you probably meant. It has never fetched a page</td></tr>
-        <tr><td>Ranker</td><td>When you ask</td><td>Which of the matching pages to put first</td></tr>
-        <tr><td>The live web</td><td>Not consulted</td><td>Everything, and nobody asks it at the moment you search</td></tr>
+        <tr><td>One satellite</td><td>Broadcasts ID + timestamp, constantly</td><td>Nothing about you. Not even that you exist</td></tr>
+        <tr><td>The fleet (4+ visible)</td><td>Same broadcast, independently, on schedule</td><td>Each other's schedule; not your position</td></tr>
+        <tr><td>Your phone (receiver)</td><td>Listens only — never transmits to a satellite</td><td>The time-of-arrival gap for every signal it hears</td></tr>
+        <tr><td>Assisted GPS (A-GPS)</td><td>Optional, over the network</td><td>Which satellites are overhead — a shortcut, not a requirement</td></tr>
+        <tr><td>The 4th satellite</td><td>Same broadcast as the others</td><td>Nothing special — but its extra distance corrects the phone's clock</td></tr>
       </tbody>
     </table>
 
@@ -248,16 +249,15 @@
 
         <h4 data-splitting="lines" id="sources">Take it with you</h4>
         <div class="buttons">
-          <a href="artifacts/transcript-google-search.md" class="button button__big hover_effect"><span>Full transcript</span> <span class="arrow">↗</span></a>
+          <a href="artifacts/transcript-gps.md" class="button button__big hover_effect"><span>Full transcript</span> <span class="arrow">↗</span></a>
           <a href="#map" class="button button__big hover_effect"><span>The system map</span> <span class="arrow">↗</span></a>
         </div>
 
         <div class="article__footer">
           <p class="monospace monospace__p opacity__50" data-splitting>Independent field guide. Not affiliated with,
-            endorsed by, or connected to Google LLC or Alphabet Inc. All trademarks belong to their
-            respective owners. Written to explain a publicly documented architecture, not any specific
-            implementation, and it carries no figures for index size, query volume or latency, because none
-            is needed to explain it.</p>
+            endorsed by, or connected to any GPS operator or government agency. Written to explain a publicly
+            documented architecture, not any specific receiver chipset, and it carries no figures for satellite
+            count, accuracy, or time-to-first-fix, because none is needed to explain it.</p>
         </div>
       </div>
     </section>
@@ -276,9 +276,9 @@
         <div class="buttons">
           <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
           <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
-          <a href="artifacts/google-search-system-map.png" class="button button__half hover_effect" title="The schematic, as an image"><span>The schematic</span> <span class="arrow">↗</span></a>
-          <a href="artifacts/transcript-google-search.md" class="button button__half hover_effect" title="Full narration, by section"><span>Transcript</span><span class="arrow">↗</span></a>
-          
+          <a href="artifacts/gps-system-map.png" class="button button__half hover_effect" title="The schematic, as an image"><span>The schematic</span> <span class="arrow">↗</span></a>
+          <a href="artifacts/transcript-gps.md" class="button button__half hover_effect" title="Full narration, by section"><span>Transcript</span><span class="arrow">↗</span></a>
+
           <a href="privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
         </div>
       </div>
