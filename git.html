@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nº006 — A change has to climb · Hubert the Inventor</title>
+<meta name="description" content="The one mental model behind Git: four places a change can be, and the three commands that lift it from one to the next. Working directory, staging area, repository, remote.">
+<meta property="og:title" content="Nº006 — A change has to climb">
+<meta property="og:description" content="Git is four places, not hundreds of commands. One ladder, four annotations.">
+<meta property="og:type" content="article">
+<!-- og:image — add once a still is exported -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+/* ── page furniture ─────────────────────────────────────────────── */
+.bleed { padding-inline: clamp(20px, 4vw, 72px); }
+.plate { padding-block: var(--s-2xl) var(--s-3xl); }
+.plate--tight { padding-block: var(--s-lg) var(--s-2xl); }
+.inner { max-width: 1320px; margin-inline: auto; }
+
+.rail {
+  position: fixed; inset-inline: 0; top: 0; z-index: 80;
+  display: flex; justify-content: space-between; align-items: center;
+  gap: var(--s-md);
+  padding: var(--s-xs) clamp(20px, 4vw, 72px);
+  background: oklch(96.2% 0.012 85 / 0.86);
+  backdrop-filter: blur(8px);
+  border-bottom: var(--rule-fade);
+}
+.rail a { text-decoration: none; }
+.rail .live { display: inline-flex; align-items: center; gap: var(--s-2xs); }
+.rail .dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--hazard);
+  box-shadow: 0 0 0 3px oklch(56% 0.18 40 / 0.16);
+}
+main { padding-top: 52px; }
+
+/* ── masthead ──────────────────────────────────────────────────── */
+.marks { display: flex; gap: var(--s-sm); align-items: center; margin-bottom: var(--s-md); }
+.marks img { display: block; }
+.slug { display: flex; gap: var(--s-md); flex-wrap: wrap; margin-bottom: var(--s-lg); }
+.title-block { border-bottom: var(--line); padding-bottom: var(--s-xl); }
+.standfirst { margin-top: var(--s-lg); color: var(--dim); }
+.byline { margin-top: var(--s-md); }
+
+/* ── the ladder: the spine of the page ─────────────────────────── */
+.map figure { margin: 0; }
+.map svg { width: 100%; height: auto; display: block; }
+.m-line   { stroke: var(--faint); stroke-width: 1.2; fill: none; }
+.m-box    { stroke: var(--accent); stroke-width: 1.4; fill: none; }
+.m-rung   { stroke-width: 1.6; fill: none; }
+.m-move   { stroke: var(--accent); stroke-width: 3; fill: none; stroke-linecap: round; }
+.m-fill   { fill: var(--accent); }
+.m-t      { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
+            fill: var(--dim); text-transform: uppercase; }
+.m-n      { font-family: var(--font-mono); font-size: 12px; font-weight: 500;
+            fill: var(--sun); letter-spacing: 0.06em; }
+/* Colour is altitude, the same encoding the reel uses. */
+.rung-work   { stroke: var(--faint); }
+.rung-stage  { stroke: var(--accent); }
+.rung-perm   { stroke: var(--sun); }
+.t-work  { fill: var(--faint); }
+.t-stage { fill: var(--accent); }
+.t-perm  { fill: var(--sun); }
+.legend { display: flex; gap: var(--s-lg); flex-wrap: wrap; margin-top: var(--s-lg);
+          padding-top: var(--s-sm); border-top: var(--line); }
+.legend div { display: flex; align-items: center; gap: var(--s-2xs); }
+.legend i { width: 26px; height: 0; border-top: 4px solid var(--accent); border-radius: 2px; }
+.legend i.faint { border-top-color: var(--faint); }
+.legend i.sun { border-top-color: var(--sun); }
+
+/* ── annotations: unequal diptychs, hairline-ruled ─────────────── */
+.ann { border-top: var(--line); padding-block: var(--s-xl); display: grid; gap: var(--s-md); }
+@media (min-width: 900px) {
+  .ann { grid-template-columns: 56% 35%; gap: 9%; align-items: start; }
+}
+.ann h3 { margin-bottom: var(--s-md); }
+.ann .aside { color: var(--dim); font-size: var(--t-small); max-width: var(--measure-note); }
+.ann .aside b { font-family: var(--font-mono); font-weight: 500; font-size: var(--t-label);
+                text-transform: uppercase; letter-spacing: var(--track-label);
+                display: block; margin-bottom: var(--s-2xs); color: var(--faint); }
+.ann-num { margin-bottom: var(--s-sm); }
+
+/* ── the cheat sheet ───────────────────────────────────────────── */
+.sheet { border-top: var(--line); padding-block: var(--s-xl); }
+.sheet table { width: 100%; border-collapse: collapse; }
+.sheet th, .sheet td { text-align: left; padding: var(--s-sm) var(--s-md) var(--s-sm) 0;
+                       border-bottom: var(--rule-fade); vertical-align: top; }
+.sheet th { font-family: var(--font-mono); font-size: var(--t-label); font-weight: 500;
+            text-transform: uppercase; letter-spacing: var(--track-label); color: var(--faint); }
+.sheet td.cmd { font-family: var(--font-mono); white-space: nowrap; color: var(--sun); }
+.sheet td { font-size: var(--t-small); color: var(--dim); }
+
+footer { padding-block: var(--s-xl) var(--s-2xl); border-top: var(--line); }
+.foot-grid { display: grid; gap: var(--s-lg); }
+@media (min-width: 800px) { .foot-grid { grid-template-columns: 1fr 22em; gap: var(--s-2xl); } }
+footer p { font-size: var(--t-small); color: var(--dim); max-width: var(--measure-note); }
+.skip { position: absolute; left: -9999px; }
+.skip:focus { left: var(--s-md); top: var(--s-md); z-index: 100; background: var(--ink);
+              color: var(--paper); padding: var(--s-2xs) var(--s-sm); }
+</style>
+</head>
+<body>
+<a class="skip" href="#map">Skip to the ladder</a>
+
+<div class="rail">
+  <a class="mono" href="index.html">Hubert the Inventor</a>
+  <span class="mono live"><span class="dot" aria-hidden="true"></span>Nº006 · Version control</span>
+</div>
+
+<main>
+
+<!-- ══ masthead ══ -->
+<section class="plate plate--paper bleed">
+  <div class="inner">
+    <div class="marks" aria-hidden="true">
+      <img src="brand/git-logo.svg" alt="" width="44" height="44">
+      <img src="brand/github-mark.svg" alt="" width="44" height="44">
+    </div>
+    <div class="slug">
+      <span class="mono">Field guide Nº006</span>
+      <span class="mono">Filed under · Version control</span>
+    </div>
+    <p class="mono" style="margin-bottom: var(--s-md);">You commented GIT — this is the ladder.</p>
+    <div class="title-block">
+      <h1>A change<br>has to<br>climb.</h1>
+      <p class="lead standfirst">Git is four places, not hundreds of commands. A change you
+        type starts in one of them and has to be lifted, deliberately, to each of the next
+        three. Every command you actually use is one of those lifts — which is why the whole
+        thing collapses into four words once you can see the shape.</p>
+      <p class="byline mono">Companion to the reel · Watch it on <a href="https://instagram.com/huberttheinventor" rel="me">@huberttheinventor</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ the ladder ══ -->
+<section class="plate plate--midnight bleed map" id="map">
+  <div class="inner">
+    <span class="mono">The whole mental model, one picture</span>
+    <h2 style="margin-block: var(--s-md) var(--s-lg); max-width: 15em;">Four places a change
+      can be, and the three lifts between them</h2>
+
+    <figure>
+      <svg viewBox="0 0 1200 640" role="img" aria-labelledby="ladder-title ladder-desc">
+        <title id="ladder-title">The Git ladder</title>
+        <desc id="ladder-desc">Four stacked bands. From the bottom: working directory, staging
+          area, repository, remote. git add lifts a change from the working directory to
+          staging, git commit lifts it to the repository, git push lifts it to the remote.</desc>
+
+        <!-- 04 · the remote -->
+        <rect class="m-rung rung-perm" x="120" y="40" width="960" height="96" rx="14"/>
+        <text class="m-n" x="140" y="70">04</text>
+        <text class="m-t t-perm" x="180" y="70">The remote · somebody else’s disk</text>
+        <text class="m-t" x="140" y="106">GitHub. The history now exists somewhere your laptop cannot lose it.</text>
+
+        <path class="m-move" d="M600 190 L600 146"/>
+        <path class="m-move" d="M588 158 L600 146 L612 158"/>
+        <text class="m-n" x="620" y="180">git push</text>
+
+        <!-- 03 · repository -->
+        <rect class="m-rung rung-perm" x="120" y="196" width="960" height="96" rx="14"/>
+        <text class="m-n" x="140" y="226">03</text>
+        <text class="m-t t-perm" x="180" y="226">Repository · permanent history</text>
+        <text class="m-t" x="140" y="262">A snapshot with its own unique identifier. This is the part that survives you.</text>
+
+        <path class="m-move" d="M600 346 L600 302"/>
+        <path class="m-move" d="M588 314 L600 302 L612 314"/>
+        <text class="m-n" x="620" y="336">git commit</text>
+
+        <!-- 02 · staging -->
+        <rect class="m-rung rung-stage" x="120" y="352" width="960" height="96" rx="14"/>
+        <text class="m-n" x="140" y="382">02</text>
+        <text class="m-t t-stage" x="180" y="382">Staging area · what you chose</text>
+        <text class="m-t" x="140" y="418">The exact changes you want in the next snapshot. Not the others.</text>
+
+        <path class="m-move" d="M600 502 L600 458"/>
+        <path class="m-move" d="M588 470 L600 458 L612 470"/>
+        <text class="m-n" x="620" y="492">git add</text>
+
+        <!-- 01 · working directory -->
+        <rect class="m-rung rung-work" x="120" y="508" width="960" height="96" rx="14"/>
+        <text class="m-n" x="140" y="538">01</text>
+        <text class="m-t t-work" x="180" y="538">Working directory · what you typed</text>
+        <text class="m-t" x="140" y="574">The file on your disk right now. Real, and saved nowhere. git status shows it.</text>
+      </svg>
+    </figure>
+
+    <div class="legend mono">
+      <div><i class="faint"></i><span>Typed, not chosen, not safe</span></div>
+      <div><i></i><span>Staged — chosen, on the way</span></div>
+      <div><i class="sun"></i><span>Committed — permanent</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ annotations ══ -->
+<section class="plate plate--paper bleed plate--tight">
+  <div class="inner">
+
+    <article class="ann" style="border-top: 0;">
+      <div>
+        <div class="mono ann-num">Nº001 · Git is not GitHub</div>
+        <h3>One of them runs on your machine. The other is a website.</h3>
+        <p>Git is a version control system. It lives on your computer, it has no opinion about
+          the internet, and its entire job is remembering every version of your project.
+          GitHub is a website that hosts what Git makes. You can use Git for years without
+          ever creating a GitHub account — the history is already real, already permanent,
+          already on your disk.</p>
+      </div>
+      <div class="aside">
+        <b>The distinction that matters</b>
+        Only the top rung of the ladder involves GitHub at all. The other three happen
+        entirely on the machine in front of you.
+      </div>
+    </article>
+
+    <article class="ann">
+      <div>
+        <div class="mono ann-num">Nº002 · Nothing saves itself</div>
+        <h3>Git tracks everything and stores nothing until you say so</h3>
+        <p><code>git init</code> turns a folder into a repository, and from that moment Git is
+          watching. But it never commits on your behalf. A file you edited sits in the working
+          directory, changed and unsaved, until you deliberately lift it — which is exactly
+          what <code>git status</code> is telling you every time you run it.</p>
+      </div>
+      <div class="aside">
+        <b>Why staging exists at all</b>
+        It is the step where you choose. Edit six files, stage two, and the snapshot contains
+        two. Without it, every commit would be everything you happened to have open.
+      </div>
+    </article>
+
+    <article class="ann">
+      <div>
+        <div class="mono ann-num">Nº003 · Branch, merge, conflict</div>
+        <h3>Two lines of the same project, folded back together</h3>
+        <p>A branch is a second line of development growing off a commit, so you can build
+          something new without touching the working code. Merging folds it back, and Git does
+          it automatically — right up until both lines changed the same lines of the same file.
+          Then it stops. It marks the disputed section, refuses to guess which version you
+          meant, and waits for you to decide. That refusal is a feature.</p>
+      </div>
+      <div class="aside">
+        <b>On the ladder</b>
+        Branching and merging both happen on rung 03. They rearrange history; they do not move
+        a change between places.
+      </div>
+    </article>
+
+    <article class="ann">
+      <div>
+        <div class="mono ann-num">Nº006 · Going backwards</div>
+        <h3>Three different undos, and only one of them is dangerous</h3>
+        <p><code>git restore</code> throws away an edit you have not committed.
+          <code>git revert</code> writes a <em>new</em> commit that undoes an old one, erasing
+          nothing — the mistake stays in the history, and so does the correction.
+          <code>git reset</code> moves your branch pointer backwards, which is powerful and
+          therefore very easy to misuse: the commits are usually still there, but the pointer
+          that named them is not.</p>
+      </div>
+      <div class="aside">
+        <b>The habit worth building</b>
+        Reach for <code>revert</code> by default. It is the only one of the three that is safe
+        on history other people have already pulled.
+      </div>
+    </article>
+
+    <div class="sheet">
+      <h3 style="margin-bottom: var(--s-md);">Ninety percent of the time</h3>
+      <table>
+        <thead>
+          <tr><th>Command</th><th>What it actually does</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="cmd">git add</td><td>Lifts a change from the working directory into staging.</td></tr>
+          <tr><td class="cmd">git commit</td><td>Takes the snapshot. Staging becomes permanent history.</td></tr>
+          <tr><td class="cmd">git push</td><td>Sends your commits up to the remote.</td></tr>
+          <tr><td class="cmd">git pull</td><td>Brings everyone else’s commits down. Run it <em>before</em> you push.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══ subscribe ══ -->
+<section class="plate plate--midnight bleed">
+  <div class="inner">
+    <span class="mono">Next guide</span>
+    <h2 style="margin-block: var(--s-md) var(--s-md); max-width: 11em;">One system, taken apart.</h2>
+    <p style="color: var(--dim);">Same treatment, different machine. No pitch, no
+      thread-bait, and an unsubscribe link that works.</p>
+
+    <!-- Buttondown account: huberttheinventor (confirmed 2026-08-20). This action is
+         the CONFIRM-FIRST embed endpoint and is the fallback; subscribe.js swaps it
+         for the Worker /signup route once SIGNUP_ENDPOINT is set. -->
+    <form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor"
+          method="post" target="popupwindow"
+          onsubmit="window.open('https://buttondown.com/huberttheinventor','popupwindow')">
+      <label class="mono" for="bd-email" style="display:block; margin-bottom: var(--s-2xs);">Email address</label>
+      <div class="field">
+        <input type="email" name="email" id="bd-email" placeholder="you@example.com" required autocomplete="email">
+        <input type="hidden" name="tag" value="guide-006-git">
+        <button type="submit"><span>Send it</span></button>
+      </div>
+      <label class="consent">
+        <input type="checkbox" name="consent" required>
+        <span>Email me new field guides. I can unsubscribe at any time and my address
+          is never shared — see the <a href="privacy.html">privacy note</a>.</span>
+      </label>
+    </form>
+  </div>
+</section>
+
+<footer class="plate--paper bleed">
+  <div class="inner foot-grid">
+    <p><strong>An independent educational breakdown.</strong> Not affiliated with, endorsed by,
+      or produced in cooperation with the Git project, Software Freedom Conservancy, GitHub, Inc.
+      or Microsoft. All trademarks belong to their respective owners. Written to explain
+      publicly documented behaviour of a widely used tool, not any specific installation.
+      The Git logo is by <a href="https://twitter.com/jasonlong">Jason Long</a>, used under
+      <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</p>
+    <p>
+      <a href="index.html">All field guides</a> · <a href="privacy.html">Privacy</a> ·
+      <a href="https://instagram.com/huberttheinventor" rel="me">@huberttheinventor</a><br>
+      <span class="mono" style="display:inline-block; margin-top: var(--s-sm);">Field guide Nº006 · Version control</span>
+    </p>
+  </div>
+</footer>
+
+</main>
+<script src="subscribe.js" defer></script>
+<!-- GoatCounter: replace CODE before launch -->
+<script data-goatcounter="https://CODE.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
