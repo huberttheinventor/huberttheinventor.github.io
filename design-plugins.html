@@ -6,20 +6,20 @@
 <title>Taste is installable. — Hubert's field guides</title>
 <meta name="description" content="Field guide Nº007. Five Claude Code plugins that fix vibe-coded design: Taste Skill, Web Design Guidelines, Awesome Design, Image to Code, and Playwright CLI. What each one does and when to reach for it.">
 <meta name="theme-color" content="#1a1a1a">
-<link rel="icon" href="img/favicon.svg?v=msz1k8sd" type="image/svg+xml">
+<link rel="icon" href="img/favicon.svg?v=2026-08-26-review" type="image/svg+xml">
 
 <meta property="og:type" content="article">
 <meta property="og:title" content="Taste is installable.">
 <meta property="og:description" content="AI-built apps work and look dated. Five plugins carry the design taste for you.">
 <meta name="twitter:card" content="summary">
 
-<link rel="stylesheet" href="assets/css/00-critical.css?v=msz1k8sd">
-<link rel="stylesheet" href="assets/css/entry.CQSbLAcy.css?v=msz1k8sd">
-<link rel="stylesheet" href="assets/css/default.Z9wDiTTt.css?v=msz1k8sd">
-<link rel="stylesheet" href="assets/css/_slug_.DENrRFxM.css?v=msz1k8sd">
-<link rel="stylesheet" href="assets/css/Industries.BJpTkmyx.css?v=msz1k8sd">
-<link rel="stylesheet" href="assets/css/Footer.MRJrKAf5.css?v=msz1k8sd">
-<link rel="stylesheet" href="assets/css/99-hubert.css?v=headerfix02">
+<link rel="stylesheet" href="assets/css/00-critical.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/entry.CQSbLAcy.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/default.Z9wDiTTt.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/_slug_.DENrRFxM.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/Industries.BJpTkmyx.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/Footer.MRJrKAf5.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/99-hubert.css?v=2026-08-26-review">
 
 <noscript><style>
   .hover_effect, .splitting, [data-splitting],
@@ -28,6 +28,7 @@
 </head>
 <body class="journal">
 <div class="topOverlay"></div>
+<a class="skip-link" href="#main">Skip to the guide</a>
 <header>
   <div class="layout cursor_disabled">
     <div class="layout__third">
@@ -37,7 +38,7 @@
         </span></span>
       </a>
     </div>
-    <div class="nav layout__second">
+    <div class="nav layout__second" role="navigation" aria-label="Field guides">
       <a href="index.html" class="hover_effect"><span>Index</span></a>
       <a href="netflix.html" class="hover_effect"><span>Guide 01</span></a>
       <a href="kubernetes.html" class="hover_effect"><span>Guide 02</span></a>
@@ -54,7 +55,7 @@
   <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Menu</button>
 </header>
 <div class="mobilenav__backdrop"></div>
-<div id="mobile-navigation" class="mobilenav">
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Field guides, mobile">
   <div class="mobilenav__main">
     <a href="index.html"><span>Index</span></a>
     <a href="netflix.html"><span>Guide 01</span></a>
@@ -72,7 +73,7 @@
     <a href="privacy.html" class="monospace">Privacy note &#8599;</a>
   </div>
 </div>
-<main class="main">
+<main class="main" id="main">
   <div class="scanlines"></div>
   <div class="gloom"></div>
   <div class="vignette"></div>
@@ -129,7 +130,7 @@
         <hr>
 
         <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº001 · Taste Skill</p>
-        <h4 data-splitting="lines">Borrow someone else's eye</h4>
+        <h4 aria-level="2" data-splitting="lines">Borrow someone else's eye</h4>
         <p data-splitting>Left alone, a model designs toward the middle of everything it has seen — which
           is why unaided output looks generic. Taste Skill pulls design taste from premium references and
           puts it in front of the model before it writes a line of CSS. Reach for it at the start of a
@@ -138,7 +139,7 @@
           <a href="https://github.com/Leonxlnx/taste-skill" rel="noopener noreferrer" target="_blank">github.com/Leonxlnx/taste-skill</a></p>
 
         <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº002 · Web Design Guidelines</p>
-        <h4 data-splitting="lines">An inspector for the interface</h4>
+        <h4 aria-level="2" data-splitting="lines">An inspector for the interface</h4>
         <p data-splitting>Vercel maintains a set of interface guidelines — the small correctness rules of
           good web UI, from focus states to touch targets. This plugin audits your code against them and
           flags the weak points before shipping. Run it late, the way you would run a linter: after the
@@ -147,7 +148,7 @@
           <a href="https://github.com/vercel-labs/web-interface-guidelines" rel="noopener noreferrer" target="_blank">github.com/vercel-labs/web-interface-guidelines</a></p>
 
         <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº003 · Awesome Design</p>
-        <h4 data-splitting="lines">Design systems, already written</h4>
+        <h4 aria-level="2" data-splitting="lines">Design systems, already written</h4>
         <p data-splitting>A curated collection of DESIGN.md files: complete design systems — colors,
           typography, spacing — pulled from quality sites and written down in a form a coding agent can
           follow. Instead of inventing a palette and hoping, you hand the model a system that already
@@ -156,7 +157,7 @@
           <a href="https://github.com/VoltAgent/awesome-design-md" rel="noopener noreferrer" target="_blank">github.com/VoltAgent/awesome-design-md</a></p>
 
         <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº004 · Image to Code</p>
-        <h4 data-splitting="lines">From screenshot to component, detail intact</h4>
+        <h4 aria-level="2" data-splitting="lines">From screenshot to component, detail intact</h4>
         <p data-splitting>The usual failure of "build me this" with a picture attached is that the model
           reproduces the layout and loses the finish — the spacing, the shadows, the typographic detail
           that made the reference worth copying. Image to Code turns a design reference image into usable
@@ -166,7 +167,7 @@
           <a href="https://github.com/Leonxlnx/taste-skill/tree/main/skills/image-to-code-skill" rel="noopener noreferrer" target="_blank">github.com/Leonxlnx/taste-skill · skills/image-to-code-skill</a></p>
 
         <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº005 · Playwright CLI</p>
-        <h4 data-splitting="lines">Let the agent see its own work</h4>
+        <h4 aria-level="2" data-splitting="lines">Let the agent see its own work</h4>
         <p data-splitting>A coding agent normally ships blind: it writes the interface and never looks at
           it. Playwright CLI lets the agent open a real browser, screenshot what it built, and catch
           broken UI itself — the overlapping button, the invisible text, the layout that collapsed on
@@ -177,7 +178,7 @@
 
         <hr>
 
-        <h4 data-splitting="lines">When to reach for which</h4>
+        <h4 aria-level="2" data-splitting="lines">When to reach for which</h4>
         <p class="monospace monospace__p opacity__50" data-splitting>Reference · the moment each one earns its place</p>
 <table>
       <thead><tr><th scope="col">Plugin</th><th scope="col">The moment it earns its place</th></tr></thead>
@@ -195,7 +196,7 @@
 
         <hr>
 
-        <h4 data-splitting="lines" id="sources">Take it with you</h4>
+        <h4 aria-level="2" data-splitting="lines" id="sources">Take it with you</h4>
         <p class="monospace monospace__p opacity__50" data-splitting>The sources here are the plugins themselves — five repositories, all public.</p>
         <div class="buttons">
           <a href="https://github.com/Leonxlnx/taste-skill" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Taste Skill</span> <span class="arrow">↗</span></a>
@@ -215,7 +216,7 @@
       </div>
     </section>
   </div>
-  <section class="section no__p footer section__blue">
+  <section class="section no__p footer section__blue" role="contentinfo">
     <div class="footer__wrapper" effect__parallax data-parallax="70">
       <div class="footer__logoStack">
         <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
@@ -239,9 +240,9 @@
   </section>
   <div class="cursor"><div class="cursor__inner"></div></div>
 </main>
-<script src="assets/js/gsap.min.js?v=msz1k8sd"></script>
-<script src="assets/js/ScrollTrigger.min.js?v=msz1k8sd"></script>
-<script src="assets/js/splitting.min.js?v=msz1k8sd"></script>
-<script src="assets/js/site.js?v=msz1k8sd" type="module"></script>
+<script src="assets/js/gsap.min.js?v=2026-08-26-review"></script>
+<script src="assets/js/ScrollTrigger.min.js?v=2026-08-26-review"></script>
+<script src="assets/js/splitting.min.js?v=2026-08-26-review"></script>
+<script src="assets/js/site.js?v=2026-08-26-review" type="module"></script>
 </body>
 </html>

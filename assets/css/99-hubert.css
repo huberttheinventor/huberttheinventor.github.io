@@ -241,6 +241,155 @@ html.motion-failed .homeMiniVideo video { opacity: 1 !important; }
   .marqueeText__track { transform: none !important; }
 }
 
+/* ── keyboard focus ───────────────────────────────────────────────────
+   The port sets `a { outline: 0 }` and defines no replacement, so every link
+   on every page in this bundle focuses invisibly. Measured on the live site
+   2026-08-26: seven of the first eight focusable elements on each page report
+   outline-style: none with no box-shadow and no border change. The eighth is
+   the Menu button, which keeps the UA default — `outline: auto 1px rgb(16,16,16)`
+   — a near-black ring on a near-black header.
+
+   The ring resolves off the plate's own text colour so it works on all four
+   plates without a per-plate override: #bababa on the dark plates (8.97:1
+   against #1a1a1a), #111111 on the light-grey plate (4.00:1 against #71737d).
+   Both clear the 3:1 that WCAG asks of a non-text indicator.
+
+   :focus-visible, not :focus, so a mouse click does not draw it. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--color, var(--primarycolor));
+  outline-offset: 3px;
+  transition: none;             /* never animate a focus ring */
+}
+
+/* Skip link. Off-screen until focused, then it lands in the top-left corner
+   as a plain plate-coloured row. */
+.skip-link {
+  background: var(--bgcolor);
+  color: var(--primarycolor);
+  font-family: Mono, ui-monospace, monospace;
+  font-size: 14px;
+  left: 8px;
+  letter-spacing: .06em;
+  padding: 12px 16px;
+  position: fixed;
+  text-transform: uppercase;
+  top: -100px;
+  z-index: 200;
+}
+.skip-link:focus { top: 8px; }
+
+/* ── tap targets ──────────────────────────────────────────────────────
+   Measured at 390x844 on the live site 2026-08-26: the mobile menu's two
+   social links render 91.3 x 12 px, and the Menu button 75.7 x 36.9 px. Both
+   are the primary navigation controls on the site's primary viewport.
+
+   The Menu button's hit area is grown with an overlay pseudo-element rather
+   than with min-height. A first pass used `display: inline-flex; min-height:
+   44px` and a pixel diff of the before and after screenshots caught it moving
+   the "Menu" label down 4px on index, netflix and design-plugins. The overlay
+   changes no box and no baseline: the button keeps its layout and gains a
+   centred 44px-tall transparent target on top of it. */
+   Do NOT add `position: relative` here. The port sets
+   `header .menu { position: fixed; right: 0; top: 0 }`, this file loads last,
+   and a same-specificity `position` declaration wins the cascade and drops the
+   button out of the corner into the flow. A screenshot check caught exactly
+   that. The button is already positioned, so the overlay anchors to it. */
+header .menu::after {
+  content: "";
+  height: 44px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* The two links at the foot of the mobile panel are left at 12px. An overlay
+   does not work there (they sit flush, 651.2-663.2 and 663.2-675.2, so the
+   second one's overlay swallows the first: probing every pixel gave 12px and
+   45px of real target), and real padding does not fit. See the note below. */
+
+/* ── the mobile panel has to hold ten links ───────────────────────────
+   The panel is `height: 85svh; padding: 20svh 0 0 10px` and the two social
+   links are `position: absolute; bottom: 5vh`. At 390x844 that gives a list
+   starting at y169; ten links at 52px each end at y689, and the social block
+   occupies 651 to 675. Measured on the LIVE site: index.html, which already
+   carried ten links, overlaps by 38px — the social links are printed through
+   "The List". netflix.html, with eight links, measured 0.
+
+   Adding Guides 06 and 07 takes every guide page from eight links to ten, so
+   without this the nav fix would have spread that overlap to eight more pages.
+   Dropping the top padding to 12svh puts the list at y101 to y621 and leaves a
+   30px gap above the social block, with nothing else moved. overflow-y is the
+   safety net for shorter phones, where 20svh + ten links already did not fit:
+   at 390x667 the list needs more room than the panel has whatever the padding,
+   so the panel scrolls rather than clipping.
+
+   The social block also stops being `position: absolute; bottom: 5vh`, because
+   inside a scroll container that offset resolves against the visible box and
+   lands the block in the middle of the list as soon as the list is taller than
+   the panel — measured at 390x667, 90px of overlap with "Sources". A flex
+   column with `margin-top: auto` gives the same result when there is room (the
+   block still sits 5vh off the bottom edge) and flows it after the list when
+   there is not. */
+.mobilenav {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-bottom: 5vh;
+  padding-top: 12svh;
+}
+.mobilenav__social {
+  margin-top: auto;
+  position: static;
+}
+a, button, input, select, textarea, summary, [role="button"] {
+  touch-action: manipulation;   /* removes the 300ms double-tap-zoom delay */
+}
+
+/* ── native UI on a dark page ─────────────────────────────────────────
+   Without this the scrollbar and any native control render in the light
+   default against a #1a1a1a page. git.html is a light page and does not load
+   this file, so this cannot reach it. */
+html { color-scheme: dark; }
+
+/* ── anchor targets vs the fixed header ───────────────────────────────
+   The header is fixed and 99px tall (computed). Without a scroll margin,
+   `#map` and `#sources` land with their first line under it. */
+:where(h1, h2, h3, h4, figure, section, div)[id] { scroll-margin-top: 116px; }
+
+/* ── the package-box CTA label ────────────────────────────────────────
+   `.section .pricing__box .button` sets color: var(--background), which on the
+   light-grey plate resolves to #71737d against a #bababa button fill: 2.43:1
+   (computed). The canvas colour on the same fill is 8.97:1 and keeps the
+   dark-label-on-light-button reading the box already has. */
+.section .pricing__box .button { color: var(--bgcolor) !important; }
+
+/* ── the mono badge ───────────────────────────────────────────────────
+   `.section .pricing__box--badge` asks for `font-family: var(--mono)`. No such
+   custom property is defined anywhere in the bundle, so the badge inherits the
+   display face instead of the mono one. */
+.section .pricing__box--badge { font-family: Mono, ui-monospace, monospace; }
+
+/* ── reduced motion: the CRT layers ───────────────────────────────────
+   site.js gates every GSAP animation off `prefers-reduced-motion`, but the CRT
+   overlays are pure CSS and were never gated. Verified against the live site
+   2026-08-26 with the media feature emulated: on all nine pages in this bundle
+   `scanline` (8s) and `scanlines` (1s) were still reported as running with
+   iteration count Infinity. `foreground` is the same pattern in the port and is
+   included here for the same reason.
+
+   The layers stay on screen and keep their opacity. Only the movement stops. */
+@media (prefers-reduced-motion: reduce) {
+  .scanlines::before,
+  .scanlines::after,
+  .wrapper::after,
+  section .branding__imageStack::after {
+    animation: none !important;
+  }
+}
+
 /* ── guide video captions vs native controls ──────────────────────────
    Default WebVTT caption position sits at the bottom of the frame, the same
    band the browser's own play/scrub/volume controls occupy — the two overlap

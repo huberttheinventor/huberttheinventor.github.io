@@ -6,7 +6,7 @@
 <title>Zero bars. Still found. — Hubert's field guides</title>
 <meta name="description" content="Field guide Nº005. Four satellites broadcast one thing each: who they are and exactly what time it is. Your phone never replies — it just times the gap between when a shout was sent and when it landed.">
 <meta name="theme-color" content="#1a1a1a">
-<link rel="icon" href="img/favicon.svg?v=msz1k8sd" type="image/svg+xml">
+<link rel="icon" href="img/favicon.svg?v=2026-08-26-review" type="image/svg+xml">
 
 <meta property="og:type" content="article">
 <meta property="og:title" content="Zero bars. Still found.">
@@ -14,13 +14,13 @@
 <meta property="og:image" content="artifacts/gps-system-map.png">
 <meta name="twitter:card" content="summary_large_image">
 
-<link rel="stylesheet" href="assets/css/00-critical.css?v=msz1k8sd">
-<link rel="stylesheet" href="assets/css/entry.CQSbLAcy.css?v=msz1k8sd">
-<link rel="stylesheet" href="assets/css/default.Z9wDiTTt.css?v=msz1k8sd">
-<link rel="stylesheet" href="assets/css/_slug_.DENrRFxM.css?v=msz1k8sd">
-<link rel="stylesheet" href="assets/css/Industries.BJpTkmyx.css?v=msz1k8sd">
-<link rel="stylesheet" href="assets/css/Footer.MRJrKAf5.css?v=msz1k8sd">
-<link rel="stylesheet" href="assets/css/99-hubert.css?v=headerfix02">
+<link rel="stylesheet" href="assets/css/00-critical.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/entry.CQSbLAcy.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/default.Z9wDiTTt.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/_slug_.DENrRFxM.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/Industries.BJpTkmyx.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/Footer.MRJrKAf5.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/99-hubert.css?v=2026-08-26-review">
 
 <noscript><style>
   .hover_effect, .splitting, [data-splitting],
@@ -29,6 +29,7 @@
 </head>
 <body class="journal">
 <div class="topOverlay"></div>
+<a class="skip-link" href="#main">Skip to the guide</a>
 <header>
   <div class="layout cursor_disabled">
     <div class="layout__third">
@@ -38,13 +39,13 @@
         </span></span>
       </a>
     </div>
-    <div class="nav layout__second">
+    <div class="nav layout__second" role="navigation" aria-label="Field guides">
       <a href="index.html" class="hover_effect"><span>Index</span></a>
       <a href="netflix.html" class="hover_effect"><span>Guide 01</span></a>
       <a href="kubernetes.html" class="hover_effect"><span>Guide 02</span></a>
       <a href="whatsapp.html" class="hover_effect"><span>Guide 03</span></a>
       <a href="google-search.html" class="hover_effect"><span>Guide 04</span></a>
-      <a aria-current="page" href="gps.html" class="active router-link-exact-active hover_effect"><span>Guide 05</span></a>
+      <a aria-current="page" href="gps.html" class="active router-link-exact-active hover_effect"><span>Guide 05</span></a><a href="git.html" class="hover_effect"><span>Guide 06</span></a><a href="design-plugins.html" class="hover_effect"><span>Guide 07</span></a>
       <a href="#sources" class="hover_effect"><span>Sources</span></a>
       <a href="index.html#pricing" class="start hover_effect"><span>The List</span></a>
       <span class="rec">●</span>
@@ -53,14 +54,14 @@
   <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Menu</button>
 </header>
 <div class="mobilenav__backdrop"></div>
-<div id="mobile-navigation" class="mobilenav">
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Field guides, mobile">
   <div class="mobilenav__main">
     <a href="index.html"><span>Index</span></a>
     <a href="netflix.html"><span>Guide 01</span></a>
     <a href="kubernetes.html"><span>Guide 02</span></a>
     <a href="whatsapp.html"><span>Guide 03</span></a>
     <a href="google-search.html"><span>Guide 04</span></a>
-    <a href="gps.html"><span>Guide 05</span></a>
+    <a href="gps.html"><span>Guide 05</span></a><a href="git.html"><span>Guide 06</span></a><a href="design-plugins.html"><span>Guide 07</span></a>
     <a href="gps.html#sources"><span>Sources</span></a>
     <a href="index.html#pricing" class="start"><span>The List</span></a>
   </div>
@@ -69,7 +70,7 @@
     <a href="privacy.html" class="monospace">Privacy note &#8599;</a>
   </div>
 </div>
-<main class="main">
+<main class="main" id="main">
   <div class="scanlines"></div>
   <div class="gloom"></div>
   <div class="vignette"></div>
@@ -101,7 +102,7 @@
           it landed.</p>
 
         <figure class="journalArticle__banner guideVideo">
-          <video controls preload="metadata" playsinline
+          <video controls preload="none" playsinline
                  poster="img/guide/guide-05-poster.jpg"
                  aria-label="Field guide Nº005: zero bars, still found — how GPS works without a network">
             <source src="img/guide/guide-05.mp4" type="video/mp4">
@@ -199,7 +200,7 @@
         <hr>
 
         <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº001</p>
-        <h4 data-splitting="lines">The satellite has no idea you exist</h4>
+        <h4 aria-level="2" data-splitting="lines">The satellite has no idea you exist</h4>
         <p data-splitting>Each satellite in the fleet does exactly one job: it broadcasts its own identity and
           the exact time, on a fixed schedule, into open space. It is not addressed to you. It is not waiting
           for a reply. It has no way of knowing whether a single receiver on the ground is listening, or a
@@ -209,7 +210,7 @@
           Nothing else about the network has to.</p>
 
         <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº002</p>
-        <h4 data-splitting="lines">Your phone is the finest eavesdropper ever built</h4>
+        <h4 aria-level="2" data-splitting="lines">Your phone is the finest eavesdropper ever built</h4>
         <p data-splitting>Consumer GPS receivers are passive. Your phone never transmits a request to a
           satellite and never confirms receipt — it only listens, which is also why GPS keeps working with no
           signal bars and no data plan. There is nothing to authenticate, register, or pay for on the way in.</p>
@@ -219,7 +220,7 @@
           almost entirely to correct your phone's own cheap, sloppy internal clock.</p>
 
         <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº003</p>
-        <h4 data-splitting="lines">Wifi only ever makes it faster, never possible</h4>
+        <h4 aria-level="2" data-splitting="lines">Wifi only ever makes it faster, never possible</h4>
         <p data-splitting>A GPS fix works with genuinely nothing else — no cellular, no internet, no prior
           contact with the network at all. When a phone does reach for the internet during a fix, it is asking
           for the almanac: which satellites are overhead right now, so it is not left scanning empty sky for
@@ -232,7 +233,7 @@
 
         <hr>
 
-        <h4 data-splitting="lines">Who actually does what</h4>
+        <h4 aria-level="2" data-splitting="lines">Who actually does what</h4>
         <p class="monospace monospace__p opacity__50" data-splitting>Reference · the core components</p>
 <table>
       <thead><tr><th scope="col">Component</th><th scope="col">Sends / receives</th><th scope="col">What it knows</th></tr></thead>
@@ -247,7 +248,7 @@
 
         <hr>
 
-        <h4 data-splitting="lines" id="sources">Take it with you</h4>
+        <h4 aria-level="2" data-splitting="lines" id="sources">Take it with you</h4>
         <div class="buttons">
           <a href="artifacts/transcript-gps.md" class="button button__big hover_effect"><span>Full transcript</span> <span class="arrow">↗</span></a>
           <a href="#map" class="button button__big hover_effect"><span>The system map</span> <span class="arrow">↗</span></a>
@@ -262,7 +263,7 @@
       </div>
     </section>
   </div>
-  <section class="section no__p footer section__blue">
+  <section class="section no__p footer section__blue" role="contentinfo">
     <div class="footer__wrapper" effect__parallax data-parallax="70">
       <div class="footer__logoStack">
         <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
@@ -286,9 +287,9 @@
   </section>
   <div class="cursor"><div class="cursor__inner"></div></div>
 </main>
-<script src="assets/js/gsap.min.js?v=msz1k8sd"></script>
-<script src="assets/js/ScrollTrigger.min.js?v=msz1k8sd"></script>
-<script src="assets/js/splitting.min.js?v=msz1k8sd"></script>
-<script src="assets/js/site.js?v=msz1k8sd" type="module"></script>
+<script src="assets/js/gsap.min.js?v=2026-08-26-review"></script>
+<script src="assets/js/ScrollTrigger.min.js?v=2026-08-26-review"></script>
+<script src="assets/js/splitting.min.js?v=2026-08-26-review"></script>
+<script src="assets/js/site.js?v=2026-08-26-review" type="module"></script>
 </body>
 </html>

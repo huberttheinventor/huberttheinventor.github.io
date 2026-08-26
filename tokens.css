@@ -95,7 +95,11 @@
                     --line: var(--rule);   --accent: var(--marine); }
 .plate--midnight  { --bg: var(--midnight); --fg: var(--midnight-ink);
                     --dim: oklch(78% 0.02 230); --faint: oklch(62% 0.02 230);
-                    --line: var(--rule-invert); --accent: var(--aqua); }
+                    --line: var(--rule-invert); --accent: var(--aqua);
+                    /* --focus is set for paper, where it clears 3:1. On this
+                       plate it measured ~2.4:1 against the field, so the ring
+                       rebinds here the way every other colour does. */
+                    --focus: var(--sun); }
 
 /* ══ reset ═════════════════════════════════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; }
@@ -194,6 +198,74 @@ small, .note { font-size: var(--t-small); letter-spacing: 0; }
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ══ the subscribe form ════════════════════════════════════════════
+   assets/css/99-hubert.css carries the sizing for this component, but that
+   file belongs to the other stylesheet bundle and this page does not load it,
+   so the form was rendering unstyled. Measured on the live page at 390x844
+   on 2026-08-26: the email field and the Send button were 21px tall, the
+   consent checkbox 13x13px, and the field font-size resolved to 13.33px,
+   which is the size at which iOS Safari zooms the viewport on focus.
+
+   16px minimum on the field is what stops that zoom. 44px minimum height on
+   the field, the button and the consent row is the tap target. Nothing here
+   changes the type, the rule language or the layout. */
+.sub-form { display: block; width: 100%; }
+.sub-form .field {
+  align-items: center;
+  border-bottom: var(--rule-fade);
+  display: flex;
+  gap: var(--s-xs);
+  margin-bottom: var(--s-xs);
+  padding-bottom: var(--s-2xs);
+}
+.sub-form input[type="email"] {
+  background: none;
+  border: 0;
+  color: inherit;
+  flex: 1 1 auto;
+  font-family: var(--font-body);
+  font-size: 16px;              /* below this, iOS Safari zooms on focus */
+  min-height: 44px;
+  min-width: 0;
+  padding: var(--s-2xs) 0;
+}
+.sub-form input[type="email"]::placeholder { color: currentColor; opacity: .45; }
+.sub-form .field:focus-within { border-bottom-color: var(--hazard); }
+.sub-form button {
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--t-label);
+  letter-spacing: var(--track-label);
+  min-height: 44px;
+  padding: 0 var(--s-2xs);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.sub-form .consent {
+  align-items: flex-start;
+  cursor: pointer;
+  display: flex;
+  gap: var(--s-xs);
+  min-height: 44px;             /* the whole row is the tap target */
+  padding-top: var(--s-3xs);
+}
+.sub-form .consent input {
+  accent-color: var(--hazard);
+  flex: 0 0 auto;
+  height: 20px;
+  margin: 3px 0 0;
+  width: 20px;
+}
+/* Below the reference's own breakpoint the field and the button stop sharing a
+   line, so the boundary between typing and submitting stays visible. */
+@media (max-width: 600px) {
+  .sub-form .field { align-items: stretch; flex-direction: column; gap: 0; }
+  .sub-form button { border-top: var(--rule-fade); padding: var(--s-xs) 0; text-align: left; }
 }
 
 /* ══ sticky subscribe bar ══

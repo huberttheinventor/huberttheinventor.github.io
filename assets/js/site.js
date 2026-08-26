@@ -510,8 +510,19 @@ function heroMedia() {
   const video = el('.homeMiniVideo video');
   if (banner) gsap.to(banner, { opacity: 1, duration: 1.1, ease: 'power2.out' });
   if (video) {
-    gsap.to(video, { opacity: 1, duration: 1.1, delay: 0.2, ease: 'power2.out' });
-    video.play?.().catch(() => {});   /* autoplay refusal is not an error */
+    gsap.to(video, { opacity: 1, duration: reduced ? 0 : 1.1, delay: reduced ? 0 : 0.2, ease: 'power2.out' });
+    /* The mini video is a decorative muted loop, so under reduced motion it
+       holds on its first frame instead of running. It stays visible and the
+       button around it still opens the real player; only the loop stops.
+       Verified 2026-08-26: with the media feature emulated this element was
+       still reporting paused: false. */
+    if (reduced) {
+      video.autoplay = false;
+      video.removeAttribute('autoplay');
+      video.pause?.();
+    } else {
+      video.play?.().catch(() => {});   /* autoplay refusal is not an error */
+    }
   }
 }
 

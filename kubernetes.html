@@ -6,7 +6,7 @@
 <title>Kubernetes has never started a container — Hubert's field guides</title>
 <meta name="description" content="Field guide Nº002. A control plane that decides and never once touches a container, the kubelet that actually starts one, and why Docker and Kubernetes were never competing for the same job.">
 <meta name="theme-color" content="#1a1a1a">
-<link rel="icon" href="img/favicon.svg?v=msz1k8sd" type="image/svg+xml">
+<link rel="icon" href="img/favicon.svg?v=2026-08-26-review" type="image/svg+xml">
 
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kubernetes has never started a container">
@@ -14,13 +14,13 @@
 <meta property="og:image" content="artifacts/kubernetes-system-map.png">
 <meta name="twitter:card" content="summary_large_image">
 
-<link rel="stylesheet" href="assets/css/00-critical.css?v=msz1k8sd">
-<link rel="stylesheet" href="assets/css/entry.CQSbLAcy.css?v=msz1k8sd">
-<link rel="stylesheet" href="assets/css/default.Z9wDiTTt.css?v=msz1k8sd">
-<link rel="stylesheet" href="assets/css/_slug_.DENrRFxM.css?v=msz1k8sd">
-<link rel="stylesheet" href="assets/css/Industries.BJpTkmyx.css?v=msz1k8sd">
-<link rel="stylesheet" href="assets/css/Footer.MRJrKAf5.css?v=msz1k8sd">
-<link rel="stylesheet" href="assets/css/99-hubert.css?v=headerfix02">
+<link rel="stylesheet" href="assets/css/00-critical.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/entry.CQSbLAcy.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/default.Z9wDiTTt.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/_slug_.DENrRFxM.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/Industries.BJpTkmyx.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/Footer.MRJrKAf5.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/99-hubert.css?v=2026-08-26-review">
 
 <noscript><style>
   .hover_effect, .splitting, [data-splitting],
@@ -29,6 +29,7 @@
 </head>
 <body class="journal">
 <div class="topOverlay"></div>
+<a class="skip-link" href="#main">Skip to the guide</a>
 <header>
   <div class="layout cursor_disabled">
     <div class="layout__third">
@@ -38,10 +39,10 @@
         </span></span>
       </a>
     </div>
-    <div class="nav layout__second">
+    <div class="nav layout__second" role="navigation" aria-label="Field guides">
       <a href="index.html" class="hover_effect"><span>Index</span></a>
       <a href="netflix.html" class="hover_effect"><span>Guide 01</span></a>
-      <a aria-current="page" href="kubernetes.html" class="active router-link-exact-active hover_effect"><span>Guide 02</span></a><a href="whatsapp.html" class="hover_effect"><span>Guide 03</span></a><a href="google-search.html" class="hover_effect"><span>Guide 04</span></a><a href="gps.html" class="hover_effect"><span>Guide 05</span></a>
+      <a aria-current="page" href="kubernetes.html" class="active router-link-exact-active hover_effect"><span>Guide 02</span></a><a href="whatsapp.html" class="hover_effect"><span>Guide 03</span></a><a href="google-search.html" class="hover_effect"><span>Guide 04</span></a><a href="gps.html" class="hover_effect"><span>Guide 05</span></a><a href="git.html" class="hover_effect"><span>Guide 06</span></a><a href="design-plugins.html" class="hover_effect"><span>Guide 07</span></a>
       <a href="#sources" class="hover_effect"><span>Sources</span></a>
       <a href="index.html#pricing" class="start hover_effect"><span>The List</span></a>
       <span class="rec">●</span>
@@ -50,12 +51,12 @@
   <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Menu</button>
 </header>
 <div class="mobilenav__backdrop"></div>
-<div id="mobile-navigation" class="mobilenav">
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Field guides, mobile">
   <div class="mobilenav__main">
     <a href="index.html"><span>Index</span></a>
     <a href="netflix.html"><span>Guide 01</span></a>
-    <a href="kubernetes.html"><span>Guide 02</span></a><a href="whatsapp.html" class="hover_effect"><span>Guide 03</span></a><a href="google-search.html" class="hover_effect"><span>Guide 04</span></a>
-    <a href="whatsapp.html"><span>Guide 03</span></a><a href="google-search.html"><span>Guide 04</span></a><a href="gps.html"><span>Guide 05</span></a>
+    <a href="kubernetes.html"><span>Guide 02</span></a>
+    <a href="whatsapp.html"><span>Guide 03</span></a><a href="google-search.html"><span>Guide 04</span></a><a href="gps.html"><span>Guide 05</span></a><a href="git.html"><span>Guide 06</span></a><a href="design-plugins.html"><span>Guide 07</span></a>
     <a href="kubernetes.html#sources"><span>Sources</span></a>
     <a href="index.html#pricing" class="start"><span>The List</span></a>
   </div>
@@ -64,7 +65,7 @@
     <a href="privacy.html" class="monospace">Privacy note &#8599;</a>
   </div>
 </div>
-<main class="main">
+<main class="main" id="main">
   <div class="scanlines"></div>
   <div class="gloom"></div>
   <div class="vignette"></div>
@@ -96,7 +97,7 @@
           the only real work in the whole picture: it starts the container.</p>
 
         <figure class="journalArticle__banner guideVideo">
-          <video controls preload="metadata" playsinline
+          <video controls preload="none" playsinline
                  poster="img/guide/guide-02-poster.jpg"
                  aria-label="Field guide Nº002: Kubernetes has never started a container">
             <source src="img/guide/guide-02.mp4" type="video/mp4">
@@ -171,7 +172,7 @@
         <hr>
 
         <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº001</p>
-        <h4 data-splitting="lines">It decides. It never touches a container.</h4>
+        <h4 aria-level="2" data-splitting="lines">It decides. It never touches a container.</h4>
         <p data-splitting>The control plane is the brain of the cluster: it watches everything, holds the
           plan, and decides which containers should exist, where, and how many copies. When something dies,
           it notices and issues a new order. What it never does, under any circumstance, is run a container
@@ -182,7 +183,7 @@
 
 
         <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº002</p>
-        <h4 data-splitting="lines">The hands are local, one pair per machine</h4>
+        <h4 aria-level="2" data-splitting="lines">The hands are local, one pair per machine</h4>
         <p data-splitting>Every machine in the cluster runs a small agent called a kubelet. It takes orders
           from the control plane over the network, and it is the only thing standing close enough to a
           container to actually start one. The order can travel from anywhere; the starting always happens
@@ -193,7 +194,7 @@
 
 
         <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº003</p>
-        <h4 data-splitting="lines">Different jobs, not competing tools</h4>
+        <h4 aria-level="2" data-splitting="lines">Different jobs, not competing tools</h4>
         <p data-splitting>Docker builds a container image and can run it, on one machine, right there. That
           is the entire job, and it does it well. Kubernetes doesn't replace that step — it sits above many
           machines, each already capable of running containers, and decides which one runs what, and what
@@ -205,7 +206,7 @@
 
         <hr>
 
-        <h4 data-splitting="lines">Who actually does what</h4>
+        <h4 aria-level="2" data-splitting="lines">Who actually does what</h4>
         <p class="monospace monospace__p opacity__50" data-splitting>Reference · the core components</p>
 <table>
       <thead><tr><th scope="col">Component</th><th scope="col">Layer</th><th scope="col">What it actually does</th></tr></thead>
@@ -220,7 +221,7 @@
 
         <hr>
 
-        <h4 data-splitting="lines" id="sources">Take it with you</h4>
+        <h4 aria-level="2" data-splitting="lines" id="sources">Take it with you</h4>
         <div class="buttons">
           <a href="artifacts/reading-list-kubernetes.md" class="button button__big hover_effect"><span>The reading list</span> <span class="arrow">↗</span></a>
           <a href="artifacts/transcript-kubernetes.md" class="button button__big hover_effect"><span>Full transcript</span> <span class="arrow">↗</span></a>
@@ -236,7 +237,7 @@
       </div>
     </section>
   </div>
-  <section class="section no__p footer section__blue">
+  <section class="section no__p footer section__blue" role="contentinfo">
     <div class="footer__wrapper" effect__parallax data-parallax="70">
       <div class="footer__logoStack">
         <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
@@ -260,9 +261,9 @@
   </section>
   <div class="cursor"><div class="cursor__inner"></div></div>
 </main>
-<script src="assets/js/gsap.min.js?v=msz1k8sd"></script>
-<script src="assets/js/ScrollTrigger.min.js?v=msz1k8sd"></script>
-<script src="assets/js/splitting.min.js?v=msz1k8sd"></script>
-<script src="assets/js/site.js?v=msz1k8sd" type="module"></script>
+<script src="assets/js/gsap.min.js?v=2026-08-26-review"></script>
+<script src="assets/js/ScrollTrigger.min.js?v=2026-08-26-review"></script>
+<script src="assets/js/splitting.min.js?v=2026-08-26-review"></script>
+<script src="assets/js/site.js?v=2026-08-26-review" type="module"></script>
 </body>
 </html>
