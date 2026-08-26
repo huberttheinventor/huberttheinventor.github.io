@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nº007 — Taste is installable · Hubert the Inventor</title>
+<meta name="description" content="Five Claude Code plugins that fix vibe-coded design: Taste Skill, Web Design Guidelines, Awesome Design, Image to Code, and Playwright CLI. What each one does and when to reach for it.">
+<meta property="og:title" content="Nº007 — Taste is installable">
+<meta property="og:description" content="AI-built apps work and look dated. Five plugins carry the design taste for you.">
+<meta property="og:type" content="article">
+<!-- og:image — add once a still is exported -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+/* ── page furniture ─────────────────────────────────────────────── */
+.bleed { padding-inline: clamp(20px, 4vw, 72px); }
+.plate { padding-block: var(--s-2xl) var(--s-3xl); }
+.plate--tight { padding-block: var(--s-lg) var(--s-2xl); }
+.inner { max-width: 1320px; margin-inline: auto; }
+
+.rail {
+  position: fixed; inset-inline: 0; top: 0; z-index: 80;
+  display: flex; justify-content: space-between; align-items: center;
+  gap: var(--s-md);
+  padding: var(--s-xs) clamp(20px, 4vw, 72px);
+  background: oklch(96.2% 0.012 85 / 0.86);
+  backdrop-filter: blur(8px);
+  border-bottom: var(--rule-fade);
+}
+.rail a { text-decoration: none; }
+.rail .live { display: inline-flex; align-items: center; gap: var(--s-2xs); }
+.rail .dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--hazard);
+  box-shadow: 0 0 0 3px oklch(56% 0.18 40 / 0.16);
+}
+main { padding-top: 52px; }
+
+/* ── masthead ──────────────────────────────────────────────────── */
+.slug { display: flex; gap: var(--s-md); flex-wrap: wrap; margin-bottom: var(--s-lg); }
+.title-block { border-bottom: var(--line); padding-bottom: var(--s-xl); }
+.standfirst { margin-top: var(--s-lg); color: var(--dim); }
+.byline { margin-top: var(--s-md); }
+
+/* ── the shelf: the spine of the page ──────────────────────────────
+   Five ruled rows, one per plugin. Hairlines only, no cards.        */
+.shelf { margin-top: var(--s-lg); }
+.shelf .row {
+  display: grid; gap: var(--s-2xs);
+  padding: var(--s-md) 0; border-top: var(--line);
+}
+.shelf .row:last-child { border-bottom: var(--line); }
+@media (min-width: 800px) {
+  .shelf .row { grid-template-columns: 4em 16em 1fr; gap: var(--s-lg); align-items: baseline; }
+}
+.shelf .name { font-family: var(--font-mono); font-weight: 500; font-size: var(--t-label);
+               text-transform: uppercase; letter-spacing: var(--track-label); color: var(--sun); }
+.shelf .role { color: var(--dim); font-size: var(--t-small); max-width: var(--measure); margin: 0; }
+
+/* ── annotations: unequal diptychs, hairline-ruled ─────────────── */
+.ann { border-top: var(--line); padding-block: var(--s-xl); display: grid; gap: var(--s-md); }
+@media (min-width: 900px) {
+  .ann { grid-template-columns: 56% 35%; gap: 9%; align-items: start; }
+}
+.ann h3 { margin-bottom: var(--s-md); }
+.ann .aside { color: var(--dim); font-size: var(--t-small); max-width: var(--measure-note); }
+.ann .aside b { font-family: var(--font-mono); font-weight: 500; font-size: var(--t-label);
+                text-transform: uppercase; letter-spacing: var(--track-label);
+                display: block; margin-bottom: var(--s-2xs); color: var(--faint); }
+.ann .aside a { overflow-wrap: anywhere; }
+.ann-num { margin-bottom: var(--s-sm); }
+
+/* ── the cheat sheet ───────────────────────────────────────────── */
+.sheet { border-top: var(--line); padding-block: var(--s-xl); }
+.sheet table { width: 100%; border-collapse: collapse; }
+.sheet th, .sheet td { text-align: left; padding: var(--s-sm) var(--s-md) var(--s-sm) 0;
+                       border-bottom: var(--rule-fade); vertical-align: top; }
+.sheet th { font-family: var(--font-mono); font-size: var(--t-label); font-weight: 500;
+            text-transform: uppercase; letter-spacing: var(--track-label); color: var(--faint); }
+.sheet td.cmd { font-family: var(--font-mono); white-space: nowrap; color: var(--sun); }
+.sheet td { font-size: var(--t-small); color: var(--dim); }
+
+footer { padding-block: var(--s-xl) var(--s-2xl); border-top: var(--line); }
+.foot-grid { display: grid; gap: var(--s-lg); }
+@media (min-width: 800px) { .foot-grid { grid-template-columns: 1fr 22em; gap: var(--s-2xl); } }
+footer p { font-size: var(--t-small); color: var(--dim); max-width: var(--measure-note); }
+.skip { position: absolute; left: -9999px; }
+.skip:focus { left: var(--s-md); top: var(--s-md); z-index: 100; background: var(--ink);
+              color: var(--paper); padding: var(--s-2xs) var(--s-sm); }
+</style>
+</head>
+<body>
+<a class="skip" href="#shelf">Skip to the shelf</a>
+
+<div class="rail">
+  <a class="mono" href="index.html">Hubert the Inventor</a>
+  <span class="mono live"><span class="dot" aria-hidden="true"></span>Nº007 · Design tooling</span>
+</div>
+
+<main>
+
+<!-- ══ masthead ══ -->
+<section class="plate plate--paper bleed">
+  <div class="inner">
+    <div class="slug">
+      <span class="mono">Field guide Nº007</span>
+      <span class="mono">Filed under · Design tooling</span>
+    </div>
+    <p class="mono" style="margin-bottom: var(--s-md);">You commented PLUGINS — this is the list.</p>
+    <div class="title-block">
+      <h1>Taste is<br>installable.</h1>
+      <p class="lead standfirst">An AI-built app has a particular failure mode: everything
+        works, and all of it looks like 2015. The model writes correct code and default
+        design. These five plugins close that gap — each one carries a piece of design
+        judgement you no longer have to supply yourself.</p>
+      <p class="byline mono">Companion to the reel · Watch it on <a href="https://instagram.com/huberttheinventor" rel="me">@huberttheinventor</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ the shelf ══ -->
+<section class="plate plate--midnight bleed" id="shelf">
+  <div class="inner">
+    <span class="mono">The whole kit, one glance</span>
+    <h2 style="margin-block: var(--s-md) var(--s-lg); max-width: 14em;">Five plugins,
+      five different jobs</h2>
+
+    <div class="shelf">
+      <div class="row">
+        <span class="mono">01</span>
+        <span class="name">Taste Skill</span>
+        <p class="role">Feeds the model premium references so it stops designing from the average.</p>
+      </div>
+      <div class="row">
+        <span class="mono">02</span>
+        <span class="name">Web Design Guidelines</span>
+        <p class="role">Audits the interface against Vercel's guidelines before anything ships.</p>
+      </div>
+      <div class="row">
+        <span class="mono">03</span>
+        <span class="name">Awesome Design</span>
+        <p class="role">Ready-made design systems, borrowed whole instead of improvised.</p>
+      </div>
+      <div class="row">
+        <span class="mono">04</span>
+        <span class="name">Image to Code</span>
+        <p class="role">Turns a reference image into code without dropping the detail.</p>
+      </div>
+      <div class="row">
+        <span class="mono">05</span>
+        <span class="name">Playwright CLI</span>
+        <p class="role">Gives the agent a browser, so it can look at what it built.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ annotations ══ -->
+<section class="plate plate--paper bleed plate--tight">
+  <div class="inner">
+
+    <article class="ann" style="border-top: 0;">
+      <div>
+        <div class="mono ann-num">Nº001 · Taste Skill</div>
+        <h3>Borrow someone else's eye</h3>
+        <p>Left alone, a model designs toward the middle of everything it has seen — which
+          is why unaided output looks generic. Taste Skill pulls design taste from premium
+          references and puts it in front of the model before it writes a line of CSS.
+          Reach for it at the start of a build, when the look is still undecided and the
+          default would otherwise win.</p>
+      </div>
+      <div class="aside">
+        <b>Source</b>
+        <a href="https://github.com/Leonxlnx/taste-skill">github.com/Leonxlnx/taste-skill</a>
+      </div>
+    </article>
+
+    <article class="ann">
+      <div>
+        <div class="mono ann-num">Nº002 · Web Design Guidelines</div>
+        <h3>An inspector for the interface</h3>
+        <p>Vercel maintains a set of interface guidelines — the small correctness rules of
+          good web UI, from focus states to touch targets. This plugin audits your code
+          against them and flags the weak points before shipping. Run it late, the way you
+          would run a linter: after the build works, before anyone else sees it.</p>
+      </div>
+      <div class="aside">
+        <b>Source</b>
+        <a href="https://github.com/vercel-labs/web-interface-guidelines">github.com/vercel-labs/web-interface-guidelines</a>
+      </div>
+    </article>
+
+    <article class="ann">
+      <div>
+        <div class="mono ann-num">Nº003 · Awesome Design</div>
+        <h3>Design systems, already written</h3>
+        <p>A curated collection of DESIGN.md files: complete design systems — colors,
+          typography, spacing — pulled from quality sites and written down in a form a
+          coding agent can follow. Instead of inventing a palette and hoping, you hand the
+          model a system that already hangs together. Reach for it when you want a coherent
+          look without building one from scratch.</p>
+      </div>
+      <div class="aside">
+        <b>Source</b>
+        <a href="https://github.com/VoltAgent/awesome-design-md">github.com/VoltAgent/awesome-design-md</a>
+      </div>
+    </article>
+
+    <article class="ann">
+      <div>
+        <div class="mono ann-num">Nº004 · Image to Code</div>
+        <h3>From screenshot to component, detail intact</h3>
+        <p>The usual failure of "build me this" with a picture attached is that the model
+          reproduces the layout and loses the finish — the spacing, the shadows, the
+          typographic detail that made the reference worth copying. Image to Code turns a
+          design reference image into usable code without losing that detail. Reach for it
+          when you already know exactly what you want it to look like.</p>
+      </div>
+      <div class="aside">
+        <b>Source</b>
+        <a href="https://github.com/Leonxlnx/taste-skill/tree/main/skills/image-to-code-skill">github.com/Leonxlnx/taste-skill · skills/image-to-code-skill</a>
+      </div>
+    </article>
+
+    <article class="ann">
+      <div>
+        <div class="mono ann-num">Nº005 · Playwright CLI</div>
+        <h3>Let the agent see its own work</h3>
+        <p>A coding agent normally ships blind: it writes the interface and never looks at
+          it. Playwright CLI lets the agent open a real browser, screenshot what it built,
+          and catch broken UI itself — the overlapping button, the invisible text, the
+          layout that collapsed on mobile. Keep it running through the whole build; it is
+          the feedback loop the other four assume.</p>
+      </div>
+      <div class="aside">
+        <b>Source</b>
+        <a href="https://github.com/microsoft/playwright-cli">github.com/microsoft/playwright-cli</a>
+      </div>
+    </article>
+
+    <div class="sheet">
+      <h3 style="margin-bottom: var(--s-md);">When to reach for which</h3>
+      <table>
+        <thead>
+          <tr><th>Plugin</th><th>The moment it earns its place</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="cmd">Taste Skill</td><td>Before the first line of UI — set the taste, then build.</td></tr>
+          <tr><td class="cmd">Web Design Guidelines</td><td>After it works, before it ships. Run it like a linter.</td></tr>
+          <tr><td class="cmd">Awesome Design</td><td>When you need a coherent system and don't want to invent one.</td></tr>
+          <tr><td class="cmd">Image to Code</td><td>When the reference already exists as a picture.</td></tr>
+          <tr><td class="cmd">Playwright CLI</td><td>The whole time — it is how the agent checks its own output.</td></tr>
+        </tbody>
+      </table>
+      <p class="note" style="margin-top: var(--s-lg); color: var(--dim);">These are the five
+        shown in the reel, and this list is the thing the comments asked for — the DM
+        deliverable, written down in one place.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ subscribe ══ -->
+<section class="plate plate--midnight bleed">
+  <div class="inner">
+    <span class="mono">Next guide</span>
+    <h2 style="margin-block: var(--s-md) var(--s-md); max-width: 11em;">One system, taken apart.</h2>
+    <p style="color: var(--dim);">Same treatment, different machine. No pitch, no
+      thread-bait, and an unsubscribe link that works.</p>
+
+    <!-- Buttondown account: huberttheinventor (confirmed 2026-08-20). This action is
+         the CONFIRM-FIRST embed endpoint and is the fallback; subscribe.js swaps it
+         for the Worker /signup route once SIGNUP_ENDPOINT is set. -->
+    <form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor"
+          method="post" target="popupwindow"
+          onsubmit="window.open('https://buttondown.com/huberttheinventor','popupwindow')">
+      <label class="mono" for="bd-email" style="display:block; margin-bottom: var(--s-2xs);">Email address</label>
+      <div class="field">
+        <input type="email" name="email" id="bd-email" placeholder="you@example.com" required autocomplete="email">
+        <input type="hidden" name="tag" value="guide-007-design-plugins">
+        <button type="submit"><span>Send it</span></button>
+      </div>
+      <label class="consent">
+        <input type="checkbox" name="consent" required>
+        <span>Email me new field guides. I can unsubscribe at any time and my address
+          is never shared — see the <a href="privacy.html">privacy note</a>.</span>
+      </label>
+    </form>
+  </div>
+</section>
+
+<footer class="plate--paper bleed">
+  <div class="inner foot-grid">
+    <p><strong>An independent educational breakdown.</strong> Not affiliated with, endorsed by,
+      or produced in cooperation with Anthropic, Vercel, Microsoft, GitHub, Inc. or the
+      maintainers of the plugins described. All trademarks belong to their respective owners.
+      Each plugin is open source and lives at the linked repository; read its own
+      documentation before installing anything.</p>
+    <p>
+      <a href="index.html">All field guides</a> · <a href="privacy.html">Privacy</a> ·
+      <a href="https://instagram.com/huberttheinventor" rel="me">@huberttheinventor</a><br>
+      <span class="mono" style="display:inline-block; margin-top: var(--s-sm);">Field guide Nº007 · Design tooling</span>
+    </p>
+  </div>
+</footer>
+
+</main>
+<script src="subscribe.js" defer></script>
+<!-- GoatCounter: replace CODE before launch -->
+<script data-goatcounter="https://CODE.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
