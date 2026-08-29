@@ -6,20 +6,22 @@
 <title>A change has to climb. — Hubert's field guides</title>
 <meta name="description" content="The one mental model behind Git: four places a change can be, and the three commands that lift it from one to the next. Working directory, staging area, repository, remote.">
 <meta name="theme-color" content="#1a1a1a">
-<link rel="icon" href="img/favicon.svg?v=2026-08-26-review" type="image/svg+xml">
+<link rel="icon" href="img/favicon.svg?v=2026-08-29-plate" type="image/svg+xml">
 
 <meta property="og:type" content="article">
 <meta property="og:title" content="A change has to climb.">
 <meta property="og:description" content="Git is four places, not hundreds of commands. One ladder, four annotations.">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="artifacts/git-diagram.png">
+<meta property="og:image:alt" content="The Git ladder: four places a change can be, and the three commands that lift it between them.">
+<meta name="twitter:card" content="summary_large_image">
 
-<link rel="stylesheet" href="assets/css/00-critical.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/entry.CQSbLAcy.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/default.Z9wDiTTt.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/_slug_.DENrRFxM.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/Industries.BJpTkmyx.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/Footer.MRJrKAf5.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/99-hubert.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/00-critical.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/entry.CQSbLAcy.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/default.Z9wDiTTt.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/_slug_.DENrRFxM.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/Industries.BJpTkmyx.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/Footer.MRJrKAf5.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/99-hubert.css?v=2026-08-29-plate">
 
 <style>
   /* ── the two brand marks ──────────────────────────────────────────────
@@ -119,6 +121,34 @@
   .hover_effect, .splitting, [data-splitting],
   .journalArticle__article { opacity: 1 !important; }
 </style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
 </head>
 <body class="journal">
 <div class="topOverlay"></div>
@@ -187,6 +217,13 @@
         </div>
         <div class="journalArticle__documentCell monospace">
           <span>Annotations</span><strong>Four, keyed to the ladder</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
         </div>
         <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
           <span>Status</span>
@@ -390,9 +427,9 @@
   </section>
   <div class="cursor"><div class="cursor__inner"></div></div>
 </main>
-<script src="assets/js/gsap.min.js?v=2026-08-26-review"></script>
-<script src="assets/js/ScrollTrigger.min.js?v=2026-08-26-review"></script>
-<script src="assets/js/splitting.min.js?v=2026-08-26-review"></script>
-<script src="assets/js/site.js?v=2026-08-26-review" type="module"></script>
+<script src="assets/js/gsap.min.js?v=2026-08-29-plate"></script>
+<script src="assets/js/ScrollTrigger.min.js?v=2026-08-29-plate"></script>
+<script src="assets/js/splitting.min.js?v=2026-08-29-plate"></script>
+<script src="assets/js/site.js?v=2026-08-29-plate" type="module"></script>
 </body>
 </html>

@@ -6,21 +6,49 @@
 <title>Privacy — Hubert's field guides</title>
 <meta name="description" content="Nothing is collected from you at the moment: no signup form, no analytics, no cookies. This page says what changes when the mailing list opens.">
 <meta name="theme-color" content="#1a1a1a">
-<link rel="icon" href="img/favicon.svg?v=2026-08-26-review" type="image/svg+xml">
+<link rel="icon" href="img/favicon.svg?v=2026-08-29-plate" type="image/svg+xml">
 <meta name="robots" content="index,follow">
 
-<link rel="stylesheet" href="assets/css/00-critical.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/entry.CQSbLAcy.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/default.Z9wDiTTt.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/_slug_.DENrRFxM.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/Industries.BJpTkmyx.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/Footer.MRJrKAf5.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/99-hubert.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/00-critical.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/entry.CQSbLAcy.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/default.Z9wDiTTt.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/_slug_.DENrRFxM.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/Industries.BJpTkmyx.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/Footer.MRJrKAf5.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/99-hubert.css?v=2026-08-29-plate">
 
 <noscript><style>
   .hover_effect, .splitting, [data-splitting],
   .journalArticle__article { opacity: 1 !important; }
 </style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
 </head>
 <body class="journal">
 <div class="topOverlay"></div>
@@ -76,7 +104,14 @@
           <span>Cookies</span><strong>None</strong>
         </div>
         <div class="journalArticle__documentCell monospace">
-          <span>Last revised</span><strong>18 August 2026</strong>
+          <span>Last revised</span><strong>29 August 2026</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
         </div>
         <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
           <span>Status</span>
@@ -105,7 +140,16 @@
           sets no cookies and stores neither personal data nor full IP addresses, and this page will say so
           before it is switched on.</p>
 
-        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº003 / When the list opens</p>
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº003 / Browser storage</p>
+        <h4 aria-level="2" data-splitting="lines">Two settings, kept on your own device</h4>
+        <p data-splitting>Not cookies, and not sent anywhere: two values are written to this site&rsquo;s
+          local storage in your browser, and neither leaves your device. <strong>hubert:reading</strong>
+          remembers whether you chose the paper or the panel reading plate, so the site does not forget
+          between pages. <strong>hubert:motion</strong> records whether the animation layer started
+          correctly, which is used to keep the text visible if it did not. Clearing your browser&rsquo;s
+          site data removes both, and the site works normally without them.</p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº004 / When the list opens</p>
         <h4 aria-level="2" data-splitting="lines">One address, for one purpose</h4>
         <p data-splitting>Your email address will be the only personal thing collected, and only if you type
           it into the form and tick the consent box. It will be used to send new field guides and nothing else —
@@ -114,7 +158,7 @@
           the addresses and send the emails as the processor, under their privacy policy. This page will be
           updated to describe that as fact, not as a plan, before any address is collected.</p>
 
-        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº004 / Your rights</p>
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº005 / Your rights</p>
         <h4 aria-level="2" data-splitting="lines">Once there is anything to exercise them on</h4>
         <ul>
           <li><strong>Unsubscribe</strong> — every email will carry a working unsubscribe link, and using it
@@ -127,11 +171,11 @@
           withdraw it at any time by unsubscribing. Today none of this is engaged, because no address has been
           asked for.</p>
 
-        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº005 / Retention</p>
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº006 / Retention</p>
         <h4 aria-level="2" data-splitting="lines">How long it would be kept</h4>
         <p data-splitting>Until you unsubscribe. There is no archive of removed subscribers.</p>
 
-        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº006 / Contact</p>
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº007 / Contact</p>
         <h4 aria-level="2" data-splitting="lines">How to reach a person</h4>
         <p data-splitting>Message <a href="https://instagram.com/huberttheinventor" rel="me">@huberttheinventor</a>
           on Instagram.</p>
@@ -167,9 +211,9 @@
   </section>
   <div class="cursor"><div class="cursor__inner"></div></div>
 </main>
-<script src="assets/js/gsap.min.js?v=2026-08-26-review"></script>
-<script src="assets/js/ScrollTrigger.min.js?v=2026-08-26-review"></script>
-<script src="assets/js/splitting.min.js?v=2026-08-26-review"></script>
-<script src="assets/js/site.js?v=2026-08-26-review" type="module"></script>
+<script src="assets/js/gsap.min.js?v=2026-08-29-plate"></script>
+<script src="assets/js/ScrollTrigger.min.js?v=2026-08-29-plate"></script>
+<script src="assets/js/splitting.min.js?v=2026-08-29-plate"></script>
+<script src="assets/js/site.js?v=2026-08-29-plate" type="module"></script>
 </body>
 </html>

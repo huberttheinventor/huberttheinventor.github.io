@@ -6,20 +6,48 @@
 <title>Not filed — Hubert's field guides</title>
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#1a1a1a">
-<link rel="icon" href="/img/favicon.svg?v=2026-08-26-review" type="image/svg+xml">
-<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-08-26-review">
-<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-08-26-review">
-<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-08-26-review">
-<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-08-26-review">
-<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-08-26-review">
-<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-08-26-review">
-<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-08-26-review">
+<link rel="icon" href="/img/favicon.svg?v=2026-08-29-plate" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-08-29-plate">
 <style>
   /* Absolute paths throughout, because a 404 can be served at any depth and a
      relative stylesheet would resolve against the wrong directory. */
   .notFiled { display: grid; min-height: 100svh; place-items: center; padding: 6vw 20px; }
   .notFiled__inner { max-width: 34em; }
 </style>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
 </head>
 <body>
 <main class="main">

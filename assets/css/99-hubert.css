@@ -203,16 +203,16 @@ html { overflow-x: clip; }
 }
 .journalArticle__article th,
 .journalArticle__article td {
-  border-bottom: 1px solid rgba(0, 0, 0, .35);
+  border-bottom: 1px solid var(--plate-read-rule);
   padding: 12px 16px 12px 0;
   text-align: left;
   vertical-align: baseline;
 }
 .journalArticle__article th {
+  color: var(--plate-read-dim);
   font-family: Mono, ui-monospace, monospace;
-  font-size: 13px;
+  font-size: 14px;              /* was 13px; the system's own floor is 14 at 390 */
   letter-spacing: -0.048em;
-  opacity: .55;
   text-transform: uppercase;
 }
 .journalArticle__article td:first-child {
@@ -288,7 +288,8 @@ html.motion-failed .homeMiniVideo video { opacity: 1 !important; }
    44px` and a pixel diff of the before and after screenshots caught it moving
    the "Menu" label down 4px on index, netflix and design-plugins. The overlay
    changes no box and no baseline: the button keeps its layout and gains a
-   centred 44px-tall transparent target on top of it. */
+   centred 44px-tall transparent target on top of it.
+
    Do NOT add `position: relative` here. The port sets
    `header .menu { position: fixed; right: 0; top: 0 }`, this file loads last,
    and a same-specificity `position` declaration wins the cascade and drops the
@@ -417,3 +418,141 @@ video::-webkit-media-text-track-display { transform: translateY(-44px); }
 @media (min-width: 601px) {
   header .nav a { padding-left: .5vw; padding-right: .5vw; white-space: nowrap; }
 }
+
+/* ── the reading plate, and the device behind it ──────────────────────
+   Founder decision 2026-08-29 (PROPOSAL-2026-08-29-READING-PLATE.md): R2
+   "printed page" is the default, R3 "panel" is available on a reader toggle
+   that is remembered.
+
+   WHY THE DIM TIER CHANGED. The system's documented device is to dim apparatus
+   with opacity rather than with a second grey (DESIGN.md → Do's). Measured on
+   the live site 2026-08-29 at 390x844, that device is what made the plate
+   unreadable, and no plate colour fixes it:
+
+     plate #71737d, ink #111111            body 4.00:1   at .55  2.29:1
+     plate #7b7d87 (the review's pick)      body 4.61:1   at .55  2.46:1
+     plate #d5d6db (near-white)             body 13.01:1  at .55  3.74:1
+
+   A near-white plate still leaves table headers below AA. So on THIS plate the
+   dim tier is now an explicit ink, checked like any other colour. Opacity
+   dimming is untouched on the dark plates, where it still passes. DESIGN.md is
+   updated to match. */
+
+:root {
+  --plate-read:       #d5d6db;   /* R2 · printed page */
+  --plate-read-ink:   #111111;   /* 13.01:1 */
+  --plate-read-dim:   #54565d;   /*  5.05:1 */
+  --plate-read-hover: #03049c;   /*  9.61:1 — the site blue, already in the palette */
+  --plate-read-rule:  rgba(17, 17, 17, .28);
+}
+html[data-reading="panel"] {
+  --plate-read:       #22242b;   /* R3 · panel */
+  --plate-read-ink:   #d2d4da;   /* 10.46:1 */
+  --plate-read-dim:   #91939a;   /*  5.05:1 */
+  --plate-read-hover: #9fe4f3;   /*  9.16:1 — the palette's lightblue */
+  --plate-read-rule:  hsla(0, 0%, 100%, .26);
+}
+
+/* The port binds the plate as `--background: var(--lightgrey); --color:
+   var(--black)`, and `.section` paints from those two. Rebinding them here is
+   the whole theme: every child already resolves off the plate. `--black` is
+   rebound INSIDE the plate only — it is also the .section__black plate's own
+   background, which must not move. */
+.section__lightgrey {
+  --background: var(--plate-read);
+  --color: var(--plate-read-ink);
+  --black: var(--plate-read-ink);
+}
+
+/* the three rules that dimmed with opacity on this plate */
+.section__lightgrey .opacity__50,
+.section__lightgrey .sub-form .consent {
+  color: var(--plate-read-dim);
+  opacity: 1;
+}
+
+/* `.button:hover` on this plate resolves to var(--grey) #bababa, which was
+   2.40:1 on the old plate and would be 1.32:1 on the paper one. */
+.section__lightgrey .button:hover { color: var(--plate-read-hover); }
+
+/* the form's hairline is white at 50%, invisible on a light plate */
+.section__lightgrey .sub-form .field { border-bottom-color: var(--plate-read-rule); }
+.section__lightgrey .sub-form .consent input { accent-color: var(--plate-read-ink); }
+
+/* ── the reading toggle ───────────────────────────────────────────────
+   Lives as one more cell in the dossier document header, because that block is
+   already a field table of apparatus and this is one more field. Hidden until
+   the script enables it, so a reader without JavaScript is never shown a
+   control that cannot work — they get the default plate, which is the readable
+   one. */
+.readingToggle { display: none; }
+html.reading-ready .readingToggle { display: flex; gap: 2px; }
+.readingToggle button {
+  background: none;
+  border: 0;
+  color: var(--plate-read-dim);
+  cursor: pointer;
+  font: inherit;
+  letter-spacing: .06em;
+  min-height: 44px;
+  padding: 0 8px 0 0;
+  text-transform: uppercase;
+}
+.readingToggle button[aria-pressed="true"] {
+  color: var(--plate-read-ink);
+  text-decoration: underline;
+  text-underline-offset: .3em;
+}
+.readingToggle button:hover { color: var(--plate-read-hover); }
+
+/* ── the dossier stamp ────────────────────────────────────────────────
+   `.journalArticle__documentStamp` is `#ae1812` at .82 alpha, .86 opacity and
+   `mix-blend-mode: multiply`. Composited, that measured 2.56:1 on the new
+   reading plate — below even the 3:1 that WCAG asks of text at 24px and up,
+   and this one is 34px. It carries the Status field's value ("Filed",
+   "Current"), so it is content, not ornament.
+
+   Paper keeps the multiply blend, which is what gives the ink its stamped
+   look, and darkens the source so the composite lands well clear. Panel drops
+   the blend: multiplying a red into a #22242b plate takes it to near-black. */
+.section__lightgrey .journalArticle__documentStamp {
+  color: #8c1410 !important;
+  opacity: 1;
+}
+html[data-reading="panel"] .section__lightgrey .journalArticle__documentStamp {
+  color: #ff6b60 !important;
+  mix-blend-mode: normal;
+  text-shadow: none;
+}
+html[data-reading="panel"] .section__lightgrey .journalArticle__documentStamp::before {
+  border-color: rgba(255, 107, 96, .45);
+}
+html[data-reading="panel"] .section__lightgrey .journalArticle__documentStamp::after {
+  background: rgba(255, 107, 96, .55);
+}
+
+/* ── the dossier cells ────────────────────────────────────────────────
+   Two fixes, both consequences of the plate change.
+
+   The label span is `opacity: .55` — the same retired device — and measured
+   3.74:1 on the paper plate. It gets the dim ink.
+
+   The value is `color: var(--bgcolor)`, i.e. #1a1a1a. That is 12.6:1 on the
+   paper plate and 1.10:1 on the panel one, so in the dark theme every value in
+   the dossier ("Nº006", "Version control", "Filed") would have disappeared. It
+   now resolves off the plate like everything else on it.
+
+   NOT fixed here: these labels render at 10px at 390px, under the system's own
+   "never below 14px at 390px" floor (DESIGN.md → Don'ts, and Contradictions
+   notes the 10px tier does not read). Raising it reflows the dossier header on
+   every page, which is a visible design change rather than a colour one, so it
+   is left for a decision. */
+.section__lightgrey .journalArticle__documentCell span {
+  color: var(--plate-read-dim);
+  opacity: 1;
+}
+.section__lightgrey .journalArticle__documentCell strong {
+  color: var(--plate-read-ink);
+}
+.section__lightgrey .journalArticle__documentCell { border-left-color: var(--plate-read-rule); }
+.section__lightgrey .journalArticle__documentCell:nth-child(n+4) { border-top-color: var(--plate-read-rule); }
