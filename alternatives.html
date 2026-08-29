@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Every paid tool has an open twin. · Hubert's field guides</title>
+<meta name="description" content="Field guide Nº008. Twelve verified open-source replacements for paid tools, with GitHub star counts read on 29 August 2026, plus how to judge an alternative and where open source still costs you.">
+<meta name="theme-color" content="#1a1a1a">
+<link rel="icon" href="img/favicon.svg?v=2026-08-26-review" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="Every paid tool has an open twin.">
+<meta property="og:description" content="Somebody rebuilt the thing you pay for and put it on GitHub. Twelve swaps, checked.">
+<meta name="twitter:card" content="summary">
+
+<link rel="stylesheet" href="assets/css/00-critical.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/entry.CQSbLAcy.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/default.Z9wDiTTt.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/_slug_.DENrRFxM.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/Industries.BJpTkmyx.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/Footer.MRJrKAf5.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/99-hubert.css?v=2026-08-26-review">
+
+<style>
+  /* ── the swaps table ──────────────────────────────────────────────────
+     The shared rule in 99-hubert.css styles rows but sizes nothing, and this
+     table carries three columns plus a description line. Scoped to this page. */
+  .swaps__note { display: block; margin-top: 4px; opacity: .6; }
+  .journalArticle__article table.swaps { table-layout: fixed; }
+  .journalArticle__article table.swaps th:nth-child(1),
+  .journalArticle__article table.swaps td:nth-child(1) { width: 26%; }
+  .journalArticle__article table.swaps th:nth-child(3),
+  .journalArticle__article table.swaps td:nth-child(3) { width: 20%; text-align: right; padding-right: 0; }
+  .journalArticle__article table.swaps td { overflow-wrap: anywhere; }
+  .journalArticle__article table.swaps td:nth-child(3) { font-variant-numeric: tabular-nums; }
+
+  @media (max-width: 700px) {
+    /* Three columns will not survive 390px, so each row becomes a block: paid
+       tool on top, swap under it, star count on its own line.
+
+       The two width overrides below are load-bearing and were caught by a
+       screenshot check. `td { width: auto }` alone does NOT beat the
+       `td:nth-child(3) { width: 20% }` above it, because nth-child scores
+       higher on specificity, so the star cell kept a 20%-wide box inside a
+       full-width row and broke every number across two lines: 202,754 printed
+       as "202,7 / 54". The nth-child selectors have to be reset by name, and
+       the number gets nowrap so it can never split again whatever the width. */
+    .journalArticle__article table.swaps,
+    .journalArticle__article table.swaps tbody,
+    .journalArticle__article table.swaps tr,
+    .journalArticle__article table.swaps td { display: block; width: auto; }
+    .journalArticle__article table.swaps td:nth-child(1),
+    .journalArticle__article table.swaps td:nth-child(3) { width: auto; }
+    .journalArticle__article table.swaps thead { display: none; }
+    .journalArticle__article table.swaps tr {
+      border-bottom: 1px solid rgba(0, 0, 0, .35);
+      padding: 14px 0;
+    }
+    .journalArticle__article table.swaps td { border-bottom: 0; padding: 0 0 4px; }
+    .journalArticle__article table.swaps td:nth-child(1) {
+      font-size: 13px;
+      opacity: .55;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .journalArticle__article table.swaps td:nth-child(3) {
+      overflow-wrap: normal;
+      padding-bottom: 0;
+      text-align: left;
+      white-space: nowrap;
+    }
+    .journalArticle__article table.swaps td:nth-child(3)::before { content: "★ "; }
+  }
+
+  }
+
+  /* ── the mobile panel has to hold eleven links ───────────────────────
+     99-hubert.css tuned the panel for ten (`padding-top: 12svh`, and a note
+     recording that ten links land at y101..y621 on a 390x844 phone with a
+     30px gap above the social block). Guide 08 makes eleven, and measured on
+     2026-08-29 at 390x844 that puts the content at 739px inside a 717px
+     panel: it still scrolls, so nothing is unreachable, but "Privacy note"
+     starts below the fold on the phone this site is primarily read on.
+
+     Buying the 22px back out of the panel's own padding rather than the type
+     size keeps this nav identical to every sibling page. 9svh puts the list
+     at y76 and the whole panel fits again with room to spare. Shorter phones
+     (390x667 and below) still scroll, which they already did on the live site
+     with ten links, and overflow-y: auto stays the safety net. */
+  @media screen and (max-width: 600px) {
+    .mobilenav { padding-bottom: 3vh; padding-top: 9svh; }
+  }
+
+  /* The header is `position: fixed`, so an in-page jump lands the target
+     underneath it. Every anchor on this page gets clearance. */
+  /* The header is `position: fixed`, so an in-page jump lands the target
+     underneath it. 7vw looked right on desktop (100.8px at 1440) but collapses
+     to 27.3px at 390px against a 99px header, putting the heading 71px UNDER
+     the header on the phone this site is mostly read on. Nº007 uses a flat
+     116px; match it rather than inventing a second rule. */
+  #guide, #kit, #swaps, #judge, #honest, #sources { scroll-margin-top: 116px; }
+</style>
+
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  .journalArticle__article { opacity: 1 !important; }
+</style></noscript>
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="index.html" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second">
+      <a href="index.html" class="hover_effect"><span>Index</span></a>
+      <a href="netflix.html" class="hover_effect"><span>Guide 01</span></a>
+      <a href="kubernetes.html" class="hover_effect"><span>Guide 02</span></a>
+      <a href="whatsapp.html" class="hover_effect"><span>Guide 03</span></a>
+      <a href="google-search.html" class="hover_effect"><span>Guide 04</span></a>
+      <a href="gps.html" class="hover_effect"><span>Guide 05</span></a>
+      <a href="git.html" class="hover_effect"><span>Guide 06</span></a>
+      <a href="design-plugins.html" class="hover_effect"><span>Guide 07</span></a>
+      <a aria-current="page" href="alternatives.html" class="active router-link-exact-active hover_effect"><span>Guide 08</span></a>
+      <a href="#sources" class="hover_effect"><span>Sources</span></a>
+      <a href="index.html#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">●</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Menu</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav">
+  <div class="mobilenav__main">
+    <a href="index.html"><span>Index</span></a>
+    <a href="netflix.html"><span>Guide 01</span></a>
+    <a href="kubernetes.html"><span>Guide 02</span></a>
+    <a href="whatsapp.html"><span>Guide 03</span></a>
+    <a href="google-search.html"><span>Guide 04</span></a>
+    <a href="gps.html"><span>Guide 05</span></a>
+    <a href="git.html"><span>Guide 06</span></a>
+    <a href="design-plugins.html"><span>Guide 07</span></a>
+    <a href="alternatives.html"><span>Guide 08</span></a>
+    <a href="alternatives.html#sources"><span>Sources</span></a>
+    <a href="index.html#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<main class="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Field guide</span><strong>Nº008</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>System</span><strong>Open-source swaps</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Model</span><strong>Paid tool vs. its open twin</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Annotations</span><strong>Twelve swaps, all checked</strong>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp">Filed</span>
+        </div>
+      </div>
+
+      <div class="journalArticle__article" id="guide">
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">You commented SWITCH. This is the list.</p>
+        <h1 data-splitting="lines">Every paid tool has an open twin.</h1>
+        <p class="lead" data-splitting>Almost nothing you pay a monthly fee for is the only version of itself.
+          Somebody rebuilt it in public, put the source on GitHub, and let anyone run it. The
+          awkward part was never finding out that these exist; it was finding out which one of the
+          nine competing rebuilds is actually maintained. That is what a directory is for.</p>
+
+        <p class="monospace monospace__p" data-splitting>Companion to the reel · Watch it on
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank">@huberttheinventor</a></p>
+
+        <p data-splitting><a href="https://openalternative.co" rel="noopener noreferrer" target="_blank">OpenAlternative</a> keeps
+          score. You give it the paid tool, it gives you the open-source projects that do
+          roughly the same job, each with its GitHub star count so you can rank them yourself.
+          Stars are a crude signal, but they are a public one, and a project with a hundred
+          thousand of them is at least being looked at by people who would complain loudly if it
+          broke.</p>
+
+        <p data-splitting>Twelve swaps are listed below. Every pairing was checked against the
+          directory and against the project's own repository, and every star count was read from the
+          GitHub API on <strong>29 August 2026</strong>. Numbers move; treat them as a snapshot, not a
+          fact about today.</p>
+
+        <div class="pricing__box" id="kit">
+          <div class="pricing__box--header lead">
+            <p class="lead pricing__box--name">Swaps.PKG</p>
+            <p class="lead pricing__box--price">Free</p>
+          </div>
+          <p class="monospace monospace__p opacity__50">Twelve replacements, one glance. Free to use. Not always free to run.</p>
+          <ul class="pricing__box--items monospace monospace__p">
+            <li>01 · Claude Code → OpenCode: the same job in the terminal, any model you like</li>
+            <li>02 · Zapier / Make → n8n: visual automation you host yourself</li>
+            <li>03 · ChatGPT → Open WebUI: a chat interface pointed at a model you chose</li>
+            <li>04 · Miro → Excalidraw: the whiteboard, minus the account</li>
+            <li>05 · Google Photos → Immich: phone backup and face search, on your own disk</li>
+            <li>06 · Notion → AppFlowy: notes and databases that stay on the machine</li>
+            <li>07 · Cursor → Cline: an autonomous coding agent inside VS Code</li>
+            <li>08 · Airtable → NocoDB: a spreadsheet face on a real database</li>
+            <li>09 · Figma → Penpot: browser design with genuine developer handoff</li>
+            <li>10 · Slack / Discord → Rocket.Chat: team messaging on your own server</li>
+            <li>11 · Canva → Graphite: a vector editor in the browser</li>
+            <li>12 · Spotify → Navidrome: streams the music you already own</li>
+          </ul>
+          <a href="#swaps" class="button button__big hover_effect"><span>See the numbers</span><span class="arrow">↗</span></a>
+        </div>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">The whole kit, one panel. Everything after it is annotation.</p>
+
+        <hr>
+
+        <h4 data-splitting="lines" id="swaps">The twelve swaps</h4>
+        <p class="monospace monospace__p opacity__50" data-splitting>Stars read from the GitHub API on 29 August 2026. Ordered by star count, high to low.</p>
+
+<table class="swaps">
+      <thead><tr><th scope="col">You pay for</th><th scope="col">Open-source swap</th><th scope="col">Stars</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Zapier / Make</td>
+          <td><a href="https://github.com/n8n-io/n8n" rel="noopener noreferrer" target="_blank">n8n</a>
+            <span class="swaps__note">Visual workflow automation with a large node library. Self-hosted or their cloud. Licensed fair-code, not OSI open source.</span></td>
+          <td>202,754</td>
+        </tr>
+        <tr>
+          <td>Claude Code</td>
+          <td><a href="https://github.com/anomalyco/opencode" rel="noopener noreferrer" target="_blank">OpenCode</a>
+            <span class="swaps__note">A terminal coding agent that is not tied to one model provider. MIT licensed.</span></td>
+          <td>202,269</td>
+        </tr>
+        <tr>
+          <td>ChatGPT</td>
+          <td><a href="https://github.com/open-webui/open-webui" rel="noopener noreferrer" target="_blank">Open WebUI</a>
+            <span class="swaps__note">A chat front end that points at Ollama running locally or any OpenAI-compatible API. BSD-3 with an added clause: you may not remove Open WebUI branding above fifty users, so it is source-available rather than OSI open source.</span></td>
+          <td>150,285</td>
+        </tr>
+        <tr>
+          <td>Miro</td>
+          <td><a href="https://github.com/excalidraw/excalidraw" rel="noopener noreferrer" target="_blank">Excalidraw</a>
+            <span class="swaps__note">Whiteboard for hand-drawn-looking diagrams. MIT licensed, and usable in the browser with no account.</span></td>
+          <td>130,735</td>
+        </tr>
+        <tr>
+          <td>Google Photos</td>
+          <td><a href="https://github.com/immich-app/immich" rel="noopener noreferrer" target="_blank">Immich</a>
+            <span class="swaps__note">Self-hosted photo and video library with phone backup, face recognition and search. AGPL-3.0.</span></td>
+          <td>112,896</td>
+        </tr>
+        <tr>
+          <td>Notion</td>
+          <td><a href="https://github.com/AppFlowy-IO/AppFlowy" rel="noopener noreferrer" target="_blank">AppFlowy</a>
+            <span class="swaps__note">Notes, wikis and databases in one workspace, with offline support and local data. AGPL-3.0.</span></td>
+          <td>76,051</td>
+        </tr>
+        <tr>
+          <td>Cursor</td>
+          <td><a href="https://github.com/cline/cline" rel="noopener noreferrer" target="_blank">Cline</a>
+            <span class="swaps__note">An autonomous coding agent that lives inside VS Code and edits across files. Apache-2.0.</span></td>
+          <td>67,104</td>
+        </tr>
+        <tr>
+          <td>Airtable</td>
+          <td><a href="https://github.com/nocodb/nocodb" rel="noopener noreferrer" target="_blank">NocoDB</a>
+            <span class="swaps__note">Puts a spreadsheet interface, views and forms on top of a real SQL database you own.</span></td>
+          <td>64,778</td>
+        </tr>
+        <tr>
+          <td>Figma</td>
+          <td><a href="https://github.com/penpot/penpot" rel="noopener noreferrer" target="_blank">Penpot</a>
+            <span class="swaps__note">Browser-based design and prototyping with design tokens and developer handoff. MPL-2.0.</span></td>
+          <td>59,350</td>
+        </tr>
+        <tr>
+          <td>Slack / Discord</td>
+          <td><a href="https://github.com/RocketChat/Rocket.Chat" rel="noopener noreferrer" target="_blank">Rocket.Chat</a>
+            <span class="swaps__note">Team messaging with channels, voice and video, running on hardware you control.</span></td>
+          <td>46,040</td>
+        </tr>
+        <tr>
+          <td>Canva</td>
+          <td><a href="https://github.com/GraphiteEditor/Graphite" rel="noopener noreferrer" target="_blank">Graphite</a>
+            <span class="swaps__note">A node-based vector graphics editor that runs in the browser. Apache-2.0. It has no template library, which is most of why people use Canva.</span></td>
+          <td>26,961</td>
+        </tr>
+        <tr>
+          <td>Spotify</td>
+          <td><a href="https://github.com/navidrome/navidrome" rel="noopener noreferrer" target="_blank">Navidrome</a>
+            <span class="swaps__note">Streams a music library you already own to a web player or any Subsonic app. GPL-3.0. It will not find you a new album.</span></td>
+          <td>23,194</td>
+        </tr>
+      </tbody>
+    </table>
+
+        <p data-splitting>Three of these, OpenCode, Open WebUI and Cline, are agents or chat
+          interfaces rather than products, and two of them sit at the top of the list. The
+          fastest-moving open-source category right now is the one built on top of models that are
+          themselves not open, which is its own kind of dependency: OpenCode and Cline still need an
+          API key from somebody.</p>
+
+        <hr>
+
+        <h4 data-splitting="lines" id="judge">How to judge one before you commit</h4>
+        <p class="monospace monospace__p opacity__50" data-splitting>Five checks, in the order they save you time.</p>
+
+        <p data-splitting><strong>Stars, but only as a floor.</strong> Stars measure attention, not
+          quality, and they never go down when a project dies. They are useful for one thing: a project
+          with two hundred stars and no company behind it is a bet, and a project with fifty thousand
+          has enough people watching that a serious bug gets found. Use it to exclude, not to choose.</p>
+
+        <p data-splitting><strong>Last commit date.</strong> The single most predictive number on the
+          repo page, and the one nobody reads. Open the repository and look at when the default branch
+          was last pushed. Every project listed above had been pushed to within the previous two days
+          when this page was written. Anything quiet for six months is a project you are adopting, not
+          a tool you are using.</p>
+
+        <p data-splitting><strong>The licence.</strong> MIT and Apache-2.0 let you do essentially
+          anything. GPL and AGPL are still open source but carry obligations if you distribute or host
+          a modified version, which matters if this is going into a product. And a growing number of
+          projects use licences that are not open source at all. Two on this list qualify. n8n is "fair-code" under a Sustainable
+          Use License, which permits use for your own internal business purposes and for
+          non-commercial use, and does not permit redistributing or selling it commercially. Read
+          the licence file before you build a business on top of one.</p>
+
+        <p data-splitting><strong>Self-hosted or hosted.</strong> Most of these offer both. Self-hosting
+          is where the savings are and where the work is. A hosted plan from the same maintainers is
+          often cheaper than the tool you are leaving and involves no servers, which for one person is
+          usually the right answer even though it feels like cheating.</p>
+
+        <p data-splitting><strong>The trade you are actually making.</strong> Setup measured in
+          evenings rather than minutes. A feature list that is close but not identical, and the gap is
+          usually the thing you happen to use daily. No support contract, so when it breaks at 4pm you
+          are reading a GitHub issue thread from 2024, not opening a ticket.</p>
+
+        <hr>
+
+        <h4 data-splitting="lines" id="honest">The part the list does not tell you</h4>
+        <p class="monospace monospace__p opacity__50" data-splitting>Three ways this goes wrong, said plainly.</p>
+
+        <p data-splitting><strong>Free to use is not free to run.</strong> The software costs nothing.
+          The server does not. Something like Immich holding a decade of photos wants storage, backups
+          of that storage, and a machine that stays on. A small cloud instance plus object storage
+          lands in the same range as the subscription you cancelled, and now you are also the person
+          who gets paged. Self-hosting trades money for time, and time is not free either. It is a good
+          trade when you value control, and a bad one when you just wanted to save nine pounds a month.</p>
+
+        <p data-splitting><strong>Migration has a real cost, paid once, up front.</strong> Exporting
+          from a paid tool is deliberately unglamorous. Importers are partial. Formatting, permissions,
+          integrations and links between documents are what break, and you find out three weeks in,
+          after you cancelled. Move one project first and live in it for a fortnight before moving
+          anything that matters.</p>
+
+        <p data-splitting><strong>Some of these are genuinely worse.</strong> Not all, and not in the
+          same way. Penpot is a real design tool. Navidrome is a good music server that fundamentally
+          cannot do the thing most people open Spotify for, which is hear something they have not heard
+          before. Graphite is a capable vector editor without the template library that is most of
+          Canva's value. The honest framing is not "this replaces that", it is "this does the part of
+          that you actually use, and you should check which part that is first."</p>
+
+        <p data-splitting>The failure mode with a list like this is switching everything in a weekend
+          and switching most of it back. Pick the one tool you resent paying for the most. Try its twin
+          for a month. Keep the ones that stick.</p>
+
+        <hr>
+
+        <h4 data-splitting="lines" id="sources">Take it with you</h4>
+        <p class="monospace monospace__p opacity__50" data-splitting>The directory first, then the twelve repositories. All public.</p>
+        <div class="buttons">
+          <a href="https://openalternative.co" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>OpenAlternative · the directory</span> <span class="arrow">↗</span></a>
+          <a href="https://github.com/n8n-io/n8n" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>n8n</span> <span class="arrow">↗</span></a>
+          <a href="https://github.com/anomalyco/opencode" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>OpenCode</span> <span class="arrow">↗</span></a>
+          <a href="https://github.com/open-webui/open-webui" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Open WebUI</span> <span class="arrow">↗</span></a>
+          <a href="https://github.com/excalidraw/excalidraw" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Excalidraw</span> <span class="arrow">↗</span></a>
+          <a href="https://github.com/immich-app/immich" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Immich</span> <span class="arrow">↗</span></a>
+          <a href="https://github.com/AppFlowy-IO/AppFlowy" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>AppFlowy</span> <span class="arrow">↗</span></a>
+          <a href="https://github.com/cline/cline" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Cline</span> <span class="arrow">↗</span></a>
+          <a href="https://github.com/nocodb/nocodb" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>NocoDB</span> <span class="arrow">↗</span></a>
+          <a href="https://github.com/penpot/penpot" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Penpot</span> <span class="arrow">↗</span></a>
+          <a href="https://github.com/RocketChat/Rocket.Chat" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Rocket.Chat</span> <span class="arrow">↗</span></a>
+          <a href="https://github.com/GraphiteEditor/Graphite" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Graphite</span> <span class="arrow">↗</span></a>
+          <a href="https://github.com/navidrome/navidrome" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Navidrome</span> <span class="arrow">↗</span></a>
+        </div>
+
+        <div class="article__footer">
+          <p class="monospace monospace__p opacity__50" data-splitting>An independent educational breakdown.
+            Not affiliated with, endorsed by, or produced in cooperation with any company named here,
+            paid or open source, and not affiliated with OpenAlternative. All trademarks belong to their
+            respective owners. Star counts were read from the GitHub API on 29 August 2026 and will have
+            changed. Every project links to its own repository; read its licence and its documentation
+            before you install or host anything.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="section no__p footer section__blue">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="#kit" class="button button__half hover_effect" title="The twelve swaps, one panel"><span>The kit</span> <span class="arrow">↗</span></a>
+          <a href="#sources" class="button button__half hover_effect" title="The directory and the twelve repositories"><span>The repos</span><span class="arrow">↗</span></a>
+
+          <a href="privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+<script src="assets/js/gsap.min.js?v=2026-08-26-review"></script>
+<script src="assets/js/ScrollTrigger.min.js?v=2026-08-26-review"></script>
+<script src="assets/js/splitting.min.js?v=2026-08-26-review"></script>
+<script src="assets/js/site.js?v=2026-08-26-review" type="module"></script>
+</body>
+</html>

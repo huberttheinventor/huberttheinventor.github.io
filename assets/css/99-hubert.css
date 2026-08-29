@@ -399,3 +399,21 @@ html { color-scheme: dark; }
    collide with its own controls the same way, so this is additive, not a
    regression there. */
 video::-webkit-media-text-track-display { transform: translateY(-44px); }
+
+
+/* ── nav labels must not wrap ──────────────────────────────────────────
+   `header .nav` is a flex row whose links are `display: block` with no
+   nowrap, so every item is shrinkable and the labels break mid-phrase:
+   "Guide / 01", "The / List". That makes the nav 67px tall instead of 43px,
+   and on index.html the second line lands on top of the H1 - measured
+   overlap at 1400/1440/1600/1920, with the numerals sitting over "Field
+   Guides To Large Systems".
+
+   This is NOT caused by the link count: A/B tested by removing a link and
+   re-measuring, the wrap persists at seven guides too. Holding the labels
+   whole and trimming horizontal padding fits the row without touching type
+   size. Lived as a page-scoped rule inside alternatives.html; promoted here
+   2026-08-29 so every page gets it. */
+@media (min-width: 601px) {
+  header .nav a { padding-left: .5vw; padding-right: .5vw; white-space: nowrap; }
+}
