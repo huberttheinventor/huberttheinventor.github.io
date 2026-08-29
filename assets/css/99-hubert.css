@@ -556,3 +556,13 @@ html[data-reading="panel"] .section__lightgrey .journalArticle__documentStamp::a
 }
 .section__lightgrey .journalArticle__documentCell { border-left-color: var(--plate-read-rule); }
 .section__lightgrey .journalArticle__documentCell:nth-child(n+4) { border-top-color: var(--plate-read-rule); }
+
+/* ── the dossier's apparatus-small tier ───────────────────────────────
+   The cells inherit 10px at 390px. DESIGN.md's own Don'ts say apparatus never
+   drops below 14px at 390px, and Contradictions already recorded that this tier
+   "does not [read well]". Founder's call 2026-08-29 to raise it.
+
+   Set on the cell rather than on the label span so the label and its value stay
+   on the same tier; the header grows taller in exchange, which is the cost of
+   the decision and is why it was not taken silently. */
+.journalArticle__documentCell { font-size: 14px; }
