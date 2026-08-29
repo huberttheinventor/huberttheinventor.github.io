@@ -673,3 +673,57 @@ html[data-reading="panel"] .section__lightgrey .journalArticle__documentStamp::a
   font-size: 14px;
   font-weight: 400;
 }
+
+/* .map__phone, continued — the shapes the other maps need.
+   The ladder is a single stack. The rest are a pipeline (netflix), a
+   fan-out (kubernetes), a line of roles (whatsapp) and a two-band
+   before/during split (google-search, gps — the same drawing template).
+   All reuse the rung box; these add the pieces that stack could not carry. */
+.map__phone .mband {
+  border-top: 1px solid #7a899066;
+  margin-top: 18px;
+  padding-top: 14px;
+}
+.map__phone .mband:first-child { border-top: 0; margin-top: 0; padding-top: 0; }
+.map__phone .mband__h {
+  color: #faf6af;
+  font-family: Mono, ui-monospace, monospace;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: .06em;
+  line-height: 1.35;
+  margin: 0 0 12px;
+  text-transform: uppercase;
+}
+.map__phone .mband__h span { color: #abbac2; display: block; margin-top: 4px; }
+.map__phone .mnote {
+  color: #7a8990;
+  font-size: 13.5px;
+  line-height: 1.4;
+  margin: 8px 0 0;
+  padding: 0;
+}
+.map__phone .mnote--key { color: #faf6af; }
+.map__phone .mgrid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 10px;
+}
+.map__phone .mgrid > span {
+  border: 1px solid #79b0cc;
+  border-radius: 8px;
+  color: #abbac2;
+  font-family: Mono, ui-monospace, monospace;
+  font-size: 13.5px;
+  padding: 10px 8px;
+  text-align: center;
+}
+.map__phone .mgrid > span b {
+  color: #faf6af;
+  display: block;
+  font-weight: 400;
+  margin-bottom: 3px;
+}
+.map__phone .mrung--mute { --mrung: #7a8990; }
+.map__phone .mrung + .mrung { margin-top: 10px; }
