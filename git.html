@@ -40,7 +40,14 @@
   .map .legend i.faint { border-top-color: #7a8990; }
   .map .legend i.sun { border-top-color: #faf6af; }
 
-  /* ── the ladder at phone width — KNOWN LIMIT, not a bug in this page ──
+  /* ── the ladder at phone width — RESOLVED 2026-08-29 ──────────────────
+     The note below described this as a known limit at parity with every
+     sibling map. It is now fixed: below 600px the drawing is replaced by
+     `.map__phone`, a phone-shaped layout in real text, and the SVG is
+     display:none. The reasoning that led there is kept because it is what
+     ruled out the two cheaper options.
+
+     ── the original note ──
      Every map on this site is drawn in a 1200-unit viewBox and scaled to the
      column, so its 11px caption type renders at 7.8px on a 1440 desktop and
      2.7px at 390. Measured 2026-08-29: gps.html and netflix.html render at
@@ -294,6 +301,48 @@
             <text class="m-t t-work" x="180" y="538">Working directory · what you typed</text>
             <text class="m-t" x="140" y="574">The file on your disk right now. Real, and saved nowhere. git status shows it.</text>
           </svg>
+
+          <!-- The same ladder at phone width, in real text. Shown below 600px,
+               where the drawing above is display:none. See .map__phone in
+               99-hubert.css for why this exists rather than a scaled SVG. -->
+          <ol class="map__phone">
+            <li class="mrung mrung--perm">
+              <div class="mrung__box">
+                <span class="mrung__n">04</span>
+                <h5 class="mrung__t">The remote<small>somebody else’s disk</small></h5>
+                <p class="mrung__d">GitHub. The history now exists somewhere your laptop cannot lose it.</p>
+              </div>
+            </li>
+            <li><p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+              <span><b>git push</b> lifts it to the remote</span></p></li>
+            <li class="mrung mrung--perm">
+              <div class="mrung__box">
+                <span class="mrung__n">03</span>
+                <h5 class="mrung__t">Repository<small>permanent history</small></h5>
+                <p class="mrung__d">A snapshot with its own unique identifier. This is the part that survives you.</p>
+              </div>
+            </li>
+            <li><p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+              <span><b>git commit</b> lifts it to the repository</span></p></li>
+            <li class="mrung mrung--stage">
+              <div class="mrung__box">
+                <span class="mrung__n">02</span>
+                <h5 class="mrung__t">Staging area<small>what you chose</small></h5>
+                <p class="mrung__d">The exact changes you want in the next snapshot. Not the others.</p>
+              </div>
+            </li>
+            <li><p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+              <span><b>git add</b> lifts it to staging</span></p></li>
+            <li class="mrung mrung--work">
+              <div class="mrung__box">
+                <span class="mrung__n">01</span>
+                <h5 class="mrung__t">Working directory<small>what you typed</small></h5>
+                <p class="mrung__d">The file on your disk right now. Real, and saved nowhere.
+                  <code>git status</code> shows it.</p>
+              </div>
+            </li>
+          </ol>
+
           <div class="legend monospace">
             <div><i class="faint" aria-hidden="true"></i>Typed, not chosen, not safe</div>
             <div><i aria-hidden="true"></i>Staged — chosen, on the way</div>
