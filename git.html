@@ -3,335 +3,396 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nº006 — A change has to climb · Hubert the Inventor</title>
+<title>A change has to climb. — Hubert's field guides</title>
 <meta name="description" content="The one mental model behind Git: four places a change can be, and the three commands that lift it from one to the next. Working directory, staging area, repository, remote.">
-<meta property="og:title" content="Nº006 — A change has to climb">
-<meta property="og:description" content="Git is four places, not hundreds of commands. One ladder, four annotations.">
+<meta name="theme-color" content="#1a1a1a">
+<link rel="icon" href="img/favicon.svg?v=2026-08-26-review" type="image/svg+xml">
+
 <meta property="og:type" content="article">
-<!-- og:image — add once a still is exported -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
-<meta name="theme-color" content="#f7f2e9">
-<link rel="stylesheet" href="tokens.css">
+<meta property="og:title" content="A change has to climb.">
+<meta property="og:description" content="Git is four places, not hundreds of commands. One ladder, four annotations.">
+<meta name="twitter:card" content="summary">
+
+<link rel="stylesheet" href="assets/css/00-critical.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/entry.CQSbLAcy.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/default.Z9wDiTTt.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/_slug_.DENrRFxM.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/Industries.BJpTkmyx.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/Footer.MRJrKAf5.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/99-hubert.css?v=2026-08-26-review">
+
 <style>
-/* ── page furniture ─────────────────────────────────────────────── */
-.bleed { padding-inline: clamp(20px, 4vw, 72px); }
-.plate { padding-block: var(--s-2xl) var(--s-3xl); }
-.plate--tight { padding-block: var(--s-lg) var(--s-2xl); }
-.inner { max-width: 1320px; margin-inline: auto; }
+  /* ── the two brand marks ──────────────────────────────────────────────
+     The global reset sets `img { width: 100%; height: 100%; object-fit:
+     cover }` for the full-bleed photography, which would blow a 44px logo
+     up to the width of the column and crop it. Both marks are re-sized by
+     name and told to contain rather than cover. */
+  .marks { align-items: center; display: flex; gap: 16px; margin-bottom: 28px; }
+  .marks img { height: 44px; object-fit: contain; width: 44px; }
 
-.rail {
-  position: fixed; inset-inline: 0; top: 0; z-index: 80;
-  display: flex; justify-content: space-between; align-items: center;
-  gap: var(--s-md);
-  padding: var(--s-xs) clamp(20px, 4vw, 72px);
-  background: oklch(96.2% 0.012 85 / 0.86);
-  backdrop-filter: blur(8px);
-  border-bottom: var(--rule-fade);
-}
-.rail a { text-decoration: none; }
-.rail .live { display: inline-flex; align-items: center; gap: var(--s-2xs); }
-.rail .dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: var(--hazard);
-  box-shadow: 0 0 0 3px oklch(56% 0.18 40 / 0.16);
-}
-main { padding-top: 52px; }
+  /* ── the ladder's own legend ──────────────────────────────────────────
+     99-hubert.css gives `.map .legend i` the blue swatch and a dashed grey
+     variant, because every earlier map only needed two. This one encodes
+     three altitudes, so it adds the grey and yellow rules rather than
+     changing the shared ones. */
+  .map .legend i.faint { border-top-color: #7a8990; }
+  .map .legend i.sun { border-top-color: #faf6af; }
 
-/* ── masthead ──────────────────────────────────────────────────── */
-.marks { display: flex; gap: var(--s-sm); align-items: center; margin-bottom: var(--s-md); }
-.marks img { display: block; }
-.slug { display: flex; gap: var(--s-md); flex-wrap: wrap; margin-bottom: var(--s-lg); }
-.title-block { border-bottom: var(--line); padding-bottom: var(--s-xl); }
-.standfirst { margin-top: var(--s-lg); color: var(--dim); }
-.byline { margin-top: var(--s-md); }
+  /* ── the ladder at phone width — KNOWN LIMIT, not a bug in this page ──
+     Every map on this site is drawn in a 1200-unit viewBox and scaled to the
+     column, so its 11px caption type renders at 7.8px on a 1440 desktop and
+     2.7px at 390. Measured 2026-08-29: gps.html and netflix.html render at
+     exactly the same two numbers, so this is the shared behaviour of the
+     map component, not something this drawing does differently.
 
-/* ── the ladder: the spine of the page ─────────────────────────── */
-.map figure { margin: 0; }
-.map svg { width: 100%; height: auto; display: block; }
-.m-line   { stroke: var(--faint); stroke-width: 1.2; fill: none; }
-.m-box    { stroke: var(--accent); stroke-width: 1.4; fill: none; }
-.m-rung   { stroke-width: 1.6; fill: none; }
-.m-move   { stroke: var(--accent); stroke-width: 3; fill: none; stroke-linecap: round; }
-.m-fill   { fill: var(--accent); }
-.m-t      { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
-            fill: var(--dim); text-transform: uppercase; }
-.m-n      { font-family: var(--font-mono); font-size: 12px; font-weight: 500;
-            fill: var(--sun); letter-spacing: 0.06em; }
-/* Colour is altitude, the same encoding the reel uses. */
-.rung-work   { stroke: var(--faint); }
-.rung-stage  { stroke: var(--accent); }
-.rung-perm   { stroke: var(--sun); }
-.t-work  { fill: var(--faint); }
-.t-stage { fill: var(--accent); }
-.t-perm  { fill: var(--sun); }
-.legend { display: flex; gap: var(--s-lg); flex-wrap: wrap; margin-top: var(--s-lg);
-          padding-top: var(--s-sm); border-top: var(--line); }
-.legend div { display: flex; align-items: center; gap: var(--s-2xs); }
-.legend i { width: 26px; height: 0; border-top: 4px solid var(--accent); border-radius: 2px; }
-.legend i.faint { border-top-color: var(--faint); }
-.legend i.sun { border-top-color: var(--sun); }
+     A horizontal scroller was built and rejected: holding the drawing at a
+     readable 900px inside a 293px column needs ~3 screens of sideways drag,
+     and the drawing's text stops at x=740 of the 1200 viewBox while the
+     bands run to x=1080 — so the last half of that drag is four empty
+     rounded rectangles. Two separate visual passes read it as broken
+     content rather than a pannable diagram.
 
-/* ── annotations: unequal diptychs, hairline-ruled ─────────────── */
-.ann { border-top: var(--line); padding-block: var(--s-xl); display: grid; gap: var(--s-md); }
-@media (min-width: 900px) {
-  .ann { grid-template-columns: 56% 35%; gap: 9%; align-items: start; }
-}
-.ann h3 { margin-bottom: var(--s-md); }
-.ann .aside { color: var(--dim); font-size: var(--t-small); max-width: var(--measure-note); }
-.ann .aside b { font-family: var(--font-mono); font-weight: 500; font-size: var(--t-label);
-                text-transform: uppercase; letter-spacing: var(--track-label);
-                display: block; margin-bottom: var(--s-2xs); color: var(--faint); }
-.ann-num { margin-bottom: var(--s-sm); }
+     Left at parity with every sibling instead. On a phone the ladder reads
+     as a shape; the words are carried by the <desc> for assistive tech and
+     restated in full by the four annotations below it. Making it properly
+     legible needs the ladder redrawn in a phone-shaped viewBox, which is a
+     design decision, not a port. */
 
-/* ── the cheat sheet ───────────────────────────────────────────── */
-.sheet { border-top: var(--line); padding-block: var(--s-xl); }
-.sheet table { width: 100%; border-collapse: collapse; }
-.sheet th, .sheet td { text-align: left; padding: var(--s-sm) var(--s-md) var(--s-sm) 0;
-                       border-bottom: var(--rule-fade); vertical-align: top; }
-.sheet th { font-family: var(--font-mono); font-size: var(--t-label); font-weight: 500;
-            text-transform: uppercase; letter-spacing: var(--track-label); color: var(--faint); }
-.sheet td.cmd { font-family: var(--font-mono); white-space: nowrap; color: var(--sun); }
-.sheet td { font-size: var(--t-small); color: var(--dim); }
+  /* ── inline commands ──────────────────────────────────────────────────
+     The ported reset styles `code` as a black BLOCK — it was written for
+     fenced code samples, and this is the only page on the site that names
+     commands inside a sentence. Scoped back to an inline chip so
+     `git revert` sits in the line of prose rather than breaking it. */
+  .journalArticle__article code {
+    background: rgba(0, 0, 0, .22);
+    border-radius: 4px;
+    display: inline;
+    font-family: Mono, ui-monospace, monospace;
+    font-size: 88%;
+    margin: 0;
+    padding: .1em .38em;
+    white-space: nowrap;
+  }
 
-footer { padding-block: var(--s-xl) var(--s-2xl); border-top: var(--line); }
-.foot-grid { display: grid; gap: var(--s-lg); }
-@media (min-width: 800px) { .foot-grid { grid-template-columns: 1fr 22em; gap: var(--s-2xl); } }
-footer p { font-size: var(--t-small); color: var(--dim); max-width: var(--measure-note); }
-.skip { position: absolute; left: -9999px; }
-.skip:focus { left: var(--s-md); top: var(--s-md); z-index: 100; background: var(--ink);
-              color: var(--paper); padding: var(--s-2xs) var(--s-sm); }
+  /* ── the annotation asides ────────────────────────────────────────────
+     Each annotation carried a short margin note. The cinematic template has
+     no two-column article, so the note sits under its annotation as a
+     ruled block: the same hairline language as the tables and buttons. */
+  .ann-aside {
+    border-left: 2px solid rgba(0, 0, 0, .35);
+    font-size: 85%;
+    margin: 0 0 3vw;
+    max-width: 34em;
+    padding-left: 20px;
+  }
+  .ann-aside b {
+    display: block;
+    font-family: Mono, ui-monospace, monospace;
+    font-size: 72%;
+    font-weight: 400;
+    letter-spacing: .04em;
+    margin-bottom: 6px;
+    opacity: .55;
+    text-transform: uppercase;
+  }
+  .ann-aside p { opacity: .8; padding-bottom: 0; }
+  @media screen and (max-width: 600px) {
+    .ann-aside { margin-bottom: 5vh; padding-left: 14px; }
+  }
+
+  /* The cheat-sheet's command column never wraps mid-command. */
+  .journalArticle__article table td.cmd {
+    font-family: Mono, ui-monospace, monospace;
+    white-space: nowrap;
+  }
+
+  /* The attribution is a licence condition, not apparatus, so it does not
+     take the opacity the disclaimer above it does. */
+  .article__footer .credit { padding-top: 12px; }
+
+  /* The header is `position: fixed`, so an in-page jump lands the target
+     underneath it. Nº007 and Nº008 use a flat 116px; match it. */
+  #guide, #map, #next, #sources { scroll-margin-top: 116px; }
 </style>
+
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  .journalArticle__article { opacity: 1 !important; }
+</style></noscript>
 </head>
-<body>
-<a class="skip" href="#map">Skip to the ladder</a>
-
-<div class="rail">
-  <a class="mono" href="index.html">Hubert the Inventor</a>
-  <span class="mono live"><span class="dot" aria-hidden="true"></span>Nº006 · Version control</span>
+<body class="journal">
+<div class="topOverlay"></div>
+<a class="skip-link" href="#map">Skip to the ladder</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="index.html" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Field guides">
+      <a href="index.html" class="hover_effect"><span>Index</span></a>
+      <a href="netflix.html" class="hover_effect"><span>Guide 01</span></a>
+      <a href="kubernetes.html" class="hover_effect"><span>Guide 02</span></a>
+      <a href="whatsapp.html" class="hover_effect"><span>Guide 03</span></a>
+      <a href="google-search.html" class="hover_effect"><span>Guide 04</span></a>
+      <a href="gps.html" class="hover_effect"><span>Guide 05</span></a>
+      <a aria-current="page" href="git.html" class="active router-link-exact-active hover_effect"><span>Guide 06</span></a>
+      <a href="design-plugins.html" class="hover_effect"><span>Guide 07</span></a>
+      <a href="alternatives.html" class="hover_effect"><span>Guide 08</span></a>
+      <a href="#sources" class="hover_effect"><span>Sources</span></a>
+      <a href="index.html#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">●</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Menu</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Field guides, mobile">
+  <div class="mobilenav__main">
+    <a href="index.html"><span>Index</span></a>
+    <a href="netflix.html"><span>Guide 01</span></a>
+    <a href="kubernetes.html"><span>Guide 02</span></a>
+    <a href="whatsapp.html"><span>Guide 03</span></a>
+    <a href="google-search.html"><span>Guide 04</span></a>
+    <a href="gps.html"><span>Guide 05</span></a>
+    <a aria-current="page" href="git.html" class="active router-link-exact-active"><span>Guide 06</span></a>
+    <a href="design-plugins.html"><span>Guide 07</span></a>
+    <a href="alternatives.html"><span>Guide 08</span></a>
+    <a href="git.html#sources"><span>Sources</span></a>
+    <a href="index.html#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
 </div>
+<main class="main" id="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Field guide</span><strong>Nº006</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>System</span><strong>Version control</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Model</span><strong>Four places, three lifts</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Annotations</span><strong>Four, keyed to the ladder</strong>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp">Filed</span>
+        </div>
+      </div>
 
-<main>
+      <div class="journalArticle__article" id="guide">
+        <div class="marks" aria-hidden="true">
+          <img src="brand/git-logo.svg" alt="" width="44" height="44" decoding="async">
+          <img src="brand/github-mark.svg" alt="" width="44" height="44" decoding="async">
+        </div>
 
-<!-- ══ masthead ══ -->
-<section class="plate plate--paper bleed">
-  <div class="inner">
-    <div class="marks" aria-hidden="true">
-      <img src="brand/git-logo.svg" alt="" width="44" height="44">
-      <img src="brand/github-mark.svg" alt="" width="44" height="44">
-    </div>
-    <div class="slug">
-      <span class="mono">Field guide Nº006</span>
-      <span class="mono">Filed under · Version control</span>
-    </div>
-    <p class="mono" style="margin-bottom: var(--s-md);">You commented GIT — this is the ladder.</p>
-    <div class="title-block">
-      <h1>A change<br>has to<br>climb.</h1>
-      <p class="lead standfirst">Git is four places, not hundreds of commands. A change you
-        type starts in one of them and has to be lifted, deliberately, to each of the next
-        three. Every command you actually use is one of those lifts — which is why the whole
-        thing collapses into four words once you can see the shape.</p>
-      <p class="byline mono">Companion to the reel · Watch it on <a href="https://instagram.com/huberttheinventor" rel="me">@huberttheinventor</a></p>
-    </div>
-  </div>
-</section>
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">You commented GIT — this is the ladder.</p>
+        <h1 data-splitting="lines">A change has to climb.</h1>
+        <p class="lead" data-splitting>Git is four places, not hundreds of commands. A change you
+          type starts in one of them and has to be lifted, deliberately, to each of the next
+          three. Every command you actually use is one of those lifts — which is why the whole
+          thing collapses into four words once you can see the shape.</p>
 
-<!-- ══ the ladder ══ -->
-<section class="plate plate--midnight bleed map" id="map">
-  <div class="inner">
-    <span class="mono">The whole mental model, one picture</span>
-    <h2 style="margin-block: var(--s-md) var(--s-lg); max-width: 15em;">Four places a change
-      can be, and the three lifts between them</h2>
+        <p class="monospace monospace__p" data-splitting>Companion to the reel · Watch it on
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank">@huberttheinventor</a></p>
 
-    <figure>
-      <svg viewBox="0 0 1200 640" role="img" aria-labelledby="ladder-title ladder-desc">
-        <title id="ladder-title">The Git ladder</title>
-        <desc id="ladder-desc">Four stacked bands. From the bottom: working directory, staging
-          area, repository, remote. git add lifts a change from the working directory to
-          staging, git commit lifts it to the repository, git push lifts it to the remote.</desc>
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">The whole mental model, one picture</p>
+        <h4 aria-level="2" data-splitting="lines">Four places a change can be, and the three lifts between them</h4>
 
-        <!-- 04 · the remote -->
-        <rect class="m-rung rung-perm" x="120" y="40" width="960" height="96" rx="14"/>
-        <text class="m-n" x="140" y="70">04</text>
-        <text class="m-t t-perm" x="180" y="70">The remote · somebody else’s disk</text>
-        <text class="m-t" x="140" y="106">GitHub. The history now exists somewhere your laptop cannot lose it.</text>
+        <figure class="journalArticle__banner map" id="map">
+          <svg viewBox="0 0 1200 640" role="img" aria-labelledby="ladder-title ladder-desc">
+            <title id="ladder-title">The Git ladder</title>
+            <desc id="ladder-desc">Four stacked bands. From the bottom: working directory, staging
+              area, repository, remote. git add lifts a change from the working directory to
+              staging, git commit lifts it to the repository, git push lifts it to the remote.</desc>
+            <style>.m-rung { fill: none; stroke-width: 1.6; } .m-move { stroke: #79b0cc; stroke-width: 3; fill: none; stroke-linecap: round; } .m-t { font-family: Mono, ui-monospace, monospace; font-size: 11px; letter-spacing: 1.1px; fill: #abbac2; text-transform: uppercase; } .m-n { font-family: Mono, ui-monospace, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.7px; fill: #faf6af; } .rung-work { stroke: #7a8990; } .rung-stage { stroke: #79b0cc; } .rung-perm { stroke: #faf6af; } .t-work { fill: #7a8990; } .t-stage { fill: #79b0cc; } .t-perm { fill: #faf6af; }</style>
 
-        <path class="m-move" d="M600 190 L600 146"/>
-        <path class="m-move" d="M588 158 L600 146 L612 158"/>
-        <text class="m-n" x="620" y="180">git push</text>
+            <!-- 04 · the remote -->
+            <rect class="m-rung rung-perm" x="120" y="40" width="960" height="96" rx="14"/>
+            <text class="m-n" x="140" y="70">04</text>
+            <text class="m-t t-perm" x="180" y="70">The remote · somebody else’s disk</text>
+            <text class="m-t" x="140" y="106">GitHub. The history now exists somewhere your laptop cannot lose it.</text>
 
-        <!-- 03 · repository -->
-        <rect class="m-rung rung-perm" x="120" y="196" width="960" height="96" rx="14"/>
-        <text class="m-n" x="140" y="226">03</text>
-        <text class="m-t t-perm" x="180" y="226">Repository · permanent history</text>
-        <text class="m-t" x="140" y="262">A snapshot with its own unique identifier. This is the part that survives you.</text>
+            <path class="m-move" d="M600 190 L600 146"/>
+            <path class="m-move" d="M588 158 L600 146 L612 158"/>
+            <text class="m-n" x="620" y="180">git push</text>
 
-        <path class="m-move" d="M600 346 L600 302"/>
-        <path class="m-move" d="M588 314 L600 302 L612 314"/>
-        <text class="m-n" x="620" y="336">git commit</text>
+            <!-- 03 · repository -->
+            <rect class="m-rung rung-perm" x="120" y="196" width="960" height="96" rx="14"/>
+            <text class="m-n" x="140" y="226">03</text>
+            <text class="m-t t-perm" x="180" y="226">Repository · permanent history</text>
+            <text class="m-t" x="140" y="262">A snapshot with its own unique identifier. This is the part that survives you.</text>
 
-        <!-- 02 · staging -->
-        <rect class="m-rung rung-stage" x="120" y="352" width="960" height="96" rx="14"/>
-        <text class="m-n" x="140" y="382">02</text>
-        <text class="m-t t-stage" x="180" y="382">Staging area · what you chose</text>
-        <text class="m-t" x="140" y="418">The exact changes you want in the next snapshot. Not the others.</text>
+            <path class="m-move" d="M600 346 L600 302"/>
+            <path class="m-move" d="M588 314 L600 302 L612 314"/>
+            <text class="m-n" x="620" y="336">git commit</text>
 
-        <path class="m-move" d="M600 502 L600 458"/>
-        <path class="m-move" d="M588 470 L600 458 L612 470"/>
-        <text class="m-n" x="620" y="492">git add</text>
+            <!-- 02 · staging -->
+            <rect class="m-rung rung-stage" x="120" y="352" width="960" height="96" rx="14"/>
+            <text class="m-n" x="140" y="382">02</text>
+            <text class="m-t t-stage" x="180" y="382">Staging area · what you chose</text>
+            <text class="m-t" x="140" y="418">The exact changes you want in the next snapshot. Not the others.</text>
 
-        <!-- 01 · working directory -->
-        <rect class="m-rung rung-work" x="120" y="508" width="960" height="96" rx="14"/>
-        <text class="m-n" x="140" y="538">01</text>
-        <text class="m-t t-work" x="180" y="538">Working directory · what you typed</text>
-        <text class="m-t" x="140" y="574">The file on your disk right now. Real, and saved nowhere. git status shows it.</text>
-      </svg>
-    </figure>
+            <path class="m-move" d="M600 502 L600 458"/>
+            <path class="m-move" d="M588 470 L600 458 L612 470"/>
+            <text class="m-n" x="620" y="492">git add</text>
 
-    <div class="legend mono">
-      <div><i class="faint"></i><span>Typed, not chosen, not safe</span></div>
-      <div><i></i><span>Staged — chosen, on the way</span></div>
-      <div><i class="sun"></i><span>Committed — permanent</span></div>
-    </div>
-  </div>
-</section>
+            <!-- 01 · working directory -->
+            <rect class="m-rung rung-work" x="120" y="508" width="960" height="96" rx="14"/>
+            <text class="m-n" x="140" y="538">01</text>
+            <text class="m-t t-work" x="180" y="538">Working directory · what you typed</text>
+            <text class="m-t" x="140" y="574">The file on your disk right now. Real, and saved nowhere. git status shows it.</text>
+          </svg>
+          <div class="legend monospace">
+            <div><i class="faint" aria-hidden="true"></i>Typed, not chosen, not safe</div>
+            <div><i aria-hidden="true"></i>Staged — chosen, on the way</div>
+            <div><i class="sun" aria-hidden="true"></i>Committed — permanent</div>
+          </div>
+        </figure>
 
-<!-- ══ annotations ══ -->
-<section class="plate plate--paper bleed plate--tight">
-  <div class="inner">
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">The whole mental model, one picture. Everything after it is annotation.</p>
 
-    <article class="ann" style="border-top: 0;">
-      <div>
-        <div class="mono ann-num">Nº001 · Git is not GitHub</div>
-        <h3>One of them runs on your machine. The other is a website.</h3>
-        <p>Git is a version control system. It lives on your computer, it has no opinion about
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº001 · Git is not GitHub</p>
+        <h4 aria-level="2" data-splitting="lines">One of them runs on your machine. The other is a website.</h4>
+        <p data-splitting>Git is a version control system. It lives on your computer, it has no opinion about
           the internet, and its entire job is remembering every version of your project.
           GitHub is a website that hosts what Git makes. You can use Git for years without
           ever creating a GitHub account — the history is already real, already permanent,
           already on your disk.</p>
-      </div>
-      <div class="aside">
-        <b>The distinction that matters</b>
-        Only the top rung of the ladder involves GitHub at all. The other three happen
-        entirely on the machine in front of you.
-      </div>
-    </article>
+        <div class="ann-aside">
+          <b>The distinction that matters</b>
+          <p>Only the top rung of the ladder involves GitHub at all. The other three happen
+            entirely on the machine in front of you.</p>
+        </div>
 
-    <article class="ann">
-      <div>
-        <div class="mono ann-num">Nº002 · Nothing saves itself</div>
-        <h3>Git tracks everything and stores nothing until you say so</h3>
-        <p><code>git init</code> turns a folder into a repository, and from that moment Git is
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº002 · Nothing saves itself</p>
+        <h4 aria-level="2" data-splitting="lines">Git tracks everything and stores nothing until you say so</h4>
+        <p data-splitting><code>git init</code> turns a folder into a repository, and from that moment Git is
           watching. But it never commits on your behalf. A file you edited sits in the working
           directory, changed and unsaved, until you deliberately lift it — which is exactly
           what <code>git status</code> is telling you every time you run it.</p>
-      </div>
-      <div class="aside">
-        <b>Why staging exists at all</b>
-        It is the step where you choose. Edit six files, stage two, and the snapshot contains
-        two. Without it, every commit would be everything you happened to have open.
-      </div>
-    </article>
+        <div class="ann-aside">
+          <b>Why staging exists at all</b>
+          <p>It is the step where you choose. Edit six files, stage two, and the snapshot contains
+            two. Without it, every commit would be everything you happened to have open.</p>
+        </div>
 
-    <article class="ann">
-      <div>
-        <div class="mono ann-num">Nº003 · Branch, merge, conflict</div>
-        <h3>Two lines of the same project, folded back together</h3>
-        <p>A branch is a second line of development growing off a commit, so you can build
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº003 · Branch, merge, conflict</p>
+        <h4 aria-level="2" data-splitting="lines">Two lines of the same project, folded back together</h4>
+        <p data-splitting>A branch is a second line of development growing off a commit, so you can build
           something new without touching the working code. Merging folds it back, and Git does
           it automatically — right up until both lines changed the same lines of the same file.
           Then it stops. It marks the disputed section, refuses to guess which version you
           meant, and waits for you to decide. That refusal is a feature.</p>
-      </div>
-      <div class="aside">
-        <b>On the ladder</b>
-        Branching and merging both happen on rung 03. They rearrange history; they do not move
-        a change between places.
-      </div>
-    </article>
+        <div class="ann-aside">
+          <b>On the ladder</b>
+          <p>Branching and merging both happen on rung 03. They rearrange history; they do not move
+            a change between places.</p>
+        </div>
 
-    <article class="ann">
-      <div>
-        <div class="mono ann-num">Nº006 · Going backwards</div>
-        <h3>Three different undos, and only one of them is dangerous</h3>
-        <p><code>git restore</code> throws away an edit you have not committed.
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº006 · Going backwards</p>
+        <h4 aria-level="2" data-splitting="lines">Three different undos, and only one of them is dangerous</h4>
+        <p data-splitting><code>git restore</code> throws away an edit you have not committed.
           <code>git revert</code> writes a <em>new</em> commit that undoes an old one, erasing
           nothing — the mistake stays in the history, and so does the correction.
           <code>git reset</code> moves your branch pointer backwards, which is powerful and
           therefore very easy to misuse: the commits are usually still there, but the pointer
           that named them is not.</p>
-      </div>
-      <div class="aside">
-        <b>The habit worth building</b>
-        Reach for <code>revert</code> by default. It is the only one of the three that is safe
-        on history other people have already pulled.
-      </div>
-    </article>
+        <div class="ann-aside">
+          <b>The habit worth building</b>
+          <p>Reach for <code>revert</code> by default. It is the only one of the three that is safe
+            on history other people have already pulled.</p>
+        </div>
 
-    <div class="sheet">
-      <h3 style="margin-bottom: var(--s-md);">Ninety percent of the time</h3>
-      <table>
-        <thead>
-          <tr><th>Command</th><th>What it actually does</th></tr>
-        </thead>
-        <tbody>
-          <tr><td class="cmd">git add</td><td>Lifts a change from the working directory into staging.</td></tr>
-          <tr><td class="cmd">git commit</td><td>Takes the snapshot. Staging becomes permanent history.</td></tr>
-          <tr><td class="cmd">git push</td><td>Sends your commits up to the remote.</td></tr>
-          <tr><td class="cmd">git pull</td><td>Brings everyone else’s commits down. Run it <em>before</em> you push.</td></tr>
-        </tbody>
-      </table>
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">Ninety percent of the time</h4>
+        <p class="monospace monospace__p opacity__50" data-splitting>Reference · the four commands that do the lifting</p>
+<table>
+      <thead><tr><th scope="col">Command</th><th scope="col">What it actually does</th></tr></thead>
+      <tbody>
+        <tr><td class="cmd">git add</td><td>Lifts a change from the working directory into staging.</td></tr>
+        <tr><td class="cmd">git commit</td><td>Takes the snapshot. Staging becomes permanent history.</td></tr>
+        <tr><td class="cmd">git push</td><td>Sends your commits up to the remote.</td></tr>
+        <tr><td class="cmd">git pull</td><td>Brings everyone else’s commits down. Run it <em>before</em> you push.</td></tr>
+      </tbody>
+    </table>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Next guide</p>
+        <h4 aria-level="2" data-splitting="lines" id="next">One system, taken apart.</h4>
+        <p data-splitting>Same treatment, different machine. No pitch, no
+          thread-bait, and an unsubscribe link that works.</p>
+        <div class="buttons">
+          <a href="index.html#pricing" class="button button__big hover_effect"><span>The List</span> <span class="arrow">↗</span></a>
+        </div>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="sources">Take it with you</h4>
+        <p class="monospace monospace__p opacity__50" data-splitting>The ladder is the guide. Everything else on this page annotates it.</p>
+        <div class="buttons">
+          <a href="#map" class="button button__big hover_effect"><span>The ladder</span> <span class="arrow">↗</span></a>
+          <a href="index.html" class="button button__big hover_effect"><span>All field guides</span> <span class="arrow">↗</span></a>
+        </div>
+
+        <div class="article__footer">
+          <p class="monospace monospace__p opacity__50" data-splitting><strong>An independent educational
+            breakdown.</strong> Not affiliated with, endorsed by, or produced in cooperation with the
+            Git project, Software Freedom Conservancy, GitHub, Inc. or Microsoft. All trademarks belong
+            to their respective owners. Written to explain publicly documented behaviour of a widely
+            used tool, not any specific installation.</p>
+          <p class="monospace monospace__p credit">The Git logo is by
+            <a href="https://twitter.com/jasonlong" rel="noopener noreferrer" target="_blank">Jason Long</a>,
+            used under <a href="https://creativecommons.org/licenses/by/3.0/" rel="noopener noreferrer" target="_blank">CC BY 3.0</a>.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
     </div>
-  </div>
-</section>
-
-<!-- ══ subscribe ══ -->
-<section class="plate plate--midnight bleed">
-  <div class="inner">
-    <span class="mono">Next guide</span>
-    <h2 style="margin-block: var(--s-md) var(--s-md); max-width: 11em;">One system, taken apart.</h2>
-    <p style="color: var(--dim);">Same treatment, different machine. No pitch, no
-      thread-bait, and an unsubscribe link that works.</p>
-
-    <!-- Buttondown account: huberttheinventor (confirmed 2026-08-20). This action is
-         the CONFIRM-FIRST embed endpoint and is the fallback; subscribe.js swaps it
-         for the Worker /signup route once SIGNUP_ENDPOINT is set. -->
-    <form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor"
-          method="post" target="popupwindow"
-          onsubmit="window.open('https://buttondown.com/huberttheinventor','popupwindow')">
-      <label class="mono" for="bd-email" style="display:block; margin-bottom: var(--s-2xs);">Email address</label>
-      <div class="field">
-        <input type="email" name="email" id="bd-email" placeholder="you@example.com" required autocomplete="email">
-        <input type="hidden" name="tag" value="guide-006-git">
-        <button type="submit"><span>Send it</span></button>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
       </div>
-      <label class="consent">
-        <input type="checkbox" name="consent" required>
-        <span>Email me new field guides. I can unsubscribe at any time and my address
-          is never shared — see the <a href="privacy.html">privacy note</a>.</span>
-      </label>
-    </form>
-  </div>
-</section>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="#map" class="button button__half hover_effect" title="Four places, three lifts"><span>The ladder</span> <span class="arrow">↗</span></a>
+          <a href="#sources" class="button button__half hover_effect" title="Take it with you"><span>Sources</span><span class="arrow">↗</span></a>
 
-<footer class="plate--paper bleed">
-  <div class="inner foot-grid">
-    <p><strong>An independent educational breakdown.</strong> Not affiliated with, endorsed by,
-      or produced in cooperation with the Git project, Software Freedom Conservancy, GitHub, Inc.
-      or Microsoft. All trademarks belong to their respective owners. Written to explain
-      publicly documented behaviour of a widely used tool, not any specific installation.
-      The Git logo is by <a href="https://twitter.com/jasonlong">Jason Long</a>, used under
-      <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</p>
-    <p>
-      <a href="index.html">All field guides</a> · <a href="privacy.html">Privacy</a> ·
-      <a href="https://instagram.com/huberttheinventor" rel="me">@huberttheinventor</a><br>
-      <span class="mono" style="display:inline-block; margin-top: var(--s-sm);">Field guide Nº006 · Version control</span>
-    </p>
-  </div>
-</footer>
-
+          <a href="privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
 </main>
-<script src="subscribe.js" defer></script>
+<script src="assets/js/gsap.min.js?v=2026-08-26-review"></script>
+<script src="assets/js/ScrollTrigger.min.js?v=2026-08-26-review"></script>
+<script src="assets/js/splitting.min.js?v=2026-08-26-review"></script>
+<script src="assets/js/site.js?v=2026-08-26-review" type="module"></script>
 </body>
 </html>
