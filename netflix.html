@@ -6,7 +6,7 @@
 <title>How Netflix actually works — Hubert's field guides</title>
 <meta name="description" content="Field guide Nº001. One master file, and every decision that stands between it and your screen: renditions, origin, edge caches, and the choice your player makes every few seconds.">
 <meta name="theme-color" content="#1a1a1a">
-<link rel="icon" href="img/favicon.svg?v=2026-08-26-review" type="image/svg+xml">
+<link rel="icon" href="img/favicon.svg?v=2026-08-29-plate" type="image/svg+xml">
 
 <meta property="og:type" content="article">
 <meta property="og:title" content="How Netflix actually works">
@@ -14,18 +14,46 @@
 <meta property="og:image" content="artifacts/netflix-system-map.png">
 <meta name="twitter:card" content="summary_large_image">
 
-<link rel="stylesheet" href="assets/css/00-critical.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/entry.CQSbLAcy.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/default.Z9wDiTTt.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/_slug_.DENrRFxM.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/Industries.BJpTkmyx.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/Footer.MRJrKAf5.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/99-hubert.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/00-critical.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/entry.CQSbLAcy.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/default.Z9wDiTTt.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/_slug_.DENrRFxM.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/Industries.BJpTkmyx.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/Footer.MRJrKAf5.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/99-hubert.css?v=2026-08-29-plate">
 
 <noscript><style>
   .hover_effect, .splitting, [data-splitting],
   .journalArticle__article { opacity: 1 !important; }
 </style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
 </head>
 <body class="journal">
 <div class="topOverlay"></div>
@@ -82,6 +110,13 @@
         </div>
         <div class="journalArticle__documentCell monospace">
           <span>Annotations</span><strong>Six, keyed to the map</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
         </div>
         <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
           <span>Status</span>
@@ -176,6 +211,84 @@
     <text class="m-t" x="646" y="322">METADATA</text>
   
           </svg>
+
+          <div class="map__phone">
+            <div class="mband">
+            <div class="mrung">
+              <div class="mrung__box">
+                <span class="mrung__n">01</span>
+                <h5 class="mrung__t">Master<small>the file as delivered</small></h5>
+                
+              </div>
+            </div>
+
+            <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+              <span>becomes</span></p>
+
+            <div class="mrung">
+              <div class="mrung__box">
+                <span class="mrung__n">02</span>
+                <h5 class="mrung__t">Renditions<small>one per quality</small></h5>
+                
+              </div>
+            </div>
+
+            <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+              <span>stored in</span></p>
+
+            <div class="mrung">
+              <div class="mrung__box">
+                <span class="mrung__n">03</span>
+                <h5 class="mrung__t">Origin store</h5>
+                
+              </div>
+            </div>
+
+            <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+              <span><b>pushed ahead of demand</b></span></p>
+
+            <div class="mrung">
+              <div class="mrung__box">
+                <span class="mrung__n">04</span>
+                <h5 class="mrung__t">Edge caches<small>near you</small></h5>
+                
+              </div>
+            </div>
+
+            <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+              <span><b>video</b></span></p>
+
+            <div class="mrung">
+              <div class="mrung__box">
+                <span class="mrung__n">05</span>
+                <h5 class="mrung__t">Your player</h5>
+                
+              </div>
+            </div>
+
+            <div class="mrung">
+              <div class="mrung__box">
+                <span class="mrung__n">06</span>
+                <h5 class="mrung__t">Segments<small>quality decided per segment</small></h5>
+                
+              </div>
+            </div>
+
+            </div>
+            <div class="mband">
+              <p class="mband__h">Off the video path<span>joined to the player by metadata only</span></p>
+            <div class="mrung mrung--mute">
+              <div class="mrung__box">
+                
+                <h5 class="mrung__t">Application services</h5>
+                <p class="mrung__d">Accounts · billing. Recommendations.</p>
+              </div>
+            </div>
+
+              <p class="mnote">Metadata &mdash; the dashed line. It never carries the video.</p>
+            </div>
+          </div>
+
           <div class="legend monospace">
             <div><i aria-hidden="true"></i>Video path — enormous, goes the short way</div>
             <div><i class="dash" aria-hidden="true"></i>Metadata path — small, answers questions about you</div>
@@ -285,6 +398,33 @@
           <a href="#map" class="button button__big hover_effect"><span>The system map</span> <span class="arrow">↗</span></a>
         </div>
 
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-small="true">The List</p>
+        <h4 aria-level="2">One a week. And the other seven, now.</h4>
+        <p>Confirm your address and the whole set arrives &mdash; all eight field guides, exactly
+          as they are on the site, nothing held back for subscribers. After that, one new system
+          taken apart every week. No pitch, no thread-bait, and an unsubscribe link that works.</p>
+
+        <form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor"
+              method="post">
+          <label class="monospace monospace__p" for="list-email">Email address</label>
+          <div class="field">
+            <input type="email" name="email" id="list-email" placeholder="you@example.com"
+                   required autocomplete="email" inputmode="email" spellcheck="false">
+            <input type="hidden" name="tag" value="guide-01-netflix">
+            <button type="submit" class="monospace">Send me the set &#8599;</button>
+          </div>
+          <label class="consent monospace monospace__p">
+            <input type="checkbox" name="consent" required>
+            <span>Send me the eight guides and one new one each week. I can unsubscribe at any
+              time and my address is never shared &mdash; see the
+              <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set
+              arrives the moment you click it.</span>
+          </label>
+        </form>
+
         <div class="article__footer">
           <p class="monospace monospace__p opacity__50" data-splitting>Independent field guide. Not affiliated with,
             endorsed by, or connected to Netflix. The reference table gives orders of magnitude rather than exact
@@ -317,9 +457,9 @@
   </section>
   <div class="cursor"><div class="cursor__inner"></div></div>
 </main>
-<script src="assets/js/gsap.min.js?v=2026-08-26-review"></script>
-<script src="assets/js/ScrollTrigger.min.js?v=2026-08-26-review"></script>
-<script src="assets/js/splitting.min.js?v=2026-08-26-review"></script>
-<script src="assets/js/site.js?v=2026-08-26-review" type="module"></script>
+<script src="assets/js/gsap.min.js?v=2026-08-29-plate"></script>
+<script src="assets/js/ScrollTrigger.min.js?v=2026-08-29-plate"></script>
+<script src="assets/js/splitting.min.js?v=2026-08-29-plate"></script>
+<script src="assets/js/site.js?v=2026-08-29-plate" type="module"></script>
 </body>
 </html>

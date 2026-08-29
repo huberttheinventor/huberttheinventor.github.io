@@ -6,7 +6,7 @@
 <title>Five machines carry your message, none can read it — Hubert's field guides</title>
 <meta name="description" content="Field guide Nº003. Your message crosses five separate WhatsApp services and not one of them holds the key. The only thing that ever reads it is the phone in the other person's hand.">
 <meta name="theme-color" content="#1a1a1a">
-<link rel="icon" href="img/favicon.svg?v=2026-08-26-review" type="image/svg+xml">
+<link rel="icon" href="img/favicon.svg?v=2026-08-29-plate" type="image/svg+xml">
 
 <meta property="og:type" content="article">
 <meta property="og:title" content="Five machines carry your message. None can read it.">
@@ -14,18 +14,46 @@
 <meta property="og:image" content="artifacts/whatsapp-system-map.png">
 <meta name="twitter:card" content="summary_large_image">
 
-<link rel="stylesheet" href="assets/css/00-critical.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/entry.CQSbLAcy.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/default.Z9wDiTTt.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/_slug_.DENrRFxM.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/Industries.BJpTkmyx.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/Footer.MRJrKAf5.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/99-hubert.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/00-critical.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/entry.CQSbLAcy.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/default.Z9wDiTTt.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/_slug_.DENrRFxM.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/Industries.BJpTkmyx.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/Footer.MRJrKAf5.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/99-hubert.css?v=2026-08-29-plate">
 
 <noscript><style>
   .hover_effect, .splitting, [data-splitting],
   .journalArticle__article { opacity: 1 !important; }
 </style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
 </head>
 <body class="journal">
 <div class="topOverlay"></div>
@@ -86,6 +114,13 @@
         </div>
         <div class="journalArticle__documentCell monospace">
           <span>Annotations</span><strong>Three, keyed to the map</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
         </div>
         <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
           <span>Status</span>
@@ -167,6 +202,80 @@
     <text class="m-n" x="20" y="432">03</text>
 
           </svg>
+
+          <div class="map__phone">
+            <div class="mband">
+              <p class="mband__h">01 · End to end<span>the two phones, and nothing between them that can read</span></p>
+            <div class="mrung">
+              <div class="mrung__box">
+                
+                <h5 class="mrung__t">Your phone</h5>
+                <p class="mrung__d">&ldquo;See you at 8&rdquo;</p>
+              </div>
+            </div>
+
+            <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+              <span><b>ciphertext</b> &mdash; nobody on this line holds a key</span></p>
+
+            <div class="mrung">
+              <div class="mrung__box">
+                
+                <h5 class="mrung__t">Their phone</h5>
+                <p class="mrung__d">&ldquo;See you at 8&rdquo;</p>
+              </div>
+            </div>
+
+            </div>
+            <div class="mband">
+              <p class="mband__h">02 · What the line is made of<span>five jobs, none of which can read the message</span></p>
+            <div class="mrung mrung--mute">
+              <div class="mrung__box">
+                <span class="mrung__n">01</span>
+                <h5 class="mrung__t">Socket<small>chat server</small></h5>
+                
+              </div>
+            </div>
+
+            <div class="mrung mrung--mute">
+              <div class="mrung__box">
+                <span class="mrung__n">02</span>
+                <h5 class="mrung__t">Queue<small>store and forward</small></h5>
+                
+              </div>
+            </div>
+
+            <div class="mrung mrung--mute">
+              <div class="mrung__box">
+                <span class="mrung__n">03</span>
+                <h5 class="mrung__t">Media<small>blob store</small></h5>
+                
+              </div>
+            </div>
+
+            <div class="mrung mrung--mute">
+              <div class="mrung__box">
+                <span class="mrung__n">04</span>
+                <h5 class="mrung__t">Push<small>APNs / FCM</small></h5>
+                <p class="mrung__d">Wake up &mdash; says nothing about what arrived.</p>
+              </div>
+            </div>
+
+            <div class="mrung mrung--mute">
+              <div class="mrung__box">
+                <span class="mrung__n">05</span>
+                <h5 class="mrung__t">Presence<small>typing · last seen</small></h5>
+                
+              </div>
+            </div>
+
+            </div>
+            <div class="mband">
+              <p class="mband__h">03 · What is kept anyway</p>
+              <p class="mnote">Retained regardless &mdash; from · to · when · how often.</p>
+              <p class="mnote mnote--key">Not the words. The envelope.</p>
+            </div>
+          </div>
+
           <div class="legend monospace">
             <div><i aria-hidden="true"></i>The message itself — solid, encrypted end to end, no key anywhere along it</div>
             <div><i class="dash" aria-hidden="true"></i>Signalling — dashed, wakes a phone, carries no message content</div>
@@ -234,6 +343,33 @@
           <a href="#map" class="button button__big hover_effect"><span>The system map</span> <span class="arrow">↗</span></a>
         </div>
 
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-small="true">The List</p>
+        <h4 aria-level="2">One a week. And the other seven, now.</h4>
+        <p>Confirm your address and the whole set arrives &mdash; all eight field guides, exactly
+          as they are on the site, nothing held back for subscribers. After that, one new system
+          taken apart every week. No pitch, no thread-bait, and an unsubscribe link that works.</p>
+
+        <form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor"
+              method="post">
+          <label class="monospace monospace__p" for="list-email">Email address</label>
+          <div class="field">
+            <input type="email" name="email" id="list-email" placeholder="you@example.com"
+                   required autocomplete="email" inputmode="email" spellcheck="false">
+            <input type="hidden" name="tag" value="guide-03-whatsapp">
+            <button type="submit" class="monospace">Send me the set &#8599;</button>
+          </div>
+          <label class="consent monospace monospace__p">
+            <input type="checkbox" name="consent" required>
+            <span>Send me the eight guides and one new one each week. I can unsubscribe at any
+              time and my address is never shared &mdash; see the
+              <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set
+              arrives the moment you click it.</span>
+          </label>
+        </form>
+
         <div class="article__footer">
           <p class="monospace monospace__p opacity__50" data-splitting>Independent field guide. Not affiliated with,
             endorsed by, or connected to WhatsApp or Meta Platforms, Inc. All trademarks belong to their
@@ -267,9 +403,9 @@
   </section>
   <div class="cursor"><div class="cursor__inner"></div></div>
 </main>
-<script src="assets/js/gsap.min.js?v=2026-08-26-review"></script>
-<script src="assets/js/ScrollTrigger.min.js?v=2026-08-26-review"></script>
-<script src="assets/js/splitting.min.js?v=2026-08-26-review"></script>
-<script src="assets/js/site.js?v=2026-08-26-review" type="module"></script>
+<script src="assets/js/gsap.min.js?v=2026-08-29-plate"></script>
+<script src="assets/js/ScrollTrigger.min.js?v=2026-08-29-plate"></script>
+<script src="assets/js/splitting.min.js?v=2026-08-29-plate"></script>
+<script src="assets/js/site.js?v=2026-08-29-plate" type="module"></script>
 </body>
 </html>

@@ -10,7 +10,11 @@ colors:
   canvas: "#1a1a1a"          # --bgcolor, <body> background on all 9 template pages
   ink: "#bababa"             # --primarycolor / --grey, default text
   ink-dim: "#111111"         # --black, text colour on the mid-grey plate
-  plate-read: "#71737d"      # --lightgrey, background of every article body
+  plate-read: "#d5d6db"      # --plate-read, article body, default "paper" theme
+  plate-read-panel: "#22242b"  # --plate-read under [data-reading=panel]
+  plate-read-ink: "#111111"    # 13.01:1 on paper / #d2d4da, 10.46:1 on panel
+  plate-read-dim: "#54565d"    #  5.05:1 on paper / #91939a, 5.05:1 on panel
+  plate-read-legacy: "#71737d" # what --lightgrey was until 2026-08-29; 4.00:1, retired
   plate-deep: "#111111"      # --black, section__black
   plate-accent: "#03049c"    # --blue, every footer
   accent-warn: "#ff001a"     # --red
@@ -244,6 +248,15 @@ in a desaturated red.
 Hairline under every row, mono uppercase `th` at 13px / 0.55 opacity, first
 column mono with tabular numerals. Defined in `99-hubert.css`.
 
+### Reading toggle (`.readingToggle`)
+Two mono buttons, Paper / Panel, living as one more cell in the dossier document
+header — that block is already a field table of apparatus, so the control needs
+no new furniture. `aria-pressed` carries the state; both buttons are 44px tall.
+Hidden until the boot script adds `.reading-ready` to `<html>`, so a reader
+without JavaScript is never shown a control that cannot work; they get the
+default paper plate, which is the more legible of the two. The choice is stored
+in `localStorage` under `hubert:reading` and is disclosed in `privacy.html`.
+
 ### Header and mobile menu
 Wordmark left (SVG, `textLength`-stretched), inline link list centre on desktop,
 a text-only "Menu" button on mobile that opens `#mobile-navigation`.
@@ -273,8 +286,10 @@ clear the native control bar.
 - Use a full-bleed plate to change register. Never a card.
 - Keep the three font roles sealed: display for headings, Graphik for prose,
   Mono for everything that is apparatus.
-- Set apparatus uppercase with positive tracking, and dim it with opacity rather
-  than a second grey.
+- Set apparatus uppercase with positive tracking. Dim it with opacity **on the
+  dark plates only**, where the device still measures above 4.5:1. On the
+  reading plate use the explicit `--plate-read-dim` ink instead — see
+  Contradictions 2 and 3, which this rule replaced on 2026-08-29.
 - Use the hairline link row for every outbound action.
 - Give diagrams their own field and their own colour set, and inline those
   colours from the source artefact.
@@ -300,17 +315,20 @@ clear the native control bar.
 These are the places where the site does not obey itself. They are the input to
 `DESIGN-REVIEW.md`; severities and fixes live there.
 
-1. **Two design systems.** `git.html` loads `tokens.css`, not the System A
-   bundle. Warm paper `oklch(96.2% 0.012 85)` against System A's `#1a1a1a`;
-   Archivo + Newsreader + JetBrains Mono against SemiSqueezed + Graphik + Mono;
-   a documented 4pt spacing scale and a `clamp()` type canyon against `vw` and
-   percentages; its own header and its own footer. Known and accepted by the
-   owner; recorded here because a reader arriving from a reel cannot know that.
-2. **The reading plate fails its own ink.** `#111111` on `#71737d` measures
-   4.00:1. WCAG AA for text below 24px needs 4.5:1. This is the surface every
-   article body sits on.
-3. **Apparatus is dimmed below legibility.** Mono labels at `opacity: .5` and
-   `.55` on the reading plate measure 2.12:1 and 2.29:1 (computed).
+1. ~~**Two design systems.**~~ **Resolved 2026-08-26** by commit 25adfcc, which
+   rebuilt `git.html` on System A. All ten template pages now load the same
+   bundle. `tokens.css` is still in the repo and is no longer referenced by any
+   page; it is dead and should be deleted. (This entry described the site as it
+   was when extracted; it was already stale by the time it was next read.)
+2. ~~**The reading plate fails its own ink.**~~ **Resolved 2026-08-29.** Was
+   `#111111` on `#71737d` = 4.00:1. The plate is now `--plate-read`, defaulting
+   to `#d5d6db` (13.01:1) with a reader toggle to `#22242b` (10.46:1).
+3. ~~**Apparatus is dimmed below legibility.**~~ **Resolved 2026-08-29.** Was
+   2.12:1 and 2.29:1. Opacity-dimming is replaced on this plate by
+   `--plate-read-dim` (5.05:1 in both themes), and `th` is lifted from 13px to
+   the system's own 14px floor. The measurement that forced the device change:
+   even a near-white `#d5d6db` plate leaves `.55`-opacity apparatus at 3.74:1,
+   so no plate colour could have fixed this on its own.
 4. **No radius scale.** `var(--radius)` plus hard-coded `8px`, `12px`, `999px`.
 5. **Three unit systems for type** (`vw`, `%`, `px`) with breakpoint floors,
    so there is no scale you can name a step of.
@@ -321,9 +339,9 @@ These are the places where the site does not obey itself. They are the input to
    nor `@font-face`d, so every `↗` on the site falls back to the system UI sans
    rather than to a face in the system.
 8. **`GeistMono` is `@font-face`d and never used.**
-9. **Focus has no design.** System A removes the outline on every anchor
-   (`a { outline: 0 }`) and defines no replacement. System B defines a proper
-   focus ring. The two pages disagree about whether keyboard users exist.
+9. ~~**Focus has no design.**~~ **Resolved.** `99-hubert.css` now defines a
+   `:focus-visible` ring that resolves off the plate's own text colour, so it
+   works on all four plates without a per-plate override.
 10. **The footer is a `<section class="... footer ...">`, not a `<footer>`,**
     and the nav is a `<div class="nav">`, not a `<nav>`. System B uses the real
     elements.
@@ -332,9 +350,10 @@ These are the places where the site does not obey itself. They are the input to
 
 ---
 
-# System B — `tokens.css` (git.html only)
+# System B — `tokens.css` (no longer used by any page)
 
-Recorded for completeness. It is a warm-paper editorial system: `--paper`
+**Dead as of commit 25adfcc**, which rebuilt `git.html` on System A. Nothing
+loads this file. Recorded for completeness. It is a warm-paper editorial system: `--paper`
 `oklch(96.2% 0.012 85)`, `--ink` `oklch(24% 0.02 250)`, one dark plate
 `--midnight` `oklch(17.5% 0.035 250)` lifted from the film, Archivo for display,
 Newsreader for prose, JetBrains Mono for apparatus, a 4pt spacing scale
