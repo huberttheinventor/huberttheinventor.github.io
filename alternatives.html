@@ -6,26 +6,28 @@
 <title>Every paid tool has an open twin. · Hubert's field guides</title>
 <meta name="description" content="Field guide Nº008. Twelve verified open-source replacements for paid tools, with GitHub star counts read on 29 August 2026, plus how to judge an alternative and where open source still costs you.">
 <meta name="theme-color" content="#1a1a1a">
-<link rel="icon" href="img/favicon.svg?v=2026-08-26-review" type="image/svg+xml">
+<link rel="icon" href="img/favicon.svg?v=2026-08-29-plate" type="image/svg+xml">
 
 <meta property="og:type" content="article">
 <meta property="og:title" content="Every paid tool has an open twin.">
 <meta property="og:description" content="Somebody rebuilt the thing you pay for and put it on GitHub. Twelve swaps, checked.">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="artifacts/alternatives-card.png">
+<meta property="og:image:alt" content="Field guide Nº008 — Every paid tool has an open twin. Twelve open-source swaps, on the Hubert field-guide card.">
+<meta name="twitter:card" content="summary_large_image">
 
-<link rel="stylesheet" href="assets/css/00-critical.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/entry.CQSbLAcy.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/default.Z9wDiTTt.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/_slug_.DENrRFxM.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/Industries.BJpTkmyx.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/Footer.MRJrKAf5.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/99-hubert.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/00-critical.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/entry.CQSbLAcy.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/default.Z9wDiTTt.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/_slug_.DENrRFxM.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/Industries.BJpTkmyx.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/Footer.MRJrKAf5.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/99-hubert.css?v=2026-08-29-plate">
 
 <style>
   /* ── the swaps table ──────────────────────────────────────────────────
      The shared rule in 99-hubert.css styles rows but sizes nothing, and this
      table carries three columns plus a description line. Scoped to this page. */
-  .swaps__note { display: block; margin-top: 4px; opacity: .6; }
+  .swaps__note { display: block; margin-top: 4px; color: var(--plate-read-dim); }  /* was opacity .6 = 4.34:1 at 20px, just under the 4.5 AA floor */
   .journalArticle__article table.swaps { table-layout: fixed; }
   .journalArticle__article table.swaps th:nth-child(1),
   .journalArticle__article table.swaps td:nth-child(1) { width: 26%; }
@@ -53,13 +55,15 @@
     .journalArticle__article table.swaps td:nth-child(3) { width: auto; }
     .journalArticle__article table.swaps thead { display: none; }
     .journalArticle__article table.swaps tr {
-      border-bottom: 1px solid rgba(0, 0, 0, .35);
+      border-bottom: 1px solid var(--plate-read-rule);
       padding: 14px 0;
     }
     .journalArticle__article table.swaps td { border-bottom: 0; padding: 0 0 4px; }
     .journalArticle__article table.swaps td:nth-child(1) {
-      font-size: 13px;
-      opacity: .55;
+      /* was `font-size: 13px; opacity: .55`, which measured 3.74:1 on the
+         reading plate. Same retired device as the shared `th` rule; same fix. */
+      color: var(--plate-read-dim);
+      font-size: 14px;
       text-transform: uppercase;
       white-space: nowrap;
     }
@@ -105,6 +109,34 @@
   .hover_effect, .splitting, [data-splitting],
   .journalArticle__article { opacity: 1 !important; }
 </style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
 </head>
 <body class="journal">
 <div class="topOverlay"></div>
@@ -172,6 +204,13 @@
         </div>
         <div class="journalArticle__documentCell monospace">
           <span>Annotations</span><strong>Twelve swaps, all checked</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
         </div>
         <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
           <span>Status</span>
@@ -399,6 +438,32 @@
           <a href="https://github.com/navidrome/navidrome" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Navidrome</span> <span class="arrow">↗</span></a>
         </div>
 
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-small="true">The List</p>
+        <h4 aria-level="2">One system, taken apart, when there is a new one.</h4>
+        <p>Everything here is free and stays free. The list exists so the next guide can
+          reach you without an algorithm deciding whether you deserve it. No pitch, no
+          thread-bait, and an unsubscribe link that works.</p>
+
+        <form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor"
+              method="post">
+          <label class="monospace monospace__p" for="list-email">Email address</label>
+          <div class="field">
+            <input type="email" name="email" id="list-email" placeholder="you@example.com"
+                   required autocomplete="email" inputmode="email" spellcheck="false">
+            <input type="hidden" name="tag" value="guide-08-alternatives">
+            <button type="submit" class="monospace">Send it &#8599;</button>
+          </div>
+          <label class="consent monospace monospace__p">
+            <input type="checkbox" name="consent" required>
+            <span>Email me new field guides. I can unsubscribe at any time and my address is
+              never shared &mdash; see the <a href="privacy.html">privacy note</a>. You will get
+              a confirmation email first; you are not on the list until you click it.</span>
+          </label>
+        </form>
+
         <div class="article__footer">
           <p class="monospace monospace__p opacity__50" data-splitting>An independent educational breakdown.
             Not affiliated with, endorsed by, or produced in cooperation with any company named here,
@@ -434,9 +499,9 @@
   </section>
   <div class="cursor"><div class="cursor__inner"></div></div>
 </main>
-<script src="assets/js/gsap.min.js?v=2026-08-26-review"></script>
-<script src="assets/js/ScrollTrigger.min.js?v=2026-08-26-review"></script>
-<script src="assets/js/splitting.min.js?v=2026-08-26-review"></script>
-<script src="assets/js/site.js?v=2026-08-26-review" type="module"></script>
+<script src="assets/js/gsap.min.js?v=2026-08-29-plate"></script>
+<script src="assets/js/ScrollTrigger.min.js?v=2026-08-29-plate"></script>
+<script src="assets/js/splitting.min.js?v=2026-08-29-plate"></script>
+<script src="assets/js/site.js?v=2026-08-29-plate" type="module"></script>
 </body>
 </html>

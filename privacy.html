@@ -4,23 +4,51 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Privacy — Hubert's field guides</title>
-<meta name="description" content="Nothing is collected from you at the moment: no signup form, no analytics, no cookies. This page says what changes when the mailing list opens.">
+<meta name="description" content="One email address, only if you type it into the form and confirm it. No analytics, no cookies, no tracking. What is collected, by whom, and how to get out.">
 <meta name="theme-color" content="#1a1a1a">
-<link rel="icon" href="img/favicon.svg?v=2026-08-26-review" type="image/svg+xml">
+<link rel="icon" href="img/favicon.svg?v=2026-08-29-plate" type="image/svg+xml">
 <meta name="robots" content="index,follow">
 
-<link rel="stylesheet" href="assets/css/00-critical.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/entry.CQSbLAcy.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/default.Z9wDiTTt.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/_slug_.DENrRFxM.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/Industries.BJpTkmyx.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/Footer.MRJrKAf5.css?v=2026-08-26-review">
-<link rel="stylesheet" href="assets/css/99-hubert.css?v=2026-08-26-review">
+<link rel="stylesheet" href="assets/css/00-critical.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/entry.CQSbLAcy.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/default.Z9wDiTTt.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/_slug_.DENrRFxM.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/Industries.BJpTkmyx.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/Footer.MRJrKAf5.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/99-hubert.css?v=2026-08-29-plate">
 
 <noscript><style>
   .hover_effect, .splitting, [data-splitting],
   .journalArticle__article { opacity: 1 !important; }
 </style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
 </head>
 <body class="journal">
 <div class="topOverlay"></div>
@@ -70,13 +98,20 @@
           <span>Document</span><strong>Privacy note</strong>
         </div>
         <div class="journalArticle__documentCell monospace">
-          <span>Collected today</span><strong>Nothing</strong>
+          <span>Collected</span><strong>Email, if you give it</strong>
         </div>
         <div class="journalArticle__documentCell monospace">
           <span>Cookies</span><strong>None</strong>
         </div>
         <div class="journalArticle__documentCell monospace">
-          <span>Last revised</span><strong>18 August 2026</strong>
+          <span>Last revised</span><strong>29 August 2026</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
         </div>
         <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
           <span>Status</span>
@@ -86,16 +121,21 @@
 
       <div class="journalArticle__article" id="privacy">
         <h1 data-splitting="lines">What is collected, and what is not.</h1>
-        <p class="lead" data-splitting>Nothing is collected from you at the moment. There is no signup form,
-          no analytics and no cookies on these pages. What follows describes that, and what will change when
-          the mailing list opens.</p>
+        <p class="lead" data-splitting>One thing is collected, and only if you hand it over: an email
+          address, typed into the form at the foot of a guide. There are no analytics, no cookies and
+          no tracking on these pages. What follows says exactly what happens to that address.</p>
 
         <hr>
 
         <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº001 / What is collected</p>
-        <h4 aria-level="2" data-splitting="lines">Nothing, today</h4>
-        <p data-splitting>The mailing list is not open yet, so there is no form to type an address into.
-          Nothing on these pages requires an account, and nothing is recorded about readers who simply read.</p>
+        <h4 aria-level="2" data-splitting="lines">One address, and only if you type it</h4>
+        <p data-splitting>Every field guide ends with a form for the mailing list. If you fill it in and
+          tick the consent box, your email address is collected &mdash; and that is the only personal thing
+          this site ever asks for. Nothing requires an account, and nothing at all is recorded about readers
+          who simply read and leave.</p>
+        <p data-splitting>Each form carries a tag naming the guide it sits on, so the list knows which
+          guide brought you. That tag is attached to your subscription, not to any record of your
+          browsing.</p>
 
         <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº002 / Analytics</p>
         <h4 aria-level="2" data-splitting="lines">None, and no cookie banner</h4>
@@ -105,33 +145,42 @@
           sets no cookies and stores neither personal data nor full IP addresses, and this page will say so
           before it is switched on.</p>
 
-        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº003 / When the list opens</p>
-        <h4 aria-level="2" data-splitting="lines">One address, for one purpose</h4>
-        <p data-splitting>Your email address will be the only personal thing collected, and only if you type
-          it into the form and tick the consent box. It will be used to send new field guides and nothing else —
-          not sold, rented, traded, or shared with advertisers, and not used to build a profile of you. The list
-          will run on <a href="https://buttondown.com/legal/privacy" rel="noopener">Buttondown</a>, which would store
-          the addresses and send the emails as the processor, under their privacy policy. This page will be
-          updated to describe that as fact, not as a plan, before any address is collected.</p>
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº003 / Browser storage</p>
+        <h4 aria-level="2" data-splitting="lines">Two settings, kept on your own device</h4>
+        <p data-splitting>Not cookies, and not sent anywhere: two values are written to this site&rsquo;s
+          local storage in your browser, and neither leaves your device. <strong>hubert:reading</strong>
+          remembers whether you chose the paper or the panel reading plate, so the site does not forget
+          between pages. <strong>hubert:motion</strong> records whether the animation layer started
+          correctly, which is used to keep the text visible if it did not. Clearing your browser&rsquo;s
+          site data removes both, and the site works normally without them.</p>
 
-        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº004 / Your rights</p>
-        <h4 aria-level="2" data-splitting="lines">Once there is anything to exercise them on</h4>
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº004 / The mailing list</p>
+        <h4 aria-level="2" data-splitting="lines">One address, for one purpose</h4>
+        <p data-splitting>Your email address is the only personal thing collected, and only if you type
+          it into the form and tick the consent box. It is used to send new field guides and nothing else —
+          not sold, rented, traded, or shared with advertisers, and not used to build a profile of you.</p>
+        <p data-splitting>The list runs on <a href="https://buttondown.com/legal/privacy" rel="noopener">Buttondown</a>,
+          which stores the addresses and sends the emails as the processor, under their privacy policy.
+          Signup is confirmed: Buttondown emails you first, and you are not on the list and receive nothing
+          until you click the link in that email. If you never click it, the address is never activated.</p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº005 / Your rights</p>
+        <h4 aria-level="2" data-splitting="lines">How to exercise them</h4>
         <ul>
-          <li><strong>Unsubscribe</strong> — every email will carry a working unsubscribe link, and using it
+          <li><strong>Unsubscribe</strong> — every email carries a working unsubscribe link, and using it
             deletes you from the list.</li>
           <li><strong>Access or deletion</strong> — ask, and your address is removed along with any record of it.</li>
           <li><strong>Correction</strong> — reply to any newsletter to change your address.</li>
         </ul>
         <p data-splitting>If you are in the EU or UK, these are your rights under the GDPR. The lawful basis for
-          holding your address would be your consent, given by ticking the box on the form, and you could
-          withdraw it at any time by unsubscribing. Today none of this is engaged, because no address has been
-          asked for.</p>
+          holding your address is your consent, given by ticking the box on the form and confirmed by clicking
+          the link in the confirmation email, and you can withdraw it at any time by unsubscribing.</p>
 
-        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº005 / Retention</p>
-        <h4 aria-level="2" data-splitting="lines">How long it would be kept</h4>
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº006 / Retention</p>
+        <h4 aria-level="2" data-splitting="lines">How long it is kept</h4>
         <p data-splitting>Until you unsubscribe. There is no archive of removed subscribers.</p>
 
-        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº006 / Contact</p>
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº007 / Contact</p>
         <h4 aria-level="2" data-splitting="lines">How to reach a person</h4>
         <p data-splitting>Message <a href="https://instagram.com/huberttheinventor" rel="me">@huberttheinventor</a>
           on Instagram.</p>
@@ -167,9 +216,9 @@
   </section>
   <div class="cursor"><div class="cursor__inner"></div></div>
 </main>
-<script src="assets/js/gsap.min.js?v=2026-08-26-review"></script>
-<script src="assets/js/ScrollTrigger.min.js?v=2026-08-26-review"></script>
-<script src="assets/js/splitting.min.js?v=2026-08-26-review"></script>
-<script src="assets/js/site.js?v=2026-08-26-review" type="module"></script>
+<script src="assets/js/gsap.min.js?v=2026-08-29-plate"></script>
+<script src="assets/js/ScrollTrigger.min.js?v=2026-08-29-plate"></script>
+<script src="assets/js/splitting.min.js?v=2026-08-29-plate"></script>
+<script src="assets/js/site.js?v=2026-08-29-plate" type="module"></script>
 </body>
 </html>
