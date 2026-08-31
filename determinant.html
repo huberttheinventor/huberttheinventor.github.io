@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The determinant is a volume — Hubert's field guides</title>
+<meta name="description" content="Field guide Nº009. Your matrix columns are vectors, those vectors span a solid, and the determinant is that solid&#39;s volume — which is why zero volume means no inverse.">
+<meta name="theme-color" content="#1a1a1a">
+<link rel="icon" href="img/favicon.svg?v=2026-08-29-plate" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="The determinant is a volume">
+<meta property="og:description" content="The whole system as one map, then three annotations that zoom into named regions of it.">
+<meta property="og:image" content="artifacts/determinant-system-map.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="stylesheet" href="assets/css/00-critical.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/entry.CQSbLAcy.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/default.Z9wDiTTt.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/_slug_.DENrRFxM.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/Industries.BJpTkmyx.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/Footer.MRJrKAf5.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/99-hubert.css?v=2026-08-29-plate">
+
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  .journalArticle__article { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="index.html" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Field guides">
+      <a href="index.html" class="hover_effect"><span>Index</span></a>
+      <a href="netflix.html" class="hover_effect"><span>Guide 01</span></a>
+      <a href="kubernetes.html" class="hover_effect"><span>Guide 02</span></a><a href="whatsapp.html" class="hover_effect"><span>Guide 03</span></a><a href="google-search.html" class="hover_effect"><span>Guide 04</span></a><a href="gps.html" class="hover_effect"><span>Guide 05</span></a><a href="git.html" class="hover_effect"><span>Guide 06</span></a><a href="design-plugins.html" class="hover_effect"><span>Guide 07</span></a>
+      <a href="alternatives.html" class="hover_effect"><span>Guide 08</span></a><a aria-current="page" href="determinant.html" class="active router-link-exact-active hover_effect"><span>Guide 09</span></a>
+      <a href="#sources" class="hover_effect"><span>Sources</span></a>
+      <a href="index.html#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">●</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Menu</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Field guides, mobile">
+  <div class="mobilenav__main">
+    <a href="index.html"><span>Index</span></a>
+    <a href="netflix.html"><span>Guide 01</span></a>
+    <a href="kubernetes.html"><span>Guide 02</span></a>
+    <a href="whatsapp.html"><span>Guide 03</span></a><a href="google-search.html"><span>Guide 04</span></a><a href="gps.html"><span>Guide 05</span></a><a href="git.html"><span>Guide 06</span></a><a href="design-plugins.html"><span>Guide 07</span></a>
+    <a href="alternatives.html"><span>Guide 08</span></a>
+    <a href="determinant.html"><span>Guide 09</span></a>
+    <a href="determinant.html#sources"><span>Sources</span></a>
+    <a href="index.html#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<main class="main" id="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Field guide</span><strong>Nº009</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>System</span><strong>The determinant</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Model</span><strong>Volume, and what zero means</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Annotations</span><strong>Three, keyed to the map</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp">Filed</span>
+        </div>
+      </div>
+
+      <div class="journalArticle__article" id="guide">
+        <h1 data-splitting="lines">The determinant is a volume.</h1>
+        <p class="lead" data-splitting>Everyone memorises ad &minus; bc and nobody says what it measures.
+          Pull a matrix's columns out as vectors, look at the solid they span, and the determinant is
+          that solid's volume. Every other fact about it falls out of that one picture.</p>
+
+        <figure class="journalArticle__banner guideVideo">
+          <video controls preload="none" playsinline
+                 poster="img/guide/guide-09-poster.jpg"
+                 aria-label="Field guide N&ordm;009: the determinant is a volume">
+            <source src="img/guide/guide-09.mp4" type="video/mp4">
+            <track kind="subtitles" src="artifacts/guide-09.vtt" srclang="en" label="English">
+            <p class="monospace monospace__p">Your browser will not play this. The whole guide is written
+              out below, and <a href="artifacts/transcript-determinant.md">the transcript</a> has every word of it.</p>
+          </video>
+          <figcaption class="monospace monospace__p opacity__50">N&ordm;009 &middot; 3:49 &middot; watch it first, then read the map</figcaption>
+        </figure>
+
+        <figure class="journalArticle__banner map" id="map">
+          <svg viewBox="0 0 1200 480" role="img"
+             aria-label="System map: three column vectors leave a shared origin and span a solid. The solid's volume is the absolute value of the determinant. When the third vector flattens into the plane of the other two, the volume reaches zero, the column span loses a dimension, and the matrix stops being invertible.">
+            <style>.m-line{stroke:#7a8990;stroke-width:1.2;fill:none}.m-edge{stroke:#79b0cc;stroke-width:1.6;fill:none}.m-video{stroke:#79b0cc;stroke-width:5;fill:none;stroke-linecap:round}.m-meta{stroke:#7a8990;stroke-width:1.6;fill:none;stroke-dasharray:7 6}.m-box{stroke:#79b0cc;stroke-width:1.4;fill:none}.m-fill{fill:#79b0cc}.m-dim{fill:#79b0cc7d}.m-t{font-family:Mono,ui-monospace,monospace;font-size:13px;letter-spacing:1.1px;fill:#abbac2}.m-n{font-family:Mono,ui-monospace,monospace;font-size:14px;font-weight:500;letter-spacing:.7px;fill:#faf6af}</style>
+
+            <!-- 01 · the columns become vectors -->
+            <text class="m-n" x="20" y="60">01</text>
+            <text class="m-t" x="60" y="60">COLUMNS &middot; PULLED OUT AS VECTORS FROM ONE ORIGIN</text>
+            <circle class="m-fill" cx="150" cy="330" r="6"/>
+            <path class="m-video" d="M150 330 L300 300"/>
+            <path class="m-video" d="M150 330 L215 215"/>
+            <path class="m-video" d="M150 330 L190 250"/>
+            <text class="m-t" x="150" y="360">ORIGIN</text>
+
+            <!-- 02 · the solid they span -->
+            <text class="m-n" x="440" y="60">02</text>
+            <text class="m-t" x="480" y="60">THE SOLID THEY SPAN &middot; ITS VOLUME IS |det|</text>
+            <path class="m-edge" d="M470 350 L620 320 L680 230 L530 260 Z"/>
+            <path class="m-edge" d="M470 350 L470 250 L620 220 L620 320"/>
+            <path class="m-edge" d="M470 250 L530 160 L680 130 L620 220"/>
+            <path class="m-edge" d="M680 130 L680 230"/>
+            <path class="m-line" d="M530 160 L530 260"/>
+            <text class="m-t" x="470" y="392">VOLUME &middot; 1.00</text>
+
+            <!-- 03 · flattened -->
+            <text class="m-n" x="880" y="60">03</text>
+            <text class="m-t" x="920" y="60">FLATTENED &middot; VOLUME ZERO, ONE DIMENSION LOST</text>
+            <path class="m-meta" d="M700 300 L860 300"/>
+            <path class="m-edge" d="M900 350 L1050 320 L1110 230 L960 260 Z"/>
+            <path class="m-video" d="M900 350 L1050 320"/>
+            <text class="m-t" x="900" y="392">VOLUME &middot; 0.00 &middot; NO INVERSE</text>
+          </svg>
+
+          <div class="map__phone">
+            <div class="mband">
+              <div class="mrung">
+                <div class="mrung__box">
+                  <span class="mrung__n">01</span>
+                  <h5 class="mrung__t">Columns<small>pulled out as vectors from one origin</small></h5>
+                </div>
+              </div>
+
+              <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+                <span>they <b>span</b> a solid</span></p>
+
+              <div class="mrung">
+                <div class="mrung__box">
+                  <span class="mrung__n">02</span>
+                  <h5 class="mrung__t">The solid<small>its volume is the absolute value of the determinant</small></h5>
+                  <div class="mgrid">
+                    <span><b>2 columns</b>Area</span>
+                    <span><b>3 columns</b>Volume</span>
+                    <span><b>n columns</b>n-volume</span>
+                  </div>
+                </div>
+              </div>
+
+              <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+                <span>flatten it</span></p>
+
+              <div class="mrung">
+                <div class="mrung__box">
+                  <span class="mrung__n">03</span>
+                  <h5 class="mrung__t">Zero volume<small>the column span lost a dimension &mdash; no inverse</small></h5>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="legend monospace">
+            <div><i aria-hidden="true"></i>Column vectors and the edges they span &mdash; the thing being measured</div>
+            <div><i class="dash" aria-hidden="true"></i>The flattening &mdash; what happens as the determinant goes to zero</div>
+          </div>
+        </figure>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">The whole mental model, one picture. Everything after it is annotation.</p>
+
+        <p class="monospace monospace__p" data-splitting>Take it with you:
+          <a href="artifacts/determinant-system-map.png" download>the map as an image</a> &middot;
+          <a href="artifacts/determinant-system-map.svg" download>as a vector</a></p>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">N&ordm;001</p>
+        <h4 aria-level="2" data-splitting="lines">The columns are vectors. The vectors span a solid.</h4>
+        <p data-splitting>Take a 3&times;3 matrix and read it column by column. Each column is three numbers,
+          which is a point in space, which is a vector from the origin. Draw all three and you have three
+          arrows leaving one corner. The shape they span &mdash; the squashed box with those three arrows as
+          its edges &mdash; is called a parallelepiped, and its volume is the absolute value of the determinant.</p>
+        <p data-splitting>The dimension is not special. Two columns span a parallelogram and you get an area.
+          Three span a solid and you get a volume. n columns span an n-dimensional analogue and you get an
+          n-volume. Same measurement, same number, more axes.</p>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">N&ordm;002</p>
+        <h4 aria-level="2" data-splitting="lines">Zero volume means a dimension went missing.</h4>
+        <p data-splitting>The determinant is zero exactly when that solid has flattened. This is where the
+          picture starts paying for itself, because flatness is not just a smaller volume &mdash; it is a
+          statement about the columns themselves.</p>
+        <p data-splitting>Here is the argument. Take n&minus;1 of your column vectors and call the shape they
+          span the base. The remaining vector's height above that base is the solid's height, and volume is
+          base times height. If the volume is zero then the height is zero, which means that last vector lies
+          inside the base &mdash; it is a combination of the others. It was never adding a new direction. The
+          column span has one fewer dimension than it appears to.</p>
+        <p data-splitting>And if you object that the volume could be zero because the base itself collapsed,
+          the same argument applies to the base, one dimension down, until you reach two vectors in a plane
+          where a zero-length base means you lost a vector outright.</p>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">N&ordm;003</p>
+        <h4 aria-level="2" data-splitting="lines">Which is why a zero determinant has no inverse.</h4>
+        <p data-splitting>An inverse undoes a transformation: hand it any output and it hands back the one
+          input that produced it. That is only possible if no two inputs ever land on the same output.</p>
+        <p data-splitting>A flattened image is lower dimensional than the space it came from, so the map has
+          to be squashing distinct inputs onto the same point &mdash; there is not enough room on the other
+          side for them to stay separate. Several inputs, one output, nothing to hand back. The matrix is not
+          invertible, and the determinant told you so with a single number.</p>
+        <p data-splitting>That is the whole reason the determinant is worth carrying around. It is not a
+          formula to be memorised, it is a volume scaling factor: the amount by which a transformation
+          stretches or squashes space. Zero means it flattened space, and flattened space cannot be unflattened.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="sources">Take it with you</h4>
+        <div class="buttons">
+          <a href="artifacts/reading-list-determinant.md" class="button button__big hover_effect"><span>The reading list</span> <span class="arrow">&#8599;</span></a>
+          <a href="artifacts/transcript-determinant.md" class="button button__big hover_effect"><span>Full transcript</span> <span class="arrow">&#8599;</span></a>
+          <a href="#map" class="button button__big hover_effect"><span>The system map</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-small="true">The List</p>
+        <h4 aria-level="2">One a week. And the other seven, now.</h4>
+        <p>Confirm your address and the whole set arrives &mdash; all eight field guides, exactly
+          as they are on the site, nothing held back for subscribers. After that, one new system
+          taken apart every week. No pitch, no thread-bait, and an unsubscribe link that works.</p>
+
+        <form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor"
+              method="post">
+          <label class="monospace monospace__p" for="list-email">Email address</label>
+          <div class="field">
+            <input type="email" name="email" id="list-email" placeholder="you@example.com"
+                   required autocomplete="email" inputmode="email" spellcheck="false">
+            <input type="hidden" name="tag" value="guide-09-determinant">
+            <button type="submit" class="monospace">Send me the set &#8599;</button>
+          </div>
+          <label class="consent monospace monospace__p">
+            <input type="checkbox" name="consent" required>
+            <span>Send me the eight guides and one new one each week. I can unsubscribe at any
+              time and my address is never shared &mdash; see the
+              <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set
+              arrives the moment you click it.</span>
+          </label>
+        </form>
+
+        <div class="article__footer">
+          <p class="monospace monospace__p opacity__50" data-splitting>Independent field guide. This one explains a piece of
+            mathematics rather than a company&#39;s system, so there is nothing to disclaim except the usual:
+            the argument is standard linear algebra, the pictures are drawn for this guide, and any error
+            in it is mine.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="artifacts/determinant-system-map.png" class="button button__half hover_effect" title="The schematic, as an image"><span>The schematic</span> <span class="arrow">↗</span></a>
+          <a href="artifacts/transcript-determinant.md" class="button button__half hover_effect" title="Full narration, by section"><span>Transcript</span><span class="arrow">↗</span></a>
+          <a href="artifacts/reading-list-determinant.md" class="button button__half hover_effect" title="Primary sources"><span>Sources</span><span class="arrow">↗</span></a>
+          <a href="privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+<script src="assets/js/gsap.min.js?v=2026-08-29-plate"></script>
+<script src="assets/js/ScrollTrigger.min.js?v=2026-08-29-plate"></script>
+<script src="assets/js/splitting.min.js?v=2026-08-29-plate"></script>
+<script src="assets/js/site.js?v=2026-08-29-plate" type="module"></script>
+<dialog id="list-modal" class="listModal" aria-labelledby="list-modal-title"><div class="listModal__inner" tabindex="-1" autofocus><p class="listModal__eyebrow">The List</p><h2 id="list-modal-title">Eight guides. One email.</h2><p>Every field guide on this site, sent the moment you confirm &mdash; then one new system taken apart each week.</p><p>Nothing is held back for subscribers. The guides stay free and stay here; the list is only how the next one reaches you without an algorithm getting a vote.</p><form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor" method="post"><label class="monospace monospace__p" for="list-email-modal">Email address</label><div class="field"><input type="email" name="email" id="list-email-modal" placeholder="you@example.com" required autocomplete="email" inputmode="email" spellcheck="false"><input type="hidden" name="tag" value="popup-determinant"><button type="submit" class="monospace">Send me the set &#8599;</button></div><label class="consent monospace monospace__p"><input type="checkbox" name="consent" required><span>Send me the eight guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set arrives the moment you click it.</span></label></form><button type="button" class="listModal__close" data-close>No thanks &mdash; just reading</button></div></dialog>
+<script src="assets/js/list-modal.js?v=2026-08-29-plate" defer></script>
+</body>
+</html>

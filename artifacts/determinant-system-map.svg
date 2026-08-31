@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="480" viewBox="0 0 1200 480" role="img"
+             aria-label="System map: three column vectors leave a shared origin and span a solid. The solid's volume is the absolute value of the determinant. When the third vector flattens into the plane of the other two, the volume reaches zero, the column span loses a dimension, and the matrix stops being invertible.">
+            <style>.m-line{stroke:#7a8990;stroke-width:1.2;fill:none}.m-edge{stroke:#79b0cc;stroke-width:1.6;fill:none}.m-video{stroke:#79b0cc;stroke-width:5;fill:none;stroke-linecap:round}.m-meta{stroke:#7a8990;stroke-width:1.6;fill:none;stroke-dasharray:7 6}.m-box{stroke:#79b0cc;stroke-width:1.4;fill:none}.m-fill{fill:#79b0cc}.m-dim{fill:#79b0cc7d}.m-t{font-family:Mono,ui-monospace,monospace;font-size:13px;letter-spacing:1.1px;fill:#abbac2}.m-n{font-family:Mono,ui-monospace,monospace;font-size:14px;font-weight:500;letter-spacing:.7px;fill:#faf6af}.bg{fill:#000d18}</style>
+<rect class="bg" x="0" y="0" width="1200" height="480"/>
+
+            <!-- 01 · the columns become vectors -->
+            <text class="m-n" x="20" y="60">01</text>
+            <text class="m-t" x="60" y="60">COLUMNS &middot; PULLED OUT AS VECTORS FROM ONE ORIGIN</text>
+            <circle class="m-fill" cx="150" cy="330" r="6"/>
+            <path class="m-video" d="M150 330 L300 300"/>
+            <path class="m-video" d="M150 330 L215 215"/>
+            <path class="m-video" d="M150 330 L190 250"/>
+            <text class="m-t" x="150" y="360">ORIGIN</text>
+
+            <!-- 02 · the solid they span -->
+            <text class="m-n" x="440" y="60">02</text>
+            <text class="m-t" x="480" y="60">THE SOLID THEY SPAN &middot; ITS VOLUME IS |det|</text>
+            <path class="m-edge" d="M470 350 L620 320 L680 230 L530 260 Z"/>
+            <path class="m-edge" d="M470 350 L470 250 L620 220 L620 320"/>
+            <path class="m-edge" d="M470 250 L530 160 L680 130 L620 220"/>
+            <path class="m-edge" d="M680 130 L680 230"/>
+            <path class="m-line" d="M530 160 L530 260"/>
+            <text class="m-t" x="470" y="392">VOLUME &middot; 1.00</text>
+
+            <!-- 03 · flattened -->
+            <text class="m-n" x="880" y="60">03</text>
+            <text class="m-t" x="920" y="60">FLATTENED &middot; VOLUME ZERO, ONE DIMENSION LOST</text>
+            <path class="m-meta" d="M700 300 L860 300"/>
+            <path class="m-edge" d="M900 350 L1050 320 L1110 230 L960 260 Z"/>
+            <path class="m-video" d="M900 350 L1050 320"/>
+            <text class="m-t" x="900" y="392">VOLUME &middot; 0.00 &middot; NO INVERSE</text>
+          </svg>
