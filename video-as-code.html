@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your video is a web page — Hubert's field guides</title>
+<meta name="description" content="Field guide Nº010. There is no video engine underneath this film. The composition is an HTML file, a headless Chrome draws it frame by frame, and every caption hangs off a measured word-level timestamp.">
+<meta name="theme-color" content="#1a1a1a">
+<link rel="icon" href="img/favicon.svg?v=2026-08-29-plate" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="Your video is a web page">
+<meta property="og:description" content="The whole system as one map, then three annotations that zoom into named regions of it.">
+<meta property="og:image" content="img/guide/guide-10-poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="stylesheet" href="assets/css/00-critical.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/entry.CQSbLAcy.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/default.Z9wDiTTt.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/_slug_.DENrRFxM.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/Industries.BJpTkmyx.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/Footer.MRJrKAf5.css?v=2026-08-29-plate">
+<link rel="stylesheet" href="assets/css/99-hubert.css?v=2026-08-29-plate">
+
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  .journalArticle__article { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="index.html" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Field guides">
+      <a href="index.html" class="hover_effect"><span>Index</span></a>
+      <a href="netflix.html" class="hover_effect"><span>Guide 01</span></a>
+      <a href="kubernetes.html" class="hover_effect"><span>Guide 02</span></a><a href="whatsapp.html" class="hover_effect"><span>Guide 03</span></a><a href="google-search.html" class="hover_effect"><span>Guide 04</span></a><a href="gps.html" class="hover_effect"><span>Guide 05</span></a><a href="git.html" class="hover_effect"><span>Guide 06</span></a><a href="design-plugins.html" class="hover_effect"><span>Guide 07</span></a>
+      <a href="alternatives.html" class="hover_effect"><span>Guide 08</span></a><a href="determinant.html" class="hover_effect"><span>Guide 09</span></a><a aria-current="page" href="video-as-code.html" class="active router-link-exact-active hover_effect"><span>Guide 10</span></a>
+      <a href="#sources" class="hover_effect"><span>Sources</span></a>
+      <a href="index.html#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">●</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Menu</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Field guides, mobile">
+  <div class="mobilenav__main">
+    <a href="index.html"><span>Index</span></a>
+    <a href="netflix.html"><span>Guide 01</span></a>
+    <a href="kubernetes.html"><span>Guide 02</span></a>
+    <a href="whatsapp.html"><span>Guide 03</span></a><a href="google-search.html"><span>Guide 04</span></a><a href="gps.html"><span>Guide 05</span></a><a href="git.html"><span>Guide 06</span></a><a href="design-plugins.html"><span>Guide 07</span></a>
+    <a href="alternatives.html"><span>Guide 08</span></a>
+    <a href="determinant.html"><span>Guide 09</span></a>
+    <a href="video-as-code.html"><span>Guide 10</span></a>
+    <a href="video-as-code.html#sources"><span>Sources</span></a>
+    <a href="index.html#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<main class="main" id="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Field guide</span><strong>Nº010</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>System</span><strong>Rendering video from code</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Model</span><strong>A page, drawn frame by frame</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Annotations</span><strong>Three, keyed to the map</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp">Filed</span>
+        </div>
+      </div>
+
+      <div class="journalArticle__article" id="guide">
+        <h1 data-splitting="lines">Your video is a web page.</h1>
+        <p class="lead" data-splitting>There is no video engine underneath this one. The composition is an
+          HTML file with a CSS block in it, a headless Chrome draws it frame by frame, and the frames are
+          assembled into an MP4. Everything else follows from that: if a browser can paint it, the video
+          can have it.</p>
+
+        <figure class="journalArticle__banner guideVideo">
+          <video controls preload="none" playsinline
+                 poster="img/guide/guide-10-poster.jpg"
+                 aria-label="Field guide N&ordm;010: your video is a web page">
+            <source src="img/guide/guide-10.mp4" type="video/mp4">
+            <track kind="subtitles" src="artifacts/guide-10.vtt" srclang="en" label="English">
+            <p class="monospace monospace__p">Your browser will not play this. The whole guide is written
+              out below, and <a href="artifacts/transcript-video-as-code.md">the transcript</a> has every word of it.</p>
+          </video>
+          <figcaption class="monospace monospace__p opacity__50">N&ordm;010 &middot; 1:14 &middot; watch it first, then read the map</figcaption>
+        </figure>
+
+        <figure class="journalArticle__banner map" id="map">
+          <svg viewBox="0 0 1200 480" role="img" aria-label="System map: one audio file goes in, every word in it is timestamped, the scenes are built on those timings across motion, sound and caption tracks, and a headless Chrome draws all 2,232 frames of the resulting web page out to an MP4. There is no video engine in the chain.">
+            <style>.m-line{stroke:#7a8990;stroke-width:1.2;fill:none}.m-edge{stroke:#79b0cc;stroke-width:1.6;fill:none}.m-video{stroke:#79b0cc;stroke-width:2.4;fill:none;stroke-linecap:round}.m-meta{stroke:#7a8990;stroke-width:1.6;fill:none;stroke-dasharray:7 6}.m-box{stroke:#79b0cc;stroke-width:1.4;fill:none}.m-fill{fill:#79b0cc}.m-dim{fill:#79b0cc7d}.m-t{font-family:Mono,ui-monospace,monospace;font-size:13px;letter-spacing:1.1px;fill:#abbac2}.m-n{font-family:Mono,ui-monospace,monospace;font-size:14px;font-weight:500;letter-spacing:.7px;fill:#faf6af}</style>
+            <text class="m-n" x="20" y="60">01</text>
+    <text class="m-t" x="60" y="60">YOUR AUDIO &middot; ONE FILE, NOTHING ELSE</text>
+    <path class="m-video" d="M30 220 L30 220.0 L34 230.2 L38 237.8 L42 239.1 L46 233.7 L50 225.1 L54 219.0 L58 219.9 L62 228.4 L66 240.3 L70 248.3 L74 246.4 L78 233.6 L82 214.8 L86 198.8 L90 193.8 L94 202.7 L98 221.3 L102 240.4 L106 250.4 L110 246.7 L114 232.3 L118 216.1 L122 208.0 L126 213.2 L130 229.3 L134 247.1 L138 255.8 L142 248.7 L146 227.1 L150 199.8 L154 178.5 L158 171.6 L162 180.1 L166 197.4 L170 212.9 L174 218.2 L178 211.3 L182 197.5 L186 186.1 L190 185.1 L194 196.9 L198 216.8 L202 235.9 L206 246.2 L210 244.0 L214 232.3 L218 218.1 L222 208.8 L226 208.1 L230 214.8 L234 223.9 L238 229.7 L242 229.3 L246 223.5 L250 216.3"/>
+    <text class="m-t" x="30" y="300">VOICE TRACK</text><text class="m-n" x="330" y="60">02</text>
+    <text class="m-t" x="370" y="60">EVERY WORD TIMED &middot; NOT GUESSED</text>
+    <path class="m-line" d="M340 220 L340 220.0 L344 226.7 L348 231.7 L352 232.5 L356 229.0 L360 223.3 L364 219.3 L368 219.9 L372 225.5 L376 233.2 L380 238.5 L384 237.3 L388 228.9 L392 216.6 L396 206.2 L400 202.9 L404 208.7 L408 220.8 L412 233.3 L416 239.8 L420 237.5 L424 228.0 L428 217.4 L432 212.1 L436 215.5 L440 226.1 L444 237.7 L448 243.4 L452 238.8 L456 224.7 L460 206.8 L464 192.8 L468 188.3 L472 193.9 L476 205.2 L480 215.4 L484 218.8 L488 214.3 L492 205.3 L496 197.8 L500 197.2 L504 204.9 L508 217.9 L512 230.4 L516 237.1 L520 235.7 L524 228.0 L528 218.7 L532 212.7 L536 212.2 L540 216.6 L544 222.5 L548 226.3 L552 226.1 L556 222.3 L560 217.6"/><path class="m-line" d="M340.0 176 L340.0 264"/><text class="m-t" x="340.0" y="292" text-anchor="middle">0.0s</text><path class="m-line" d="M359.8 176 L359.8 264"/><path class="m-line" d="M381.8 176 L381.8 264"/><path class="m-line" d="M399.4 176 L399.4 264"/><text class="m-t" x="399.4" y="292" text-anchor="middle">1.1s</text><path class="m-line" d="M419.2 176 L419.2 264"/><path class="m-line" d="M439.0 176 L439.0 264"/><path class="m-line" d="M461.0 176 L461.0 264"/><text class="m-t" x="461.0" y="292" text-anchor="middle">2.3s</text><path class="m-line" d="M485.2 176 L485.2 264"/><path class="m-line" d="M511.6 176 L511.6 264"/><path class="m-line" d="M535.8 176 L535.8 264"/><text class="m-t" x="535.8" y="292" text-anchor="middle">3.7s</text><path class="m-line" d="M560.0 176 L560.0 264"/><text class="m-t" x="340" y="320">WORD-LEVEL TIMESTAMPS</text><text class="m-n" x="640" y="60">03</text>
+    <text class="m-t" x="680" y="60">SCENES BUILT ON THOSE TIMINGS</text><text class="m-t" x="650" y="162">MOTION</text><rect class="m-fill" x="650.0" y="170" width="14.9" height="14" rx="2"/><rect class="m-fill" x="668.9" y="170" width="17.0" height="14" rx="2"/><rect class="m-fill" x="689.9" y="170" width="12.8" height="14" rx="2"/><rect class="m-fill" x="706.7" y="170" width="14.9" height="14" rx="2"/><rect class="m-fill" x="725.6" y="170" width="14.9" height="14" rx="2"/><rect class="m-fill" x="744.5" y="170" width="17.0" height="14" rx="2"/><rect class="m-fill" x="765.5" y="170" width="19.1" height="14" rx="2"/><rect class="m-fill" x="788.6" y="170" width="21.2" height="14" rx="2"/><rect class="m-fill" x="813.8" y="170" width="19.1" height="14" rx="2"/><rect class="m-fill" x="836.9" y="170" width="19.1" height="14" rx="2"/><text class="m-t" x="650" y="208">SOUND</text><rect class="m-dim" x="650.0" y="216" width="14.9" height="14" rx="2"/><rect class="m-dim" x="668.9" y="216" width="17.0" height="14" rx="2"/><rect class="m-dim" x="689.9" y="216" width="12.8" height="14" rx="2"/><rect class="m-dim" x="706.7" y="216" width="14.9" height="14" rx="2"/><rect class="m-dim" x="725.6" y="216" width="14.9" height="14" rx="2"/><rect class="m-dim" x="744.5" y="216" width="17.0" height="14" rx="2"/><rect class="m-dim" x="765.5" y="216" width="19.1" height="14" rx="2"/><rect class="m-dim" x="788.6" y="216" width="21.2" height="14" rx="2"/><rect class="m-dim" x="813.8" y="216" width="19.1" height="14" rx="2"/><rect class="m-dim" x="836.9" y="216" width="19.1" height="14" rx="2"/><text class="m-t" x="650" y="254">CAPTIONS</text><rect class="m-dim" x="650.0" y="262" width="14.9" height="14" rx="2"/><rect class="m-dim" x="668.9" y="262" width="17.0" height="14" rx="2"/><rect class="m-dim" x="689.9" y="262" width="12.8" height="14" rx="2"/><rect class="m-dim" x="706.7" y="262" width="14.9" height="14" rx="2"/><rect class="m-dim" x="725.6" y="262" width="14.9" height="14" rx="2"/><rect class="m-dim" x="744.5" y="262" width="17.0" height="14" rx="2"/><rect class="m-dim" x="765.5" y="262" width="19.1" height="14" rx="2"/><rect class="m-dim" x="788.6" y="262" width="21.2" height="14" rx="2"/><rect class="m-dim" x="813.8" y="262" width="19.1" height="14" rx="2"/><rect class="m-dim" x="836.9" y="262" width="19.1" height="14" rx="2"/><text class="m-t" x="650" y="320">AN HTML FILE. THAT IS THE WHOLE FORMAT.</text><text class="m-n" x="950" y="60">04</text>
+    <text class="m-t" x="990" y="60">A BROWSER DRAWS EVERY FRAME</text>
+    <path class="m-box" d="M960 150 L1180 150 L1180 268 L960 268 Z"/>
+    <path class="m-line" d="M960 176 L1180 176"/>
+    <circle class="m-fill" cx="974" cy="163" r="4"/><circle class="m-fill" cx="990" cy="163" r="4"/>
+    <text class="m-t" x="1006" y="168">HEADLESS CHROME</text><rect class="m-box" x="966" y="196" width="28" height="52" rx="2"/><rect class="m-box" x="1002" y="196" width="28" height="52" rx="2"/><rect class="m-box" x="1038" y="196" width="28" height="52" rx="2"/><rect class="m-box" x="1074" y="196" width="28" height="52" rx="2"/><rect class="m-box" x="1110" y="196" width="28" height="52" rx="2"/><rect class="m-box" x="1146" y="196" width="28" height="52" rx="2"/><text class="m-t" x="960" y="300">2,232 FRAMES &rarr; MP4</text><path class="m-meta" d="M266 220 L322 220"/>
+    <path class="m-meta" d="M576 220 L632 220"/>
+    <path class="m-meta" d="M876 220 L944 220"/>
+    <text class="m-t" x="20" y="430">NO VIDEO ENGINE ANYWHERE IN THIS CHAIN. THE COMPOSITION IS A WEB PAGE, AND WHAT A BROWSER CAN PAINT, THE VIDEO CAN HAVE.</text>
+          </svg>
+
+          <div class="map__phone">
+            <div class="mband">
+              <div class="mrung">
+                <div class="mrung__box">
+                  <span class="mrung__n">01</span>
+                  <h5 class="mrung__t">Your audio<small>one file, nothing else goes in</small></h5>
+                </div>
+              </div>
+
+              <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+                <span>every word gets a <b>timestamp</b></span></p>
+
+              <div class="mrung">
+                <div class="mrung__box">
+                  <span class="mrung__n">02</span>
+                  <h5 class="mrung__t">Word-level timings<small>measured off the audio, not estimated from a word count</small></h5>
+                </div>
+              </div>
+
+              <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+                <span>the scenes are built <b>on those timings</b></span></p>
+
+              <div class="mrung">
+                <div class="mrung__box">
+                  <span class="mrung__n">03</span>
+                  <h5 class="mrung__t">An HTML file<small>that is the whole format</small></h5>
+                  <div class="mgrid">
+                    <span><b>Motion</b>CSS and JS</span>
+                    <span><b>Sound</b>audio elements</span>
+                    <span><b>Captions</b>from the timings</span>
+                  </div>
+                </div>
+              </div>
+
+              <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+                <span>a browser <b>draws every frame</b></span></p>
+
+              <div class="mrung">
+                <div class="mrung__box">
+                  <span class="mrung__n">04</span>
+                  <h5 class="mrung__t">2,232 frames &rarr; MP4<small>headless Chrome, then ffmpeg staples them together</small></h5>
+                </div>
+              </div>
+            </div>
+          </div>
+          <figcaption class="monospace monospace__p opacity__50">The chain end to end. No video engine appears anywhere in it.</figcaption>
+        </figure>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">N&ordm;001</p>
+        <h4 aria-level="2" data-splitting="lines">Every word gets a timestamp, and everything hangs off them.</h4>
+        <p data-splitting>The input is one audio file. Before any picture exists, that audio is transcribed
+          to <b>word-level timestamps</b> &mdash; not a word count divided by a duration, but the measured
+          start and end of each spoken word.</p>
+        <p data-splitting>That distinction is the whole reason the result stays in sync. A caption that
+          appears because the script said it should appear at 4.2 seconds will drift the moment the
+          narration is re-recorded a shade slower. A caption that appears because <em>the word does</em>
+          cannot drift, because it is reading the same clock as the sound.</p>
+        <p data-splitting>Everything downstream inherits those numbers: when a character swaps, when a
+          diagram advances, when a chapter changes colour. Re-record the voice and the film re-times itself.</p>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">N&ordm;002</p>
+        <h4 aria-level="2" data-splitting="lines">The composition is an HTML file. That is the whole format.</h4>
+        <p data-splitting>There is no proprietary project file, no binary timeline, no scene graph you can
+          only open in one program. There is a page: elements with start times and durations on them, a
+          stylesheet, and a function that says what the frame looks like at a given moment.</p>
+        <p data-splitting>Which means the whole of the web is available as a drawing tool. Typography is
+          typography. A diagram is an SVG. A chart is whatever you would build for a chart. Real footage is
+          a video element sitting inside the layout like any other box.</p>
+        <p data-splitting>It also means the file is readable, diffable and reviewable. You can see what
+          changed between two versions of a film the same way you see what changed between two versions of
+          anything else.</p>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">N&ordm;003</p>
+        <h4 aria-level="2" data-splitting="lines">A browser draws every frame, one at a time.</h4>
+        <p data-splitting>Rendering is not playback. The page is loaded in a headless Chrome, the clock is
+          set to a specific instant, the frame is captured, the clock moves on. This film is 2,232 of those.
+          ffmpeg then staples them into an MP4 and lays the audio underneath.</p>
+        <p data-splitting>The consequence worth understanding is <b>determinism</b>. Because each frame is
+          drawn from a time value rather than from whatever state playback happened to reach, the same
+          composition renders identically every time, and any frame can be produced without producing the
+          ones before it. Nothing can be random, and nothing can depend on the wall clock.</p>
+        <p data-splitting>That is also why review works. A studio can seek anywhere in the film and show you
+          the true frame, because seeking and rendering use the same mechanism. What you scrub is what
+          renders.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="sources">Take it with you</h4>
+        <div class="buttons">
+          <a href="artifacts/video-as-code-system-map.svg" class="button button__big hover_effect"><span>The system map</span> <span class="arrow">&#8599;</span></a>
+          <a href="artifacts/transcript-video-as-code.md" class="button button__big hover_effect"><span>Full transcript</span> <span class="arrow">&#8599;</span></a>
+          <a href="#map" class="button button__big hover_effect"><span>Read the map here</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-small="true">The List</p>
+        <h4 aria-level="2">One a week. And the other seven, now.</h4>
+        <p>Confirm your address and the whole set arrives &mdash; all eight field guides, exactly
+          as they are on the site, nothing held back for subscribers. After that, one new system
+          taken apart every week. No pitch, no thread-bait, and an unsubscribe link that works.</p>
+
+        <form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor"
+              method="post">
+          <label class="monospace monospace__p" for="list-email">Email address</label>
+          <div class="field">
+            <input type="email" name="email" id="list-email" placeholder="you@example.com"
+                   required autocomplete="email" inputmode="email" spellcheck="false">
+            <input type="hidden" name="tag" value="guide-10-video-as-code">
+            <button type="submit" class="monospace">Send me the set &#8599;</button>
+          </div>
+          <label class="consent monospace monospace__p">
+            <input type="checkbox" name="consent" required>
+            <span>Send me the eight guides and one new one each week. I can unsubscribe at any
+              time and my address is never shared &mdash; see the
+              <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set
+              arrives the moment you click it.</span>
+          </label>
+        </form>
+
+        <div class="article__footer">
+          <p class="monospace monospace__p opacity__50" data-splitting>Independent field guide. This guide names HyperFrames, a HeyGen product, and describes Claude, Chrome and ffmpeg.
+            Independent — not affiliated with, endorsed by, or connected to any of them. Nothing here was
+            sponsored or reviewed by any company named. Every capability described was checked against the
+            tool’s own documentation and its behaviour on this machine, and the film you are watching was
+            made with it.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="artifacts/video-as-code-system-map.png" class="button button__half hover_effect" title="The schematic, as an image"><span>The schematic</span> <span class="arrow">↗</span></a>
+          <a href="artifacts/transcript-video-as-code.md" class="button button__half hover_effect" title="Full narration, by section"><span>Transcript</span><span class="arrow">↗</span></a>
+          <a href="artifacts/sources-video-as-code.md" class="button button__half hover_effect" title="Primary sources"><span>Sources</span><span class="arrow">↗</span></a>
+          <a href="privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+<script src="assets/js/gsap.min.js?v=2026-08-29-plate"></script>
+<script src="assets/js/ScrollTrigger.min.js?v=2026-08-29-plate"></script>
+<script src="assets/js/splitting.min.js?v=2026-08-29-plate"></script>
+<script src="assets/js/site.js?v=2026-08-29-plate" type="module"></script>
+<dialog id="list-modal" class="listModal" aria-labelledby="list-modal-title"><div class="listModal__inner" tabindex="-1" autofocus><p class="listModal__eyebrow">The List</p><h2 id="list-modal-title">Eight guides. One email.</h2><p>Every field guide on this site, sent the moment you confirm &mdash; then one new system taken apart each week.</p><p>Nothing is held back for subscribers. The guides stay free and stay here; the list is only how the next one reaches you without an algorithm getting a vote.</p><form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor" method="post"><label class="monospace monospace__p" for="list-email-modal">Email address</label><div class="field"><input type="email" name="email" id="list-email-modal" placeholder="you@example.com" required autocomplete="email" inputmode="email" spellcheck="false"><input type="hidden" name="tag" value="popup-video-as-code"><button type="submit" class="monospace">Send me the set &#8599;</button></div><label class="consent monospace monospace__p"><input type="checkbox" name="consent" required><span>Send me the eight guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set arrives the moment you click it.</span></label></form><button type="button" class="listModal__close" data-close>No thanks &mdash; just reading</button></div></dialog>
+<script src="assets/js/list-modal.js?v=2026-08-29-plate" defer></script>
+</body>
+</html>
