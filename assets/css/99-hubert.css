@@ -1139,3 +1139,23 @@ html[data-reading="panel"] .section__lightgrey .journalArticle__documentStamp::a
 .guideNav__all { margin-top: 18px; opacity: .55; }
 .guideNav__all a { text-decoration: underline; text-underline-offset: .25em; }
 .guideNav__all a:hover { opacity: 1; }
+
+/* ── the headline and its standfirst ──────────────────────────────────
+   They touched. Measured on netflix at 1440, 2026-09-01: h1 bottom 411,
+   lead top 411 — a zero-pixel gap, on every guide, so the two read as one slab
+   of text rather than a headline and an intro. Worst on a phone, where that
+   slab is most of the first screen.
+
+   It is an absence rather than a decision. The port's own typography sets
+   `article h1 { padding-bottom: 5vw }`, but that is an element selector and the
+   guide body is `<div class="journalArticle__article">`, so the whole `article
+   …` block never applies here. `_slug_` then sets `.journalArticle__article
+   p.lead { margin-bottom: 0 }` and nothing restores a top edge, while the h1
+   runs at line-height .9, which pulls its box tighter than its glyphs.
+
+   Restored on the lead rather than the h1, so it only affects the standfirst
+   that follows a headline and not the other h1s in the document. */
+.journalArticle__article > h1 + p.lead { margin-top: 2.4vw; }
+@media screen and (max-width: 600px) {
+  .journalArticle__article > h1 + p.lead { margin-top: 20px; }
+}
