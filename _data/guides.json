@@ -1,0 +1,98 @@
+{
+  "_comment": "The spine. Every guide, newest first is derived from `n` descending. The archive at /guides/, the prev/next pairs and the mobile menu's latest-few list are all generated from this file — add a guide here and they all update. `blurb` is optional and renders only when present. `tags` are unused by the current nav (reverse-chronological, no groups) and exist so related-guides and archive filtering can be added later without a migration.",
+
+  "cacheToken": "2026-09-01-guides",
+
+  "guides": [
+    {
+      "n": 10,
+      "slug": "video-as-code",
+      "headline": "Your video is a web page.",
+      "system": "Rendering video from code",
+      "runtime": "1:14",
+      "video": true,
+      "tags": ["video", "html", "tooling"]
+    },
+    {
+      "n": 9,
+      "slug": "determinant",
+      "headline": "The determinant is a volume.",
+      "system": "The determinant",
+      "runtime": "2:55",
+      "video": true,
+      "tags": ["maths", "linear-algebra"]
+    },
+    {
+      "n": 8,
+      "slug": "alternatives",
+      "headline": "Every paid tool has an open twin.",
+      "system": "Open-source swaps",
+      "runtime": "",
+      "video": false,
+      "tags": ["open-source", "tooling"]
+    },
+    {
+      "n": 7,
+      "slug": "design-plugins",
+      "headline": "Taste is installable.",
+      "system": "Design plugins",
+      "runtime": "",
+      "video": false,
+      "tags": ["design", "tooling", "ai"]
+    },
+    {
+      "n": 6,
+      "slug": "git",
+      "headline": "A change has to climb.",
+      "system": "Version control",
+      "runtime": "",
+      "video": false,
+      "tags": ["git", "tooling"]
+    },
+    {
+      "n": 5,
+      "slug": "gps",
+      "headline": "Zero bars. Still found.",
+      "system": "GPS",
+      "runtime": "1:44",
+      "video": true,
+      "tags": ["infrastructure", "radio"]
+    },
+    {
+      "n": 4,
+      "slug": "google-search",
+      "headline": "It doesn't search the internet. It searches a copy.",
+      "system": "Google Search",
+      "runtime": "1:31",
+      "video": true,
+      "tags": ["infrastructure", "indexing"]
+    },
+    {
+      "n": 3,
+      "slug": "whatsapp",
+      "headline": "Five machines carry your message. None of them can read it.",
+      "system": "WhatsApp",
+      "runtime": "1:39",
+      "video": true,
+      "tags": ["infrastructure", "encryption"]
+    },
+    {
+      "n": 2,
+      "slug": "kubernetes",
+      "headline": "Kubernetes has never started a container.",
+      "system": "Kubernetes / Docker",
+      "runtime": "1:42",
+      "video": true,
+      "tags": ["infrastructure", "containers"]
+    },
+    {
+      "n": 1,
+      "slug": "netflix",
+      "headline": "The play button was never the hard part.",
+      "system": "Netflix",
+      "runtime": "2:53",
+      "video": true,
+      "tags": ["infrastructure", "streaming", "cdn"]
+    }
+  ]
+}

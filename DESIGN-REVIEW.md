@@ -1,686 +1,550 @@
 # DESIGN-REVIEW.md — huberttheinventor.github.io
 
-Reviewed 2026-08-26 against the live site, then re-verified against the local
-build on branch `review/design-fixes`.
+Reviewed **2026-09-01** against the live production site, then re-verified
+against this branch (`review/design-fixes`) served locally.
 
-Tools used, all installed from their own READMEs:
-
-| tool | how it was installed | status |
-|---|---|---|
-| Playwright CLI | `npm install -g @playwright/cli@latest`, then `playwright-cli install-browser chromium` | installed, used for every measurement below |
-| Taste Skill | `npx skills add https://github.com/Leonxlnx/taste-skill --skill design-taste-frontend` | installed as `design-taste-frontend` |
-| Web Design Guidelines | `npx skills add https://github.com/vercel-labs/agent-skills --skill web-design-guidelines`, rules fetched from `vercel-labs/web-interface-guidelines/main/command.md` | installed |
-| Awesome Design | repo cloned; the collection is DESIGN.md files, there is no installer | used as the comparison bar for `DESIGN.md` |
-
-The `taste-skill` README's own install line points at `Leonxlnx/taste-skill`;
-the Web Design Guidelines README points the skill at a different repo
-(`vercel-labs/agent-skills`) from the one the guidelines live in. Both installed
-cleanly. Nothing was half-installed.
-
-**How to read the citations.** `assets/css/00-critical.css` is a 15-line minified
-bundle, so a line number there locates almost nothing. Findings in that file are
-cited as `file:line` plus the exact selector, which is what you can actually
-search for. Hand-written pages carry real line numbers, taken from the state of
-`main` at review time.
-
-Every number below was measured this session. Where a number came from the
-browser it says "computed"; where it came from a file on disk it says so.
+This supersedes the review of 2026-08-26. Everything that review found has been
+checked again; where a fix held, it is recorded as held and not re-reported.
 
 ---
 
 ## Executive summary
 
-The site is in better shape than a first look suggests, and the two things most
-likely to be blamed are not the problems.
+Thirteen pages, two viewports, 52 screenshots, every page's console and network
+log. **Three blockers, four majors.** All seven are fixed on this branch. Nine
+further findings are design-direction calls and are listed, not applied.
 
-**Checked and dismissed.** Screenshot review flagged sentences that fade out
-mid-line across the guide pages, which reads as broken copy. It is not. It is
-the `effect__textFade` scroll-scrubbed reveal, and it only looked stuck because
-the first screenshot pass drove the page with `window.scrollTo`, which Lenis
-overrides. Re-driven with real wheel events and a 2.5s settle, the count of
-in-viewport text nodes still below 0.5 opacity was 0 on index, 0 on kubernetes,
-0 on whatsapp, and 4, 5, 46 and 66 on netflix, gps, google-search and
-design-plugins, all of them within 30px of the bottom edge of the viewport,
-which is where a reveal is supposed to be mid-flight. Also dismissed: horizontal
-overflow. Root `scrollWidth` equals `clientWidth` on all ten pages at both
-390x844 and 1440x900. `html { overflow-x: clip }` is doing its job.
+The site is in better shape than the finding count suggests. Reduced motion is
+fully respected, the focus ring is deliberately tuned and contrast-checked, the
+skip link works, landmarks are present via ARIA roles, and the guide-video crop
+fixed on 2026-08-29 has held on all seven films at both sizes. `99-hubert.css`
+documents its own reasoning better than most production stylesheets.
 
-**What is actually wrong, in order.**
+What went wrong is concentrated in two places, and both are the same kind of
+mistake — **a rule that was correct in the reference it was ported from, and
+wrong here**:
 
-1. **Keyboard focus is invisible on nine of the ten pages.** `assets/css/00-critical.css:1`
-   sets `a { outline: 0 }` and nothing anywhere defines a replacement. Measured:
-   on each of the nine pages, seven of the first eight focusable elements report
-   `outline-style: none` with no box-shadow and no border change. The eighth,
-   the Menu button, keeps the browser default, which resolves to
-   `outline: auto 1px rgb(16,16,16)` on a `#1a1a1a` header. `git.html` — the
-   page everyone knows is off-design — is the only page with a working focus
-   ring.
+1. **The dossier strip is pushed off-screen on every guide page, at both
+   viewports.** The ported rule cancels a gutter that the strip's parent does
+   not have. On a phone the left 54px of every cell in columns 1 and 4 is gone —
+   "Annotations" renders as "ations". On desktop the first row is lifted 134px
+   above the top of the document, where scrolling cannot reach it, and the strip
+   is 374px wider than the screen. The site's own `DESIGN.md` calls this
+   component a signature piece; it is currently readable at neither size.
 
-2. **The surface every article is read on fails WCAG AA.** `#111111` on
-   `#71737d` is 4.00:1. AA wants 4.5:1 below 24px. The apparatus on that same
-   plate is dimmed with `opacity: .5` and `.55`, landing at 2.12:1 and 2.29:1.
-   This is the single most consequential item and the fix is a palette decision,
-   so it is yours, not mine. Numbers and one-line options are in
-   "Not applied" below.
+2. **The mobile menu's fifteen links stay in the tab order while the menu is
+   shut.** At 390px the desktop nav is `display: none`, so this panel is the only
+   navigation — and tabbing past the Menu button walks into fifteen links that
+   are clipped invisible, while the button reports `aria-expanded="false"`.
 
-3. **The nav bug shipped again, in the place it was not checked.** The desktop
-   nav duplicate-Guide-03/04 bug was fixed in commit 9bd438a. The same duplicate
-   is still in `kubernetes.html`'s mobile menu (`kubernetes.html:57` on `main`),
-   and Guides 06 and 07 were missing from both navs on all five earlier guides,
-   and Guides 02 to 07 were missing from `privacy.html`. A reader on Guide 01
-   through 05 had no route to the two newest guides. And the reason that nav
-   was never completed shows up the moment you complete it: the open mobile
-   panel cannot hold ten links. On the **live** homepage, which already has ten,
-   the list runs to y689 while the two small footer links are pinned at
-   y651-675, so they are printed straight through "The List", 38px of overlap.
-   That is fixed here too, because otherwise the nav repair would have spread it
-   to eight more pages.
+Third blocker: **the newsletter email field had no focus indicator at all** — not
+a weak one, none. Two rules cancelled each other and the outline was suppressed
+by hand. That is WCAG 2.4.7 Level A on the site's only conversion surface, on all
+thirteen pages.
 
-4. **The CRT never stops.** `site.js` gates every GSAP animation off
-   `prefers-reduced-motion` and does it thoroughly. The scanline layers are pure
-   CSS and were never gated. Verified with the media feature emulated: on all
-   nine template pages `scanline` (8s) and `scanlines` (1s) were still reported
-   `running` with iteration count `Infinity`, and the homepage's decorative
-   video still reported `paused: false`.
+**One correction to a premise in the brief.** GitHub Pages serves every asset
+with `Cache-Control: max-age=600` and an ETag — measured on the live site
+2026-09-01 with `curl -I` on `99-hubert.css`, `guide-01.mp4`, `guide-01-poster.jpg`
+and `index.html`. A stylesheet fix therefore reaches returning visitors after ten
+minutes whether or not the token moves; the token is belt-and-braces, not the
+gate. It has still been bumped, as instructed, and **109 asset URLs that carried
+no token at all** — including all ten guide films and their posters — now carry
+one.
 
-5. **The 3D stack loads on every page.** `assets/js/site.js:12` statically
-   imports `three.module.min.js`. `logo3d` appears in `index.html` only, but a
-   cold load of `privacy.html` at 390x844 pulled 21 requests / 432 KB including
-   `three.module.min.js` at 165 KB over the wire plus the floppy-disk glTF and
-   its textures. On a text-only privacy page, for phone readers.
+**Not found, and worth saying:** no console errors, no failed requests, no dead
+links, no dead anchors, no broken images, no horizontal overflow, on any of the
+26 page-viewport combinations, before or after.
 
-6. **The homepage announces 40 top-level headings.** Five marquees, each
-   repeating its line eight times, each repetition a full `<h1>`.
-
-Everything else is smaller. Full list follows.
-
-Counts: 7 blockers, 11 majors, 9 minors, 7 nits. 21 fixed on this branch,
-15 left for you because they are direction calls.
-
----
-
-## 1. Playwright CLI pass — reality first
-
-Ten pages driven at 390x844 and 1440x900 on the live site, 83 screenshots, plus
-a DOM probe pass per page at top-of-page and after real wheel scrolling, plus a
-cold-cache network pass in a fresh browser context.
-
-### 1.1 Console and network
-
-Clean, with one exception and one caveat.
-
-- **Console errors: none of ours.** The only warning is
-  `THREE.GLTFLoader: Unknown extension "KHR_materials_pbrSpecularGlossiness"`
-  from the floppy-disk model, which is a model-authoring note, not a failure.
-- **One transient 503** on `img/works/branding15.webp` during the first pass.
-  The file exists in the repo (33,894 bytes on disk) and the same URL served 200
-  on every later request. Recorded, not reported as a defect. It was GitHub
-  Pages, not the site.
-- **No 4xx or 5xx on any local asset** across all ten pages on the cold-cache
-  pass.
-
-### 1.2 Dead links and anchors
-
-| severity | finding | fix |
+| | before | after |
 |---|---|---|
-| **blocker** | `netflix.html:282` links `href="#map"`, and `netflix.html:106` is `<figure class="journalArticle__banner map">` with no `id`. `kubernetes.html:110` and `gps.html:115` both carry `id="map"`. The "jump to the map" control on the flagship guide does nothing. | add `id="map"` — **applied** |
-| **major** | `privacy.html:105` links `https://buttondown.com/privacy`, which returns 404. This is the named processor's privacy policy on your privacy page. `https://buttondown.com/legal/privacy` returns 200. | **applied** |
+| blockers | 3 | 0 |
+| majors | 4 | 0 |
+| console errors / failed requests | 0 / 0 | 0 / 0 |
+| assets with no cache token | 109 | 0 |
+| distinct cache tokens in use | 2 (one + "none") | 1 |
 
-All other external links resolve: the five plugin repos, both Instagram URLs,
-`twitter.com/jasonlong`, the CC BY 3.0 deed, `goatcounter.com/help/privacy`, and
-`buttondown.com/huberttheinventor`. All 14 referenced local artefacts exist.
+---
 
-### 1.3 Cross-page inconsistency
+## Findings, ranked
 
-This is the category you flagged, and it is the richest one.
+Severity: **blocker** = broken or a Level A accessibility failure on a primary
+path · **major** = guideline violation or cross-page inconsistency · **minor** ·
+**nit**.
 
-| severity | finding | fix |
+### B1 · blocker · Dossier strip pushed off-screen — every guide page, both viewports
+
+**Where** `assets/css/_slug_.DENrRFxM.css`, selector
+`.journalArticle__documentHeader` (the file is a one-line minified bundle; the
+selector is the locator). Affects `netflix`, `kubernetes`, `whatsapp`,
+`google-search`, `gps`, `git`, `design-plugins`, `alternatives`, `determinant`,
+`video-as-code`, `privacy`.
+
+The ported rule declares:
+
+```
+margin-left: -15vw; margin-right: -11vw; transform: translateY(-70%);
+@media (max-width: 600px) { margin-left: -54px; }
+```
+
+Those negative margins cancel a gutter the strip's parent does not have. The
+text column's gutter is `padding-left` on `.journalArticle__article` (54px at
+390, 259.2px at 1440); the strip is a **sibling** of that block, inside a section
+with no horizontal padding. So the margins do not pull it out to the edge, they
+push it past it.
+
+Measured on the live site, 2026-09-01:
+
+| viewport | strip x | strip right | width | viewport | first row y |
+|---|---|---|---|---|---|
+| 390×844 | −54 | 390 | 444 | 390 | 32 |
+| 1440×900 | −216 | 1598 | 1814 | 1440 | **−62** |
+
+At 390 the left 54px of every cell in columns 1 and 4 is off-screen: "Annotations"
+renders as "ations", "Field guide" as "d guide". At 1440 `translateY(-70%)` =
+−134px puts row 1 above the top of the document, where no scrolling reaches it,
+and row 2 lands at y=37, under the header.
+
+`html { overflow-x: clip }` (`99-hubert.css:20`) and the port's
+`body { overflow-x: hidden }` mean none of this produces a scrollbar — which is
+why the page reports no overflow and why screenshot review reads it as a
+rendering fault rather than a position fault.
+
+**Ruled out: a tween caught mid-flight.** Identical geometry at t=500ms,
+t=4500ms, after a full scroll-settle, and under `prefers-reduced-motion: reduce`
+with every GSAP tween disabled. Four conditions, same numbers. It is layout.
+
+**Second, separate collision.** The header has no background (`rgba(0,0,0,0)`),
+so it does not occlude — but the HUBERT logotype does. The mark occupies y=4..95
+at 390; the strip's first row sat at y=32. The wordmark was drawing over the
+dossier's first row. Nothing else on the page is affected: the h1 starts at
+y=304 (390) and y=321 (1440), well clear.
+
+**Fix applied** — `assets/css/99-hubert.css:847`. Negative margins and the lift
+removed; a top margin clears the wordmark. After: strip at `[0, 110, 390, 134]`
+and `[0, 96, 1440, 191]`, no cell off-screen at either size, `elementFromPoint`
+at each cell's centre returns the cell itself.
+
+> **House-rule deviation, flagged.** `99-hubert.css:6` says "If a rule here
+> overrides a ported rule, that is a bug in the port — fix it there, not here."
+> This fix breaks that rule. `_slug_.DENrRFxM.css` is a vendored minified bundle
+> with a content-hash filename; editing it in place is hard to review and the
+> hash stops matching. Your call whether to move it into the port.
+
+### B2 · blocker · Mobile menu keeps fifteen links in the tab order while shut
+
+**Where** `assets/css/00-critical.css` and `assets/css/default.Z9wDiTTt.css`,
+selector `.mobilenav` (`clip-path: rect(0 100% 0 0); pointer-events: none`);
+toggle at `assets/js/site.js:183` (`setOpen`). All twelve pages with chrome.
+
+The closed panel is hidden by `clip-path` and `pointer-events: none`. Neither
+takes it out of the tab order. At 390×844 the desktop nav is `display: none`, so
+this panel is the only navigation present — and tab order runs:
+
+```
+1 Skip to the guide   2 HUBERT   3 Menu
+4 Index  5 Guide 01  6 Guide 02  7 Guide 03  8 Guide 04 …   (15 links)
+```
+
+Measured 2026-09-01: for every one of those, `document.elementFromPoint` at the
+focused link's own centre returns the section behind it, not the link — the focus
+ring is drawn over page content with nothing under it. `#mobile-navigation`
+reports `visibility: visible`, `hidden: false`, `inert: false`, `aria-hidden:
+null`, and the Menu button reports `aria-expanded="false"` throughout.
+
+WCAG 2.4.3 Focus Order and 2.4.7 Focus Visible; the `aria-expanded` mismatch is
+4.1.2. **Desktop was already clean** — at 1440 the real nav takes focus and this
+panel is never reached, confirmed by the same probe.
+
+**Fix applied** — `assets/js/site.js:199`, one line:
+`panel.toggleAttribute('inert', !open)`. `inert` closes tab order, the
+accessibility tree and pointer events together, without touching the `clip-path`
+the reveal animates. After: tab runs Skip → HUBERT → Menu → the reading toggle →
+page content, no panel links; opening the menu clears `inert`, sets
+`aria-expanded="true"` and the first link is hit-testable.
+
+### B3 · blocker · The newsletter email field has no focus indicator at all
+
+**Where** `assets/css/99-hubert.css:54` (as it was on `main`:
+`.sub-form input[type="email"]:focus { outline: none; }`) and `:499`
+(`.section__lightgrey .sub-form .field { border-bottom-color: … }`). All thirteen
+pages, both the in-page form and — for the outline half — the modal.
+
+Two rules cancelled each other:
+
+1. `outline: none` on `:focus` suppressed the site's own 2px `:focus-visible`
+   ring, the one every other control draws.
+2. The underline meant to replace it,
+   `.sub-form .field:focus-within` (line 56, specificity 0,3,0), is overridden by
+   `.section__lightgrey .sub-form .field` (line 499, same specificity, later in
+   the file). The plate that carries the in-page form is `.section__lightgrey`,
+   so the focus underline never fired there.
+
+Measured 2026-09-01 at both 390×844 and 1440×900, before and after focusing
+`#list-email`:
+
+| | outline-style | field border-bottom |
 |---|---|---|
-| **blocker** | Guides 06 and 07 missing from the desktop **and** mobile nav on `netflix`, `kubernetes`, `whatsapp`, `google-search`, `gps`. `index` and `design-plugins` have all seven. | **applied**, both navs, all five pages |
-| **blocker** | `kubernetes.html:57` repeats Guide 03 and Guide 04 in the mobile menu, so that menu lists ten items with two duplicates. Same bug class as commit 9bd438a, in the nav that commit did not touch. | **applied** |
-| **blocker** | The open mobile panel overlaps itself on any page with ten nav links. Measured on the **live** site at 390x844: `.mobilenav` is 717px tall with `padding-top: 20svh`, so the list starts at y169 and ten links at 52px end at y689, while `.mobilenav__social` is pinned `absolute; bottom: 5vh` at y651-675. On `index.html` that is a 38px overlap with "The List" printed through the two small links. `netflix.html`, with eight links, measured 0. Adding Guides 06 and 07 takes every guide page to ten links, so the nav fix above would have spread this to eight more pages. | **applied** — top padding to 12svh (list now y101-621, 30px clear of the block), the panel becomes a scrollable flex column, and the social block uses `margin-top: auto` instead of an absolute offset. Verified 0 overlap at 390x844, 390x667 and 430x932; the block still sits at exactly y651-675 at 390x844, the same place as on `main` |
-| **major** | `privacy.html` nav carried Index, Guide 01, Sources, The List only. Six guides unreachable from it. | **applied**, both navs |
-| **major** | `privacy.html` was the only template page with no `.topOverlay`. The header is `position: fixed` and transparent (computed: `rgba(0,0,0,0)`, `backdrop-filter: none`, 99px tall), so the backdrop element is the only thing keeping copy from running through the wordmark. Measured: `.topOverlay` reports `position: fixed, top: 0, opacity: 1` on the six guide pages, and was absent on `privacy`. Screenshot review found the wordmark printed through headings on all four privacy bands. | **applied** |
-| **major** | `index.html`'s `.topOverlay` reports `position: sticky, opacity: 0, top: 845` at scroll 0 and `opacity: 0` still at scrollY 4000. The homepage header has no backdrop at any scroll position. | **not applied** — see below, the hero is dark enough that the fix may be unwanted |
-| **minor** | Cache-busting `?v=` differed per page: `msz0kztq` (index), `msz0l00s` (netflix), `msz1k8sd` (five pages), `1a0161a4047` (privacy, 404), with `headerfix02` pinned separately on `99-hubert.css` everywhere. Same assets, four different cache keys. | unified to `?v=2026-08-26-review` — **applied**. This also guarantees the CSS and JS edits on this branch actually reach readers. |
-| **minor** | Guides 01 and 02 offer the map "as a vector" (`.svg`); guides 03, 04 and 05 offer the `.png` only. `artifacts/` confirms: only `netflix-system-map.svg` and `kubernetes-system-map.svg` exist. | **not applied** — needs the SVG files exported |
-| **minor** | `git.html` has no `theme-color`; every other page has one. | **applied** (`#f7f2e9`, matching its paper) |
-| **nit** | Instagram is linked as `https://www.instagram.com/...` in the shared chrome and `https://instagram.com/...` in `git.html`'s footer and `privacy.html:132`. Both resolve. | not applied |
-| **nit** | Guides 06 and 07 have no video, transcript, reading list or `#sources` artefacts, unlike 01 to 05, but sit in the same numbered series. | not applied, content decision |
+| unfocused | `none` | `rgba(17,17,17,.28)` 1px |
+| focused | `none` | `rgba(17,17,17,.28)` 1px |
 
-### 1.4 Tap targets at 390x844
+Nothing changes. WCAG 2.4.7 Focus Visible, **Level A**, on the site's only
+conversion surface.
 
-Measured on the live site, every element matching
-`a[href], button, input, select, textarea, [role=button], [tabindex]`.
+The modal copy of the form is not on `.section__lightgrey`, so its underline did
+fire — which is why this reads as working if you only test the modal. Both were
+measured before concluding.
 
-| severity | element | measured | fix |
-|---|---|---|---|
-| **major** | mobile menu social links ("Instagram ↗", "Privacy note ↗") | 91.3 x **12** px, on all eight pages with a mobile menu | **not applied.** They sit flush (651.2-663.2 and 663.2-675.2), so an overlay pseudo-element does not work: probing every pixel with the second link's overlay in place gave 12px and 45px of real target, which is worse. Real padding does not fit either — the panel is already 38px over its own height on a ten-link page. Fixing this properly means giving the panel a different bottom block, which is a layout decision |
-| **major** | the "Menu" button, the only nav control on phones | 75.7 x **36.9** px | `min-height: 44px` on `header .menu` — **applied** |
-| **major** | `git.html` email field | 177 x **21** px | 44px min-height in `tokens.css` — **applied** |
-| **major** | `git.html` "Send it" button | 57.5 x **21** px | 44px min-height — **applied** |
-| **major** | `git.html` consent checkbox | **13 x 13** px | 20px box, 44px row — **applied** |
-| **minor** | footer link rows across all pages | 350 x 25.9 px | clears WCAG 2.2 AA (24px) but not the 44px guideline; padding change is a rhythm decision — not applied |
-| **minor** | "the map as an image" / "as a vector" inline links | 156.2 x 16 and 90.4 x 16 px | inline links in prose; not applied |
+**Fix applied** — `99-hubert.css:54` (the `outline: none` removed) and `:508` (the
+`:focus-within` state restored after the plate rule so it wins). After: outline
+`solid`, border-bottom `rgb(17,17,17)` at 2px, from `rgba(17,17,17,.28)` at 1px.
 
-`git.html` already had `min-height: 44px` documented for exactly these controls
-in `assets/css/99-hubert.css:71` — but that file belongs to the other stylesheet
-bundle and `git.html` does not load it. The rules were written and never reached
-the page. They are now in `tokens.css`.
+### M1 · major · 404.html shipped with no header, no navigation, no scripts
 
-### 1.5 Weight, measured cold in a fresh context
+**Where** `404.html`. Reported no `header` landmark, zero `role` attributes, no
+Menu button, no `#mobile-navigation`, no skip link, no `meta description`, and no
+`<script>` tags — against twelve pages that have all of them. Someone who
+mistypes a URL off a reel landed on a page with exactly two links and no way to
+reach guides 02–10.
 
-| page | requests | content-length total | notable |
-|---|---|---|---|
-| `index.html` | 31 | 790 KB | `three.module.min.js` 165 KB, `hubert-hero.mp4` 95 KB, floppy normal map 68 KB, `cloud10.png` 57 KB |
-| `privacy.html` | 21 | 432 KB | `three.module.min.js` 165 KB **and the glTF model**, on a page with no canvas |
-| `netflix.html` | 23 | see below | `guide-01.mp4` |
-| `git.html` | 11 | 198 KB | 163 KB of it from `fonts.gstatic.com` |
+This is the "hand-duplicated chrome, one page missing a fix" category exactly.
 
-**major — the 3D stack loads everywhere.** `assets/js/site.js:12-15` statically
-imports Three, GLTFLoader, RoomEnvironment and BufferGeometryUtils at module
-top level. `logo3d` appears in `index.html` only (verified: `grep -c logo3d`
-returns 1 for index, 0 for the other nine). Both `privacy.html` and
-`netflix.html` fetched Three and the floppy model on a cold load. **Not applied**
-— the four functions that use Three (`webgl`, `renderer`, `cloudField`,
-`gogglesMark`, `pricingObject`) hold 48 `THREE.` references between them, and
-moving them behind `await import()` is a real refactor of `site.js`, not a
-design fix. Concrete fix: move those five functions into `assets/js/webgl.js`
-and have `webgl()` do `const m = await import('./webgl.js')` only when
-`el('.logo3d__canvas') || el('.pricing__box canvas')` is truthy.
+**Fix applied** — the header, mobile nav panel, skip link, `id="main"` and the
+four script tags copied verbatim from `privacy.html`, with every `href` rewritten
+to an absolute path (the page's own comment already explains why: a 404 can be
+served at any depth). Meta description added. After: 1 header, 2 navigation
+roles, 14-item nav fingerprint matching the other pages, panel `inert` when shut,
+no overflow.
 
-**major — guide videos buffer before anyone presses play.** `guide-01.mp4` is
-4,193,214 bytes on disk. On a cold load at 390x844 with no interaction,
-Chromium issued `Range: bytes=0-`, the server answered `206` with
-`content-range: bytes 0-4193213/4193214`, and the element reported
-`buffered: 43.3s` of a `173s` video before going idle. `preload="metadata"` was
-set and was treated as a hint. Guide videos on disk run 4.19 to 5.73 MB.
-**Applied**: `preload="none"` on all five guide videos. The poster still
-renders, so nothing visible changes.
+### M2 · major · 109 asset URLs carried no cache token
 
-**minor — `git.html` loads fonts from `fonts.gstatic.com`** (163 KB of the
-page's 198 KB) while every other page self-hosts from `assets/fonts/`. It is
-also a third-party request that `privacy.html` does not mention. Not applied;
-self-hosting Archivo, Newsreader and JetBrains Mono is a decision about
-`git.html`'s future.
+**Where** all thirteen HTML files. The brief states all ~163 asset URLs share one
+`?v=` token. They did not: 326 carried the token and **109 carried none**,
+including every guide film and poster (`img/guide/guide-01.mp4` … `guide-10.mp4`,
+`guide-NN-poster.jpg`), all 36 homepage images, `img/home/hubert-hero.mp4`, and
+`brand/git-logo.svg` / `github-mark.svg`.
 
----
+This matters most for the films, which do get recut — Guide 09 was recut to 2:55
+in commit `62e8fbd`.
 
-## 2. Web Design Guidelines audit
+**Correction to the premise.** GitHub Pages serves everything
+`Cache-Control: max-age=600` with an ETag (measured `curl -I`, live, 2026-09-01,
+on four representative URLs). So an untokened asset is stale for at most ten
+minutes, not forever. The token is still worth having and has been fixed; it is
+not the deploy gate the brief describes it as.
 
-Rules fetched fresh from
-`vercel-labs/web-interface-guidelines/main/command.md` this session.
+**Fix applied** — token bumped `2026-09-01-video` → `2026-09-01-review` on 167
+URLs, and added to the 109 that had none. After: 498 URLs, one token, zero
+untokened.
 
-### Blockers
+*Worth knowing:* this review's own verification loop was caught by the token —
+several CSS edits appeared not to work because the browser kept serving the
+cached stylesheet under an unchanged `?v=`. The token does not gate the deploy
+(the ten-minute `max-age` does that), but it absolutely gates **iteration**. If
+you are editing CSS and the change is not showing, that is the reason.
 
-`assets/css/00-critical.css:1` — `a{color:inherit;cursor:pointer;font-weight:inherit;outline:0;text-decoration:none}`
-removes the focus outline from every anchor with no replacement. There is no
-`:focus-visible` rule anywhere in the bundle (`focusVisible: 0` measured on all
-nine pages; `git.html` reports 1). Violates "Never `outline: none` without focus
-replacement" and "Interactive elements need visible focus".
-**Applied** — `:focus-visible` ring added to `assets/css/99-hubert.css`,
-resolving off `var(--color, var(--primarycolor))` so it works on all four
-plates: `#bababa` on the dark plates is 8.97:1 against `#1a1a1a`, `#111111` on
-the light-grey plate is 4.00:1 against `#71737d`. Both clear the 3:1 a non-text
-indicator needs.
+### M3 · major · Footer social links are 12px tall at 10px type
 
-`index.html:33` — 40 `<h1>` elements. Five marquees x eight repetitions.
-Violates "Headings hierarchical `h1`–`h6`".
-**Applied** — `aria-hidden="true"` on the 39 duplicates, one kept. A tag swap
-was rejected: `assets/css/00-critical.css:1` styles the bare `h1` selector
-(`h1{font-size:6vw;line-height:.9}`) and `.marqueeText__title` does not set a
-size, so changing the tag would change the type.
+**Where** `.mobilenav__social a` (`assets/css/00-critical.css`, and
+`99-hubert.css:364`). Measured 380×12px at `font-size: 10px`, 390×844, on every
+page carrying chrome.
 
-All nine template pages — heading sequence runs `h1` then `h4` with nothing
-between (measured: `144444` on the guides, `1444444` on privacy).
-**Applied** — `aria-level="2"` on the article `h4`s, 41 across seven pages. A
-tag swap was rejected here too: `h4{font-size:6vw}` / `h4{font-size:10vw}` and
-`article h4{border-top:var(--border);font-size:250%}` are all bare-tag rules, so
-`<h4>` to `<h2>` would resize every section head.
+WCAG 2.2 SC 2.5.8 asks 24×24 CSS px of any target that is not inline in a
+sentence; this is a standalone row in the menu. The type is also below
+`DESIGN.md`'s own stated floor ("apparatus never drops below 14px at 390px").
 
-All nine template pages — no skip link (`git.html` has one:
-"Skip to the ladder"). Violates "include skip link for main content".
-**Applied** — `.skip-link` to `#main`, off-screen until focused, plus
-`id="main"` on `<main>`.
+**Fix applied** — `99-hubert.css:928`: 14px type, `min-height: 44px`, flex-centred.
+After: 380×44 at 14px.
 
-All nine template pages — no `<nav>` and no `<footer>` element. The nav is
-`<div class="nav layout__second">`, the footer is
-`<section class="section no__p footer section__blue">`.
-**Applied** — `role="navigation"` with `aria-label` on both navs and
-`role="contentinfo"` on the footer section. Roles rather than element swaps
-because the CSS keys off `.nav` and off the `section` element in places.
+### M4 · major · Map caption unreadable on the deep field — video-as-code.html
 
-`prefers-reduced-motion` is not honoured by the CSS layer. Verified with the
-media feature emulated on `/`, `/netflix.html`, `/design-plugins.html`:
-`scanline` (8s, `iterations: Infinity`) and `scanlines` (1s,
-`iterations: Infinity`) both `running`; the homepage mini video `paused: false`.
-`git.html` reported zero animations, correctly.
-**Applied** — a `@media (prefers-reduced-motion: reduce)` block in
-`99-hubert.css` stopping `.scanlines::before`, `.scanlines::after`,
-`.wrapper::after` and `section .branding__imageStack::after`, plus a
-`reduced` branch in `heroMedia()` in `site.js` that pauses the mini video. The
-layers stay on screen at their normal opacity; only the movement stops.
+**Where** `.journalArticle__banner.map figcaption` on `video-as-code.html`.
+`rgb(84,86,93)` on `rgb(4,17,31)` at 14px = **2.59:1**, against the 4.5:1 WCAG AA
+asks for body text.
 
-### Majors
+**Verified as local, not global, before concluding.** The same class on the light
+plate (`rgb(213,214,219)`) measures 5.05:1 and passes. Two cases, opposite
+results, so this is one figure sitting on the wrong ground — not a colour-system
+error. Eight pages carry a `.map` figure; only this one has a visible caption on
+it today.
 
-`assets/css/00-critical.css:1` — `.scanlines:after{animation:scanlines 1s steps(60) infinite; ...}`
-animates `background-position`, not `transform`/`opacity`. Violates
-"Animate `transform`/`opacity` only". Not applied; rewriting the scanline to a
-transform is a rendering change to the site's signature texture and belongs
-with you.
+**Fix applied** — `99-hubert.css:917`, the map's own label ink (`#abbac2`). After:
+**9.53:1**. The rule is written against `.journalArticle__banner.map figcaption`
+so it covers the other seven map figures too.
 
-`assets/css/00-critical.css:1` — `.wrapper:after{animation:foreground .5s steps(1) infinite; ... position:fixed; mix-blend-mode:overlay; z-index:100}`
-is an 11-step jump loop on a fixed full-viewport blended layer. The Taste Skill
-calls out this exact pattern (6.E). It is correctly on a fixed
-`pointer-events: none` pseudo-element, which is the right construction; it is
-the uncapped repaint that is the cost. Gated under reduced motion now; left
-running otherwise.
+### m1 · minor · The "Current" status stamp overflows the viewport — privacy.html, 390px
 
-`index.html` — `<video autoplay loop muted playsinline>` with no `controls`,
-no `poster`, and no pause affordance. Violates "Autoplay motion >5 seconds
-alongside other content needs pause, stop, or hide controls". The reduced-motion
-half is applied; adding a visible pause control changes the composition, so it
-is not.
+**Where** `.journalArticle__documentStamp`, mobile tier (`font-size: 34px` flat,
+`assets/css/_slug_.DENrRFxM.css`). `privacy.html` only.
 
-No `color-scheme` declared anywhere (`getComputedStyle(html).colorScheme`
-returned `normal` on all ten pages). On a `#1a1a1a` page that leaves native
-scrollbars and form controls in the light default. Violates
-"`color-scheme: dark` on `<html>` for dark themes".
-**Applied** — `html { color-scheme: dark }` in `99-hubert.css`. `git.html` is
-a light page and does not load that file, so it is unaffected.
+The stamp is a fixed 34px whatever word it carries. "Filed" — the value on all
+ten guides — sets 118px and fits its cell. "Current", the only other value in the
+site, sets 157px against a 113px content box.
 
-`git.html:302` — the email field's computed `font-size` is 13.33px. iOS Safari
-zooms the viewport when a field below 16px takes focus. Violates the input/zoom
-rule. **Applied** — 16px in `tokens.css`.
+**This was already broken on the live site**, and the review's own before/after
+screenshot pass initially read it as a regression. It is not: measured 2026-09-01
+at 390×844 on production, the stamp's right edge was at **406** against a 390
+viewport — the T was cut. Removing the strip's negative margin (B1) narrowed the
+cell from 148px to 130px and made it **424**. So the branch aggravated a
+pre-existing defect rather than introducing one, and it would have been wrong to
+ship B1 without also handling this.
 
-Anchor targets sit under the fixed 99px header. Violates
-"`scroll-margin-top` on heading anchors". **Applied** —
-`scroll-margin-top: 116px` on identified block elements in `99-hubert.css`.
+**Fix applied** — `99-hubert.css`, mobile tier: the stamp is aligned to the end of
+its cell. After: 384 at 390, inside the viewport, and a 1px no-op for "Filed".
+Visually checked at 390×844 on both `privacy` and `netflix`: roughly 50–60px of
+clear space between the stamp's ink and the PAPER/PANEL buttons to its left, no
+contact, all six labels still aligned to the same 8–9px offset.
 
-### Minors
+**Not fixed, and it is yours:** the stamp cannot size itself to its own word in
+CSS. Any `font-size` fix shrinks the stamp on all eleven pages to suit one. The
+alignment is a stopgap; a longer status value in future will overflow again.
 
-- `assets/css/00-critical.css:1` — `.section .pricing__box--badge` sets
-  `font-family: var(--mono)`. `--mono` is not defined anywhere, so the badge
-  inherits the display face instead of the mono one. **Applied**: set to `Mono`.
-- `index.html` — five `img/home/benefit*.webp` stills had no `loading="lazy"`
-  despite sitting well below the fold on a 10,276px-tall mobile page.
-  **Applied**.
-- `index.html` — 65 `<img>` elements, none with `width`/`height`. Violates
-  "`<img>` needs explicit `width` and `height`". **Not applied**: they sit in
-  tracks whose height is set in CSS (`.homeworks__showcaseItem img { height: 100% }`),
-  so the CLS exposure is small, and writing 60 sets of intrinsic dimensions by
-  hand is a change I would rather you sanction than guess at.
-- `index.html` — the same five stills all carry `alt="Still from Guide 01"`.
-  Accurate but not distinguishing. Not applied, copy decision.
-- `git.html` — the form posts to Buttondown's embed endpoint with
-  `target="popupwindow"` and an `onsubmit` that calls `window.open`. Popup
-  blockers are the normal case on mobile. Not applied; the form's existence is
-  a direction call (see below).
-- `404.html` has no meta description. It carries `robots: noindex`, so this is
-  correct as-is. Recorded so it is not re-flagged.
+### m2 · minor · Nav "Sources" on index and privacy points into Guide 01
 
-### Nits
+`index.html` and `privacy.html` link Sources to `netflix.html#sources`; the ten
+guides link to their own `#sources`. Not a bug — those two pages have no sources
+section — but it is the homepage-leads-with-Guide-01 pattern showing up in the
+nav. **Not applied**: it is part of the front-page question that is yours.
 
-- `assets/css/00-critical.css:1` — `.arrow{font-family:obviously, ...}`. No
-  `obviously` face is shipped or `@font-face`d, so every `↗` on the site falls
-  back to the system UI sans rather than to a face in the system.
-- `GeistMono` is `@font-face`d in `00-critical.css` and referenced by no rule.
-  Two font files in the repo that nothing can request.
-- Two custom cursor elements on the homepage (`.homeVideoOverlay__closeCursor`
-  "Click to close", `.homeworks__skimCursor` "Hold to skim"). The Taste Skill
-  bans custom cursors outright (9.A). They are pointer-only affordances with no
-  keyboard equivalent.
-- Copy: `privacy.html:131-132` renders as "@huberttheinventoron Instagram" at
-  390px. The source is correct (a newline separates the anchor from "on
-  Instagram"), so the space is being lost by Splitting.js when it tokenises
-  around the child anchor. Putting the anchor and the following words on one
-  source line with an explicit space would fix it.
+### m3 · minor · The design system has no type scale
+
+17 distinct rendered sizes at 390px across the thirteen pages:
+
+```
+10 · 12.2 · 13.5 · 14 · 15 · 17 · 17.6 · 20 · 24 · 30 · 34 · 36 · 39 · 40 · 42 · 78 · 135
+```
+
+Adjacent ratios in the small tier run 1.03–1.25. Several pairs are within 4–7% of
+each other — 14/15, 17/17.6, 39/40/42, 12.2/13.5 — below the threshold at which a
+step reads as deliberate. The fractional values (12.2, 13.5, 17.6) come from
+percentage inheritance rather than declaration.
+
+Spacing is the same story: **29 distinct values** including 1, 2, 3, 4, 5, 6, 7
+and 8px, which cannot all be meaningful.
+
+**Not applied.** Collapsing a type scale is a design-direction call. See the
+proposal at the end.
+
+### n1 · nit · 39 duplicate `<h1>` on the homepage
+
+`index.html` renders 40 `<h1 class="marqueeText__title lead">`, all reading
+"●Field Guides To Large Systems". **39 of them carry `aria-hidden="true"`** — they
+are marquee repeats and assistive technology sees exactly one heading. No user
+harm; `<span>` would be the more honest element. Left alone.
 
 ---
 
-## 3. Taste Skill pass
+## Per-tool sections
 
-Judged as `design-taste-frontend` would: what is distinctive, what is
-execution, what is a default the site reached for. The CRT / mono / numbered
-field-guide character is the brief, not a finding.
+### 1 · Playwright CLI
 
-### What is genuinely good, and should not be touched
+`npm install -g @playwright/cli@latest` (v0.1.19), then
+`playwright-cli install-browser chromium`. Installed cleanly and drove every
+measurement in this document.
 
-- **The sealed font roles.** SemiSqueezed for display, Graphik for prose, Mono
-  for every piece of apparatus, no exceptions. This is a real system decision
-  and it is what makes the site recognisable at thumbnail size.
-- **Plates instead of cards.** Four full-bleed colour plates and hairline rules,
-  zero shadows, zero elevation. Most sites in the Awesome Design collection
-  reach for a card at the first sign of grouping. This one does not.
-- **The link row.** One CTA component, full column width, rule above and below,
-  mono label left, `↗` right, fill wiping up on hover. It is on every page
-  including `404.html`. One component, one intent, no duplicate-CTA problem.
-- **The sealed diagram palette.** The system maps carry their colours inline
-  from the poster file so the page cannot drift from the artefact people
-  download. That is a discipline most design systems do not bother with.
-- **The comments in `99-hubert.css` and `tokens.css`.** Every deviation is
-  explained with the measurement that caused it and the date. This is above the
-  bar of anything in the reference collection.
+Note for whoever runs this next: the `run-code` sandbox has **no `require`, no
+`node:` imports and no filesystem**. Scripts must return their result as a string
+and let the shell redirect it. `page.screenshot({path})` writes files itself and
+is the way to get images out.
 
-### Where the execution slips
+Thirteen pages × {390×844, 1440×900}, viewport and full-page capture each — 52
+images. Per page: console at error and warning level, `requestfailed` and every
+response ≥400, root and per-element overflow, every interactive element's box,
+in-page anchor resolution, image and video state, heading outline, landmarks,
+form field wiring, nav and footer fingerprints for drift, and the cache-token
+inventory.
 
-**major — the type scale is not a scale.** Headings are declared in `vw`
-(`20vw`, `15vw`, `10vw`, `6vw`, `5vw`, `4vw`, `3vw`, `2.8vw`), mid sizes in
-percentages (`260%`, `250%`, `150%`, `130%`, `100%`, `90%`, `80%`, `70%`, `55%`,
-`50%`), and floors in px inside two breakpoints. Rendered on the guide pages,
-that produces 78 / 39 / 30 / 20 / 14 / 13 / 12 / 11 / 10 px at 390 and
-172.8 / 86.4 / 63.6 / 40.3 / 17.1 / 12.2 px at 1440. There is no step you can
-name. Compare `tokens.css`, which has a documented four-rung canyon with a
-deliberate missing rung. The off-design page has the better scale.
+**Result, live site, before any change:**
 
-**major — the 10px tier.** At 390px, guide pages set eyebrows, stamp fields and
-status labels at 10px, and the homepage renders 1,030 text nodes at 10px. On a
-phone, for developers arriving from a reel, that is below the floor `tokens.css`
-sets for itself (`--t-label: clamp(12px, ..., 13.5px)`, with a comment that says
-"Floors respect a 12px min"). The site's own better system disagrees with it.
+- HTTP 200 on all thirteen pages, both viewports.
+- **Zero console errors.** One warning, on `index.html` only:
+  `THREE.GLTFLoader: Unknown extension "KHR_materials_pbrSpecularGlossiness"`.
+  Benign, pre-existing, left alone.
+- **Zero failed requests. Zero broken images. Zero dead links. Zero dead
+  anchors** (`#kit`, `#main`, `#map`, `#pricing`, `#sources`, `#swaps` all
+  resolve). **Zero horizontal overflow** at the root.
+- Nav fingerprints: three variants across thirteen pages — the ten guides share
+  one, `index`/`privacy` share a second (the `#sources` difference in m1), and
+  `404` had none at all (M1). No unintended drift in the guide set.
+- Guide video, all seven films, both viewports: `object-fit: contain`,
+  `object-position: 50% 50%`, 316×562 at 390 and 405×720 at 1440 — 9:16 in both
+  cases. **The 2026-08-29 crop fix has held.** `git`, `design-plugins` and
+  `alternatives` carry no film.
 
-**major — the diagram is the product and it is unreadable on the primary
-viewport.** Screenshot review, independently by two passes, could not resolve a
-single internal label on the system maps at 390px: the maps render inside a
-~316px card and the internal type lands at roughly 5-6px, while the legend
-underneath is at normal mono size and fully readable. So the phone reader gets a
-legible legend explaining a picture they cannot read. The escape hatch exists
-(the map is downloadable as PNG, and as SVG on guides 01 and 02) but the link
-sits further down the page, not under the figure. **Not applied** — the fix is
-compositional: make the figure itself a link to the full-size artefact, or add
-a pinch-to-zoom viewer, or crop the map into the three or four annotated details
-the article already walks through.
+**After the fixes, same sweep against this branch:** 26 page-viewport
+combinations, **0 problems** — no console errors beyond the pre-existing warning,
+no failed requests, no overflow, no broken images, no dead anchors, 498 asset
+URLs on a single token.
 
-**minor — no radius scale.** `var(--radius)` (`.5vw`, overridden to `1vh`) in
-five rules, plus hard-coded `8px`, `12px`, `0` and `999px`. The Taste Skill's
-Shape Consistency Lock (4.4) asks for one scale or a documented rule. Neither
-exists.
+### 2 · Web Design Guidelines (vercel-labs)
 
-**minor — the decorative status dot.** `<span class="rec">●</span>` sits at the
-end of the nav on every template page, and every marquee line is prefixed with a
-`●`. Section 9.F bans decorative status dots by default and allows them only for
-real semantic state. Here they are ornament. They are also, arguably, the
-site's signature. Your call; recorded because the skill flags it and you should
-decide rather than inherit it.
+Installed as the `web-design-guidelines` skill
+(`npx skills add https://github.com/vercel-labs/agent-skills --skill web-design-guidelines`);
+already present in `.claude/skills/` and recorded in `skills-lock.json`.
 
-**Deliberately not counted as findings.** The Taste Skill also bans, as AI
-tells: section-number eyebrows (`Nº001 / What is collected`), em-dashes
-anywhere, mono uppercase eyebrows above every section, and `Brand · No. 01`
-sub-eyebrows. This site is a numbered series of field guides; the numbering is
-the brand, not a tell, and the em-dash rule is that skill's house style, not a
-defect. Flagging them would be exactly the flooding you asked me to avoid.
+Note the README points the skill at a different repo (`vercel-labs/agent-skills`)
+from the one the guidelines live in (`vercel-labs/web-interface-guidelines`).
+Both resolve; nothing was half-installed.
 
----
+**Passes — verified, not assumed:**
 
-## 4. Awesome Design pass
+- **Reduced motion is fully respected.** Under `prefers-reduced-motion: reduce`,
+  **zero** running animations on `index`, `netflix` and `alternatives` — including
+  the CRT `scanline` (8s) and `scanlines` (1s) layers, which are gated
+  explicitly at `99-hubert.css:405`. `site.js:18` gates every GSAP tween. This is
+  better than most animation-heavy sites manage.
+- **Focus ring** is defined at `99-hubert.css:278` on `:focus-visible` (not
+  `:focus`), 2px, offset 3px, resolved off the plate's text colour, with the
+  contrast worked out in the comment. Verified drawn on the first 14 focusable
+  elements of `index` and `netflix`, all in view.
+- **Skip link** present and first in tab order on all twelve chrome pages, and
+  now on `404` too.
+- **Landmarks** present via ARIA roles, not elements: `role="navigation"` on both
+  navs, `role="contentinfo"` on the footer. `<nav>`/`<footer>` elements would be
+  more idiomatic but this is not a violation — flagged as a nit, not applied.
+- **Form wiring** is correct: `type="email"`, `autocomplete="email"`,
+  `inputmode="email"`, `required`, a real `<label>`, and **20px font-size** on the
+  input, which is above the 16px threshold below which iOS Safari zooms on focus.
+  Consent is a `required` checkbox in a wrapping label.
+- **Consent checkbox target**: the input is 20×20, under the 24×24 minimum *in
+  isolation* — but it sits in a wrapping `<label>` measuring 316×116 with
+  `min-height: 44px` set deliberately at `99-hubert.css:77` ("the whole row is the
+  tap target"). Clicking the text toggles it, so the target is the label. **Not a
+  violation.** Recorded here because it looks like one in an automated scan.
+- **`touch-action: manipulation`** on all interactive elements
+  (`99-hubert.css:369`) removes the 300ms double-tap delay.
+- Every page: `lang="en"`, a title, a meta description (`404` excepted before
+  M1), one non-hidden `<h1>`, `<main>` present.
 
-The site's de-facto system is extracted into **`DESIGN.md`** at the repo root,
-in the collection's format: YAML front matter with `colors`, `typography`,
-`rounded`, `spacing` and `breakpoints`, then Overview / Colors / Typography /
-Layout / Shapes / Components / Motion / Do's and Don'ts / Responsive Behavior.
+**Failures:** B2, B3, M3 above. Contrast: exactly one failure site-wide (M4);
+every other text/background pair on all thirteen pages clears AA at 390px on the
+default plate.
 
-### Against the collection's bar
+### 3 · Taste Skill
 
-Measured against the 74 entries in `VoltAgent/awesome-design-md`, using
-`linear.app` as the closest comparison (near-black canvas, single accent, dense
-technical register):
+Installed as `design-taste-frontend`
+(`npx skills add https://github.com/Leonxlnx/taste-skill`); already present, with
+`hallmark` alongside it. Recorded in `skills-lock.json`.
 
-| dimension | collection bar | this site |
-|---|---|---|
-| named colour tokens | semantic (`surface-1`, `ink-muted`, `hairline`) | literal (`--lightgrey`, `--blue`, `--black`) — `--black` is the name of a **plate background** and also the name of the **ink on another plate** |
-| type scale | named steps with explicit size, weight, line-height, tracking | three unit systems, no nameable step |
-| spacing | a scale | `vw` values with px overrides, no tokens |
-| radius | a scale | one token plus three hard-coded values |
-| focus | defined | undefined on 9 of 10 pages |
-| dark/light | one committed theme | **two whole systems in one repo** |
-| do's and don'ts | documented | documented only inside `tokens.css`, which nine pages do not load |
+Judged as a designer, character taken as given.
 
-The system passes the collection's bar on colour discipline, component
-restraint, and font-role sealing. It fails on tokenisation and on having a
-single source of truth.
+**What is genuinely good.** The filing-cabinet conceit is carried all the way
+down: `Nº001`, the red rubber `FILED` / `CURRENT` stamp, "Nothing filed here." on
+the 404, the reading-plate toggle sitting as one more cell in a field table
+rather than as a settings widget. The scanline and vignette are restrained —
+present at both sizes, never loud. The stretched `textLength` wordmark and the
+full-bleed colour plates are doing real work. `design-plugins` has the only
+*body* region that looks designed rather than defaulted: the `Plugins.PKG` row
+with its vertical rule and the numbered mono list.
 
-### Self-contradictions
+**Where the execution falls short of the concept.**
 
-All eleven are listed under "Contradictions in the system as shipped" in
-`DESIGN.md`. The load-bearing ones:
+- **The article body is the weak surface, and it is the surface people came
+  for.** Between the dossier strip and the first video, every guide is a
+  left-aligned column of near-black prose on light grey — h1, deck, h2,
+  paragraph. No rules, no margin marks, no mono furniture, none of the filing
+  language the header, the stamp and the 404 establish. Above the fold on a
+  phone, `kubernetes`, `whatsapp`, `google-search`, `gps`, `determinant` and
+  `video-as-code` are hard to tell from any long-read with a CRT filter over it.
+  Fixing B1 helps — the dossier is now visible, which puts one piece of
+  apparatus on screen — but the body itself is untouched.
+- **The deck has no separation from the h1.** On every guide the standfirst
+  begins on the next line at a size close to the h1's, so the two read as one
+  slab rather than a headline and a deck. Worse on mobile, where the slab takes
+  most of the first screen.
+- **Desktop leaves the sides empty.** A ~936px column centred in 1440 with ~259px
+  of unused plate either side, and >200px of empty background above the h1.
+- **Single-word orphans on wrapped h1s** — `alternatives` ("twin."), `privacy`
+  ("not."), `determinant` mobile ("volume."), `netflix` ("hard part."). One
+  declaration (`text-wrap: balance`) fixes all of them.
+- **The native `<video>` control bar** is the least on-brand element on the site,
+  sitting inside the most carefully composed frame on the page.
 
-1. **The two-design-systems problem.** `git.html` loads `tokens.css` and no part
-   of the System A bundle. Warm paper `oklch(96.2% 0.012 85)` against `#1a1a1a`;
-   Archivo + Newsreader + JetBrains Mono against SemiSqueezed + Graphik + Mono;
-   a 4pt spacing scale and a `clamp()` canyon against `vw`; its own header, its
-   own footer, no site nav at all. You know about this one, so it is reported
-   here once and not repeated in the other sections. What is worth adding: the
-   off-design page is the **better-engineered** of the two. It is the only page
-   with a focus ring, the only page with a skip link, the only page with a
-   documented spacing scale, the only page with a 12px type floor, and the only
-   page that respects reduced motion completely. If the paper system is being
-   retired, its engineering should be ported first.
-2. **`--black` is used as both a background and an ink.** `.section__black`
-   sets `--background: var(--black)`; `.section__lightgrey` sets
-   `--color: var(--black)`. The name carries no role.
-3. **The reading plate fails its own ink** (item 2 in the summary).
-4. **Focus has no design** in System A and a proper token (`--focus`) in
-   System B.
-5. **The footer is a `<section>` and the nav is a `<div>`** in System A; both
-   are real elements in System B.
+All of the above are design-direction calls. None applied.
 
----
+### 4 · Awesome Design
 
-## Applied on `review/design-fixes`
+Cloned (`git clone https://github.com/VoltAgent/awesome-design-md`); the
+collection is 74 `DESIGN.md` files with no installer, so it was used as the
+comparison bar, which is what its README asks for.
 
-21 fixes. Nothing here changes a colour, a size, a typeface, a layout or a
-piece of copy.
+**The site already has a `DESIGN.md`, and it is at the corpus bar.** Against
+`claude`, `vercel` and `apple` from the collection (562–736 lines), this site's
+364 lines carry the same front-matter keys (`colors`, `typography`, `rounded`,
+`spacing`, `breakpoints`) and the same prose sections (Overview, Colors,
+Typography, Layout, Shapes, Components, Do's and Don'ts, Responsive Behavior) —
+plus a **Contradictions** section that no file in the collection has. That
+section is the best thing in the document and is above the bar, not at it.
 
-**`assets/css/99-hubert.css`** (reaches nine pages)
-1. `:focus-visible` ring on every interactive element, resolving off the plate's
-   own text colour.
-2. `.skip-link`, off-screen until focused.
-3. 44px hit area on `header .menu` via an overlay pseudo-element, box and
-   position unchanged.
-3b. The open mobile panel is a scrollable flex column with `padding-top: 12svh`
-   and the social block on `margin-top: auto`, so ten nav links stop colliding
-   with it. See §1.3.
-4. `touch-action: manipulation` on interactive elements.
-5. `html { color-scheme: dark }`.
-6. `scroll-margin-top: 116px` on identified block elements.
-7. `.section .pricing__box .button` label from `var(--background)` (2.43:1 on
-   its own fill) to `var(--bgcolor)` (8.97:1).
-8. `.section .pricing__box--badge` gets a real mono family instead of the
-   undefined `var(--mono)`.
-9. `@media (prefers-reduced-motion: reduce)` stopping the four uncapped CRT
-   animations.
+**Gaps against the corpus, fixed on this branch:**
 
-**HTML, all pages**
-10. `role="navigation"` + `aria-label` on both navs, `role="contentinfo"` on the
-    footer section, `id="main"` on `<main>`, skip link before `<header>`.
-11. `?v=` unified to `2026-08-26-review` so the CSS and JS edits above actually
-    invalidate.
+- The `description` front matter still said *"One page, git.html, does not use
+  this system at all and runs a separate warm-paper editorial system of its
+  own."* The document contradicted itself: line 319 already recorded that commit
+  `25adfcc` rebuilt `git.html` on System A. Corrected.
+- `breakpoints` still listed two `git.html`-only breakpoints as live. Corrected.
+- No **Touch Targets** subsection under Responsive Behavior, which the corpus
+  files carry — and this review found three target-size questions. Added.
+- The four contradictions this review measured, added to that section.
 
-**Nav repair**
-12. Guides 06 and 07 added to desktop and mobile nav on the five earlier guides.
-13. Duplicate Guide 03 / Guide 04 removed from `kubernetes.html`'s mobile menu.
-14. `privacy.html` nav carries the full guide list, desktop and mobile.
+**Where the site contradicts its own system** (all now recorded in `DESIGN.md`):
 
-**Per page**
-15. `netflix.html` — `id="map"` on the map figure.
-16. `privacy.html` — `.topOverlay` added; `buttondown.com/privacy` →
-    `buttondown.com/legal/privacy`.
-17. `index.html` — `aria-hidden="true"` on 39 duplicate marquee `<h1>`;
-    `loading="lazy"` + `decoding="async"` on five below-fold stills.
-18. Five guide pages — `aria-level="2"` on 41 article `h4`s;
-    `preload="metadata"` → `preload="none"` on the guide videos.
-19. `git.html` — the `data-goatcounter="https://CODE.goatcounter.com/count"`
-    tag removed (the placeholder was never replaced, so it could never count
-    anything, and it loaded third-party JS your privacy note says is not there);
-    `theme-color` added. **`tokens.css`** — the subscribe form's sizing, ported
-    from the rules already written for it in `99-hubert.css` that this page
-    cannot load: 16px field, 44px minimums, 20px checkbox.
-20. **`tokens.css`** — `.plate--midnight` rebinds `--focus`. The token is set
-    for paper, where its comment says it clears 3:1; the subscribe form sits on
-    the midnight plate, where the ring measured about 2.4:1 against the field.
-    It now resolves to the plate's own `--sun`, the way every other colour on
-    that plate rebinds.
-
-**`assets/js/site.js`**
-21. `heroMedia()` pauses the decorative mini video and drops its `autoplay`
-    attribute under reduced motion.
+| `DESIGN.md` says | the site does |
+|---|---|
+| apparatus never below 14px at 390px | dossier cells were 10px until 2026-08-29; `.mobilenav__social a` was 10px until this branch |
+| a stated type scale | 17 distinct rendered sizes, adjacent ratios 1.03–1.25 |
+| — | 29 distinct spacing values, including 1–8px |
+| the document header is "pulled out into the margins" as a deliberate device | the pull put it off-screen at both viewports (B1) |
 
 ---
 
-## Not applied — these are yours
+## Deliberately NOT applied — these are yours
 
-Ranked by what I would decide first.
+1. **Reel attribution is on 3 of 10 guides.** `git`, `design-plugins` and
+   `alternatives` open with a "You commented GIT — this is the ladder." kicker
+   and carry a *"Companion to the reel · Watch it on @huberttheinventor"* credit.
+   `netflix`, `kubernetes`, `whatsapp`, `google-search`, `gps`, `determinant`
+   and `video-as-code` have neither — verified by grep across all ten files.
+   Given the audience arrives from reels, this is the most valuable thing on this
+   list. Not applied because it means writing seven new kickers, which is copy,
+   not markup.
+2. **The homepage leads with Guide 01** — flagged as instructed, untouched.
+3. **System maps unreadable on a phone** — known, untouched. Confirmed still
+   present: the map is drawn in a 1200-unit viewBox, so caption type renders
+   ~2.7px at 390px regardless of declared size.
+4. **Collapse the type scale** from 17 sizes to a stated ramp, and the spacing
+   set from 29 values to a unit. Mechanical once the ramp is chosen; the ramp is
+   yours.
+5. **Give the deck separation from the h1** on every guide — one margin, biggest
+   single readability win on the primary viewport.
+6. **`text-wrap: balance` on h1** — kills every orphan at once.
+7. **The article body carries none of the site's own furniture.** The largest
+   design opportunity here, and entirely a direction call.
+8. **"The List" is behind the hamburger on mobile.** On desktop it is a distinct
+   green-dotted CTA in the nav; on the viewport that carries the audience it is
+   one tap away and invisible. Probably deliberate — worth deciding on purpose.
+9. **Use `<nav>` and `<footer>` elements** instead of divs with roles. No
+   accessibility gain, purely idiomatic.
 
-**1. The reading plate. `--lightgrey: #71737d`.**
-`#111111` on it is 4.00:1; AA needs 4.5:1 below 24px. This is the background of
-every article body on every guide, plus `privacy.html` and `404.html`. Three
-ways out, all one line, all measured:
-
-- Lighten the plate to `#7b7d87` → 4.61:1 with the existing ink. A 4% luminance
-  lift; the plate stays the same hue and the same blue-grey. **This is what I
-  would do.** One caveat, which is why I did not: it makes the
-  `.section .pricing__box .button` label worse, from 2.43:1 to 2.11:1 — already
-  fixed independently in item 7 above, so that objection is now moot.
-- Keep the plate, take the ink to `#000000` → 4.45:1. Still short.
-- Keep the plate, take the ink to `#ffffff` → 4.72:1. Passes, and inverts the
-  section's whole read.
-
-Whichever you pick, the apparatus needs the same pass: `.opacity__50` and the
-`.55` opacities on that plate land at 2.12:1 and 2.29:1 today, and would still
-fail at full opacity on the current plate (4.00:1). Dimming apparatus with
-opacity is the system's device, so this is a decision about the device, not a
-bug fix.
-
-**2. `git.html`'s live signup versus what `privacy.html` says.**
-`git.html:299` is a working `<form action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor">`
-with a required email field and a required consent checkbox, plus `subscribe.js`
-which writes `hti-sticky-dismissed` to `localStorage` with a 30-day expiry.
-`privacy.html` says, today: "Nothing is collected from you at the moment. There
-is no signup form, no analytics and no cookies on these pages", and describes
-Buttondown as a plan ("The list **will** run on Buttondown"). One page collects
-addresses; the other says nothing does. I removed the broken analytics tag,
-which was unambiguous. The rest is a choice between two edits and I am not
-making it for you:
-- take the form and `subscribe.js` off `git.html` until the list opens, which
-  makes the privacy note true again; or
-- rewrite `privacy.html` §001, §002 and §003 to describe Buttondown and
-  `localStorage` as fact, before the next reader arrives.
-This is the only item on this list with a compliance edge, so it is the one I
-would not leave sitting.
-
-**3. `index.html`'s header has no backdrop.** `.topOverlay` reports
-`opacity: 0` at every scroll position on the homepage and `opacity: 1` on the
-six guide pages. Copy passes under a transparent fixed header on the lower
-sections. It reads fine over the dark hero, which may be exactly why it is off.
-Fix is to give the homepage the same fixed, opaque-to-34% overlay the guides
-have; that changes the top of the homepage, so it is yours.
-
-**4. The system map at 390px.** Internal labels unreadable; legend readable.
-Options in §3 above.
-
-**5. The type scale.** Three unit systems, no nameable step, a 10px tier on
-phones. Rebuilding it on the `tokens.css` model is the single largest quality
-lever and the single largest change.
-
-**6. Three.js on every page.** The refactor is described in §1.5.
-
-**7. `404.html`.** No header, no nav, no footer, no wordmark. Ink starts at
-20px from the left where the other pages start at 54px. A reader who mistypes a
-URL lands on a page that does not look like the site and offers two links out.
-
-**8. The homepage autoplay loop** needs a pause affordance, or to not autoplay.
-
-**9. `.scanlines:after` animates `background-position`**, not a compositor
-property.
-
-**10. The `●` status dot and the marquee bullets** — ornament that the Taste
-Skill bans by default. Signature or tell; your call.
-
-**11. Custom cursors** on the homepage — pointer-only, no keyboard equivalent.
-
-**12. `index.html`'s 65 images without intrinsic dimensions.**
-
-**13. Missing `.svg` map exports for guides 03, 04 and 05**, so the "as a
-vector" affordance exists on two guides out of five.
-
-**14. `git.html`'s Google Fonts dependency**, where every other page
-self-hosts.
-
-**15. The mobile panel's two footer links are still 91.3 x 12 px.** They are
-the only tap targets on the site left under 24px that a thumb is meant to hit.
-They sit flush against each other with no room above or below, so making them
-44px needs a decision about that bottom block: give it its own rule and 24px of
-breathing space, drop to one link, or move them into the main list.
+Also unresolved by choice: whether the dossier strip should bleed to the viewport
+edges at all, or sit in the text column with the h1. B1's fix restores every cell
+to the screen using the bleed the original rule was reaching for; the alternative
+is a design decision.
 
 ---
 
-## Re-verification
+## Verification of this branch
 
-The full Playwright pass was re-run against the branch served from
-`127.0.0.1:8899`, all ten pages, both viewports, plus a dedicated probe pass and
-a separate `reducedMotion: 'reduce'` browser context.
+- Full 26-combination Playwright sweep re-run against the branch: **0 problems**.
+- B1: strip `[0,110,390,134]` and `[0,96,1440,191]`, no cell off-screen,
+  `elementFromPoint` returns the cell itself at both sizes.
+- B2: `inert` present when shut; tab order clean of all 15 links; opening clears
+  `inert`, sets `aria-expanded="true"`, first link hit-testable.
+- B3: outline `none`→`solid`, border `rgba(17,17,17,.28)` 1px →`rgb(17,17,17)` 2px.
+- M1: `404` has 1 header, 2 nav roles, skip link, `#main`, meta description,
+  14-item nav matching the other pages.
+- M2: 498 URLs, one token, zero untokened.
+- M3: social row 380×12 @10px → 380×44 @14px.
+- M4: 2.59:1 → 9.53:1.
+- Visual before/after comparison of the changed pages at both viewports.
 
-| check | before | after |
-|---|---|---|
-| focusable elements with a visible ring (first 14 per page) | 1 of 8 sampled, on 9 pages | **14 of 14 on every page**, 2 of 2 on `404.html` |
-| `<h1>` in the accessibility tree, `index.html` | 40 | **1** |
-| heading sequence, guide pages | `144444` | **`122222`** |
-| skip link present | `git.html` only | **all 9 template pages** |
-| `role="navigation"` / `role="contentinfo"` | 0 / 0 | **2 / 1 on every template page** |
-| `getComputedStyle(html).colorScheme` | `normal` | **`dark`** (`git.html` unchanged at `normal`, correctly) |
-| dead in-page anchors | `#map` on `netflix.html` | **none on any page** |
-| nav link list, all 9 template pages | four different lists | **identical, 10 links, desktop and mobile** |
-| Menu button | 75.7 x 36.9 px at `x294, y30`, `position: fixed` | **44px hit area; box and position identical to `main`: 76 x 37 at `x294, y30`, still `fixed`** |
-| open mobile panel, ten links | list `y169-689` over a social block at `y651-675`: **38px overlap**, "The List" printed through | **0 overlap at 390x844, 390x667 and 430x932; social block still at `y651-675` at 390x844** |
-| `git.html` focus ring on the midnight plate | `oklch(45% 0.18 40)`, ~2.4:1 against the field | **`oklch(96% 0.09 105)`, the plate's own `--sun`** |
-| `git.html` email field | 177 x 21 px @ 13.33px | **350 x 44 px @ 16px** |
-| `git.html` consent checkbox | 13 x 13 px | **20 x 20 px**, in a 44px row |
-| `git.html` Send button | 57.5 x 21 px | **350 x 44 px** |
-| `.topOverlay` on `privacy.html` | absent | **`fixed`, opacity 1** |
-| guide video `preload` | `metadata` | **`none`** |
-| animations running under `prefers-reduced-motion` | `scanline`, `scanlines`, both `Infinity`, both `running`; mini video `paused: false` | **`[]` on `/`, `/netflix.html`, `/privacy.html`; mini video `paused: true`** |
-| horizontal overflow, all pages, both viewports | none | **none** |
-| console errors and 4xx/5xx across all ten pages | none of ours | **none** |
-
-Unchanged and still open, as intended: `index.html`'s `.topOverlay` still
-reports `sticky` / opacity 0, and the two inline "the map as an image" /
-"as a vector" links are still 156 x 16 and 90 x 16. Both are on the
-"Not applied" list.
-
-### The screenshot pass caught two of my own regressions
-
-Both were found by looking at the rendered page, not by reading the diff, which
-is the whole argument for driving the browser first.
-
-Before-and-after screenshots were compared pixel by pixel at 390x844 on
-`index`, `netflix`, `privacy`, `git` and `design-plugins`.
-
-The first version of the tap-target fix used
-`display: inline-flex; min-height: 44px`. The diff showed the "Menu" label
-sitting **4px lower** on `index`, `netflix` and `design-plugins` — 434 differing
-pixels, all inside `x307-356, y41-59`, with the wordmark unmoved, so "Menu" went
-from 2px above the wordmark's optical centre to 2px below it. It also
-shrink-wrapped the social links.
-
-The second version added `position: relative` so an overlay pseudo-element could
-anchor to the button. That was worse and it did not show in the diff, because
-the mobile panel had to be opened to see it: the port sets
-`header .menu { position: fixed; right: 0; top: 0 }`, `99-hubert.css` loads
-last, and a same-specificity `position` declaration wins, so the button dropped
-out of the top-right corner into the flow at `x-20, y128.9` with its "M" clipped
-by the viewport edge.
-
-Third version, and the one on the branch: no `position` declaration at all. The
-button is already positioned, so the overlay anchors to it. Verified against
-`main`: `x294, y30, 76 x 37, position: fixed` in both, with a 44px hit area
-confirmed by probing above and below the visual centre.
-
-The social links could not use an overlay — they sit flush, 651.2-663.2 and
-663.2-675.2, so the second link's overlay swallowed the first and probing every
-pixel gave 12px and 45px. Real padding did not fit either, which is how the
-panel-overlap blocker in §1.3 was found. They are left at 12px and listed under
-"Not applied".
-
-Everything else: the intended visual changes are the header backdrop appearing
-on `privacy.html` and the mobile panel's list starting 68px higher.
-`git.html`'s first three viewport bands are byte-identical before and after.
+**Not pushed. No PR opened.**

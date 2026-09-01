@@ -183,6 +183,20 @@ function mobileNav() {
   const setOpen = (open) => {
     document.body.classList.toggle('menu_open', open);
     button.setAttribute('aria-expanded', String(open));
+    /* The closed panel is hidden by clip-path and `pointer-events: none`.
+       Neither of those takes it out of the tab order, so at 390x844 — where the
+       desktop nav is `display: none` and this panel is the only navigation —
+       tabbing past the Menu button walked into all fifteen links of a menu that
+       is not on screen. Measured on the live site 2026-09-01: `elementFromPoint`
+       at the centre of each focused link returned the section behind it, not the
+       link, while the focus ring drew over page content. WCAG 2.4.3 and 2.4.7,
+       and the button said aria-expanded="false" the whole way through.
+
+       `inert` is the one attribute that closes all of it at once — tab order,
+       the accessibility tree and pointer events — without touching the clip-path
+       the reveal animates. Desktop was already clean: at 1440 the real nav takes
+       the focus and this panel is never reached. */
+    panel.toggleAttribute('inert', !open);
     /* Reveal is animated by clip-path in the reference; a straight open is
        correct when motion is reduced. */
     gsap.to(panel, {

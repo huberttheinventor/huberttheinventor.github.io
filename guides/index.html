@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Every field guide — Hubert</title>
+<meta name="description" content="Every Hubert field guide, newest first. One large system per guide, taken apart on screen. Drawn, sourced, and free.">
+<meta name="theme-color" content="#1a1a1a">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Every field guide — Hubert">
+<meta property="og:description" content="Every Hubert field guide, newest first.">
+<meta property="og:image" content="/artifacts/site-card.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://huberttheinventor.github.io/guides/">
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-09-01-guides" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-09-01-guides">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-09-01-guides">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-09-01-guides">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-09-01-guides">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-09-01-guides">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-09-01-guides">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-09-01-guides">
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect" aria-current="page"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/" aria-current="page"><span>All guides</span></a>
+    <a href="/video-as-code.html"><span>Nº010 · Rendering video from code</span></a>
+    <a href="/determinant.html"><span>Nº009 · The determinant</span></a>
+    <a href="/alternatives.html"><span>Nº008 · Open-source swaps</span></a>
+    <a href="/design-plugins.html"><span>Nº007 · Design plugins</span></a>
+    <a href="/git.html"><span>Nº006 · Version control</span></a>
+    <a href="/gps.html"><span>Nº005 · GPS</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <section class="section section__lightgrey">
+    <div class="cardDrawer">
+      <div class="cardDrawer__head">
+        <h1>Every guide.</h1>
+        <p class="lead">One large system per guide, taken apart on screen. Newest first.</p>
+        <label class="cardDrawer__filter">
+          <span class="monospace">Filter</span>
+          <input type="search" id="guide-filter" autocomplete="off"
+                 placeholder="system, title, or number" aria-describedby="guide-count">
+        </label>
+        <p class="monospace monospace__p" id="guide-count" role="status" aria-live="polite">10 guides</p>
+      </div>
+      <div class="cardDrawer__rows" id="guide-rows">
+      <a class="cardRow" href="/video-as-code.html">
+        <span class="cardRow__n monospace">Nº010</span>
+        <span class="cardRow__body">
+          <span class="cardRow__title">Your video is a web page.</span>
+          <span class="cardRow__meta monospace">RENDERING VIDEO FROM CODE &middot; 1:14</span>
+        </span>
+        <span class="cardRow__arrow" aria-hidden="true">&#8599;</span>
+      </a>
+      <a class="cardRow" href="/determinant.html">
+        <span class="cardRow__n monospace">Nº009</span>
+        <span class="cardRow__body">
+          <span class="cardRow__title">The determinant is a volume.</span>
+          <span class="cardRow__meta monospace">THE DETERMINANT &middot; 2:55</span>
+        </span>
+        <span class="cardRow__arrow" aria-hidden="true">&#8599;</span>
+      </a>
+      <a class="cardRow" href="/alternatives.html">
+        <span class="cardRow__n monospace">Nº008</span>
+        <span class="cardRow__body">
+          <span class="cardRow__title">Every paid tool has an open twin.</span>
+          <span class="cardRow__meta monospace">OPEN-SOURCE SWAPS</span>
+        </span>
+        <span class="cardRow__arrow" aria-hidden="true">&#8599;</span>
+      </a>
+      <a class="cardRow" href="/design-plugins.html">
+        <span class="cardRow__n monospace">Nº007</span>
+        <span class="cardRow__body">
+          <span class="cardRow__title">Taste is installable.</span>
+          <span class="cardRow__meta monospace">DESIGN PLUGINS</span>
+        </span>
+        <span class="cardRow__arrow" aria-hidden="true">&#8599;</span>
+      </a>
+      <a class="cardRow" href="/git.html">
+        <span class="cardRow__n monospace">Nº006</span>
+        <span class="cardRow__body">
+          <span class="cardRow__title">A change has to climb.</span>
+          <span class="cardRow__meta monospace">VERSION CONTROL</span>
+        </span>
+        <span class="cardRow__arrow" aria-hidden="true">&#8599;</span>
+      </a>
+      <a class="cardRow" href="/gps.html">
+        <span class="cardRow__n monospace">Nº005</span>
+        <span class="cardRow__body">
+          <span class="cardRow__title">Zero bars. Still found.</span>
+          <span class="cardRow__meta monospace">GPS &middot; 1:44</span>
+        </span>
+        <span class="cardRow__arrow" aria-hidden="true">&#8599;</span>
+      </a>
+      <a class="cardRow" href="/google-search.html">
+        <span class="cardRow__n monospace">Nº004</span>
+        <span class="cardRow__body">
+          <span class="cardRow__title">It doesn't search the internet. It searches a copy.</span>
+          <span class="cardRow__meta monospace">GOOGLE SEARCH &middot; 1:31</span>
+        </span>
+        <span class="cardRow__arrow" aria-hidden="true">&#8599;</span>
+      </a>
+      <a class="cardRow" href="/whatsapp.html">
+        <span class="cardRow__n monospace">Nº003</span>
+        <span class="cardRow__body">
+          <span class="cardRow__title">Five machines carry your message. None of them can read it.</span>
+          <span class="cardRow__meta monospace">WHATSAPP &middot; 1:39</span>
+        </span>
+        <span class="cardRow__arrow" aria-hidden="true">&#8599;</span>
+      </a>
+      <a class="cardRow" href="/kubernetes.html">
+        <span class="cardRow__n monospace">Nº002</span>
+        <span class="cardRow__body">
+          <span class="cardRow__title">Kubernetes has never started a container.</span>
+          <span class="cardRow__meta monospace">KUBERNETES / DOCKER &middot; 1:42</span>
+        </span>
+        <span class="cardRow__arrow" aria-hidden="true">&#8599;</span>
+      </a>
+      <a class="cardRow" href="/netflix.html">
+        <span class="cardRow__n monospace">Nº001</span>
+        <span class="cardRow__body">
+          <span class="cardRow__title">The play button was never the hard part.</span>
+          <span class="cardRow__meta monospace">NETFLIX &middot; 2:53</span>
+        </span>
+        <span class="cardRow__arrow" aria-hidden="true">&#8599;</span>
+      </a>
+      </div>
+      <p class="monospace monospace__p cardDrawer__empty" id="guide-empty" hidden>Nothing filed under that.</p>
+    </div>
+  </section>
+</main>
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-09-01-guides"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-09-01-guides"></script>
+<script src="/assets/js/splitting.min.js?v=2026-09-01-guides"></script>
+<script src="/assets/js/site.js?v=2026-09-01-guides" type="module"></script>
+<!-- /build:scripts -->
+<script>
+/* Filter-as-you-type over the rows already in the HTML. No fetch, no index to
+   keep in sync — the rows are the data, so this works with JS off (you get all
+   of them) and needs no service as the count grows. */
+(function () {
+  var HAY = ["10 010 your video is a web page. rendering video from code video html tooling","9 009 the determinant is a volume. the determinant maths linear-algebra","8 008 every paid tool has an open twin. open-source swaps open-source tooling","7 007 taste is installable. design plugins design tooling ai","6 006 a change has to climb. version control git tooling","5 005 zero bars. still found. gps infrastructure radio","4 004 it doesn't search the internet. it searches a copy. google search infrastructure indexing","3 003 five machines carry your message. none of them can read it. whatsapp infrastructure encryption","2 002 kubernetes has never started a container. kubernetes / docker infrastructure containers","1 001 the play button was never the hard part. netflix infrastructure streaming cdn"];
+  var input = document.getElementById('guide-filter');
+  var rows = [].slice.call(document.querySelectorAll('#guide-rows .cardRow'));
+  var count = document.getElementById('guide-count');
+  var empty = document.getElementById('guide-empty');
+  if (!input) return;
+  function apply() {
+    var q = input.value.trim().toLowerCase();
+    var shown = 0;
+    rows.forEach(function (row, i) {
+      var hit = !q || HAY[i].indexOf(q) !== -1;
+      row.hidden = !hit;
+      if (hit) shown++;
+    });
+    count.textContent = shown + (shown === 1 ? ' guide' : ' guides') + (q ? ' matching “' + input.value.trim() + '”' : '');
+    empty.hidden = shown !== 0;
+  }
+  input.addEventListener('input', apply);
+  input.addEventListener('search', apply);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+#!/bin/sh
+# Keep the generated chrome in step with _partials/ and _data/guides.json.
+#
+# The chrome used to be hand-copied into every page. That is how 404.html
+# shipped with no header at all. build.mjs is the single source now, and this
+# hook makes it impossible to commit a page that has drifted from it.
+#
+# It restages only files the build actually rewrote, so it never sweeps up
+# unrelated work-in-progress from another session.
+set -e
+
+if ! command -v node >/dev/null 2>&1; then
+  echo "pre-commit: node not found — skipping the chrome build." >&2
+  exit 0
+fi
+
+# Only act if something the build reads or writes is already staged.
+staged=$(git diff --cached --name-only)
+case "$staged" in
+  *_partials/*|*_data/guides.json*|*build.mjs*|*.html*) ;;
+  *) exit 0 ;;
+esac
+
+before=$(git diff --cached --name-only)
+node build.mjs >/dev/null
+
+# Restage only the generated files that changed AND were already part of this
+# commit, plus guides/index.html which the build owns outright.
+for f in $(git diff --name-only); do
+  case "$f" in
+    guides/index.html) git add "$f" ;;
+    *.html)
+      if echo "$before" | grep -qx "$f"; then git add "$f"; fi
+      ;;
+  esac
+done
+
+# Anything still out of date means a page the build owns was not in this commit.
+if ! node build.mjs --check >/dev/null 2>&1; then
+  echo "pre-commit: pages are out of step with _partials/. Run: node build.mjs" >&2
+  node build.mjs --check >&2 || true
+  exit 1
+fi

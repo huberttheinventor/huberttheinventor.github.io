@@ -1,7 +1,7 @@
 ---
 version: alpha
 name: hubert-field-guides-design-analysis
-description: "A dark, CRT-flavoured field-guide system built on a near-black canvas (#1a1a1a) with a light-grey ink (#bababa), plus one mid-grey reading plate (#71737d) that carries every article body and one saturated indigo plate (#03049c) that carries every footer. Display type is SemiSqueezed, a very narrow grotesque, set enormous and viewport-scaled; body prose is Graphik; all apparatus (labels, captions, numbers, buttons, tables) is PP Neue Montreal Mono, uppercase and letterspaced. There are no cards and no shadows: hierarchy is carried by full-bleed colour plates, hairline rules, and one link-row component that spans the full column with a trailing arrow. Persistent fixed overlays (scanline, gloom, vignette) sit above everything to give the CRT read. One page, git.html, does not use this system at all and runs a separate warm-paper editorial system of its own."
+description: "A dark, CRT-flavoured field-guide system built on a near-black canvas (#1a1a1a) with a light-grey ink (#bababa), plus one near-white reading plate (#d5d6db, reader-switchable to #22242b) that carries every article body and one saturated indigo plate (#03049c) that carries every footer. Display type is SemiSqueezed, a very narrow grotesque, set enormous and viewport-scaled; body prose is Graphik; all apparatus (labels, captions, numbers, buttons, tables) is PP Neue Montreal Mono, uppercase and letterspaced. There are no cards and no shadows: hierarchy is carried by full-bleed colour plates, hairline rules, and one link-row component that spans the full column with a trailing arrow. Persistent fixed overlays (scanline, gloom, vignette) sit above everything to give the CRT read. All thirteen pages run this one system: git.html was rebuilt onto it in commit 25adfcc and the second system is dead."
 
 extracted: 2026-08-26
 method: "Values read from assets/css/00-critical.css :root and from getComputedStyle in Chromium at 390x844 and 1440x900 against the live site. Sizes marked (computed) are rendered pixel values, not declarations."
@@ -97,8 +97,8 @@ spacing:
 breakpoints:
   - "max-width: 1300px"
   - "max-width: 600px"
-  - "min-width: 800px (texture, git.html only)"
-  - "max-width: 560px (sticky bar, git.html only)"
+  - "max-width: 560px (list modal goes full-bleed)"
+  note: "the two git.html-only breakpoints listed here until 2026-09-01 died with System B"
 ---
 
 # DESIGN.md — huberttheinventor.github.io
@@ -310,6 +310,24 @@ clear the native control bar.
 - Root horizontal scrolling is clipped rather than hidden, so `position: sticky`
   backdrops keep working.
 
+### Touch Targets
+
+Added 2026-09-01. WCAG 2.2 SC 2.5.8 is the floor: **24x24 CSS px** for any target
+that is not inline in a sentence. The system's own rule is stricter where it can
+be — 44px — and `touch-action: manipulation` is set on every interactive element
+so nothing carries the 300ms double-tap delay.
+
+- Link rows (`.button__big`), menu links, the reading toggle and the modal close
+  all set `min-height: 44px`.
+- **Inline links inside running prose are exempt** and are left at their line
+  height. An automated scan will flag them; they are not violations.
+- **A labelled checkbox's target is its label.** `.sub-form .consent input` is
+  20x20, under the minimum on its own, but sits in a wrapping `<label>` with
+  `min-height: 44px` — clicking the text toggles it, so the target is 316x116.
+  Do not "fix" the input's box.
+- Measured 2026-09-01: `.mobilenav__social a` was the one real failure at
+  380x12 and 10px type. Now 380x44 at 14px.
+
 ## Contradictions in the system as shipped
 
 These are the places where the site does not obey itself. They are the input to
@@ -347,6 +365,32 @@ These are the places where the site does not obey itself. They are the input to
     elements.
 11. **`color-scheme` is never declared** on a dark site, so native scrollbars
     and form controls render in the light default.
+12. ~~**The dossier strip is pushed off-screen.**~~ **Resolved 2026-09-01.** The
+    ported rule's `margin-left: -15vw / -54px`, `margin-right: -11vw` and
+    `transform: translateY(-70%)` cancel a gutter the strip's parent does not
+    have — the gutter is `padding-left` on the sibling `.journalArticle__article`.
+    Measured: strip at x=-54 in a 390 viewport and at x=-216, y=-62, width 1814
+    in a 1440 one, identical under `prefers-reduced-motion` so not a tween.
+    The header comment on `99-hubert.css` describes this pull-out as deliberate;
+    the result was clipped content at both sizes.
+13. ~~**The signup field has no focus indicator.**~~ **Resolved 2026-09-01.**
+    `outline: none` on `:focus` plus a `:focus-within` underline that
+    `.section__lightgrey .sub-form .field` overrode by source order. Nothing
+    changed on focus, on any page. WCAG 2.4.7, Level A.
+14. **There is no type scale.** 17 distinct rendered sizes at 390px across the
+    thirteen pages — 10, 12.2, 13.5, 14, 15, 17, 17.6, 20, 24, 30, 34, 36, 39,
+    40, 42, 78, 135 — with adjacent ratios of 1.03 to 1.25 in the small tier.
+    14/15, 17/17.6, 39/40/42 and 12.2/13.5 are all closer together than a step
+    can read as deliberate; the fractional sizes come from percentage
+    inheritance rather than declaration. This is contradiction 5 measured.
+15. **There is no spacing unit.** 29 distinct values in use, including 1, 2, 3,
+    4, 5, 6, 7 and 8px, which cannot all carry meaning. `spacing.note` above
+    already says no named tokens exist; this is the size of the gap.
+16. **The status stamp is a fixed 34px whatever word it carries.** "Filed"
+    (ten pages) sets 118px and fits its mobile cell; "Current" (privacy.html)
+    sets 157px and does not — it overflowed the viewport on the live site at
+    390px before 2026-09-01. Aligned to the end of its cell as a stopgap; a real
+    fix has to size the stamp to its content, which is a design decision.
 
 ---
 

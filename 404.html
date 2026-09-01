@@ -4,25 +4,43 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Not filed — Hubert's field guides</title>
+<meta name="description" content="That address is not filed. Every Hubert field guide, and the way back to the index.">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#1a1a1a">
 <meta property="og:image" content="artifacts/site-card.png">
 <meta property="og:image:alt" content="Hubert — field guides to large systems.">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="/img/favicon.svg?v=2026-09-01-video" type="image/svg+xml">
-<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-09-01-video">
-<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-09-01-video">
-<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-09-01-video">
-<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-09-01-video">
-<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-09-01-video">
-<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-09-01-video">
-<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-09-01-video">
+
+
+
+
+
+
+
+
 <style>
   /* Absolute paths throughout, because a 404 can be served at any depth and a
      relative stylesheet would resolve against the wrong directory. */
   .notFiled { display: grid; min-height: 100svh; place-items: center; padding: 6vw 20px; }
   .notFiled__inner { max-width: 34em; }
 </style>
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-09-01-guides" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-09-01-guides">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-09-01-guides">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-09-01-guides">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-09-01-guides">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-09-01-guides">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-09-01-guides">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-09-01-guides">
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
 <script>
 /* Reading plate. Set before first paint so the page never flashes the other
    plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
@@ -51,9 +69,48 @@
   });
 })();
 </script>
+<!-- /build:head-assets -->
 </head>
-<body>
-<main class="main">
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/video-as-code.html"><span>Nº010 · Rendering video from code</span></a>
+    <a href="/determinant.html"><span>Nº009 · The determinant</span></a>
+    <a href="/alternatives.html"><span>Nº008 · Open-source swaps</span></a>
+    <a href="/design-plugins.html"><span>Nº007 · Design plugins</span></a>
+    <a href="/git.html"><span>Nº006 · Version control</span></a>
+    <a href="/gps.html"><span>Nº005 · GPS</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
   <div class="scanlines"></div>
   <div class="gloom"></div>
   <div class="vignette"></div>
@@ -69,6 +126,13 @@
       </div>
     </div>
   </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
 </main>
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-09-01-guides"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-09-01-guides"></script>
+<script src="/assets/js/splitting.min.js?v=2026-09-01-guides"></script>
+<script src="/assets/js/site.js?v=2026-09-01-guides" type="module"></script>
+<!-- /build:scripts -->
 </body>
 </html>
