@@ -128,14 +128,34 @@ html { overflow-x: clip; }
   }
 }
 
-/* The guide's video sits in a banner slot like the map does. */
+/* The guide's video sits in a banner slot like the map does.
+
+   Every guide film is vertical — 720x1280 or 1080x1920. This rule released the
+   height and capped it, but it never overrode the site-wide reset in
+   00-critical.css:
+
+     img, picture, video { height:100%; object-fit:cover; object-position:center top }
+
+   With width:100% the video came out 936x720 on a 1440 viewport, and `cover`
+   cropped a 9:16 frame into a landscape box: the top 43% was all anyone saw, on
+   EVERY guide page, Nº001 through Nº010. It went unnoticed because a phone
+   column happens to land on 316x562, which is 9:16 exactly, so the bug is
+   invisible on the device most people watch on.
+
+   width:auto lets the frame keep its own shape, margin-inline centres it in the
+   column, and object-fit:contain stops the crop. At 80vh on a 900px viewport
+   the film renders 405x720, whole. */
 .guideVideo video {
   background: #04111f;
   border-radius: var(--radius);
   display: block;
   height: auto;
   max-height: 80vh;
-  width: 100%;
+  width: auto;
+  max-width: 100%;
+  margin-inline: auto;
+  object-fit: contain;
+  object-position: center center;
 }
 .guideVideo figcaption { margin-top: 12px; }
 
