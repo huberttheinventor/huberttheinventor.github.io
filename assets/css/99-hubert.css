@@ -51,7 +51,13 @@ html { overflow-x: clip; }
   min-width: 0;
   padding: 6px 0;
 }
-.sub-form input[type="email"]:focus { outline: none; }
+/* No `outline: none` here. It used to sit on this line and it was the whole
+   focus indicator story for the email field: the ring was suppressed, and the
+   underline that was meant to replace it is itself overridden further down the
+   file (see "the signup field's focus indicator" near the plate block), so the
+   field changed nothing at all on focus. Measured on the live site 2026-09-01
+   at 390x844 and 1440x900, on every page: outline-style `none` and
+   border-bottom-color `rgba(17,17,17,.28)` both before and after focus. */
 .sub-form input[type="email"]::placeholder { color: currentColor; opacity: .4; }
 .sub-form .field:focus-within { border-bottom-color: var(--primarycolor); }
 .sub-form button {
@@ -499,6 +505,26 @@ html[data-reading="panel"] {
 .section__lightgrey .sub-form .field { border-bottom-color: var(--plate-read-rule); }
 .section__lightgrey .sub-form .consent input { accent-color: var(--plate-read-ink); }
 
+/* ── the signup field's focus indicator ───────────────────────────────
+   The rule above and `.sub-form .field:focus-within` have the same specificity
+   (0,3,0), and this one is later in the file, so it won unconditionally — the
+   focus underline never appeared on the plate that carries the in-page form.
+   Together with the `outline: none` that used to sit on the input, the email
+   field was the one control on the site with no focus indicator at all: WCAG
+   2.4.7 Focus Visible, Level A, on the site's only conversion surface, on all
+   thirteen pages. Measured 2026-09-01, both viewports.
+
+   The `:focus-within` state is restored here, after the plate rule, so it wins;
+   the ink is the plate's own so the rule stays legible on paper and on panel.
+   The input also gets the site's standard 2px `:focus-visible` ring back, which
+   is the same ring every other control on the page already draws. */
+.section__lightgrey .sub-form .field:focus-within,
+.sub-form .field:focus-within {
+  border-bottom-color: var(--plate-read-ink, var(--primarycolor));
+  border-bottom-width: 2px;
+  padding-bottom: 7px;          /* holds the row height as the rule thickens */
+}
+
 /* ── the reading toggle ───────────────────────────────────────────────
    Lives as one more cell in the dossier document header, because that block is
    already a field table of apparatus and this is one more field. Hidden until
@@ -816,4 +842,121 @@ html[data-reading="panel"] .section__lightgrey .journalArticle__documentStamp::a
     from { opacity: 0; transform: translateY(12px); }
     to   { opacity: 1; transform: none; }
   }
+}
+
+/* ── the dossier strip's geometry ─────────────────────────────────────
+   The ported rule in `_slug_.DENrRFxM.css` sets, on
+   `.journalArticle__documentHeader`:
+
+       margin-left: -15vw; margin-right: -11vw; transform: translateY(-70%);
+       @media (max-width: 600px) { margin-left: -54px; }
+
+   Those negative margins were written to cancel a gutter that this strip's
+   parent does not have. The text column's gutter lives on
+   `.journalArticle__article` (padding-left: 54px at 390, 259.2px at 1440); the
+   strip is a sibling of that block, inside a section with no horizontal
+   padding at all. So the margins do not pull the strip out to the edge — they
+   push it past it.
+
+   Measured on the live site 2026-09-01, at rest and identical at t=500ms,
+   t=4500ms, after a full scroll-settle, and under `prefers-reduced-motion:
+   reduce` with every GSAP tween disabled — so this is layout, not a tween
+   caught mid-flight:
+
+     390x844   strip x = -54, width 444 in a 390 viewport. The left 54px of
+               every cell in columns 1 and 4 is off-screen: "Annotations"
+               renders as "ations", "Field guide" as "d guide".
+     1440x900  strip x = -216, right = 1598, width 1814 in a 1440 viewport, and
+               translateY(-70%) = -134px puts row 1 at y = -62, above the top of
+               the document, where no amount of scrolling reaches it. Row 2
+               lands at y = 37, under the header.
+
+   `html { overflow-x: clip }` (line 20) and the port's `body { overflow-x:
+   hidden }` mean none of this produces a scrollbar. The content is discarded,
+   not scrolled to, which is why the page reports no overflow.
+
+   The vertical clearance is a second, separate collision. The header has no
+   background (`rgba(0,0,0,0)`), so it does not occlude — but its logotype does:
+   the HUBERT mark occupies y = 4..95 at 390 and the header runs to y = 81 at
+   1440, and the strip's first row sat at y = 32 and y = -60 respectively. The
+   wordmark was drawing straight over the dossier's first row. Nothing else on
+   the page is affected: the h1 starts at y = 304 (390) and y = 321 (1440).
+
+   Fixed here rather than in the port, because the port is a vendored bundle.
+   The strip now bleeds to the viewport edges, which is the treatment the
+   negative margins were reaching for, and clears the wordmark.
+
+   NOT decided here: whether the strip should bleed full-width at all, or sit
+   in the text column with the h1. That is a layout call. This restores every
+   cell to the screen without inventing a new one. */
+.journalArticle__documentHeader {
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 24px;             /* header bottom is 81px at 1440; static top 72 */
+  transform: none;
+  width: auto;
+}
+@media screen and (max-width: 600px) {
+  .journalArticle__documentHeader {
+    margin-left: 0;
+    margin-top: 80px;           /* logotype bottom is 95px at 390; static top 30 */
+  }
+}
+
+/* ── the map caption on the deep field ───────────────────────────────
+   One figure on video-as-code.html sits on the map field (#04111f) instead of
+   the reading plate, and its caption kept the plate's dim ink: rgb(84,86,93)
+   on rgb(4,17,31) measured 2.59:1 at 14px, against the 4.5:1 WCAG AA asks for
+   body text. Every other figcaption on the site is the same class on the light
+   plate (rgb(213,214,219)) and passes, so this is one figure on the wrong
+   ground, not a global colour error — both cases were measured 2026-09-01
+   before concluding that.
+
+   The map's own label ink is used, which is the colour the rest of that
+   drawing already speaks in. */
+.journalArticle__banner.map figcaption {
+  color: #abbac2;
+  opacity: 1;
+}
+
+/* ── the footer's social row ──────────────────────────────────────────
+   `.mobilenav__social a` inherits the 10px apparatus tier and renders a 380x12
+   box (measured 390x844, 2026-09-01). WCAG 2.2 SC 2.5.8 asks 24x24 of any
+   target that is not inline in a sentence, and this one is a standalone row in
+   the menu. The type also sits under DESIGN.md's own "never below 14px at
+   390px" floor for apparatus. */
+.mobilenav__social a {
+  font-size: 14px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+/* ── the status stamp on a narrow column ──────────────────────────────
+   The stamp is a fixed 34px whatever word it carries. "Filed" sets 118px and
+   fits the mobile cell; "Current" — privacy.html, the only other value in the
+   site — sets 157px and does not.
+
+   This already overflowed the viewport on the live site before this branch
+   (measured 2026-09-01 at 390x844: stamp right edge 406 against a 390 viewport,
+   so the T was cut). Removing the strip's negative margin narrowed the cell from
+   148px to 130px and made it worse, not better — 424. Recorded because it is a
+   pre-existing defect this branch aggravated, not one it introduced.
+
+   Aligning the stamp to the end of its cell keeps it inside the viewport
+   (384 at 390) and is a 1px no-op for "Filed". Not shrinking the type: CSS
+   cannot size to the longest word, so any font-size fix would shrink the stamp
+   on all eleven pages to suit one — that is a design call, not a bug fix, and
+   it is written up in DESIGN-REVIEW.md instead.
+
+   All three declarations are load-bearing. The stamp is wider than the cell's
+   content box (157px against 113px), and an over-sized flex item needs both the
+   container's `align-items` and its own `align-self` to move — measured, each
+   alone leaves it back at 424. The cell is a flex column, so aligning the
+   container would take the "Status" label right along with the stamp and leave
+   one of the six labels out of step; the label is pinned back to the start. */
+@media screen and (max-width: 600px) {
+  .journalArticle__documentCell--brand { align-items: flex-end; }
+  .journalArticle__documentCell--brand .journalArticle__documentStamp { align-self: flex-end; }
+  .journalArticle__documentCell--brand > span { align-self: flex-start; }
 }
