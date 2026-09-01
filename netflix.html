@@ -6,25 +6,29 @@
 <title>How Netflix actually works — Hubert's field guides</title>
 <meta name="description" content="Field guide Nº001. One master file, and every decision that stands between it and your screen: renditions, origin, edge caches, and the choice your player makes every few seconds.">
 <meta name="theme-color" content="#1a1a1a">
-<link rel="icon" href="img/favicon.svg?v=2026-09-01-review" type="image/svg+xml">
+
 
 <meta property="og:type" content="article">
 <meta property="og:title" content="How Netflix actually works">
 <meta property="og:description" content="The whole system as one map, then six annotations that zoom into named regions of it.">
 <meta property="og:image" content="artifacts/netflix-system-map.png">
 <meta name="twitter:card" content="summary_large_image">
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-09-01-guides" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-09-01-guides">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-09-01-guides">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-09-01-guides">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-09-01-guides">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-09-01-guides">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-09-01-guides">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-09-01-guides">
 
-<link rel="stylesheet" href="assets/css/00-critical.css?v=2026-09-01-review">
-<link rel="stylesheet" href="assets/css/entry.CQSbLAcy.css?v=2026-09-01-review">
-<link rel="stylesheet" href="assets/css/default.Z9wDiTTt.css?v=2026-09-01-review">
-<link rel="stylesheet" href="assets/css/_slug_.DENrRFxM.css?v=2026-09-01-review">
-<link rel="stylesheet" href="assets/css/Industries.BJpTkmyx.css?v=2026-09-01-review">
-<link rel="stylesheet" href="assets/css/Footer.MRJrKAf5.css?v=2026-09-01-review">
-<link rel="stylesheet" href="assets/css/99-hubert.css?v=2026-09-01-review">
-
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
 <noscript><style>
   .hover_effect, .splitting, [data-splitting],
-  .journalArticle__article { opacity: 1 !important; }
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
 </style></noscript>
 <script>
 /* Reading plate. Set before first paint so the page never flashes the other
@@ -54,46 +58,47 @@
   });
 })();
 </script>
+<!-- /build:head-assets -->
 </head>
 <body class="journal">
 <div class="topOverlay"></div>
+<!-- build:header -->
 <a class="skip-link" href="#main">Skip to the guide</a>
 <header>
   <div class="layout cursor_disabled">
     <div class="layout__third">
-      <a href="index.html" class="logo" aria-label="Hubert, home">
+      <a href="/" class="logo" aria-label="Hubert, home">
         <span class="line"><span class="line__inner">
           <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
         </span></span>
       </a>
     </div>
-    <div class="nav layout__second" role="navigation" aria-label="Field guides">
-      <a href="index.html" class="hover_effect"><span>Index</span></a>
-      <a aria-current="page" href="netflix.html" class="active router-link-exact-active hover_effect"><span>Guide 01</span></a><a href="kubernetes.html" class="hover_effect"><span>Guide 02</span></a><a href="whatsapp.html" class="hover_effect"><span>Guide 03</span></a><a href="google-search.html" class="hover_effect"><span>Guide 04</span></a><a href="gps.html" class="hover_effect"><span>Guide 05</span></a><a href="git.html" class="hover_effect"><span>Guide 06</span></a><a href="design-plugins.html" class="hover_effect"><span>Guide 07</span></a>
-      <a href="alternatives.html" class="hover_effect"><span>Guide 08</span></a><a href="determinant.html" class="hover_effect"><span>Guide 09</span></a><a href="video-as-code.html" class="hover_effect"><span>Guide 10</span></a>
-      <a href="#sources" class="hover_effect"><span>Sources</span></a>
-      <a href="index.html#pricing" class="start hover_effect"><span>The List</span></a>
-      <span class="rec">●</span>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
     </div>
   </div>
-  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Menu</button>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
 </header>
 <div class="mobilenav__backdrop"></div>
-<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Field guides, mobile">
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
   <div class="mobilenav__main">
-    <a href="index.html"><span>Index</span></a>
-    <a href="netflix.html"><span>Guide 01</span></a><a href="kubernetes.html"><span>Guide 02</span></a><a href="whatsapp.html"><span>Guide 03</span></a><a href="google-search.html"><span>Guide 04</span></a><a href="gps.html"><span>Guide 05</span></a><a href="git.html"><span>Guide 06</span></a><a href="design-plugins.html"><span>Guide 07</span></a>
-    <a href="alternatives.html"><span>Guide 08</span></a>
-    <a href="determinant.html"><span>Guide 09</span></a>
-    <a href="video-as-code.html"><span>Guide 10</span></a>
-    <a href="netflix.html#sources"><span>Sources</span></a>
-    <a href="index.html#pricing" class="start"><span>The List</span></a>
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/video-as-code.html"><span>Nº010 · Rendering video from code</span></a>
+    <a href="/determinant.html"><span>Nº009 · The determinant</span></a>
+    <a href="/alternatives.html"><span>Nº008 · Open-source swaps</span></a>
+    <a href="/design-plugins.html"><span>Nº007 · Design plugins</span></a>
+    <a href="/git.html"><span>Nº006 · Version control</span></a>
+    <a href="/gps.html"><span>Nº005 · GPS</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
   </div>
   <div class="mobilenav__social">
     <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
-    <a href="privacy.html" class="monospace">Privacy note &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
   </div>
 </div>
+<!-- /build:header -->
 <main class="main" id="main">
   <div class="scanlines"></div>
   <div class="gloom"></div>
@@ -133,10 +138,10 @@
 
         <figure class="journalArticle__banner guideVideo">
           <video controls preload="none" playsinline
-                 poster="img/guide/guide-01-poster.jpg?v=2026-09-01-review"
+                 poster="img/guide/guide-01-poster.jpg?v=2026-09-01-guides"
                  aria-label="Field guide Nº001: how Netflix actually works">
-            <source src="img/guide/guide-01.mp4?v=2026-09-01-review" type="video/mp4">
-            <track kind="subtitles" src="artifacts/guide-01.vtt?v=2026-09-01-review" srclang="en" label="English">
+            <source src="img/guide/guide-01.mp4?v=2026-09-01-guides" type="video/mp4">
+            <track kind="subtitles" src="artifacts/guide-01.vtt?v=2026-09-01-guides" srclang="en" label="English">
             <p class="monospace monospace__p">Your browser will not play this. The whole guide is written
               out below, and <a href="artifacts/transcript.md">the transcript</a> has every word of it.</p>
           </video>
@@ -300,8 +305,8 @@
         <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">The whole system, one picture. Everything after it is annotation.</p>
 
         <p class="monospace monospace__p" data-splitting>Take it with you:
-          <a href="artifacts/netflix-system-map.png?v=2026-09-01-review" download>the map as an image</a> ·
-          <a href="artifacts/netflix-system-map.svg?v=2026-09-01-review" download>as a vector</a></p>
+          <a href="artifacts/netflix-system-map.png?v=2026-09-01-guides" download>the map as an image</a> ·
+          <a href="artifacts/netflix-system-map.svg?v=2026-09-01-guides" download>as a vector</a></p>
 
         <hr>
 
@@ -426,8 +431,22 @@
               arrives the moment you click it.</span>
           </label>
         </form>
-
-        <div class="article__footer">
+<!-- build:guidenav -->
+      <div class="guideNav">
+        <h4 aria-level="2" class="guideNav__head">Keep going</h4>
+        <div class="buttons">
+        <a href="/kubernetes.html" class="button button__big hover_effect"><span><em class="guideNav__kicker">Next</em> Nº002 · Kubernetes / Docker</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__label">Related</p>
+        <div class="buttons">
+        <a href="/gps.html" class="button button__big hover_effect"><span>Nº005 · GPS &mdash; Zero bars. Still found.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/google-search.html" class="button button__big hover_effect"><span>Nº004 · Google Search &mdash; It doesn't search the internet. It searches a copy.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/whatsapp.html" class="button button__big hover_effect"><span>Nº003 · WhatsApp &mdash; Five machines carry your message. None of them can read it.</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__all"><a href="/guides/">All 10 guides &#8599;</a></p>
+      </div>
+<!-- /build:guidenav -->
+      <div class="article__footer">
           <p class="monospace monospace__p opacity__50" data-splitting>Independent field guide. Not affiliated with,
             endorsed by, or connected to Netflix. The reference table gives orders of magnitude rather than exact
             bitrates because real encoding ladders are computed per title and change constantly.</p>
@@ -449,7 +468,7 @@
         <div class="buttons">
           <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
           <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
-          <a href="artifacts/netflix-system-map.png?v=2026-09-01-review" class="button button__half hover_effect" title="The schematic, as an image"><span>The schematic</span> <span class="arrow">↗</span></a>
+          <a href="artifacts/netflix-system-map.png?v=2026-09-01-guides" class="button button__half hover_effect" title="The schematic, as an image"><span>The schematic</span> <span class="arrow">↗</span></a>
           <a href="artifacts/transcript.md" class="button button__half hover_effect" title="Full narration, by section"><span>Transcript</span><span class="arrow">↗</span></a>
           <a href="artifacts/reading-list.md" class="button button__half hover_effect" title="Six primary sources"><span>Sources</span><span class="arrow">↗</span></a>
           <a href="privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
@@ -459,11 +478,17 @@
   </section>
   <div class="cursor"><div class="cursor__inner"></div></div>
 </main>
-<script src="assets/js/gsap.min.js?v=2026-09-01-review"></script>
-<script src="assets/js/ScrollTrigger.min.js?v=2026-09-01-review"></script>
-<script src="assets/js/splitting.min.js?v=2026-09-01-review"></script>
-<script src="assets/js/site.js?v=2026-09-01-review" type="module"></script>
+
+
+
+
 <dialog id="list-modal" class="listModal" aria-labelledby="list-modal-title"><div class="listModal__inner" tabindex="-1" autofocus><p class="listModal__eyebrow">The List</p><h2 id="list-modal-title">Ten guides. One email.</h2><p>Every field guide on this site, sent the moment you confirm &mdash; then one new system taken apart each week.</p><p>Nothing is held back for subscribers. The guides stay free and stay here; the list is only how the next one reaches you without an algorithm getting a vote.</p><form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor" method="post"><label class="monospace monospace__p" for="list-email-modal">Email address</label><div class="field"><input type="email" name="email" id="list-email-modal" placeholder="you@example.com" required autocomplete="email" inputmode="email" spellcheck="false"><input type="hidden" name="tag" value="popup-netflix"><button type="submit" class="monospace">Send me the set &#8599;</button></div><label class="consent monospace monospace__p"><input type="checkbox" name="consent" required><span>Send me the ten guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set arrives the moment you click it.</span></label></form><button type="button" class="listModal__close" data-close>No thanks &mdash; just reading</button></div></dialog>
-<script src="assets/js/list-modal.js?v=2026-09-01-review" defer></script>
+<script src="assets/js/list-modal.js?v=2026-09-01-guides" defer></script>
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-09-01-guides"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-09-01-guides"></script>
+<script src="/assets/js/splitting.min.js?v=2026-09-01-guides"></script>
+<script src="/assets/js/site.js?v=2026-09-01-guides" type="module"></script>
+<!-- /build:scripts -->
 </body>
 </html>
