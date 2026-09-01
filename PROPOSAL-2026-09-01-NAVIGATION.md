@@ -8,13 +8,40 @@ Every measurement below was taken this session against the site as it stands,
 served locally at 1280 / 1440 / 1920 and 390. Every external claim carries its
 source.
 
-**Status, 2026-09-01.** P0, P1, P2, P3, P4 and P6 are built on
-`feature/guides-index-and-build`. P5 (the ⌘K palette) is deliberately not built
-— it belongs at ~25 guides. The stopgap is not built and should not be: measured
-after this was written, `flex-wrap: wrap` turns the nav into two rows and grows
-the header from 81px to 118px at 1440 *today*, which is a visible regression on
-all thirteen pages to prevent a problem that does not exist until Guide 11. The
-real fix landed instead and is smaller.
+**Status, 2026-09-01 — SHIPPED and live.** P0 (one source for the chrome, plus
+`_data/guides.json`), P1 (`/guides/`), P2 (header down to Guides / The List),
+P3 (prev, next and related on every guide), P4 (labels) and P6 (mobile) are all
+live on `main`.
+
+P5 (the ⌘K palette) is deliberately not built — it belongs at ~25 guides.
+
+The stopgap was never built and should not be: measured after this was written,
+`flex-wrap: wrap` turns the nav into two rows and grows the header from 81px to
+118px at 1440 *today*. That is a visible regression on every page to prevent a
+problem that does not exist until Guide 11. The real fix landed instead and is
+smaller.
+
+Two things learned after shipping, for whoever picks this up:
+
+- **The archive was rebuilt once.** The first version set row titles at 30px in
+  the display face and the ordinal at 12px mono at 55% opacity, and read as a
+  stack of headlines rather than a list. It is now a four-column ruled index
+  (Nº / Title / System / Run) at 53px row pitch, sixteen rows to a screen.
+  Four options were built side by side before choosing; the per-row FILED stamp
+  and the film-still thumbnails were both built and rejected, for reasons in the
+  commit.
+- **The next two things to break are known.** At around 30 rows the column
+  header and the filter field scroll out of view and both want to become
+  sticky — the fixed site header has no background, so that needs a top offset
+  worked out rather than `top: 0`. And a hundred rows at identical weight with a
+  hairline between each becomes a wall; a heavier rule every ten would give the
+  eye a foothold. Neither is urgent at ten guides.
+
+Also corrected while here: the system maps are **not** unreadable on a phone.
+Measured on all eight guides — the SVG is switched off below 600px and a
+`.map__phone` block replaces it with a readable numbered list plus the legend.
+That shipped 2026-08-29. The only residual is the caption, which still says
+"one picture" when on a phone it is a list; founder chose to leave it.
 
 ---
 
