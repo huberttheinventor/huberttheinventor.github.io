@@ -206,26 +206,41 @@ ${relatedRows.join('\n')}
 }
 
 /* ── the archive ──────────────────────────────────────────────────────
-   Text-only card catalogue. No thumbnails: a hundred rows stay light, and pure
-   type is the truest read of the filing language the rest of the site speaks.
-   `blurb` is optional and renders only when a guide has one. */
+   A ruled index, not a stack of headlines. Founder's call 2026-09-01 after
+   looking at four built options side by side: the first version set the
+   headline at 30px in the display face and the ordinal at 12px mono at 55%
+   opacity, so ten rows read as ten headlines rather than a list, and only six
+   fitted on a screen.
+
+   Four aligned columns — ordinal, title, system, runtime — with a rule after
+   the ordinal and the runtime flush right, so there are two hard alignment
+   edges and you can scan one column without reading any of the others. The
+   headline drops to list scale. A mono header row declares it is a table
+   before the first row is read.
+
+   No FILED stamp per row: it is a good motif on ten rows and wallpaper on a
+   hundred. No thumbnails: three of ten guides have no film, and 100 stills is
+   an image budget for no scanning gain.
+
+   Rows past VISIBLE_ROWS are in the HTML but hidden by CSS, so every guide
+   stays crawlable and reachable without JavaScript while the first screen
+   stays short. `blurb` renders only when a guide has one. */
+const VISIBLE_ROWS = 30;
+
 function archive() {
-  const rows = GUIDES.map((g) => {
-    const meta = [g.system.toUpperCase(), g.runtime].filter(Boolean).join(' &middot; ');
-    const blurb = g.blurb ? `\n        <p class="cardRow__blurb">${g.blurb}</p>` : '';
-    return `      <a class="cardRow" href="/${g.slug}.html">
-        <span class="cardRow__n monospace">Nº${nnn(g.n)}</span>
-        <span class="cardRow__body">
-          <span class="cardRow__title">${g.headline}</span>
-          <span class="cardRow__meta monospace">${meta}</span>
-        </span>
-        <span class="cardRow__arrow" aria-hidden="true">&#8599;</span>${blurb}
-      </a>`;
+  const rows = GUIDES.map((g, i) => {
+    const blurb = g.blurb ? `<span class="cardRow__blurb">${g.blurb}</span>` : '';
+    return `      <a class="cardRow${i >= VISIBLE_ROWS ? ' is-overflow' : ''}" href="/${g.slug}.html">` +
+      `<span class="cardRow__n monospace">Nº${nnn(g.n)}</span>` +
+      `<span class="cardRow__t">${g.headline}${blurb}</span>` +
+      `<span class="cardRow__s monospace">${g.system}</span>` +
+      `<span class="cardRow__r monospace">${g.runtime || '&mdash;'}</span></a>`;
   }).join('\n');
 
   const search = GUIDES.map((g) =>
     `${g.n} ${nnn(g.n)} ${g.headline} ${g.system} ${(g.tags || []).join(' ')}`.toLowerCase()
   );
+  const hidden = Math.max(0, GUIDES.length - VISIBLE_ROWS);
 
   return `<!doctype html>
 <html lang="en">
@@ -265,38 +280,56 @@ function archive() {
         <p class="monospace monospace__p" id="guide-count" role="status" aria-live="polite">${GUIDES.length} guides</p>
       </div>
       <div class="cardDrawer__rows" id="guide-rows">
+        <span class="cardRow cardRow--head monospace" aria-hidden="true"><span>Nº</span><span>Title</span><span>System</span><span>Run</span></span>
 ${rows}
       </div>
       <p class="monospace monospace__p cardDrawer__empty" id="guide-empty" hidden>Nothing filed under that.</p>
+      <button type="button" class="monospace cardDrawer__more" id="guide-more"${hidden ? '' : ' hidden'}>
+        Show the other <span id="guide-more-n">${hidden}</span> &#8595;
+      </button>
     </div>
   </section>
 </main>
 <!-- build:scripts -->
 <!-- /build:scripts -->
 <script>
-/* Filter-as-you-type over the rows already in the HTML. No fetch, no index to
-   keep in sync — the rows are the data, so this works with JS off (you get all
-   of them) and needs no service as the count grows. */
+/* Filter and "show more" both work on rows that are already in the HTML — the
+   rows are the data. No fetch, no index to keep in sync, and with JavaScript
+   off you get every guide. Filtering searches the whole set, including rows the
+   "show more" button is currently holding back. */
 (function () {
   var HAY = ${JSON.stringify(search)};
   var input = document.getElementById('guide-filter');
-  var rows = [].slice.call(document.querySelectorAll('#guide-rows .cardRow'));
+  var rows = [].slice.call(document.querySelectorAll('#guide-rows .cardRow:not(.cardRow--head)'));
   var count = document.getElementById('guide-count');
   var empty = document.getElementById('guide-empty');
+  var more = document.getElementById('guide-more');
+  var expanded = false;
   if (!input) return;
   function apply() {
     var q = input.value.trim().toLowerCase();
-    var shown = 0;
+    var shown = 0, matched = 0;
     rows.forEach(function (row, i) {
       var hit = !q || HAY[i].indexOf(q) !== -1;
-      row.hidden = !hit;
-      if (hit) shown++;
+      if (hit) matched++;
+      var capped = !q && !expanded && row.classList.contains('is-overflow');
+      row.hidden = !hit || capped;
+      if (!row.hidden) shown++;
     });
-    count.textContent = shown + (shown === 1 ? ' guide' : ' guides') + (q ? ' matching “' + input.value.trim() + '”' : '');
-    empty.hidden = shown !== 0;
+    count.textContent = matched + (matched === 1 ? ' guide' : ' guides') +
+      (q ? ' matching “' + input.value.trim() + '”' : '');
+    empty.hidden = matched !== 0;
+    if (more) more.hidden = expanded || !!q || matched <= shown;
   }
   input.addEventListener('input', apply);
   input.addEventListener('search', apply);
+  if (more) more.addEventListener('click', function () {
+    expanded = true;
+    apply();
+    var first = rows.filter(function (r) { return !r.hidden; })[30];
+    if (first) first.focus ? first.focus() : null;
+  });
+  apply();
 })();
 </script>
 </body>
