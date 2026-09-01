@@ -1,0 +1,8 @@
+# huberttheinventor.github.io
+User-agent: *
+Allow: /
+
+# The 404 is not worth indexing; everything else is.
+Disallow: /404.html
+
+Sitemap: https://huberttheinventor.github.io/sitemap.xml
