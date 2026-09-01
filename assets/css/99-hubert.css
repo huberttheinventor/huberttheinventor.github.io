@@ -962,45 +962,44 @@ html[data-reading="panel"] .section__lightgrey .journalArticle__documentStamp::a
 }
 
 /* ── the card drawer: /guides/ ────────────────────────────────────────
-   The archive. Text only, no thumbnails: at the hundred guides this site is
-   heading for, a hundred posters is an image budget for no scanning gain, and
-   pure type is the truest read of the filing language the dossier and the
-   stamp already speak. Each row is an index card; the drawer is the page.
+   A ruled index, not a stack of headlines. The first version set the row title
+   at 30px in the display face at full opacity and the ordinal at 12px mono at
+   55%, so ten rows read as ten headlines and only six fitted a 900px screen.
+   Founder's call 2026-09-01, from four options built side by side.
 
-   Rows are real HTML, not fetched — so the page works with JavaScript off (you
-   get every guide) and the filter is an enhancement rather than the mechanism.
+   Four aligned columns with a rule after the ordinal and the runtime flush
+   right: two hard alignment edges instead of one, so a column can be scanned
+   without reading any others. Row pitch ~50px against the old 89px.
 
-   Founder's calls, 2026-09-01: text-only rows, reverse-chronological, no topic
-   grouping, headline verbatim with the system name carrying the subject. Seven
-   of the ten headlines are opaque on their own ("A change has to climb."),
-   which is why the second line is not decoration. */
+   No per-row stamp and no thumbnails — both were built and rejected. A stamp on
+   every one of a hundred rows stops meaning anything, and three of ten guides
+   have no film, so stills leave holes. */
 .cardDrawer {
   margin-inline: auto;
-  /* Not `ch`: 74ch on the display face resolved to 1234px at 1440, which put
-     ~500px of dead ground between the end of every headline and the arrow at
-     the far right. Measured 2026-09-01. A fixed measure is honest here because
-     the rows are short single lines, not prose. */
-  max-width: 860px;
+  /* Wider than prose: this is a table, and the title column has to hold the
+     longest headline ("Five machines carry your message. None of them can read
+     it.") on one line without reaching the system column. */
+  max-width: 960px;
   padding: 0 20px;
   width: 100%;
 }
 /* The fixed header sits over the top of the page and has no background of its
-   own, so a section that starts at the top puts its h1 under the wordmark. The
-   guide pages solve this on the dossier strip; this page needs the same
-   clearance. Measured 2026-09-01: h1 at y=30 against a header running to y=99
-   at 390, and y=72 against y=81 at 1440. */
+   own, so a section that starts at the top puts its h1 under the wordmark.
+   Measured 2026-09-01: h1 at y=30 against a header running to y=99 at 390, and
+   y=72 against y=81 at 1440. */
 .cardDrawer__head { padding-bottom: 8px; padding-top: 40px; }
 @media screen and (max-width: 600px) {
   .cardDrawer__head { padding-top: 88px; }
 }
 .cardDrawer__head h1 { margin-bottom: .2em; }
-.cardDrawer__head .lead { margin-bottom: 28px; }
+.cardDrawer__head .lead { margin-bottom: 28px; max-width: 34em; }
 
 .cardDrawer__filter {
   align-items: baseline;
   border-bottom: 1px solid var(--plate-read-rule);
   display: flex;
   gap: 12px;
+  max-width: 30em;              /* bound to the field, not the page */
   padding-bottom: 8px;
 }
 .cardDrawer__filter span { flex: 0 0 auto; letter-spacing: .1em; opacity: .6; }
@@ -1021,39 +1020,92 @@ html[data-reading="panel"] .section__lightgrey .journalArticle__documentStamp::a
 .cardDrawer__filter:focus-within { border-bottom-color: var(--plate-read-ink); border-bottom-width: 2px; }
 #guide-count { margin: 10px 0 0; opacity: .6; }
 .cardDrawer__empty { opacity: .6; padding: 28px 0; }
+.cardDrawer__rows { margin-top: 26px; }
 
-.cardDrawer__rows { margin-top: 24px; }
-
+/* the row */
 .cardRow {
   align-items: baseline;
   border-top: 1px solid var(--plate-read-rule);
-  column-gap: 16px;
+  color: inherit;
   display: grid;
-  grid-template-columns: auto 1fr auto;
-  padding: 18px 0;
+  gap: 0 18px;
+  /* SYSTEM at 240px, not 200: the widest value today ("Rendering video from
+     code") needs 208px and was truncating on desktop while the phone showed it
+     in full — backwards, and there were 125px of unused gap beside it.
+     Measured 2026-09-01. */
+  grid-template-columns: 62px minmax(0, 1fr) 240px 52px;
+  padding: 14px 0;
   position: relative;
   text-decoration: none;
-  transition: none;
 }
-.cardRow:last-child { border-bottom: 1px solid var(--plate-read-rule); }
-.cardRow__n { flex: 0 0 auto; letter-spacing: .06em; opacity: .55; }
-.cardRow__title { display: block; font-family: SemiSqueezed, sans-serif; font-size: 30px; line-height: 1.02; }
-.cardRow__meta { display: block; letter-spacing: .08em; margin-top: 6px; opacity: .55; }
-.cardRow__blurb { grid-column: 2 / 3; margin-top: 8px; opacity: .75; }
-.cardRow__arrow { opacity: .45; }
+.cardDrawer__rows .cardRow:last-child { border-bottom: 1px solid var(--plate-read-rule); }
+/* the rule that turns the ordinal into a real column */
+.cardRow::before {
+  background: var(--plate-read-rule);
+  bottom: 0;
+  content: "";
+  left: 62px;
+  position: absolute;
+  top: 0;
+  width: 1px;
+}
+.cardRow__n { letter-spacing: .06em; opacity: .62; }   /* was .5 — the anchor of the list should not be its faintest mark */
+.cardRow__t {
+  font-family: SemiSqueezed, "Arial Narrow", sans-serif;
+  font-size: 21px;
+  line-height: 1.12;
+  /* A future long headline truncates rather than wrapping: a wrapped row breaks
+     the single-line rhythm the whole column structure rests on. */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cardRow__s { letter-spacing: .08em; opacity: .6; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+.cardRow__r { opacity: .5; text-align: right; }
+.cardRow__blurb { display: block; font-family: Graphik, sans-serif; font-size: 14px; margin-top: 4px; opacity: .7; white-space: normal; }
 
-/* The plate's own hover, matching `.button__big` rather than inventing one. */
-.cardRow:hover .cardRow__title { text-decoration: underline; text-underline-offset: .18em; }
+/* the header row: says "table" before a single row is read */
+.cardRow--head {
+  border-top: 0;
+  letter-spacing: .12em;
+  opacity: .45;
+  padding-bottom: 8px;
+  padding-top: 0;
+  text-transform: uppercase;
+}
+.cardRow--head::before { display: none; }
+.cardRow--head span:last-child { text-align: right; }
+
+.cardRow:not(.cardRow--head):hover { background: rgba(17, 17, 17, .05); }
+.cardRow:hover .cardRow__t { text-decoration: underline; text-underline-offset: .18em; }
 .cardRow:hover .cardRow__n,
-.cardRow:hover .cardRow__meta,
-.cardRow:hover .cardRow__arrow { opacity: 1; }
+.cardRow:hover .cardRow__s,
+.cardRow:hover .cardRow__r { opacity: 1; }
 
+.cardDrawer__more {
+  background: none;
+  border: 1px solid var(--plate-read-rule);
+  border-radius: 4px;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  letter-spacing: .1em;
+  margin-top: 24px;
+  min-height: 44px;
+  padding: 10px 18px;
+  text-transform: uppercase;
+}
+.cardDrawer__more:hover { border-color: var(--plate-read-ink); }
+
+/* On a phone four columns do not fit. Two lines instead, with the ordinal
+   holding its own column on both so the left edge still scans. */
 @media screen and (max-width: 600px) {
-  .cardDrawer { padding: 0 20px; }
-  .cardRow { column-gap: 12px; padding: 16px 0; }
-  .cardRow__title { font-size: 24px; }
-  /* the ordinal keeps its own column; the arrow drops rather than squeeze the title */
-  .cardRow__arrow { display: none; }
+  .cardRow { grid-template-columns: 54px minmax(0, 1fr) auto; gap: 2px 12px; padding: 13px 0; }
+  .cardRow::before { left: 54px; }
+  .cardRow__t { font-size: 19px; grid-column: 2 / -1; white-space: normal; }
+  .cardRow__s { grid-column: 2 / 3; font-size: 11px; }
+  .cardRow__r { grid-column: 3 / 4; }
+  .cardRow--head { display: none; }   /* column labels make no sense once wrapped */
 }
 
 /* ── the dossier strip's sixth cell ───────────────────────────────────
