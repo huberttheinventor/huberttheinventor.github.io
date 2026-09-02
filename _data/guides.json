@@ -5,6 +5,15 @@
 
   "guides": [
     {
+      "n": 11,
+      "slug": "eigen",
+      "headline": "Two directions the wind cannot turn.",
+      "system": "Eigenvectors and linear systems",
+      "runtime": "1:27",
+      "video": true,
+      "tags": ["maths", "linear-algebra"]
+    },
+    {
       "n": 10,
       "slug": "video-as-code",
       "headline": "Your video is a web page.",

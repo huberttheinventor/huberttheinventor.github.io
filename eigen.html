@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two directions the wind cannot turn - Hubert's field guides</title>
+<meta name="description" content="Field guide Nº011. A matrix usually rotates a vector as well as stretching it, but along two special directions it only stretches, and those two directions carry the entire solution to x' = Ax.">
+<meta name="theme-color" content="#1a1a1a">
+
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="Two directions the wind cannot turn">
+<meta property="og:description" content="The whole system as one map, then three annotations that zoom into named regions of it.">
+<meta property="og:image" content="img/guide/guide-11-poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-09-01-index" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-09-01-index">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-09-01-index">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-09-01-index">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-09-01-index">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-09-01-index">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-09-01-index">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-09-01-index">
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/eigen.html"><span>Nº011 · Eigenvectors and linear systems</span></a>
+    <a href="/video-as-code.html"><span>Nº010 · Rendering video from code</span></a>
+    <a href="/determinant.html"><span>Nº009 · The determinant</span></a>
+    <a href="/alternatives.html"><span>Nº008 · Open-source swaps</span></a>
+    <a href="/design-plugins.html"><span>Nº007 · Design plugins</span></a>
+    <a href="/git.html"><span>Nº006 · Version control</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Field guide</span><strong>Nº011</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>System</span><strong>Eigenvectors and linear systems</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Model</span><strong>x' = Ax</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Annotations</span><strong>Three, keyed to the map</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp">Filed</span>
+        </div>
+      </div>
+
+      <div class="journalArticle__article" id="guide">
+        <h1 data-splitting="lines">Two directions the wind cannot turn.</h1>
+        <p class="lead" data-splitting>A matrix usually rotates a vector as well as stretching it. Pick the
+          right direction, though, and the rotation disappears: the matrix only stretches. Those two
+          directions carry the whole solution to x' = Ax, and every other starting point is just a mixture
+          of them.</p>
+
+        <figure class="journalArticle__banner guideVideo">
+          <video controls preload="none" playsinline
+                 poster="img/guide/guide-11-poster.jpg?v=2026-09-01-index"
+                 aria-label="Field guide N&ordm;011: two directions the wind cannot turn">
+            <source src="img/guide/guide-11.mp4?v=2026-09-01-index" type="video/mp4">
+            <track kind="subtitles" src="artifacts/guide-11.vtt?v=2026-09-01-index" srclang="en" label="English">
+            <p class="monospace monospace__p">Your browser will not play this. The whole guide is written
+              out below, and <a href="artifacts/transcript-eigen.md">the transcript</a> has every word of it.</p>
+          </video>
+          <figcaption class="monospace monospace__p opacity__50">N&ordm;011 &middot; 1:27 &middot; watch it first, then read the map</figcaption>
+        </figure>
+
+        <figure class="journalArticle__banner map" id="map">
+          <svg viewBox="0 0 1200 480" role="img"
+             aria-label="System map: a phase portrait of x' = Ax. Two straight lines cross at the origin. The line through (1, 1) carries eigenvalue 1.5, with arrows pointing away from the origin in both directions, because solutions that start on it grow. The line through (1, minus 1) carries eigenvalue minus 0.5, with arrows pointing toward the origin, because solutions that start on it decay. Eight curved trajectories start close to the decaying line, swing past the origin, and bend onto the growing line, showing that every other solution is a mix of the two and is eventually dominated by growth.">
+            <style>.m-line{stroke:#7a8990;stroke-width:1.2;fill:none}.m-video{stroke:#faf6af;stroke-width:3;fill:none;stroke-linecap:round}.m-in{stroke:#79b0cc;stroke-width:3;fill:none;stroke-linecap:round}.m-fill{fill:#faf6af}.m-fill-in{fill:#79b0cc}.m-fill-o{fill:#abbac2}.m-t{font-family:Mono,ui-monospace,monospace;font-size:13px;letter-spacing:1.1px;fill:#abbac2}.m-n{font-family:Mono,ui-monospace,monospace;font-size:14px;font-weight:500;letter-spacing:.7px;fill:#faf6af}</style>
+
+            <text class="m-t" x="20" y="40">A SADDLE &middot; TWO STRAIGHT SOLUTIONS, EVERYTHING ELSE A MIX</text>
+
+            <!-- the eight curved trajectories, drawn first so the two straight lines sit on top -->
+            <path class="m-line" d="M809.3 448.8 L763.4 402.3 L722.0 359.3 L698.9 333.7 L680.6 309.4 L671.6 291.3 L669.0 279.4 L669.3 266.4 L674.8 247.5 L691.5 217.6 L719.0 180.5 L756.1 136.4 L812.1 74.2"/>
+            <path class="m-line" d="M406.8 46.2 L437.7 76.6 L474.3 112.0 L498.3 134.1 L516.4 149.3 L530.6 159.4 L541.9 165.7 L553.4 169.8 L568.2 171.2 L589.0 166.6 L622.4 148.5 L667.2 114.8 L743.5 48.3"/>
+            <path class="m-line" d="M808.8 449.3 L762.3 403.4 L722.4 364.9 L699.0 343.5 L681.2 328.8 L671.7 322.1 L664.9 317.8 L658.1 314.3 L651.3 311.6 L644.3 309.7 L634.4 308.7 L620.6 310.4 L603.9 316.4 L582.6 328.2 L554.4 348.1 L515.8 379.4 L461.7 427.0"/>
+            <path class="m-line" d="M390.7 31.2 L436.6 77.7 L475.1 117.6 L496.5 141.0 L513.0 161.2 L524.6 179.6 L529.8 193.4 L531.2 208.2 L529.6 219.4 L523.6 236.1 L508.5 262.4 L481.0 299.5 L434.4 354.4"/>
+            <path class="m-line" d="M793.0 432.8 L756.6 396.2 L705.3 343.8 L672.5 307.4 L655.3 278.3 L653.7 263.4 L659.7 242.8 L676.4 215.1 L716.0 165.8 L786.7 87.8"/>
+            <path class="m-line" d="M407.2 47.0 L443.8 83.4 L496.2 134.7 L532.6 167.5 L561.8 184.8 L576.6 186.3 L597.2 180.3 L624.9 163.6 L674.2 124.0 L752.2 53.3"/>
+            <path class="m-line" d="M792.8 433.0 L728.6 369.4 L667.4 312.5 L638.3 295.3 L602.8 299.7 L525.8 356.0 L447.8 426.7"/>
+            <path class="m-line" d="M390.4 30.6 L436.6 77.0 L481.6 122.6 L515.4 158.4 L537.1 185.8 L544.8 201.8 L541.7 234.1 L519.5 270.4 L463.2 337.9 L399.2 407.3"/>
+
+            <!-- The two straight-line solutions. Colour carries meaning and has to
+                 survive the trip from the reel: in the film the inward line is cyan,
+                 so the page's cyan-family accent is the inward line here too, and
+                 gold is the outward one. Swapping them would invert the one visual
+                 cue somebody arrives with. -->
+            <path class="m-in" d="M404.5 44.5 L795.5 435.5"/>
+            <path class="m-video" d="M404.5 435.5 L795.5 44.5"/>
+            <polygon class="m-fill-in" points="680.8,320.8 695.6,328.5 688.5,335.6"/>
+            <polygon class="m-fill-in" points="519.3,159.3 504.4,151.5 511.5,144.4"/>
+            <polygon class="m-fill" points="782.8,57.3 775.0,72.1 767.9,65.0"/>
+            <polygon class="m-fill" points="417.3,422.8 425.0,407.9 432.1,415.0"/>
+            <circle class="m-fill-o" cx="600" cy="240" r="6"/>
+            <text class="m-t" x="610" y="258">ORIGIN</text>
+
+            <text class="m-n" x="850" y="100">&lambda; = 1.5</text>
+            <text class="m-t" x="850" y="122">v = (1, 1) &middot; OUTWARD, GROWING</text>
+
+            <text class="m-n" x="40" y="100" style="fill:#79b0cc">&lambda; = &minus;0.5</text>
+            <text class="m-t" x="40" y="122">v = (1, &minus;1) &middot; INWARD, DECAYING</text>
+
+            <text class="m-t" x="20" y="465">ON EACH LINE, A ONLY STRETCHES &middot; x' = &lambda;x, SOLVED BY e^{&lambda;t}</text>
+          </svg>
+
+          <div class="map__phone">
+            <div class="mband">
+              <div class="mrung">
+                <div class="mrung__box">
+                  <span class="mrung__n">01</span>
+                  <h5 class="mrung__t">The outward line<small>&lambda; = 1.5, v = (1, 1): solutions here grow</small></h5>
+                </div>
+              </div>
+
+              <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+                <span>every other start is a <b>mix of the two</b></span></p>
+
+              <div class="mrung">
+                <div class="mrung__box">
+                  <span class="mrung__n">02</span>
+                  <h5 class="mrung__t">The inward line<small>&lambda; = &minus;0.5, v = (1, &minus;1): solutions here decay</small></h5>
+                </div>
+              </div>
+
+              <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+                <span>a curve comes in on one line and <b>leaves along the other</b></span></p>
+
+              <div class="mrung">
+                <div class="mrung__box">
+                  <span class="mrung__n">03</span>
+                  <h5 class="mrung__t">A saddle<small>two straight solutions, everything else curved</small></h5>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="legend monospace">
+            <div><i aria-hidden="true" style="border-top-color:#faf6af"></i>&lambda; = 1.5, v = (1, 1): the outward line, where solutions grow</div>
+            <div><i aria-hidden="true" style="border-top-color:#79b0cc"></i>&lambda; = &minus;0.5, v = (1, &minus;1): the inward line, where solutions decay</div>
+          </div>
+        </figure>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">The whole mental model, one picture. Everything after it is annotation.</p>
+
+        <p class="monospace monospace__p" data-splitting>Take it with you:
+          <a href="artifacts/eigen-schematic.png?v=2026-09-01-index" download>the five-step schematic</a>,
+          the same method worked end to end on one page.</p>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">N&ordm;001</p>
+        <h4 aria-level="2" data-splitting="lines">Infinitely many solutions, and two are enough to build them all.</h4>
+        <p data-splitting>x' = Ax is a first order linear system: at every point it names the direction and
+          speed the state is currently moving in. Fix a starting point and the whole path is determined, so
+          there is one solution per starting point, and the plane is full of starting points. That is where
+          the infinity comes from. It is not a flaw in the equation, it is a description of every history the
+          system could have had.</p>
+        <p data-splitting>The equation is also linear, and linear means solutions add. If x&#8321;(t) and
+          x&#8322;(t) both solve x' = Ax, so does any combination c&#8321;x&#8321;(t) + c&#8322;x&#8322;(t).
+          In two dimensions, two solutions that are not parallel are enough to reach every starting point by
+          choosing the right c&#8321; and c&#8322;, the same way two non parallel vectors reach every point in
+          a plane. Find two honest solutions and the constants do the rest.</p>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">N&ordm;002</p>
+        <h4 aria-level="2" data-splitting="lines">Along one direction, the matrix stops turning.</h4>
+        <p data-splitting>Multiply a generic vector by A and it comes out pointing somewhere else, rotated as
+          well as scaled. Pick v = (1, 1) instead and Av = (1.5, 1.5), the same vector times 1.5. Pick
+          v = (1, &minus;1) and Av = (&minus;0.5, 0.5), the same vector times &minus;0.5. Along these two
+          lines, and only these two, A behaves like a single number instead of a matrix: it stretches or
+          shrinks the vector and sends it back along the same line it started on.</p>
+        <p data-splitting>That number is the eigenvalue &lambda;, and the direction it belongs to is the
+          eigenvector v. Once a solution is confined to a line where multiplying by A is the same as
+          multiplying by &lambda;, the whole vector equation x' = Ax collapses to the scalar equation
+          x' = &lambda;x, and that equation has one family of solutions: x(t) = ce^{&lambda;t}. A positive
+          &lambda; grows, a negative &lambda; decays, and there is nothing else it can do on a straight line
+          through the origin.</p>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">N&ordm;003</p>
+        <h4 aria-level="2" data-splitting="lines">Two straight lines, one saddle, and a sign worth watching.</h4>
+        <p data-splitting>The map has exactly two straight-line solutions, one along each eigenvector. Start
+          exactly on (1, 1) and the state moves straight out along it forever, scaled by e^{1.5t}. Start
+          exactly on (1, &minus;1) and it moves straight in toward the origin, scaled by e^{&minus;0.5t}.
+          Every other starting point is the sum c&#8321;e^{1.5t}(1, 1) + c&#8322;e^{&minus;0.5t}(1, &minus;1),
+          which is why the curved trajectories on the map hug the inward line early and swing onto the
+          outward line late: the shrinking term stops mattering and the growing term takes over.</p>
+        <p data-splitting>The signs of the two eigenvalues tell you the shape before you compute a single
+          trajectory. One positive and one negative, as here, means a saddle: attracting on one axis,
+          repelling on the other, and almost every path eventually leaves. Two positive eigenvalues would
+          pull everything outward, a source. Two negative would pull everything in, a sink. The picture is a
+          direct readout of two numbers.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="sources">Take it with you</h4>
+        <div class="buttons">
+          <a href="artifacts/eigen-schematic.png?v=2026-09-01-index" class="button button__big hover_effect"><span>The schematic</span> <span class="arrow">&#8599;</span></a>
+          <a href="artifacts/transcript-eigen.md" class="button button__big hover_effect"><span>Full transcript</span> <span class="arrow">&#8599;</span></a>
+          <a href="#map" class="button button__big hover_effect"><span>The system map</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-small="true">The List</p>
+        <h4 aria-level="2">One a week. And the other seven, now.</h4>
+        <p>Confirm your address and the whole set arrives &mdash; all ten field guides, exactly
+          as they are on the site, nothing held back for subscribers. After that, one new system
+          taken apart every week. No pitch, no thread-bait, and an unsubscribe link that works.</p>
+
+        <form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor"
+              method="post">
+          <label class="monospace monospace__p" for="list-email">Email address</label>
+          <div class="field">
+            <input type="email" name="email" id="list-email" placeholder="you@example.com"
+                   required autocomplete="email" inputmode="email" spellcheck="false">
+            <input type="hidden" name="tag" value="guide-11-eigen">
+            <button type="submit" class="monospace">Send me the set &#8599;</button>
+          </div>
+          <label class="consent monospace monospace__p">
+            <input type="checkbox" name="consent" required>
+            <span>Send me the ten guides and one new one each week. I can unsubscribe at any
+              time and my address is never shared &mdash; see the
+              <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set
+              arrives the moment you click it.</span>
+          </label>
+        </form>
+<!-- build:guidenav -->
+      <div class="guideNav">
+        <h4 aria-level="2" class="guideNav__head">Keep going</h4>
+        <div class="buttons">
+        <a href="/video-as-code.html" class="button button__big hover_effect"><span><em class="guideNav__kicker">Previous</em> Nº010 · Rendering video from code</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__label">Related</p>
+        <div class="buttons">
+        <a href="/determinant.html" class="button button__big hover_effect"><span>Nº009 · The determinant &mdash; The determinant is a volume.</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__all"><a href="/guides/">All 11 guides &#8599;</a></p>
+      </div>
+<!-- /build:guidenav -->
+      <div class="article__footer">
+          <p class="monospace monospace__p opacity__50" data-splitting>Independent field guide. This one
+            explains a piece of mathematics rather than a company&#39;s system, so there is nothing to
+            disclaim except the usual: the argument is standard linear algebra and differential equations,
+            the picture is drawn for this guide, and any error in it is mine.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="artifacts/eigen-schematic.png?v=2026-09-01-index" class="button button__half hover_effect" title="The schematic, as an image"><span>The schematic</span> <span class="arrow">↗</span></a>
+          <a href="artifacts/transcript-eigen.md" class="button button__half hover_effect" title="Full narration, by section"><span>Transcript</span><span class="arrow">↗</span></a>
+          <a href="privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+
+
+
+
+<dialog id="list-modal" class="listModal" aria-labelledby="list-modal-title"><div class="listModal__inner" tabindex="-1" autofocus><p class="listModal__eyebrow">The List</p><h2 id="list-modal-title">Ten guides. One email.</h2><p>Every field guide on this site, sent the moment you confirm &mdash; then one new system taken apart each week.</p><p>Nothing is held back for subscribers. The guides stay free and stay here; the list is only how the next one reaches you without an algorithm getting a vote.</p><form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor" method="post"><label class="monospace monospace__p" for="list-email-modal">Email address</label><div class="field"><input type="email" name="email" id="list-email-modal" placeholder="you@example.com" required autocomplete="email" inputmode="email" spellcheck="false"><input type="hidden" name="tag" value="popup-eigen"><button type="submit" class="monospace">Send me the set &#8599;</button></div><label class="consent monospace monospace__p"><input type="checkbox" name="consent" required><span>Send me the ten guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set arrives the moment you click it.</span></label></form><button type="button" class="listModal__close" data-close>No thanks &mdash; just reading</button></div></dialog>
+<script src="assets/js/list-modal.js?v=2026-09-01-index" defer></script>
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-09-01-index"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-09-01-index"></script>
+<script src="/assets/js/splitting.min.js?v=2026-09-01-index"></script>
+<script src="/assets/js/site.js?v=2026-09-01-index" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>

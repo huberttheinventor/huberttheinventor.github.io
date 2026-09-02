@@ -84,12 +84,12 @@
 <div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
   <div class="mobilenav__main">
     <a href="/guides/" aria-current="page"><span>All guides</span></a>
+    <a href="/eigen.html"><span>Nº011 · Eigenvectors and linear systems</span></a>
     <a href="/video-as-code.html"><span>Nº010 · Rendering video from code</span></a>
     <a href="/determinant.html"><span>Nº009 · The determinant</span></a>
     <a href="/alternatives.html"><span>Nº008 · Open-source swaps</span></a>
     <a href="/design-plugins.html"><span>Nº007 · Design plugins</span></a>
     <a href="/git.html"><span>Nº006 · Version control</span></a>
-    <a href="/gps.html"><span>Nº005 · GPS</span></a>
     <a href="/#pricing" class="start"><span>The List</span></a>
   </div>
   <div class="mobilenav__social">
@@ -112,10 +112,11 @@
           <input type="search" id="guide-filter" autocomplete="off"
                  placeholder="system, title, or number" aria-describedby="guide-count">
         </label>
-        <p class="monospace monospace__p" id="guide-count" role="status" aria-live="polite">10 guides</p>
+        <p class="monospace monospace__p" id="guide-count" role="status" aria-live="polite">11 guides</p>
       </div>
       <div class="cardDrawer__rows" id="guide-rows">
         <span class="cardRow cardRow--head monospace" aria-hidden="true"><span>Nº</span><span>Title</span><span>System</span><span>Run</span></span>
+      <a class="cardRow" href="/eigen.html"><span class="cardRow__n monospace">Nº011</span><span class="cardRow__t">Two directions the wind cannot turn.</span><span class="cardRow__s monospace">Eigenvectors and linear systems</span><span class="cardRow__r monospace">1:27</span></a>
       <a class="cardRow" href="/video-as-code.html"><span class="cardRow__n monospace">Nº010</span><span class="cardRow__t">Your video is a web page.</span><span class="cardRow__s monospace">Rendering video from code</span><span class="cardRow__r monospace">1:14</span></a>
       <a class="cardRow" href="/determinant.html"><span class="cardRow__n monospace">Nº009</span><span class="cardRow__t">The determinant is a volume.</span><span class="cardRow__s monospace">The determinant</span><span class="cardRow__r monospace">2:55</span></a>
       <a class="cardRow" href="/alternatives.html"><span class="cardRow__n monospace">Nº008</span><span class="cardRow__t">Every paid tool has an open twin.</span><span class="cardRow__s monospace">Open-source swaps</span><span class="cardRow__r monospace">&mdash;</span></a>
@@ -146,7 +147,7 @@
    off you get every guide. Filtering searches the whole set, including rows the
    "show more" button is currently holding back. */
 (function () {
-  var HAY = ["10 010 your video is a web page. rendering video from code video html tooling","9 009 the determinant is a volume. the determinant maths linear-algebra","8 008 every paid tool has an open twin. open-source swaps open-source tooling","7 007 taste is installable. design plugins design tooling ai","6 006 a change has to climb. version control git tooling","5 005 zero bars. still found. gps infrastructure radio","4 004 it doesn't search the internet. it searches a copy. google search infrastructure indexing","3 003 five machines carry your message. none of them can read it. whatsapp infrastructure encryption","2 002 kubernetes has never started a container. kubernetes / docker infrastructure containers","1 001 the play button was never the hard part. netflix infrastructure streaming cdn"];
+  var HAY = ["11 011 two directions the wind cannot turn. eigenvectors and linear systems maths linear-algebra","10 010 your video is a web page. rendering video from code video html tooling","9 009 the determinant is a volume. the determinant maths linear-algebra","8 008 every paid tool has an open twin. open-source swaps open-source tooling","7 007 taste is installable. design plugins design tooling ai","6 006 a change has to climb. version control git tooling","5 005 zero bars. still found. gps infrastructure radio","4 004 it doesn't search the internet. it searches a copy. google search infrastructure indexing","3 003 five machines carry your message. none of them can read it. whatsapp infrastructure encryption","2 002 kubernetes has never started a container. kubernetes / docker infrastructure containers","1 001 the play button was never the hard part. netflix infrastructure streaming cdn"];
   var input = document.getElementById('guide-filter');
   var rows = [].slice.call(document.querySelectorAll('#guide-rows .cardRow:not(.cardRow--head)'));
   var count = document.getElementById('guide-count');

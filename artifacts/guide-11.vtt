@@ -1,0 +1,61 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:06.780
+This is what a differential equation actually looks like. Every leaf is an answer.
+
+2
+00:00:07.060 --> 00:00:11.472
+This has infinitely many answers. You only need two of them.
+
+3
+00:00:11.752 --> 00:00:13.192
+- They're all just drifting.
+
+4
+00:00:13.472 --> 00:00:20.392
+Pushed. Every point is a rule saying which way you go from there. That rule is a matrix.
+
+5
+00:00:20.671 --> 00:00:26.987
+Drop a leaf anywhere and it curves. Drop a thousand. They all curve.
+
+6
+00:00:27.267 --> 00:00:30.425
+Which is why guess and check is an embarrassment.
+
+7
+00:00:30.705 --> 00:00:32.238
+Except here. And here.
+
+8
+00:00:32.517 --> 00:00:34.235
+- Those two are going dead straight.
+
+9
+00:00:34.516 --> 00:00:40.460
+On those two lines the matrix stops turning things. It only stretches them.
+
+10
+00:00:40.740 --> 00:00:46.917
+And something that only stretches is not a matrix any more. It is a number.
+
+11
+00:00:47.197 --> 00:00:48.683
+- The matrix becomes a number?
+
+12
+00:00:48.963 --> 00:01:00.248
+On that one direction. A V equals lambda V. So X prime equals A X becomes X prime equals lambda X.
+
+13
+00:01:00.528 --> 00:01:05.311
+Which you can solve in your sleep. E to the lambda T, times V.
+
+14
+00:01:05.591 --> 00:01:11.396
+Two straight answers. And every other leaf in the field is just those two, mixed.
+
+15
+00:01:11.676 --> 00:01:22.822
+Every solution the system will ever have, from two directions the wind cannot turn. Comment EIGEN and I'll send you the schematic.
