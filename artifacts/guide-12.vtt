@@ -1,0 +1,157 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:01.068
+Watch this dot.
+
+2
+00:00:01.348 --> 00:00:02.091
+- Which one?
+
+3
+00:00:02.371 --> 00:00:05.018
+Five algorithms. Five different answers.
+
+4
+00:00:05.298 --> 00:00:10.314
+Same points every time. All that changes is how much you tell it.
+
+5
+00:00:10.594 --> 00:00:13.659
+Start with nothing. No labels, no answer key.
+
+6
+00:00:13.939 --> 00:00:17.515
+Nobody told this one the answer. Watch it guess.
+
+7
+00:00:17.795 --> 00:00:22.346
+Three points drop in at random. Every dot joins the closest.
+
+8
+00:00:22.626 --> 00:00:23.183
+- That's it?
+
+9
+00:00:23.463 --> 00:00:26.482
+Then each slides to the middle of what it caught.
+
+10
+00:00:26.762 --> 00:00:31.824
+Do that six times and the clusters stop moving. That is K-means.
+
+11
+00:00:32.104 --> 00:00:35.633
+Our dot landed in cluster A. Remember that.
+
+12
+00:00:35.913 --> 00:00:39.117
+Now tell it the answers. Actual numbers.
+
+13
+00:00:39.397 --> 00:00:43.623
+Turn the cloud flat and you get the graph everyone knows.
+
+14
+00:00:43.903 --> 00:00:48.919
+Linear regression draws one line, then measures how wrong it is.
+
+15
+00:00:49.199 --> 00:00:54.772
+It tilts until those errors are as small as they go. That is best fit.
+
+16
+00:00:55.052 --> 00:00:56.306
+- Ours is right on it.
+
+17
+00:00:56.586 --> 00:00:59.140
+Change the question. Not how much. Which one.
+
+18
+00:00:59.420 --> 00:01:04.668
+The line lifts off the floor into a curve. Height is probability.
+
+19
+00:01:04.947 --> 00:01:05.876
+- Same thing?
+
+20
+00:01:06.156 --> 00:01:09.082
+No. That gave a number. This gives a chance.
+
+21
+00:01:09.362 --> 00:01:13.867
+Our dot came out at fifty percent. It refused to answer.
+
+22
+00:01:14.147 --> 00:01:16.887
+Four of these five lose to the fifth.
+
+23
+00:01:17.167 --> 00:01:18.653
+- Then why learn the four?
+
+24
+00:01:18.933 --> 00:01:22.927
+Because the fifth one is all four of them, stacked.
+
+25
+00:01:23.207 --> 00:01:27.619
+A tree stops drawing lines. It cuts the space into boxes.
+
+26
+00:01:27.898 --> 00:01:31.474
+Bigger than that? Go left. Late at night? Go right.
+
+27
+00:01:31.754 --> 00:01:37.745
+Every leaf is a box. Ours fell in box three. Box three says A.
+
+28
+00:01:38.025 --> 00:01:40.811
+Which is why a tree can show its working.
+
+29
+00:01:41.091 --> 00:01:46.432
+One tree is a weak guess. So build another that fixes its mistakes.
+
+30
+00:01:46.712 --> 00:01:48.988
+Then another. Then three hundred.
+
+31
+00:01:49.267 --> 00:01:50.428
+- Three hundred?
+
+32
+00:01:50.708 --> 00:01:56.513
+Each one small, each correcting the last. The boundary gets jagged, and right.
+
+33
+00:01:56.793 --> 00:02:03.016
+That is boosted trees. On this cloud it beat the flat plane by five points.
+
+34
+00:02:03.296 --> 00:02:06.361
+Our dot? Three hundred votes. Class B.
+
+35
+00:02:06.641 --> 00:02:13.932
+Same dot, five times. Cluster A. On the line. A coin flip. Box three. Class B.
+
+36
+00:02:14.213 --> 00:02:15.513
+- So which one was right?
+
+37
+00:02:15.793 --> 00:02:22.016
+The last one. The truth was B. We picked a hard point; the easy ones agree.
+
+38
+00:02:22.296 --> 00:02:26.801
+One cloud. Five shapes. All that changed is how much you told it.
+
+39
+00:02:27.080 --> 00:02:30.145
+Comment ALGO for all five on one page.
