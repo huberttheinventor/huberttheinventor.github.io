@@ -1,0 +1,85 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:05.433
+GitHub was down for eight hours. The servers were not the problem.
+
+2
+00:00:05.713 --> 00:00:06.735
+- Then what was?
+
+3
+00:00:07.015 --> 00:00:09.151
+The thing standing in front of them.
+
+4
+00:00:09.431 --> 00:00:14.214
+One server, ten thousand requests a second, and it falls over.
+
+5
+00:00:14.495 --> 00:00:15.656
+- So buy a bigger one.
+
+6
+00:00:15.936 --> 00:00:22.530
+There is no bigger one. So you buy ten small ones, a request arrives, and which of the ten gets it?
+
+7
+00:00:22.810 --> 00:00:30.658
+That is the entire job of a load balancer. One door in front, any number of machines behind it.
+
+8
+00:00:30.939 --> 00:00:34.515
+The obvious rule is everyone in turn. Round and round.
+
+9
+00:00:34.794 --> 00:00:35.676
+- Seems fair.
+
+10
+00:00:35.957 --> 00:00:46.081
+Fair, and stupid. One request is a login. The next is a forty-second report. Taking turns hands the next one to the busiest box anyway.
+
+11
+00:00:46.361 --> 00:00:54.860
+So send it to whoever has the fewest open connections. Which means watching all ten, all the time.
+
+12
+00:00:55.139 --> 00:01:00.619
+Except you do not have to. Pick two at random and send it to the emptier one.
+
+13
+00:01:00.899 --> 00:01:01.642
+- Just two?
+
+14
+00:01:01.922 --> 00:01:13.114
+Just two. The proof is from 1996. One random pick is dreadful. Two is nearly as good as watching everything. Three barely helps.
+
+15
+00:01:13.394 --> 00:01:17.713
+NGINX ships it. Your traffic is probably in it right now.
+
+16
+00:01:17.993 --> 00:01:30.114
+The doorman also pokes every server every few seconds. One stops answering, and it is out of the rotation, quietly, before anyone notices.
+
+17
+00:01:30.394 --> 00:01:38.335
+Back to GitHub. The doors themselves ran out of network, and the autoscaler was watching the wrong thing.
+
+18
+00:01:38.615 --> 00:01:46.881
+Every client that got no answer asked again. Ten times the traffic, aimed at a door that was already jammed.
+
+19
+00:01:47.161 --> 00:01:48.833
+- So the door was the bottleneck.
+
+20
+00:01:49.113 --> 00:01:59.098
+A load balancer never made a server stronger. It makes a hundred of them behave like one. Jam the door, and all hundred vanish at once.
+
+21
+00:01:59.378 --> 00:02:02.536
+Comment DOORMAN and I'll send you the schematic.

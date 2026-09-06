@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ten servers, one door - Hubert's field guides</title>
+<meta name="description" content="Field guide Nº013. A load balancer never made a server stronger; it makes a hundred of them behave like one. Four rules a door can use to choose, and why reading two machines is nearly as good as reading ten.">
+<meta name="theme-color" content="#1a1a1a">
+
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ten servers, one door">
+<meta property="og:description" content="Four ways a door chooses which machine gets your request. Reading two of them at random is nearly as good as reading all ten.">
+<meta property="og:image" content="img/guide/guide-13-poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-09-06-doorman" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-09-06-doorman">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-09-06-doorman">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-09-06-doorman">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-09-06-doorman">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-09-06-doorman">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-09-06-doorman">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-09-06-doorman">
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/doorman.html"><span>Nº013 · Load balancers</span></a>
+    <a href="/algo.html"><span>Nº012 · Five machine learning algorithms</span></a>
+    <a href="/eigen.html"><span>Nº011 · Eigenvectors and linear systems</span></a>
+    <a href="/video-as-code.html"><span>Nº010 · Rendering video from code</span></a>
+    <a href="/determinant.html"><span>Nº009 · The determinant</span></a>
+    <a href="/alternatives.html"><span>Nº008 · Open-source swaps</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Field guide</span><strong>N&ordm;013</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>System</span><strong>Load balancers</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Model</span><strong>One door, ten machines</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Annotations</span><strong>Four, keyed to the map</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp">Filed</span>
+        </div>
+      </div>
+
+      <div class="journalArticle__article" id="guide">
+        <h1 data-splitting="lines">Ten servers, one door.</h1>
+        <p class="lead" data-splitting>One machine takes ten thousand requests a second and falls over, and
+          there is no bigger machine to buy. So you buy ten small ones, and now you have a new question,
+          asked ten thousand times a second: which of the ten gets this one? The thing that answers it is a
+          load balancer, and it never made a single server stronger. It makes a hundred of them behave like
+          one, which also means it can make all hundred vanish at once.</p>
+
+        <figure class="journalArticle__banner guideVideo">
+          <video controls preload="none" playsinline
+                 poster="img/guide/guide-13-poster.jpg?v=2026-09-06-doorman"
+                 aria-label="Field guide N&ordm;013: ten servers, one door">
+            <source src="img/guide/guide-13.mp4?v=2026-09-06-doorman" type="video/mp4">
+            <track kind="subtitles" src="artifacts/guide-13.vtt?v=2026-09-06-doorman" srclang="en" label="English">
+            <p class="monospace monospace__p">Your browser will not play this. The whole guide is written
+              out below, and <a href="artifacts/transcript-doorman.md">the transcript</a> has every word of it.</p>
+          </video>
+          <figcaption class="monospace monospace__p opacity__50">N&ordm;013 &middot; 2:07 &middot; watch it first, then read the map</figcaption>
+        </figure>
+
+        <figure class="journalArticle__banner map" id="map">
+          <svg viewBox="0 0 1200 520" role="img"
+             aria-label="System map: four rules a load balancer can use to choose between ten machines, laid out by how many machines each rule reads before it answers. Round robin reads none of them and hands the request to the next machine in the list, which is often the busiest one. Least connections reads all ten on every request and picks the emptiest, which is the right answer at the cost of ten reads. Power of two reads two machines chosen at random and takes the emptier of that pair, which is nearly as good as reading ten. Health checks read the pulse of all ten on a timer rather than their load, and a machine that stops answering leaves the rotation; the gap in that row is the machine that stopped. Below the rows: one random pick leaves the busiest machine about log n ahead of the average and two picks leave it about log log n ahead, from Mitzenmacher in 1996, and that is what NGINX ships.">
+            <style>.d-t{font-family:Mono,ui-monospace,monospace;font-size:13px;letter-spacing:1.1px;fill:#abbac2}.d-h{font-family:Mono,ui-monospace,monospace;font-size:12px;letter-spacing:1.6px;fill:#7a8990}.d-n{font-family:Mono,ui-monospace,monospace;font-size:17px;font-weight:500;letter-spacing:.4px;fill:#cfd8dc}.d-nw{font-family:Mono,ui-monospace,monospace;font-size:17px;font-weight:500;letter-spacing:.4px;fill:#faf6af}.d-v{font-family:Mono,ui-monospace,monospace;font-size:14px;letter-spacing:.7px;fill:#abbac2}.d-vw{font-family:Mono,ui-monospace,monospace;font-size:14px;letter-spacing:.7px;fill:#faf6af}.d-box{fill:#0d1117;stroke:#3a444a;stroke-width:1.6}.d-bar{fill:#7a8990}.d-barw{fill:#faf6af}.d-rail{stroke:#3a444a;stroke-width:1.2;fill:none;stroke-dasharray:3 5}</style>
+
+            <text class="d-t" x="20" y="34">ONE DOOR &middot; TEN MACHINES &middot; FOUR RULES FOR CHOOSING</text>
+            <text class="d-h" x="596" y="74">FILLED = READ BEFORE IT ANSWERED</text>
+
+            <!-- Every row is the same ten machines. What changes down the page is
+                 how many of them the door read first, so the width of the filled
+                 block is the whole argument and the rest is annotation. -->
+            <g>
+              <text class="d-n" x="20" y="132">Round robin</text>
+              <text class="d-v" x="20" y="158">next in the list, whoever that is</text>
+              <rect class="d-box" x="596" y="112" width="22" height="26"/>
+              <rect class="d-box" x="629" y="112" width="22" height="26"/>
+              <rect class="d-box" x="662" y="112" width="22" height="26"/>
+              <rect class="d-box" x="695" y="112" width="22" height="26"/>
+              <rect class="d-box" x="728" y="112" width="22" height="26"/>
+              <rect class="d-box" x="761" y="112" width="22" height="26"/>
+              <rect class="d-box" x="794" y="112" width="22" height="26"/>
+              <rect class="d-box" x="827" y="112" width="22" height="26"/>
+              <rect class="d-box" x="860" y="112" width="22" height="26"/>
+              <rect class="d-box" x="893" y="112" width="22" height="26"/>
+              <text class="d-v" x="1180" y="132" text-anchor="end">reads 0 &middot; often hands it to the busiest box</text>
+            </g>
+            <path class="d-rail" d="M20 186 L1180 186"/>
+
+            <g>
+              <text class="d-n" x="20" y="232">Least connections</text>
+              <text class="d-v" x="20" y="258">whoever has the fewest open</text>
+              <rect class="d-bar" x="596" y="212" width="22" height="26"/>
+              <rect class="d-bar" x="629" y="212" width="22" height="26"/>
+              <rect class="d-bar" x="662" y="212" width="22" height="26"/>
+              <rect class="d-bar" x="695" y="212" width="22" height="26"/>
+              <rect class="d-bar" x="728" y="212" width="22" height="26"/>
+              <rect class="d-bar" x="761" y="212" width="22" height="26"/>
+              <rect class="d-bar" x="794" y="212" width="22" height="26"/>
+              <rect class="d-bar" x="827" y="212" width="22" height="26"/>
+              <rect class="d-bar" x="860" y="212" width="22" height="26"/>
+              <rect class="d-bar" x="893" y="212" width="22" height="26"/>
+              <text class="d-v" x="1180" y="232" text-anchor="end">reads 10 &middot; the right answer, ten reads a request</text>
+            </g>
+            <path class="d-rail" d="M20 286 L1180 286"/>
+
+            <g>
+              <text class="d-nw" x="20" y="332">Power of two</text>
+              <text class="d-vw" x="20" y="358">two at random, take the emptier</text>
+              <rect class="d-box" x="596" y="312" width="22" height="26"/>
+              <rect class="d-box" x="629" y="312" width="22" height="26"/>
+              <rect class="d-barw" x="662" y="312" width="22" height="26"/>
+              <rect class="d-box" x="695" y="312" width="22" height="26"/>
+              <rect class="d-box" x="728" y="312" width="22" height="26"/>
+              <rect class="d-box" x="761" y="312" width="22" height="26"/>
+              <rect class="d-box" x="794" y="312" width="22" height="26"/>
+              <rect class="d-barw" x="827" y="312" width="22" height="26"/>
+              <rect class="d-box" x="860" y="312" width="22" height="26"/>
+              <rect class="d-box" x="893" y="312" width="22" height="26"/>
+              <text class="d-vw" x="1180" y="332" text-anchor="end">reads 2 &middot; nearly as good as reading all ten</text>
+            </g>
+            <path class="d-rail" d="M20 386 L1180 386"/>
+
+            <g>
+              <text class="d-n" x="20" y="432">Health checks</text>
+              <text class="d-v" x="20" y="458">the pulse, not the load, on a timer</text>
+              <rect class="d-bar" x="596" y="412" width="22" height="26"/>
+              <rect class="d-bar" x="629" y="412" width="22" height="26"/>
+              <rect class="d-bar" x="662" y="412" width="22" height="26"/>
+              <rect class="d-bar" x="695" y="412" width="22" height="26"/>
+              <rect class="d-bar" x="728" y="412" width="22" height="26"/>
+              <rect class="d-bar" x="761" y="412" width="22" height="26"/>
+              <rect class="d-box" x="794" y="412" width="22" height="26"/>
+              <rect class="d-bar" x="827" y="412" width="22" height="26"/>
+              <rect class="d-bar" x="860" y="412" width="22" height="26"/>
+              <rect class="d-bar" x="893" y="412" width="22" height="26"/>
+              <text class="d-v" x="1180" y="432" text-anchor="end">the gap is the one that stopped answering</text>
+            </g>
+
+            <text class="d-t" x="20" y="500">ONE RANDOM PICK IS LOG N BEHIND PERFECT &middot; TWO IS LOG LOG N &middot; MITZENMACHER 1996 &middot; IT IS WHAT NGINX SHIPS</text>
+          </svg>
+
+          <div class="map__phone">
+            <div class="mband">
+              <div class="mrung mrung--mute">
+                <div class="mrung__box">
+                  <span class="mrung__n">01</span>
+                  <h5 class="mrung__t">Round robin<small>reads 0 &middot; next in the list, often the busiest box</small></h5>
+                </div>
+              </div>
+
+              <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+                <span>so <b>look before you answer</b></span></p>
+
+              <div class="mrung mrung--work">
+                <div class="mrung__box">
+                  <span class="mrung__n">02</span>
+                  <h5 class="mrung__t">Least connections<small>reads 10 &middot; the right answer, at ten reads a request</small></h5>
+                </div>
+              </div>
+
+              <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+                <span>almost all of that, for <b>two reads</b></span></p>
+
+              <div class="mrung mrung--perm">
+                <div class="mrung__box">
+                  <span class="mrung__n">03</span>
+                  <h5 class="mrung__t">Power of two<small>reads 2 at random, takes the emptier &middot; nearly as good as ten</small></h5>
+                </div>
+              </div>
+
+              <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+                <span>and separately, <b>is it even alive</b></span></p>
+
+              <div class="mrung mrung--stage">
+                <div class="mrung__box">
+                  <span class="mrung__n">04</span>
+                  <h5 class="mrung__t">Health checks<small>the pulse, on a timer &middot; one stops answering and it leaves the rotation</small></h5>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="legend monospace">
+            <div><i aria-hidden="true" style="border-top-color:#7a8990"></i>a machine the door read before it answered</div>
+            <div><i aria-hidden="true" style="border-top-color:#faf6af"></i>the two it reads instead of ten, and why that is enough</div>
+          </div>
+        </figure>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">The whole mental model, one picture. Everything after it is annotation.</p>
+
+        <p class="monospace monospace__p" data-splitting>Take it with you:
+          <a href="artifacts/doorman-schematic.png?v=2026-09-06-doorman" download>the doorman schematic</a>,
+          all four rules and what each one reads, on one page.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">Taking turns is fair, and it is stupid.</h4>
+        <p>The obvious rule is everyone in turn. Round and round: machine one, machine two, and back to the
+          top. It is fair in the only sense a stopwatch can measure, because over a long enough run every
+          machine gets the same number of requests. The trouble is that requests are not the same size as
+          each other. One is a login and takes four milliseconds. The next is a forty-second report. Taking
+          turns cannot tell those apart, because taking turns reads nothing at all before it answers, so it
+          will happily hand the next request to a machine that is already halfway through the report.
+          Fairness in the count is not fairness in the load.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">The right answer costs you ten reads.</h4>
+        <p>So read the machines first, and send the request to whichever has the fewest connections open.
+          That is the correct answer, and you can prove it is correct, which is why it is the rule most
+          people reach for. What it does not advertise is the price. The door now has to know the state of
+          all ten machines at the moment it decides, which means asking all ten, or keeping a table that it
+          keeps fresh by asking all ten. At ten machines that is invisible. At a thousand machines the door
+          spends its time doing bookkeeping about the work instead of handing the work out, and the thing
+          you built to remove a bottleneck has become one.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">Two random looks, and you are nearly done.</h4>
+        <p>Here is the part that sounds wrong. Pick two machines at random, read only those two, and send
+          the request to the emptier of the pair. Not the emptiest of ten: the emptier of two, chosen
+          blind. What you are left with is not a little worse than reading everything, it is almost
+          indistinguishable from it. Mitzenmacher's 1996 result is the reason. With one random pick the
+          busiest machine runs about log n ahead of the average; with two it runs about log log n ahead,
+          which for any fleet you will ever own is a small number that barely moves as the fleet grows.
+          Going to three picks buys almost nothing on top of that. The whole trick is the step from one
+          look to two, and NGINX ships it, so your traffic has probably been through it today.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">A machine that stopped is not a machine that is busy.</h4>
+        <p>Every rule above is about load, and load is the wrong question if the machine is dead. So the
+          door also pokes all ten every few seconds and asks for a sign of life, on its own timer,
+          separately from any request. A machine that stops answering comes out of the rotation quietly,
+          before anybody sees a failure, and goes back in when it starts answering again. This is a
+          different axis from everything else on this page. It is not about who is emptiest, it is about
+          who is there, and a door with a perfect balancing rule and no health checks will confidently
+          route a tenth of your traffic into a hole.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">GitHub, and the door as the thing that fails.</h4>
+        <p>On the 17th of August 2026, GitHub was unreachable for seven hours and forty-seven minutes, and
+          the servers behind the doors were fine the whole time. The doors themselves ran out of network,
+          and the autoscaler that should have noticed was watching a different number. Then the failure fed
+          itself: every client that got no answer asked again, and the retries arrived as ten times the
+          normal traffic, aimed at a door that was already jammed. That is the shape of the risk you take
+          on when you put one thing in front of a hundred things. A load balancer never made a server
+          stronger. It makes a hundred of them behave like one, and one is a number that can go to zero.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="sources">Take it with you</h4>
+        <div class="buttons">
+          <a href="artifacts/doorman-schematic.png?v=2026-09-06-doorman" class="button button__big hover_effect"><span>The schematic</span> <span class="arrow">&#8599;</span></a>
+          <a href="artifacts/transcript-doorman.md" class="button button__big hover_effect"><span>Full transcript</span> <span class="arrow">&#8599;</span></a>
+          <a href="#map" class="button button__big hover_effect"><span>The system map</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-small="true">The List</p>
+        <h4 aria-level="2">One a week. And the rest of them, now.</h4>
+        <p>Confirm your address and the whole set arrives &mdash; every field guide on the site, exactly
+          as they are here, nothing held back for subscribers. After that, one new system taken apart
+          every week. No pitch, no thread-bait, and an unsubscribe link that works.</p>
+
+        <form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor"
+              method="post">
+          <label class="monospace monospace__p" for="list-email">Email address</label>
+          <div class="field">
+            <input type="email" name="email" id="list-email" placeholder="you@example.com"
+                   required autocomplete="email" inputmode="email" spellcheck="false">
+            <input type="hidden" name="tag" value="guide-13-doorman">
+            <button type="submit" class="monospace">Send me the set &#8599;</button>
+          </div>
+          <label class="consent monospace monospace__p">
+            <input type="checkbox" name="consent" required>
+            <span>Send me the guides and one new one each week. I can unsubscribe at any
+              time and my address is never shared &mdash; see the
+              <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set
+              arrives the moment you click it.</span>
+          </label>
+        </form>
+<!-- build:guidenav -->
+      <div class="guideNav">
+        <h4 aria-level="2" class="guideNav__head">Keep going</h4>
+        <div class="buttons">
+        <a href="/algo.html" class="button button__big hover_effect"><span><em class="guideNav__kicker">Previous</em> Nº012 · Five machine learning algorithms</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__label">Related</p>
+        <div class="buttons">
+        <a href="/gps.html" class="button button__big hover_effect"><span>Nº005 · GPS &mdash; Zero bars. Still found.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/google-search.html" class="button button__big hover_effect"><span>Nº004 · Google Search &mdash; It doesn't search the internet. It searches a copy.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/whatsapp.html" class="button button__big hover_effect"><span>Nº003 · WhatsApp &mdash; Five machines carry your message. None of them can read it.</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__all"><a href="/guides/">All 13 guides &#8599;</a></p>
+      </div>
+<!-- /build:guidenav -->
+      <div class="article__footer">
+          <p class="monospace monospace__p opacity__50" data-splitting>Independent field guide. Not affiliated with, endorsed by, or connected to GitHub,
+            NGINX, or anyone else named on this page. The power-of-two result is Mitzenmacher&#39;s, published in
+            1996; the diagrams are drawn to explain the choice rather than to measure any real
+            fleet, and any error in them is mine.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="artifacts/doorman-schematic.png?v=2026-09-06-doorman" class="button button__half hover_effect" title="The schematic, as an image"><span>The schematic</span> <span class="arrow">↗</span></a>
+          <a href="artifacts/transcript-doorman.md" class="button button__half hover_effect" title="Full narration, by section"><span>Transcript</span><span class="arrow">↗</span></a>
+          <a href="privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+
+
+
+
+<dialog id="list-modal" class="listModal" aria-labelledby="list-modal-title"><div class="listModal__inner" tabindex="-1" autofocus><p class="listModal__eyebrow">The List</p><h2 id="list-modal-title">Every guide. One email.</h2><p>Every field guide on this site, sent the moment you confirm &mdash; then one new system taken apart each week.</p><p>Nothing is held back for subscribers. The guides stay free and stay here; the list is only how the next one reaches you without an algorithm getting a vote.</p><form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor" method="post"><label class="monospace monospace__p" for="list-email-modal">Email address</label><div class="field"><input type="email" name="email" id="list-email-modal" placeholder="you@example.com" required autocomplete="email" inputmode="email" spellcheck="false"><input type="hidden" name="tag" value="popup-doorman"><button type="submit" class="monospace">Send me the set &#8599;</button></div><label class="consent monospace monospace__p"><input type="checkbox" name="consent" required><span>Send me the guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set arrives the moment you click it.</span></label></form><button type="button" class="listModal__close" data-close>No thanks &mdash; just reading</button></div></dialog>
+<script src="assets/js/list-modal.js?v=2026-09-06-doorman" defer></script>
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-09-06-doorman"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-09-06-doorman"></script>
+<script src="/assets/js/splitting.min.js?v=2026-09-06-doorman"></script>
+<script src="/assets/js/site.js?v=2026-09-06-doorman" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>
