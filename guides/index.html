@@ -13,14 +13,14 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://huberttheinventor.github.io/guides/">
 <!-- build:head-assets -->
-<link rel="icon" href="/img/favicon.svg?v=2026-09-06-doorman" type="image/svg+xml">
-<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-09-06-doorman">
-<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-09-06-doorman">
-<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-09-06-doorman">
-<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-09-06-doorman">
-<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-09-06-doorman">
-<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-09-06-doorman">
-<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-09-06-doorman">
+<link rel="icon" href="/img/favicon.svg?v=2026-09-07-shadow" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-09-07-shadow">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-09-07-shadow">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-09-07-shadow">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-09-07-shadow">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-09-07-shadow">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-09-07-shadow">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-09-07-shadow">
 
 <!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
      opacity 0, because the reveal is animated. Show it all instead. -->
@@ -84,12 +84,12 @@
 <div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
   <div class="mobilenav__main">
     <a href="/guides/" aria-current="page"><span>All guides</span></a>
+    <a href="/shadow.html"><span>Nº014 · The dot product and attention</span></a>
     <a href="/doorman.html"><span>Nº013 · Load balancers</span></a>
     <a href="/algo.html"><span>Nº012 · Five machine learning algorithms</span></a>
     <a href="/eigen.html"><span>Nº011 · Eigenvectors and linear systems</span></a>
     <a href="/video-as-code.html"><span>Nº010 · Rendering video from code</span></a>
     <a href="/determinant.html"><span>Nº009 · The determinant</span></a>
-    <a href="/alternatives.html"><span>Nº008 · Open-source swaps</span></a>
     <a href="/#pricing" class="start"><span>The List</span></a>
   </div>
   <div class="mobilenav__social">
@@ -112,10 +112,11 @@
           <input type="search" id="guide-filter" autocomplete="off"
                  placeholder="system, title, or number" aria-describedby="guide-count">
         </label>
-        <p class="monospace monospace__p" id="guide-count" role="status" aria-live="polite">13 guides</p>
+        <p class="monospace monospace__p" id="guide-count" role="status" aria-live="polite">14 guides</p>
       </div>
       <div class="cardDrawer__rows" id="guide-rows">
         <span class="cardRow cardRow--head monospace" aria-hidden="true"><span>Nº</span><span>Title</span><span>System</span><span>Run</span></span>
+      <a class="cardRow" href="/shadow.html"><span class="cardRow__n monospace">Nº014</span><span class="cardRow__t">The dot product is a shadow.</span><span class="cardRow__s monospace">The dot product and attention</span><span class="cardRow__r monospace">1:48</span></a>
       <a class="cardRow" href="/doorman.html"><span class="cardRow__n monospace">Nº013</span><span class="cardRow__t">Ten servers, one door.</span><span class="cardRow__s monospace">Load balancers</span><span class="cardRow__r monospace">2:07</span></a>
       <a class="cardRow" href="/algo.html"><span class="cardRow__n monospace">Nº012</span><span class="cardRow__t">The same point, five different answers.</span><span class="cardRow__s monospace">Five machine learning algorithms</span><span class="cardRow__r monospace">2:34</span></a>
       <a class="cardRow" href="/eigen.html"><span class="cardRow__n monospace">Nº011</span><span class="cardRow__t">Two directions the wind cannot turn.</span><span class="cardRow__s monospace">Eigenvectors and linear systems</span><span class="cardRow__r monospace">1:27</span></a>
@@ -138,10 +139,10 @@
   </section>
 </main>
 <!-- build:scripts -->
-<script src="/assets/js/gsap.min.js?v=2026-09-06-doorman"></script>
-<script src="/assets/js/ScrollTrigger.min.js?v=2026-09-06-doorman"></script>
-<script src="/assets/js/splitting.min.js?v=2026-09-06-doorman"></script>
-<script src="/assets/js/site.js?v=2026-09-06-doorman" type="module"></script>
+<script src="/assets/js/gsap.min.js?v=2026-09-07-shadow"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-09-07-shadow"></script>
+<script src="/assets/js/splitting.min.js?v=2026-09-07-shadow"></script>
+<script src="/assets/js/site.js?v=2026-09-07-shadow" type="module"></script>
 <!-- /build:scripts -->
 <script>
 /* Filter and "show more" both work on rows that are already in the HTML — the
@@ -149,7 +150,7 @@
    off you get every guide. Filtering searches the whole set, including rows the
    "show more" button is currently holding back. */
 (function () {
-  var HAY = ["13 013 ten servers, one door. load balancers infrastructure distributed-systems","12 012 the same point, five different answers. five machine learning algorithms maths machine-learning","11 011 two directions the wind cannot turn. eigenvectors and linear systems maths linear-algebra","10 010 your video is a web page. rendering video from code video html tooling","9 009 the determinant is a volume. the determinant maths linear-algebra","8 008 every paid tool has an open twin. open-source swaps open-source tooling","7 007 taste is installable. design plugins design tooling ai","6 006 a change has to climb. version control git tooling","5 005 zero bars. still found. gps infrastructure radio","4 004 it doesn't search the internet. it searches a copy. google search infrastructure indexing","3 003 five machines carry your message. none of them can read it. whatsapp infrastructure encryption","2 002 kubernetes has never started a container. kubernetes / docker infrastructure containers","1 001 the play button was never the hard part. netflix infrastructure streaming cdn"];
+  var HAY = ["14 014 the dot product is a shadow. the dot product and attention maths linear-algebra machine-learning","13 013 ten servers, one door. load balancers infrastructure distributed-systems","12 012 the same point, five different answers. five machine learning algorithms maths machine-learning","11 011 two directions the wind cannot turn. eigenvectors and linear systems maths linear-algebra","10 010 your video is a web page. rendering video from code video html tooling","9 009 the determinant is a volume. the determinant maths linear-algebra","8 008 every paid tool has an open twin. open-source swaps open-source tooling","7 007 taste is installable. design plugins design tooling ai","6 006 a change has to climb. version control git tooling","5 005 zero bars. still found. gps infrastructure radio","4 004 it doesn't search the internet. it searches a copy. google search infrastructure indexing","3 003 five machines carry your message. none of them can read it. whatsapp infrastructure encryption","2 002 kubernetes has never started a container. kubernetes / docker infrastructure containers","1 001 the play button was never the hard part. netflix infrastructure streaming cdn"];
   var input = document.getElementById('guide-filter');
   var rows = [].slice.call(document.querySelectorAll('#guide-rows .cardRow:not(.cardRow--head)'));
   var count = document.getElementById('guide-count');

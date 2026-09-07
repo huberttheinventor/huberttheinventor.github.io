@@ -1,9 +1,20 @@
 {
   "_comment": "The spine. Every guide, newest first is derived from `n` descending. The archive at /guides/, the prev/next pairs and the mobile menu's latest-few list are all generated from this file — add a guide here and they all update. `blurb` is optional and renders only when present. `tags` are unused by the current nav (reverse-chronological, no groups) and exist so related-guides and archive filtering can be added later without a migration.",
-
-  "cacheToken": "2026-09-06-doorman",
-
+  "cacheToken": "2026-09-07-shadow",
   "guides": [
+    {
+      "n": 14,
+      "slug": "shadow",
+      "headline": "The dot product is a shadow.",
+      "system": "The dot product and attention",
+      "runtime": "1:48",
+      "video": true,
+      "tags": [
+        "maths",
+        "linear-algebra",
+        "machine-learning"
+      ]
+    },
     {
       "n": 13,
       "slug": "doorman",
@@ -11,7 +22,10 @@
       "system": "Load balancers",
       "runtime": "2:07",
       "video": true,
-      "tags": ["infrastructure", "distributed-systems"]
+      "tags": [
+        "infrastructure",
+        "distributed-systems"
+      ]
     },
     {
       "n": 12,
@@ -20,7 +34,10 @@
       "system": "Five machine learning algorithms",
       "runtime": "2:34",
       "video": true,
-      "tags": ["maths", "machine-learning"]
+      "tags": [
+        "maths",
+        "machine-learning"
+      ]
     },
     {
       "n": 11,
@@ -29,7 +46,10 @@
       "system": "Eigenvectors and linear systems",
       "runtime": "1:27",
       "video": true,
-      "tags": ["maths", "linear-algebra"]
+      "tags": [
+        "maths",
+        "linear-algebra"
+      ]
     },
     {
       "n": 10,
@@ -38,7 +58,11 @@
       "system": "Rendering video from code",
       "runtime": "1:14",
       "video": true,
-      "tags": ["video", "html", "tooling"]
+      "tags": [
+        "video",
+        "html",
+        "tooling"
+      ]
     },
     {
       "n": 9,
@@ -47,7 +71,10 @@
       "system": "The determinant",
       "runtime": "2:55",
       "video": true,
-      "tags": ["maths", "linear-algebra"]
+      "tags": [
+        "maths",
+        "linear-algebra"
+      ]
     },
     {
       "n": 8,
@@ -56,7 +83,10 @@
       "system": "Open-source swaps",
       "runtime": "",
       "video": false,
-      "tags": ["open-source", "tooling"]
+      "tags": [
+        "open-source",
+        "tooling"
+      ]
     },
     {
       "n": 7,
@@ -65,7 +95,11 @@
       "system": "Design plugins",
       "runtime": "",
       "video": false,
-      "tags": ["design", "tooling", "ai"]
+      "tags": [
+        "design",
+        "tooling",
+        "ai"
+      ]
     },
     {
       "n": 6,
@@ -74,7 +108,10 @@
       "system": "Version control",
       "runtime": "",
       "video": false,
-      "tags": ["git", "tooling"]
+      "tags": [
+        "git",
+        "tooling"
+      ]
     },
     {
       "n": 5,
@@ -83,7 +120,10 @@
       "system": "GPS",
       "runtime": "1:44",
       "video": true,
-      "tags": ["infrastructure", "radio"]
+      "tags": [
+        "infrastructure",
+        "radio"
+      ]
     },
     {
       "n": 4,
@@ -92,7 +132,10 @@
       "system": "Google Search",
       "runtime": "1:31",
       "video": true,
-      "tags": ["infrastructure", "indexing"]
+      "tags": [
+        "infrastructure",
+        "indexing"
+      ]
     },
     {
       "n": 3,
@@ -101,7 +144,10 @@
       "system": "WhatsApp",
       "runtime": "1:39",
       "video": true,
-      "tags": ["infrastructure", "encryption"]
+      "tags": [
+        "infrastructure",
+        "encryption"
+      ]
     },
     {
       "n": 2,
@@ -110,7 +156,10 @@
       "system": "Kubernetes / Docker",
       "runtime": "1:42",
       "video": true,
-      "tags": ["infrastructure", "containers"]
+      "tags": [
+        "infrastructure",
+        "containers"
+      ]
     },
     {
       "n": 1,
@@ -119,7 +168,11 @@
       "system": "Netflix",
       "runtime": "2:53",
       "video": true,
-      "tags": ["infrastructure", "streaming", "cdn"]
+      "tags": [
+        "infrastructure",
+        "streaming",
+        "cdn"
+      ]
     }
   ]
 }
