@@ -879,6 +879,25 @@ header{background:#0f0f0f;left:0;right:0;width:100%;border-bottom:1px solid rgba
     });
   }
 
+  /* ---- checkout clicks, so the funnel report can show intent, not just traffic ----
+     Fires the event shape report.js matches: it keeps every click whose path ends
+     in "-<page slug>", and this page's slug is `frame-one`. The plan is baked into
+     the name because "how many people chose the split" is the question that decides
+     whether a two-payment product is worth building at all.
+
+     Added 2026-09-10. The buttons still point at Instagram: the Lemon Squeezy store
+     is waiting on activation review, so there is no checkout that can take a card
+     yet. Until there is, this counts the people who reached for one. */
+  var ctas = [].slice.call(document.querySelectorAll('[data-cta="checkout"]'));
+  ctas.forEach(function (a) {
+    a.addEventListener('click', function () {
+      if (!window.goatcounter || !window.goatcounter.count) { return; }
+      var chosen = document.querySelector('[data-plan][aria-pressed="true"]');
+      var plan = chosen ? chosen.getAttribute('data-plan') : 'once';
+      window.goatcounter.count({ path: 'checkout-' + plan + '-frame-one', event: true });
+    });
+  });
+
   /* ---- the action bar steps aside once you reach the footer ---- */
   var bar = document.getElementById('fo-bar');
   var foot = document.querySelector('.footer');
