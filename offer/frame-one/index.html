@@ -273,7 +273,7 @@ header{background:#0f0f0f;left:0;right:0;width:100%;border-bottom:1px solid rgba
         <div class="fo-facts" role="group" aria-label="The short version">
           <div>
             <p class="fo-label">Costs</p>
-            <strong id="fo-factPrice">$350, once. Or 2 &times; $175.</strong>
+            <strong>$350, once. Nothing after that.</strong>
           </div>
           <div>
             <p class="fo-label">Takes</p>
@@ -487,7 +487,7 @@ header{background:#0f0f0f;left:0;right:0;width:100%;border-bottom:1px solid rgba
         <div class="pricing__box">
           <div class="pricing__box--header lead">
             <p class="lead pricing__box--name">Frame One.PKG</p>
-            <p class="lead pricing__box--price" id="fo-boxPrice">$350</p>
+            <p class="lead pricing__box--price">$350</p>
           </div>
           <p class="monospace monospace__p opacity__50">The production system, plus four weeks with a
             person reading your frames.</p>
@@ -648,16 +648,11 @@ header{background:#0f0f0f;left:0;right:0;width:100%;border-bottom:1px solid rgba
         <hr>
         <p class="fo-label">Price and payment</p>
         <h4 aria-level="2">$350, once. Nothing after that.</h4>
-        <div class="fo-seg" role="group" aria-label="How you would like to pay">
-          <button type="button" data-plan="once" aria-pressed="true">Pay once</button>
-          <button type="button" data-plan="split" aria-pressed="false">Two payments</button>
-        </div>
-        <p class="fo-out-line" id="fo-planOut" aria-live="polite"><b>$350 today</b> and nothing after. Setup pack
+        <p class="fo-out-line"><b>$350 today</b> and nothing after. Setup pack
           within a day, demo films by the end of week one.</p>
         <ul class="fo-rows" style="margin-top:26px">
           <li><span>01</span><span>Checkout link &mdash; card or the wallet you already use. You get a proper receipt from the payment provider.</span></li>
-          <li><span>02</span><span>Two payments &mdash; $175 to begin, $175 when your first film is published. Same total.</span></li>
-          <li><span>03</span><span>Refund &mdash; if week one will not run on your machine, you get everything back.</span></li>
+          <li><span>02</span><span>Refund &mdash; if week one will not run on your machine, you get everything back.</span></li>
         </ul>
 
         <hr>
@@ -665,7 +660,7 @@ header{background:#0f0f0f;left:0;right:0;width:100%;border-bottom:1px solid rgba
         <h4 aria-level="2">Three steps. The first is one word.</h4>
         <ul class="fo-rows">
           <li><span>01</span><span>Reply with one word: in.</span></li>
-          <li><span>02</span><span>Pay by the link, in one go or in two.</span></li>
+          <li><span>02</span><span>Pay by the link.</span></li>
           <li><span>03</span><span>Setup pack and template land within a day &mdash; that is week one. The two demo films follow by the end of that week.</span></li>
         </ul>
         <div class="buttons">
@@ -706,7 +701,7 @@ header{background:#0f0f0f;left:0;right:0;width:100%;border-bottom:1px solid rgba
 </main>
 
 <div class="fo-bar" id="fo-bar">
-  <span>Frame One &middot; <span class="fo-barPrice" id="fo-barPrice">$350, once</span></span>
+  <span>Frame One &middot; <span class="fo-barPrice">$350, once</span></span>
   <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" data-cta="checkout">Reply to start <span aria-hidden="true">&#8599;</span></a>
 </div>
 
@@ -846,25 +841,6 @@ header{background:#0f0f0f;left:0;right:0;width:100%;border-bottom:1px solid rgba
   });
   if (hourBtns.length) { setHours('5'); }
 
-  /* ---- pay once or split, reflected everywhere the price appears ---- */
-  var planCopy = {
-    once: { box: '$350', bar: '$350, once', fact: '$350, once. Or 2 &times; $175.',
-      out: '<b>$350 today</b> and nothing after. Setup pack within a day, demo films by the end of week one.' },
-    split: { box: '2 &times; $175', bar: '2 &times; $175', fact: 'Two payments of $175. Same total.',
-      out: '<b>$175 today</b>, <b>$175 when your first film is published</b>. Same total, no fee. You get the whole package either way.' }
-  };
-  var planBtns = [].slice.call(document.querySelectorAll('[data-plan]'));
-  planBtns.forEach(function (b) {
-    b.addEventListener('click', function () {
-      var c = planCopy[b.getAttribute('data-plan')];
-      planBtns.forEach(function (o) { o.setAttribute('aria-pressed', String(o === b)); });
-      document.getElementById('fo-planOut').innerHTML = c.out;
-      document.getElementById('fo-boxPrice').innerHTML = c.box;
-      document.getElementById('fo-barPrice').innerHTML = c.bar;
-      document.getElementById('fo-factPrice').innerHTML = c.fact;
-    });
-  });
-
   /* ---- the honest self-check ---- */
   var check = document.getElementById('fo-check');
   if (check) {
@@ -881,9 +857,7 @@ header{background:#0f0f0f;left:0;right:0;width:100%;border-bottom:1px solid rgba
 
   /* ---- checkout clicks, so the funnel report can show intent, not just traffic ----
      Fires the event shape report.js matches: it keeps every click whose path ends
-     in "-<page slug>", and this page's slug is `frame-one`. The plan is baked into
-     the name because "how many people chose the split" is the question that decides
-     whether a two-payment product is worth building at all.
+     in "-<page slug>", and this page's slug is `frame-one`.
 
      Added 2026-09-10. The buttons still point at Instagram: the Lemon Squeezy store
      is waiting on activation review, so there is no checkout that can take a card
@@ -892,9 +866,7 @@ header{background:#0f0f0f;left:0;right:0;width:100%;border-bottom:1px solid rgba
   ctas.forEach(function (a) {
     a.addEventListener('click', function () {
       if (!window.goatcounter || !window.goatcounter.count) { return; }
-      var chosen = document.querySelector('[data-plan][aria-pressed="true"]');
-      var plan = chosen ? chosen.getAttribute('data-plan') : 'once';
-      window.goatcounter.count({ path: 'checkout-' + plan + '-frame-one', event: true });
+      window.goatcounter.count({ path: 'checkout-frame-one', event: true });
     });
   });
 
