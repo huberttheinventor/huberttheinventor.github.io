@@ -1,0 +1,887 @@
+<!doctype html>
+<!-- data-reading is the site's reading-plate default, set here as an
+     attribute rather than by script: this page has no plate toggle. -->
+<html lang="en" class="reading-ready" data-reading="paper">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Frame One &mdash; a proposal</title>
+<meta name="description" content="Frame One: the production system behind Hubert's films, handed over, plus four weeks of structure that end in a film of your own, published.">
+<meta name="theme-color" content="#1a1a1a">
+<!-- A private proposal, not a page for search. -->
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css">
+<link rel="stylesheet" href="/assets/css/99-hubert.css">
+<style>
+/* ---- artifact overrides: GSAP / Splitting / site.js are absent, nothing may depend on JS to appear ---- */
+.hover_effect,.splitting,[data-splitting],.journalArticle__article{opacity:1!important}
+.wrapper{height:auto!important}
+html{color-scheme:dark}
+body{background:var(--bgcolor)}
+.cursor,.menu,.mobilenav,.mobilenav__backdrop{display:none!important}
+
+/* no CRT: the proposal is a clean document, not a screen effect */
+.scanlines,.gloom,.vignette,.topOverlay{display:none!important}
+.wrapper:after,.branding__imageStack:after{display:none!important}
+header{background:#0f0f0f;left:0;right:0;width:100%;border-bottom:1px solid rgba(186,186,186,.22)}
+
+/* the package box normally sits on black; on the light plate its white hairlines need ink */
+.section__lightgrey .pricing__box--header{border-top:1px solid rgba(17,17,17,.55);border-bottom:1px solid rgba(17,17,17,.55)}
+.section__lightgrey .pricing__box--price{border-left:1px solid rgba(17,17,17,.55)}
+.section__lightgrey .pricing__box--items li{border-bottom-color:rgba(17,17,17,.35)}
+
+/* ---- Frame One proposal furniture. Site tokens only: no new hues, no shadows, no radius but the site's. ---- */
+:root{--fo-ink:#111;--fo-ink-50:rgba(17,17,17,.5);--fo-ink-25:rgba(17,17,17,.25);--fo-ink-12:rgba(17,17,17,.12);
+  --fo-onblue:#acacba;--fo-onblue-50:rgba(172,172,186,.5);--fo-onblue-25:rgba(172,172,186,.28);--fo-rule-blue:rgb(147,147,201)}
+
+.fo-label{font-family:var(--mono),Mono,ui-monospace,monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;opacity:.55;margin:0 0 10px}
+.fo-mono{font-family:var(--mono),Mono,ui-monospace,monospace;font-size:15px;line-height:1.5}
+
+/* facts strip — the four questions answered before any scrolling */
+.fo-facts{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--fo-ink-25);border-bottom:1px solid var(--fo-ink-25);margin:0 0 2.5rem}
+.fo-facts>div{padding:18px 20px 20px;border-right:1px solid var(--fo-ink-12)}
+.fo-facts>div:last-child{border-right:0}
+.fo-facts strong{display:block;font-family:var(--mono),Mono,ui-monospace,monospace;font-size:15px;font-weight:400;line-height:1.45}
+
+/* the journey, on the blue ground */
+.fo-journey{color:var(--fo-onblue)}
+.fo-journey h2{margin:0 0 .4em}
+.fo-rail{list-style:none;margin:2.2rem 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--fo-rule-blue)}
+.fo-rail li{margin:0;padding:0;border-right:1px solid rgba(147,147,201,.45)}
+.fo-rail li:last-child{border-right:0}
+.fo-station{display:block;width:100%;min-height:132px;text-align:left;background:none;border:0;color:inherit;font:inherit;
+  padding:16px 18px 20px;cursor:pointer;position:relative}
+.fo-station:before{content:"";position:absolute;top:-5px;left:18px;width:9px;height:9px;border-radius:50%;
+  border:1px solid var(--fo-onblue-50);background:var(--blue)}
+.fo-station[aria-selected="true"]:before,.fo-station.is-on:before{background:var(--fo-onblue);border-color:var(--fo-onblue)}
+.fo-station .fo-week{display:block;font-family:var(--mono),Mono,ui-monospace,monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;opacity:.55;margin:14px 0 10px}
+.fo-station .fo-title{display:block;font-family:SemiSqueezed,"Arial Narrow",sans-serif;font-size:26px;line-height:1.05;margin-bottom:8px}
+.fo-station .fo-out{display:block;font-family:var(--mono),Mono,ui-monospace,monospace;font-size:13px;line-height:1.45;opacity:.62}
+.fo-station[aria-selected="true"],.fo-station.is-on{background:rgba(172,172,186,.07)}
+.fo-station[aria-selected="true"] .fo-week,.fo-station.is-on .fo-week{opacity:1}
+.fo-station:hover .fo-out{opacity:.85}
+.fo-panels{border-top:1px solid var(--fo-rule-blue);margin-top:0}
+.fo-panel{padding:30px 0 6px}
+.fo-panel+.fo-panel{border-top:1px solid rgba(147,147,201,.45)}
+.fo-panel h3{font-family:SemiSqueezed,"Arial Narrow",sans-serif;font-size:34px;line-height:1.05;letter-spacing:-.005em;margin:0 0 1.2rem;padding:0;max-width:100%}
+.fo-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.fo-grid3>div{padding-right:34px;border-right:1px solid rgba(147,147,201,.45)}
+.fo-grid3>div:last-child{border-right:0;padding-right:0;padding-left:34px}
+.fo-grid3>div:nth-child(2){padding-left:34px}
+.fo-grid3 p{font-family:var(--mono),Mono,ui-monospace,monospace;font-size:15px;line-height:1.55;margin:0}
+.fo-panel .fo-label{opacity:.55}
+
+/* rows: the site's link-row idiom, reused for lists that are not links */
+.fo-rows{list-style:none;margin:0;padding:0}
+.fo-rows li{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:baseline;padding:13px 0;border-bottom:1px solid var(--fo-ink-12);
+  font-family:var(--mono),Mono,ui-monospace,monospace;font-size:15px;line-height:1.45}
+.fo-rows li span:first-child{opacity:.5;letter-spacing:.06em}
+.fo-rows li:first-child{border-top:1px solid var(--fo-ink-25)}
+
+/* segmented control — price, and hours a week */
+.fo-seg{display:inline-flex;border:1px solid var(--fo-ink-50);margin:0 0 6px}
+.fo-seg button{appearance:none;background:none;border:0;border-right:1px solid var(--fo-ink-25);color:inherit;cursor:pointer;
+  font-family:var(--mono),Mono,ui-monospace,monospace;font-size:14px;min-height:46px;padding:0 20px}
+.fo-seg button:last-child{border-right:0}
+.fo-seg button[aria-pressed="true"]{background:var(--fo-ink);color:var(--lightgrey)}
+.fo-out-line{font-family:var(--mono),Mono,ui-monospace,monospace;font-size:15px;line-height:1.5;margin:14px 0 0;max-width:52ch}
+.fo-out-line b{font-weight:400;border-bottom:1px solid var(--fo-ink-50)}
+
+/* disclosure rows — modules and questions. <details> so they work with JS off. */
+.fo-disc{border-bottom:1px solid var(--fo-ink-12)}
+.fo-disc:first-of-type{border-top:1px solid var(--fo-ink-25)}
+.fo-disc>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:baseline;
+  padding:16px 0;min-height:46px;font-family:var(--mono),Mono,ui-monospace,monospace;font-size:15px;line-height:1.45}
+.fo-disc>summary::-webkit-details-marker{display:none}
+.fo-disc>summary:after{content:"+";font-family:var(--mono),Mono,ui-monospace,monospace;opacity:.6}
+.fo-disc[open]>summary:after{content:"\2212"}
+.fo-disc>summary:hover{opacity:.72}
+.fo-disc .fo-body{padding:2px 0 24px;max-width:62ch}
+.fo-disc .fo-body p{font-family:var(--mono),Mono,ui-monospace,monospace;font-size:15px;line-height:1.6;margin:0 0 12px}
+.fo-disc .fo-min{opacity:.5}
+
+/* self-check */
+.fo-check{list-style:none;margin:0;padding:0}
+.fo-check li{border-bottom:1px solid var(--fo-ink-12)}
+.fo-check li:first-child{border-top:1px solid var(--fo-ink-25)}
+.fo-check label{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:baseline;padding:14px 0;min-height:46px;cursor:pointer;
+  font-family:var(--mono),Mono,ui-monospace,monospace;font-size:15px;line-height:1.45}
+.fo-check input{appearance:none;width:16px;height:16px;border:1px solid var(--fo-ink-50);background:none;cursor:pointer;position:relative;top:2px}
+.fo-check input:checked{background:var(--fo-ink)}
+.fo-check input:checked:after{content:"";position:absolute;inset:3px;border-left:1px solid var(--lightgrey);border-bottom:1px solid var(--lightgrey);
+  transform:rotate(-45deg);height:5px}
+
+/* sticky action bar */
+.fo-bar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:11px 3vw;background:#0f0f0f;border-top:1px solid rgba(186,186,186,.35);color:var(--grey);
+  font-family:var(--mono),Mono,ui-monospace,monospace;font-size:14px;transform:translateY(0);transition:transform .25s ease}
+.fo-bar[data-away="true"]{transform:translateY(105%)}
+.fo-bar a{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 18px;border:1px solid var(--grey);color:var(--grey);text-decoration:none}
+.fo-bar a:hover{background:var(--grey);color:#0f0f0f}
+.fo-bar span.fo-barPrice{opacity:.6}
+
+/* headings and copy on the blue ground never go white */
+.fo-journey h2,.fo-journey h3,.fo-journey p,.fo-journey .fo-label{color:var(--fo-onblue)}
+.fo-journey h2{font-family:SemiSqueezed,"Arial Narrow",sans-serif;font-size:52px;line-height:1.02;letter-spacing:-.01em;max-width:20ch;padding:0}
+
+/* section breaks inside the article */
+.journalArticle__article hr{border:0;border-top:1px solid var(--fo-ink-25);margin:3.4rem 0 2.2rem}
+
+.skip-link{position:absolute;left:-9999px;top:0;z-index:60;background:#0f0f0f;color:var(--grey);padding:12px 18px;
+  font-family:var(--mono),Mono,ui-monospace,monospace;font-size:14px}
+.skip-link:focus{left:0}
+.fo-station:focus-visible,.fo-seg button:focus-visible,.fo-disc>summary:focus-visible,.fo-check input:focus-visible,.fo-bar a:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+
+@media (max-width:900px){
+  .fo-journey h2{font-size:38px}
+  .fo-panel h3{font-size:26px}
+
+  .fo-facts,.fo-rail,.fo-grid3{grid-template-columns:1fr}
+  .fo-facts{margin-bottom:0}
+  .fo-facts>div{border-right:0;border-bottom:1px solid var(--fo-ink-12);padding:15px 0 16px}
+  .fo-facts>div:last-child{border-bottom:0}
+  .fo-rail li{border-right:0;border-bottom:1px solid rgba(147,147,201,.45)}
+  .fo-station{min-height:0;padding-bottom:16px}
+  .fo-grid3>div{border-right:0;padding:0 0 22px}
+  .fo-grid3>div:nth-child(2),.fo-grid3>div:last-child{padding-left:0}
+  .fo-bar{font-size:13px;padding:9px 5vw}
+}
+@media (prefers-reduced-motion:reduce){.fo-bar{transition:none}}
+
+/* ---------- Try it: the method, playable ---------- */
+.fo-try{background:var(--bgcolor);color:var(--grey)}
+.fo-try h2,.fo-try h3,.fo-try p{color:var(--grey)}
+.fo-try h2{font-family:SemiSqueezed,"Arial Narrow",sans-serif;font-size:52px;line-height:1.02;letter-spacing:-.01em;max-width:20ch;padding:0;margin:0 0 .35em}
+.fo-try .fo-mono{opacity:.66;max-width:52ch;margin:0}
+.fo-lab{display:grid;grid-template-columns:minmax(240px,.85fr) 1.3fr;gap:38px;margin:2.4rem 0 0;align-items:start}
+.fo-ctl{margin:0 0 22px}
+.fo-ctl .fo-label{color:var(--grey);opacity:.5;margin-bottom:8px}
+.fo-chips{display:flex;flex-wrap:wrap;gap:8px}
+.fo-chips button{appearance:none;background:none;border:1px solid rgba(186,186,186,.35);color:var(--grey);cursor:pointer;
+  font-family:var(--mono),Mono,ui-monospace,monospace;font-size:13px;min-height:44px;padding:0 15px;letter-spacing:.02em}
+.fo-chips button:hover{border-color:var(--grey)}
+.fo-chips button[aria-pressed="true"]{background:var(--grey);color:#0f0f0f;border-color:var(--grey)}
+.fo-slide{display:flex;align-items:center;gap:14px}
+.fo-slide input[type=range]{appearance:none;flex:1;height:44px;background:none;cursor:pointer}
+.fo-slide input[type=range]::-webkit-slider-runnable-track{height:1px;background:rgba(186,186,186,.45)}
+.fo-slide input[type=range]::-webkit-slider-thumb{appearance:none;width:13px;height:13px;border-radius:50%;background:var(--grey);margin-top:-6px}
+.fo-slide input[type=range]::-moz-range-track{height:1px;background:rgba(186,186,186,.45)}
+.fo-slide input[type=range]::-moz-range-thumb{width:13px;height:13px;border:0;border-radius:50%;background:var(--grey)}
+.fo-slide output{font-family:var(--mono),Mono,ui-monospace,monospace;font-size:13px;opacity:.7;min-width:5ch}
+.fo-play{appearance:none;background:none;border:1px solid var(--grey);color:var(--grey);cursor:pointer;
+  font-family:var(--mono),Mono,ui-monospace,monospace;font-size:13px;min-height:46px;padding:0 20px}
+.fo-play:hover{background:var(--grey);color:#0f0f0f}
+.fo-stage{position:relative;aspect-ratio:16/9;background:#0f0f0f;border:1px solid rgba(186,186,186,.28);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.06em;overflow:hidden;text-align:center}
+.fo-stage span{font-family:SemiSqueezed,"Arial Narrow",sans-serif;font-size:clamp(24px,3.6vw,50px);line-height:1.02;letter-spacing:-.01em;color:#cbcfd2}
+.fo-stage .fo-stageB{color:var(--lightblue)}
+.fo-stage:after{content:attr(data-badge);position:absolute;left:14px;top:12px;font-family:var(--mono),Mono,ui-monospace,monospace;
+  font-size:9px;letter-spacing:.18em;text-transform:uppercase;opacity:.4;color:#cbcfd2}
+.fo-stage[data-move=hold] span{animation:foHold var(--dur,.8s) cubic-bezier(.22,.7,.25,1) both}
+.fo-stage[data-move=cut] span{animation:foCut var(--dur,.8s) steps(1,end) both}
+.fo-stage[data-move=push] span{animation:foPush var(--dur,.8s) cubic-bezier(.16,.84,.28,1) both}
+.fo-stage span.fo-stageB{animation-delay:calc(var(--dur,.8s) * .5)}
+@keyframes foHold{from{opacity:0;transform:translateY(.3em)}to{opacity:1;transform:none}}
+@keyframes foCut{0%{opacity:0}59%{opacity:0}60%{opacity:1}to{opacity:1}}
+@keyframes foPush{from{opacity:0;transform:scale(1.09)}to{opacity:1;transform:scale(1)}}
+.fo-script{margin:14px 0 0;padding:16px 18px;border:1px solid rgba(186,186,186,.22);background:rgba(186,186,186,.045);
+  font-family:var(--mono),Mono,ui-monospace,monospace;font-size:12.5px;line-height:1.75;color:var(--grey);white-space:pre;overflow-x:auto}
+.fo-script b{font-weight:400;color:var(--lightblue)}
+.fo-tryNote{margin-top:2rem!important;max-width:58ch;opacity:.66}
+@media (prefers-reduced-motion:reduce){.fo-stage span{animation:none!important;opacity:1;transform:none}}
+@media (max-width:900px){.fo-lab{grid-template-columns:1fr;gap:26px}.fo-try h2{font-size:38px}}
+
+/* the stack block, on the dark ground */
+.fo-try .fo-rows li{border-bottom-color:rgba(186,186,186,.18);grid-template-columns:170px 1fr;align-items:baseline}
+.fo-try .fo-rows li:first-child{border-top-color:rgba(186,186,186,.3)}
+.fo-try .fo-rows li span:first-child{opacity:1;letter-spacing:0;color:var(--lightblue)}
+.fo-try .fo-rows li span:last-child{opacity:.72}
+.fo-try h4{font-family:SemiSqueezed,"Arial Narrow",sans-serif;color:var(--grey);font-size:34px;line-height:1.05;letter-spacing:-.005em;padding:0;margin:0 0 1rem;max-width:100%}
+.fo-stack{margin-top:3.4rem;border-top:1px solid rgba(186,186,186,.22);padding-top:2.6rem}
+.fo-stack .fo-note{margin-top:20px!important;max-width:58ch;opacity:.6}
+@media (max-width:900px){.fo-try .fo-rows li{grid-template-columns:1fr;gap:4px}.fo-try h4{font-size:26px}}
+
+/* section rhythm: the live bundle's 144px bottom padding plus the article's own
+   86px reads as dead space on a page of hard colour cuts */
+.main>.wrapper>.section{padding-bottom:88px}
+.main>.wrapper>.section>.journalArticle__article{padding-bottom:0}
+@media (max-width:900px){.main>.wrapper>.section{padding-bottom:44px}}
+/* the live footer wrapper is a 100vh scroll-pinned reveal; without site.js it is dead blue */
+.footer__wrapper{height:auto!important}
+</style>
+</head>
+<body class="journal">
+<a class="skip-link" href="#main">Skip to the proposal</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+</header>
+
+<main class="main" id="main">
+  <div class="wrapper">
+
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Proposal</span><strong>N&ordm;001</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Product</span><strong>Frame One</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Format</span><strong>Files, then four weeks</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Price</span><strong>$350, once</strong>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp">Open</span>
+        </div>
+      </div>
+
+      <div class="journalArticle__article" id="proposal">
+        <h1>You are not going to learn After Effects.</h1>
+        <p class="lead">You asked me to teach you motion graphics. Here it is, with no calls to schedule:
+          the method, four weeks of
+          structure, and one film of yours &mdash; in your own look &mdash; published at the end.</p>
+
+        <div class="fo-facts" role="group" aria-label="The short version">
+          <div>
+            <p class="fo-label">Costs</p>
+            <strong id="fo-factPrice">$350, once. Or 2 &times; $175.</strong>
+          </div>
+          <div>
+            <p class="fo-label">Takes</p>
+            <strong>About five hours a week, four weeks.</strong>
+          </div>
+          <div>
+            <p class="fo-label">You need</p>
+            <strong>A laptop. Nothing installed, nothing learned.</strong>
+          </div>
+          <div>
+            <p class="fo-label">You get</p>
+            <strong>A published film in your own look, and the method behind it.</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section fo-try" aria-labelledby="fo-tryHead">
+      <div class="journalArticle__article">
+        <p class="fo-label">Try it &mdash; thirty seconds</p>
+        <h2 id="fo-tryHead">A film here is written, not drawn.</h2>
+        <p class="fo-mono">Change the line. Watch the frame. No timeline, no keyframes.</p>
+
+        <div class="fo-lab">
+          <div>
+            <div class="fo-ctl">
+              <p class="fo-label">The move</p>
+              <div class="fo-chips" id="fo-move" role="group" aria-label="The move">
+                <button type="button" data-move="hold" aria-pressed="false">hold</button>
+                <button type="button" data-move="cut" aria-pressed="false">cut</button>
+                <button type="button" data-move="push" aria-pressed="true">push</button>
+              </div>
+            </div>
+            <div class="fo-ctl">
+              <p class="fo-label">Line one</p>
+              <div class="fo-chips" id="fo-l1" role="group" aria-label="Line one">
+                <button type="button" aria-pressed="true">your idea</button>
+                <button type="button" aria-pressed="false">one frame</button>
+                <button type="button" aria-pressed="false">the hook</button>
+              </div>
+            </div>
+            <div class="fo-ctl">
+              <p class="fo-label">Line two</p>
+              <div class="fo-chips" id="fo-l2" role="group" aria-label="Line two">
+                <button type="button" aria-pressed="true">starts here</button>
+                <button type="button" aria-pressed="false">is enough</button>
+                <button type="button" aria-pressed="false">does the work</button>
+              </div>
+            </div>
+            <div class="fo-ctl">
+              <p class="fo-label">Hold</p>
+              <div class="fo-slide">
+                <input type="range" id="fo-hold" min="0.4" max="1.6" step="0.1" value="0.8" aria-label="How long the move holds, in seconds">
+                <output for="fo-hold" id="fo-holdVal">0.80s</output>
+              </div>
+            </div>
+            <button type="button" class="fo-play" id="fo-play">Play it again <span aria-hidden="true">&#9656;</span></button>
+          </div>
+
+          <div>
+            <div class="fo-stage" id="fo-stage" data-move="push" data-badge="Shot 01" aria-hidden="true">
+              <span class="fo-stageA">your idea</span>
+              <span class="fo-stageB">starts here</span>
+            </div>
+            <pre class="fo-script" id="fo-script" aria-label="The script that made that frame"></pre>
+          </div>
+        </div>
+
+        <p class="fo-mono fo-tryNote">That is the job. You write the shot, the machine draws it. Which is
+          why someone with no design background can publish in four weeks &mdash; and why the ceiling
+          stops being your software skill and starts being your taste.</p>
+
+        <div class="fo-stack">
+          <p class="fo-label">The stack</p>
+          <h4>What you are actually installing.</h4>
+          <ul class="fo-rows">
+            <li><span>Hyperframes</span><span>The open framework the films are built in. It turns the written shots into frames. Free.</span></li>
+            <li><span>Claude</span><span>The model you write the film with, from script to shot list. Your own account.</span></li>
+            <li><span>ElevenLabs</span><span>The voice. Your own account.</span></li>
+            <li><span>Blender</span><span>Only when a film earns 3D, which is not most of them. Free, and the module shows you how to bring your own in.</span></li>
+            <li><span>ffmpeg</span><span>The render and the export. Free &mdash; installing it is step one of the setup pack.</span></li>
+          </ul>
+          <p class="fo-mono fo-note">Three of the five are free and open. Two are subscriptions in your
+            own name, not resold through me &mdash; tell me before you pay and I will send you exactly
+            which plans I use and what they cost, so there is no surprise after the fact.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section__blue fo-journey" aria-labelledby="fo-journeyHead">
+      <div class="journalArticle__article">
+        <p class="fo-label">The journey</p>
+        <h2 id="fo-journeyHead">Four weeks. One film with your name on it.</h2>
+        <p class="fo-mono" style="max-width:48ch;opacity:.7">One thing to make each week, one thing back
+          from me. Pick a week.</p>
+
+        <ul class="fo-rail" id="fo-rail">
+          <li>
+            <button type="button" class="fo-station is-on" id="fo-tab-1" data-panel="fo-panel-1">
+              <span class="fo-week">Week 01</span>
+              <span class="fo-title">Get it running.</span>
+              <span class="fo-out">Ten seconds, rendered on your laptop.</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="fo-station" id="fo-tab-2" data-panel="fo-panel-2">
+              <span class="fo-week">Week 02</span>
+              <span class="fo-title">Write your film.</span>
+              <span class="fo-out">Thirty seconds, from your own words.</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="fo-station" id="fo-tab-3" data-panel="fo-panel-3">
+              <span class="fo-week">Week 03</span>
+              <span class="fo-title">Make it move.</span>
+              <span class="fo-out">A minute that looks made, not made up.</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="fo-station" id="fo-tab-4" data-panel="fo-panel-4">
+              <span class="fo-week">Week 04</span>
+              <span class="fo-title">Publish it.</span>
+              <span class="fo-out">Live on your account. Next one planned.</span>
+            </button>
+          </li>
+        </ul>
+
+        <div class="fo-panels" id="fo-panels">
+          <div class="fo-panel" id="fo-panel-1" aria-labelledby="fo-tab-1">
+            <h3>Nothing to learn yet. Just proof that it runs.</h3>
+            <div class="fo-grid3">
+              <div>
+                <p class="fo-label">You do</p>
+                <p>Run the setup. Render the blank film. Change one line, render again.</p>
+              </div>
+              <div>
+                <p class="fo-label">You send</p>
+                <p>The ten-second file.</p>
+              </div>
+              <div>
+                <p class="fo-label">You get</p>
+                <p>Your machine confirmed ready, and one sentence to turn into a film.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="fo-panel" id="fo-panel-2" aria-labelledby="fo-tab-2">
+            <h3>Your words, cut into shots, rendered.</h3>
+            <div class="fo-grid3">
+              <div>
+                <p class="fo-label">You do</p>
+                <p>Write thirty seconds. Break it into shots. Put type on screen. Render.</p>
+              </div>
+              <div>
+                <p class="fo-label">You send</p>
+                <p>The film, and the script it came from. Both.</p>
+              </div>
+              <div>
+                <p class="fo-label">You get</p>
+                <p>Review one, in writing: the three changes that matter most, in order.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="fo-panel" id="fo-panel-3" aria-labelledby="fo-tab-3">
+            <h3>The part people think takes years.</h3>
+            <div class="fo-grid3">
+              <div>
+                <p class="fo-label">You do</p>
+                <p>Add the voice. Time picture to sound. Put it on a proper plate.</p>
+              </div>
+              <div>
+                <p class="fo-label">You send</p>
+                <p>The rebuilt film, about a minute, with the gates run.</p>
+              </div>
+              <div>
+                <p class="fo-label">You get</p>
+                <p>Review two, on the frames: timing, legibility, where it asks too much.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="fo-panel" id="fo-panel-4" aria-labelledby="fo-tab-4">
+            <h3>Published, which is the only version that counts.</h3>
+            <div class="fo-grid3">
+              <div>
+                <p class="fo-label">You do</p>
+                <p>Cover, caption, subtitles, final gates. Then you post it.</p>
+              </div>
+              <div>
+                <p class="fo-label">You send</p>
+                <p>The link.</p>
+              </div>
+              <div>
+                <p class="fo-label">You get</p>
+                <p>Review three on the published film, and what to make next.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section__lightgrey">
+      <div class="journalArticle__article">
+
+        <p class="fo-label">What arrives</p>
+        <h4 aria-level="2">Ten things, one folder, the day you start.</h4>
+        <p>Nothing streams, nothing expires. Yours to keep and to run again next year.</p>
+
+        <div class="pricing__box">
+          <div class="pricing__box--header lead">
+            <p class="lead pricing__box--name">Frame One.PKG</p>
+            <p class="lead pricing__box--price" id="fo-boxPrice">$350</p>
+          </div>
+          <p class="monospace monospace__p opacity__50">The production system, plus four weeks with a
+            person reading your frames.</p>
+          <ul class="pricing__box--items monospace monospace__p">
+            <li>setup/ &mdash; one install script, tested on a clean machine</li>
+            <li>films/ &mdash; two demo films as editable source, in two looks that are not mine (end of week one)</li>
+            <li>template/ &mdash; a blank film that renders in under a minute</li>
+            <li>script.md &mdash; how a sixty-second film is built on paper first</li>
+            <li>look/ &mdash; how to build your own type, colour and timing system</li>
+            <li>voice/ &mdash; choosing a voice, and the pass that humanises it</li>
+            <li>gates/ &mdash; the checks that stop a bad film shipping</li>
+            <li>ship/ &mdash; cover, caption and subtitles for Instagram and TikTok</li>
+            <li>modules/ &mdash; six recorded modules, about four hours</li>
+            <li>reviews &mdash; three written reviews, each within two working days</li>
+          </ul>
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect" data-cta="checkout">
+            <span>Reply to start</span>
+            <span class="arrow">&#8599;</span>
+          </a>
+        </div>
+
+        <hr>
+        <p class="fo-label">Time, honestly</p>
+        <h4 aria-level="2">How much of your week can you give?</h4>
+        <div class="fo-seg" role="group" aria-label="Hours a week you can give">
+          <button type="button" data-hours="3" aria-pressed="false">3 hours</button>
+          <button type="button" data-hours="5" aria-pressed="true">5 hours</button>
+          <button type="button" data-hours="8" aria-pressed="false">8 hours</button>
+        </div>
+        <p class="fo-out-line" id="fo-timeOut" aria-live="polite">At five hours a week you finish in
+          <b>four weeks</b>.</p>
+
+        <hr>
+        <p class="fo-label">The modules</p>
+        <h4 aria-level="2">Six of them, about four hours, in order.</h4>
+        <p>Watch one, make the thing it just showed you. Open any to see inside.</p>
+        <details class="fo-disc" open>
+          <summary><span>M1 &middot; Thinking in frames</span> <span class="fo-min">40 min</span></summary>
+          <div class="fo-body">
+            <p>What one frame has to do before anything is allowed to move. Why beginner films move too
+              much, and the rule that fixes it. After this you can say what is wrong with a frame.</p>
+          </div>
+        </details>
+        <details class="fo-disc">
+          <summary><span>M2 &middot; Script to shots</span> <span class="fo-min">45 min</span></summary>
+          <div class="fo-body">
+            <p>The sixty-second structure &mdash; hook, turn, payoff &mdash; and where people stop watching
+              if you get the order wrong. After this you can hand back a shot list that renders.</p>
+          </div>
+        </details>
+        <details class="fo-disc">
+          <summary><span>M3 &middot; Type in motion</span> <span class="fo-min">50 min</span></summary>
+          <div class="fo-body">
+            <p>How type enters, holds and leaves, and why timing beats easing every time. You build your own set of
+              moves and learn which ones to refuse. After this your films stop looking like animated slides.</p>
+          </div>
+        </details>
+        <details class="fo-disc">
+          <summary><span>M4 &middot; Voice and timing</span> <span class="fo-min">40 min</span></summary>
+          <div class="fo-body">
+            <p>Generating the voice, the pass that stops it sounding like a machine, and cutting picture to
+              sound. After this the film has a spine and everything hangs off it.</p>
+          </div>
+        </details>
+        <details class="fo-disc">
+          <summary><span>M5 &middot; Your look</span> <span class="fo-min">30 min</span></summary>
+          <div class="fo-body">
+            <p>Type, colour, grain and 3D as one system you decide once and reuse. How to build a look that
+              is yours, and the harder half &mdash; knowing what to leave out.</p>
+          </div>
+        </details>
+        <details class="fo-disc">
+          <summary><span>M6 &middot; Render and ship</span> <span class="fo-min">35 min</span></summary>
+          <div class="fo-body">
+            <p>The gates, export settings that survive compression, cover, caption, subtitles. After this
+              you ship weekly without asking anyone.</p>
+          </div>
+        </details>
+
+        <hr>
+        <p class="fo-label">Before you buy</p>
+        <h4 aria-level="2">Is this actually for you?</h4>
+        <p>Tick what is true. Nothing is sent anywhere.</p>
+        <ul class="fo-check" id="fo-check">
+          <li><label><input type="checkbox"><span>I have never really used a video editor.</span></label></li>
+          <li><label><input type="checkbox"><span>I can give about five hours a week for a month.</span></label></li>
+          <li><label><input type="checkbox"><span>I would rather read careful notes than sit on a call.</span></label></li>
+          <li><label><input type="checkbox"><span>I want a published film, not a certificate.</span></label></li>
+          <li><label><input type="checkbox"><span>I will type a command when a guide tells me to.</span></label></li>
+        </ul>
+        <p class="fo-out-line" id="fo-checkOut" aria-live="polite">Tick the true ones and I will tell you
+          straight whether this fits.</p>
+
+        <hr>
+        <p class="fo-label">Questions</p>
+        <h4 aria-level="2">The things people ask before they pay.</h4>
+        <details class="fo-disc">
+          <summary><span>I have never made a video. Too advanced?</span> <span class="fo-min">&nbsp;</span></summary>
+          <div class="fo-body">
+            <p>No. Week one assumes a clean machine and nothing installed. If you can follow a recipe, you
+              can do week one.</p>
+          </div>
+        </details>
+        <details class="fo-disc">
+          <summary><span>Do I need an expensive computer?</span> <span class="fo-min">&nbsp;</span></summary>
+          <div class="fo-body">
+            <p>Any laptop from roughly the last five years with 8 GB of memory runs everything except the
+              3D plate at full speed, and that part is optional and renders fine overnight. If your machine
+              cannot cope, that is what the refund is for.</p>
+          </div>
+        </details>
+        <details class="fo-disc">
+          <summary><span>Do I have to be able to draw?</span> <span class="fo-min">&nbsp;</span></summary>
+          <div class="fo-body">
+            <p>No, and you will not learn to. Everything on screen is type, shapes and the rig, all
+              described in text. That is the whole method.</p>
+          </div>
+        </details>
+        <details class="fo-disc">
+          <summary><span>What if I get stuck between reviews?</span> <span class="fo-min">&nbsp;</span></summary>
+          <div class="fo-body">
+            <p>Write to me. Anything that stops you rendering is answered as fast as I can, not held for the
+              next review. A blocked week is a wasted week.</p>
+          </div>
+        </details>
+        <details class="fo-disc">
+          <summary><span>What do I own at the end?</span> <span class="fo-min">&nbsp;</span></summary>
+          <div class="fo-body">
+            <p>The files, for good, including the two demo films as editable source. Use them for your own
+              work and for client work. You cannot resell or redistribute the package itself.</p>
+          </div>
+        </details>
+        <details class="fo-disc">
+          <summary><span>Will my films end up looking like yours?</span> <span class="fo-min">&nbsp;</span></summary>
+          <div class="fo-body">
+            <p>No, and that is deliberate. None of my design ships with this &mdash; not my type, not my
+              colour, not my rig. The two demo films are built in looks I do not use myself, so there is
+              nothing here to copy. What you are buying is the method and a week spent deciding what your
+              own films should look like, which is module five and the second review.</p>
+          </div>
+        </details>
+        <details class="fo-disc">
+          <summary><span>What does it cost me after the $350?</span> <span class="fo-min">&nbsp;</span></summary>
+          <div class="fo-body">
+            <p>Two of the five tools are subscriptions in your own name, not resold through me. Ask before
+              you pay and I will send you the exact plans I use and what they cost that week, so you can
+              add it up before you decide rather than after.</p>
+          </div>
+        </details>
+        <details class="fo-disc">
+          <summary><span>Why is there no call?</span> <span class="fo-min">&nbsp;</span></summary>
+          <div class="fo-body">
+            <p>Because you can keep a written review. On a call I would say the same three things and you
+              would forget two. In writing you hold it next to your film while you fix it.</p>
+          </div>
+        </details>
+
+        <hr>
+        <p class="fo-label">Price and payment</p>
+        <h4 aria-level="2">$350, once. Nothing after that.</h4>
+        <div class="fo-seg" role="group" aria-label="How you would like to pay">
+          <button type="button" data-plan="once" aria-pressed="true">Pay once</button>
+          <button type="button" data-plan="split" aria-pressed="false">Two payments</button>
+        </div>
+        <p class="fo-out-line" id="fo-planOut" aria-live="polite"><b>$350 today</b> and nothing after. Setup pack
+          within a day, demo films by the end of week one.</p>
+        <ul class="fo-rows" style="margin-top:26px">
+          <li><span>01</span><span>Checkout link &mdash; card or the wallet you already use. You get a proper receipt from the payment provider.</span></li>
+          <li><span>02</span><span>Two payments &mdash; $175 to begin, $175 when your first film is published. Same total.</span></li>
+          <li><span>03</span><span>Refund &mdash; if week one will not run on your machine, you get everything back.</span></li>
+        </ul>
+
+        <hr>
+        <p class="fo-label">Start</p>
+        <h4 aria-level="2">Three steps. The first is one word.</h4>
+        <ul class="fo-rows">
+          <li><span>01</span><span>Reply with one word: in.</span></li>
+          <li><span>02</span><span>Pay by the link, in one go or in two.</span></li>
+          <li><span>03</span><span>Setup pack and template land within a day &mdash; that is week one. The two demo films follow by the end of that week.</span></li>
+        </ul>
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect" data-cta="checkout"><span>Reply to start</span> <span class="arrow">&#8599;</span></a>
+          <a href="/guides/" class="button button__big hover_effect"><span>See films made this way</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <div class="article__footer">
+          <p class="monospace monospace__p opacity__50">Proposal N&ordm;001, prepared 10 September 2026 and
+            held for fourteen days. The files are licensed to you for your own films and your client work;
+            they are not for resale or redistribution. Independent; not affiliated with any company named
+            in the modules.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT&rsquo;S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> PROPOSAL N&ordm;001 &middot; FRAME ONE <br> PREPARED 10 SEPTEMBER 2026 <br> HELD FOR FOURTEEN DAYS <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">&#8599;</span></a>
+          <a href="/guides/" class="button button__half hover_effect" title="Every guide"><span>Guides</span><span class="arrow">&#8599;</span></a>
+          <a href="/" class="button button__half hover_effect" title="Home"><span>Index</span><span class="arrow">&#8599;</span></a>
+          <a href="/privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">&#8599;</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="fo-bar" id="fo-bar">
+  <span>Frame One &middot; <span class="fo-barPrice" id="fo-barPrice">$350, once</span></span>
+  <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" data-cta="checkout">Reply to start <span aria-hidden="true">&#8599;</span></a>
+</div>
+
+<script>
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- Try it: the method, playable ---- */
+  var stage = document.getElementById('fo-stage');
+  if (stage) {
+    var lineA = stage.querySelector('.fo-stageA'),
+        lineB = stage.querySelector('.fo-stageB'),
+        script = document.getElementById('fo-script'),
+        holdIn = document.getElementById('fo-hold'),
+        holdVal = document.getElementById('fo-holdVal'),
+        state = { move: 'push', a: 'your idea', b: 'starts here', hold: 0.8 };
+
+    var writeScript = function () {
+      var h = state.hold.toFixed(2);
+      script.innerHTML =
+        'shot 01\n' +
+        '  move  <b>' + state.move + '</b>\n' +
+        '  text  <b>"' + state.a + '"</b>\n' +
+        '  hold  <b>' + h + 's</b>\n' +
+        '\nshot 02\n' +
+        '  move  <b>' + state.move + '</b>\n' +
+        '  text  <b>"' + state.b + '"</b>\n' +
+        '  hold  <b>' + h + 's</b>\n' +
+        '\nrender &#8594; shot-01.mp4';
+    };
+
+    var play = function () {
+      lineA.textContent = state.a;
+      lineB.textContent = state.b;
+      stage.style.setProperty('--dur', state.hold + 's');
+      stage.removeAttribute('data-move');
+      void stage.offsetWidth;            /* restart the animation */
+      stage.setAttribute('data-move', state.move);
+      writeScript();
+    };
+
+    var wireChips = function (id, key, isMove) {
+      var box = document.getElementById(id);
+      if (!box) { return; }
+      [].forEach.call(box.querySelectorAll('button'), function (b) {
+        b.addEventListener('click', function () {
+          [].forEach.call(box.querySelectorAll('button'), function (o) {
+            o.setAttribute('aria-pressed', String(o === b));
+          });
+          state[key] = isMove ? b.getAttribute('data-move') : b.textContent.trim();
+          play();
+        });
+      });
+    };
+    wireChips('fo-move', 'move', true);
+    wireChips('fo-l1', 'a', false);
+    wireChips('fo-l2', 'b', false);
+
+    holdIn.addEventListener('input', function () {
+      state.hold = parseFloat(holdIn.value);
+      holdVal.textContent = state.hold.toFixed(2) + 's';
+      writeScript();
+    });
+    holdIn.addEventListener('change', play);
+    document.getElementById('fo-play').addEventListener('click', play);
+    writeScript();
+    if (!reduce) {
+      /* plays itself once when it comes into view, so nobody has to be told to press anything */
+      if ('IntersectionObserver' in window) {
+        var seen = false;
+        new IntersectionObserver(function (e, obs) {
+          if (e[0].isIntersecting && !seen) { seen = true; play(); obs.disconnect(); }
+        }, { threshold: 0.4 }).observe(stage);
+      } else { play(); }
+    }
+  }
+
+  /* ---- the four-week journey: tabs, on top of markup that works without JS ---- */
+  var rail = document.getElementById('fo-rail');
+  if (rail) {
+    var tabs = [].slice.call(rail.querySelectorAll('.fo-station'));
+    rail.setAttribute('role', 'tablist');
+    rail.setAttribute('aria-label', 'The four weeks');
+    [].forEach.call(rail.children, function (li) { li.setAttribute('role', 'presentation'); });
+    tabs.forEach(function (tab, i) {
+      var panel = document.getElementById(tab.getAttribute('data-panel'));
+      tab.setAttribute('role', 'tab');
+      tab.setAttribute('aria-controls', panel.id);
+      tab.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+      tab.tabIndex = i === 0 ? 0 : -1;
+      tab.classList.remove('is-on');
+      panel.setAttribute('role', 'tabpanel');
+      panel.setAttribute('tabindex', '0');
+      panel.hidden = i !== 0;
+    });
+    var select = function (i, focus) {
+      tabs.forEach(function (tab, j) {
+        var on = i === j;
+        tab.setAttribute('aria-selected', on ? 'true' : 'false');
+        tab.tabIndex = on ? 0 : -1;
+        document.getElementById(tab.getAttribute('data-panel')).hidden = !on;
+      });
+      if (focus) { tabs[i].focus(); }
+    };
+    tabs.forEach(function (tab, i) {
+      tab.addEventListener('click', function () { select(i, false); });
+      tab.addEventListener('keydown', function (e) {
+        var k = e.key, n = tabs.length, t = null;
+        if (k === 'ArrowRight' || k === 'ArrowDown') { t = (i + 1) % n; }
+        else if (k === 'ArrowLeft' || k === 'ArrowUp') { t = (i - 1 + n) % n; }
+        else if (k === 'Home') { t = 0; }
+        else if (k === 'End') { t = n - 1; }
+        if (t !== null) { e.preventDefault(); select(t, true); }
+      });
+    });
+  }
+
+  /* ---- how many hours a week, and what that does to the finish line ---- */
+  var plans = {
+    '3': { weeks: 6, label: 'six weeks' },
+    '5': { weeks: 4, label: 'four weeks' },
+    '8': { weeks: 3, label: 'three weeks' }
+  };
+  var timeOut = document.getElementById('fo-timeOut');
+  var fmt = function (d) { return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long' }); };
+  var setHours = function (h) {
+    var p = plans[h], end = new Date();
+    end.setDate(end.getDate() + p.weeks * 7 + 2);
+    timeOut.innerHTML = 'At ' + h + ' hours a week you finish in <b>' + p.label + '</b> &mdash; published around <b>' + fmt(end) + '</b>.';
+  };
+  var hourBtns = [].slice.call(document.querySelectorAll('[data-hours]'));
+  hourBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      hourBtns.forEach(function (o) { o.setAttribute('aria-pressed', String(o === b)); });
+      setHours(b.getAttribute('data-hours'));
+    });
+  });
+  if (hourBtns.length) { setHours('5'); }
+
+  /* ---- pay once or split, reflected everywhere the price appears ---- */
+  var planCopy = {
+    once: { box: '$350', bar: '$350, once', fact: '$350, once. Or 2 &times; $175.',
+      out: '<b>$350 today</b> and nothing after. Setup pack within a day, demo films by the end of week one.' },
+    split: { box: '2 &times; $175', bar: '2 &times; $175', fact: 'Two payments of $175. Same total.',
+      out: '<b>$175 today</b>, <b>$175 when your first film is published</b>. Same total, no fee. You get the whole package either way.' }
+  };
+  var planBtns = [].slice.call(document.querySelectorAll('[data-plan]'));
+  planBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var c = planCopy[b.getAttribute('data-plan')];
+      planBtns.forEach(function (o) { o.setAttribute('aria-pressed', String(o === b)); });
+      document.getElementById('fo-planOut').innerHTML = c.out;
+      document.getElementById('fo-boxPrice').innerHTML = c.box;
+      document.getElementById('fo-barPrice').innerHTML = c.bar;
+      document.getElementById('fo-factPrice').innerHTML = c.fact;
+    });
+  });
+
+  /* ---- the honest self-check ---- */
+  var check = document.getElementById('fo-check');
+  if (check) {
+    var out = document.getElementById('fo-checkOut');
+    check.addEventListener('change', function () {
+      var n = check.querySelectorAll('input:checked').length, msg;
+      if (n === 0) { msg = 'Tick the true ones and I will tell you straight whether this fits.'; }
+      else if (n >= 4) { msg = '<b>' + n + ' of 5.</b> Built for exactly you. Reply with one word and we start.'; }
+      else if (n >= 2) { msg = '<b>' + n + ' of 5.</b> Most of it fits. Tell me which ones you left out and I will say honestly whether to buy.'; }
+      else { msg = '<b>' + n + ' of 5.</b> Be honest in the reply. If this is the wrong thing for you I would rather say so than take your money.'; }
+      out.innerHTML = msg;
+    });
+  }
+
+  /* ---- the action bar steps aside once you reach the footer ---- */
+  var bar = document.getElementById('fo-bar');
+  var foot = document.querySelector('.footer');
+  if (bar && foot && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      bar.setAttribute('data-away', String(entries[0].isIntersecting));
+    }, { rootMargin: '0px 0px -35% 0px' }).observe(foot);
+  }
+})();
+</script>
+</body>
+</html>
