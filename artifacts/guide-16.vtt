@@ -1,0 +1,81 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:02.926
+DeepSeek ships under an MIT licence.
+
+2
+00:00:03.206 --> 00:00:06.550
+The licence is open source. The model isn't.
+
+3
+00:00:06.829 --> 00:00:07.758
+- How does that work?
+
+4
+00:00:08.038 --> 00:00:13.889
+A licence covers what they gave you. And they gave you a block of numbers.
+
+5
+00:00:14.170 --> 00:00:21.182
+Weights, settled during training. The brain. And the licence made it sound like the blueprint.
+
+6
+00:00:21.462 --> 00:00:29.403
+A brain is a lot. Open weight means you run it on your own machines and never call anyone's server again.
+
+7
+00:00:29.683 --> 00:00:37.578
+Fine-tune it, shrink it onto a laptop, lock it inside your own building. Nobody can switch it off on you.
+
+8
+00:00:37.858 --> 00:00:39.158
+- So what did they keep?
+
+9
+00:00:39.438 --> 00:00:45.661
+The data it read, the pipeline that trained it, the code that cleaned the data first.
+
+10
+00:00:45.941 --> 00:00:47.566
+- So, the cake but not the recipe.
+
+11
+00:00:47.847 --> 00:00:54.349
+Precisely. Qwen, to its credit, calls its own releases open weight. The honest word for all three.
+
+12
+00:00:54.628 --> 00:00:55.882
+- It's free though, right?
+
+13
+00:00:56.162 --> 00:01:05.636
+Read the licence. Llama's has a number in it. Seven hundred million monthly users, and past that you ask Meta for permission.
+
+14
+00:01:05.916 --> 00:01:09.631
+Meta can say no. That is not what open has ever meant.
+
+15
+00:01:09.911 --> 00:01:21.614
+Real open source puts four things on the table. The weights, the code that trained it, the architecture, and enough about the data to build it again.
+
+16
+00:01:21.894 --> 00:01:22.776
+- Anyone could?
+
+17
+00:01:23.056 --> 00:01:31.555
+Anyone with millions of dollars of computing power. But the drawings are there, and that is the difference.
+
+18
+00:01:31.835 --> 00:01:46.928
+Even the referees disagree. The Open Source Initiative's 2024 definition doesn't demand the data itself, only a description good enough to rebuild from. Not everyone accepted that.
+
+19
+00:01:47.208 --> 00:01:57.936
+So when a company says open source, don't look for the download button. Count what's on the table. Anything less than four is open weight.
+
+20
+00:01:58.215 --> 00:02:07.085
+Open weight gives you the brain. Open source gives you the blueprint as well. Comment WEIGHTS and I'll send the five questions.
