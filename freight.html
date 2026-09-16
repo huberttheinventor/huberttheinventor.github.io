@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design a file upload service - Hubert's field guides</title>
+<meta name="description" content="Field guide Nº017. Everyone builds the same upload service and breaks it the same way: a five gigabyte file goes through the API server and into the database. Split the card from the bytes, hand the client a pre-signed URL instead of a pipe, cut big files into parts so one failure is cheap, and keep a copy near the reader. Your server decides who may move a file. It never carries a byte.">
+<meta name="theme-color" content="#1a1a1a">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="Design a file upload service">
+<meta property="og:description" content="A five gigabyte file does not belong in your database, and it does not belong in your API server's memory either. Four moves that take your server out of the freight business.">
+<meta property="og:image" content="img/guide/guide-17-poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-09-16-freight" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-09-16-freight">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-09-16-freight">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-09-16-freight">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-09-16-freight">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-09-16-freight">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-09-16-freight">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-09-16-freight">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/freight.html"><span>Nº017 · A file upload service</span></a>
+    <a href="/weights.html"><span>Nº016 · Open weight vs open source</span></a>
+    <a href="/shadow.html"><span>Nº014 · The dot product and attention</span></a>
+    <a href="/doorman.html"><span>Nº013 · Load balancers</span></a>
+    <a href="/algo.html"><span>Nº012 · Five machine learning algorithms</span></a>
+    <a href="/eigen.html"><span>Nº011 · Eigenvectors and linear systems</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Field guide</span><strong>N&ordm;017</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>System</span><strong>A file upload service</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Model</span><strong>The card, and the freight</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Annotations</span><strong>Six, keyed to the map</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp">Filed</span>
+        </div>
+      </div>
+
+      <div class="journalArticle__article" id="guide">
+        <h1 data-splitting="lines">Your server should never carry the file.</h1>
+        <p class="lead" data-splitting>Everyone builds the same upload service, and everyone breaks it the
+          same way: a five gigabyte video goes to the API server, and the API server puts it in the
+          database. It works on the first video and it is a liability by the hundredth. The fix is one
+          idea applied four times. Your server decides who is allowed to move a file. It never touches a
+          byte of the file itself.</p>
+
+        <figure class="journalArticle__banner guideVideo">
+          <video controls preload="none" playsinline
+                 poster="img/guide/guide-17-poster.jpg?v=2026-09-16-freight"
+                 aria-label="Field guide N&ordm;017: design a file upload service">
+            <source src="img/guide/guide-17.mp4?v=2026-09-16-freight" type="video/mp4">
+            <track kind="subtitles" src="artifacts/guide-17.vtt?v=2026-09-16-freight" srclang="en" label="English">
+            <p class="monospace monospace__p">Your browser will not play this. The whole guide is written
+              out below, and <a href="artifacts/transcript-freight.md">the transcript</a> has every word of it.</p>
+          </video>
+          <figcaption class="monospace monospace__p opacity__50">N&ordm;017 &middot; 1:52 &middot; watch it first, then read the map</figcaption>
+        </figure>
+
+        <figure class="journalArticle__banner map" id="map">
+          <svg viewBox="0 0 1200 520" role="img"
+             aria-label="System map: the four moves of an upload, drawn by how much data travels down each one. Move one, ask: the client asks your server who it is, whether it is allowed, and whether there is room. A few hundred bytes. Move two, permit: your server hands back one signed URL, permission to put one object in one place, and it expires. A few hundred bytes. Move three, put: the client sends the file itself straight to object storage, ten megabytes at a time, and it never passes through your server. Five gigabytes. Move four, record: your server writes one row to the database saying the file landed, with owner, name, size and where it lives. A few hundred bytes. Three of the four moves are postcards; the one that is five gigabytes never touches your server.">
+            <style>.w-t{font-family:Mono,ui-monospace,monospace;font-size:13px;letter-spacing:1.1px;fill:#abbac2}.w-h{font-family:Mono,ui-monospace,monospace;font-size:12px;letter-spacing:1.6px;fill:#7a8990}.w-n{font-family:Mono,ui-monospace,monospace;font-size:17px;font-weight:500;letter-spacing:.4px;fill:#cfd8dc}.w-nw{font-family:Mono,ui-monospace,monospace;font-size:17px;font-weight:500;letter-spacing:.4px;fill:#9fe4f3}.w-v{font-family:Mono,ui-monospace,monospace;font-size:14px;letter-spacing:.7px;fill:#abbac2}.w-e{font-family:Mono,ui-monospace,monospace;font-size:12px;letter-spacing:1.6px;fill:#7a8990}.w-ew{font-family:Mono,ui-monospace,monospace;font-size:12px;letter-spacing:1.6px;fill:#9fe4f3}.w-thin{stroke:#7a8990;stroke-width:1.6;fill:none}.w-fat{stroke:#9fe4f3;stroke-width:13;fill:none;stroke-linecap:butt;opacity:.9}.w-ah{fill:#7a8990}.w-ahw{fill:#9fe4f3}.w-rail{stroke:#3a444a;stroke-width:1.2;fill:none;stroke-dasharray:3 5}</style>
+
+            <text class="w-t" x="20" y="34">FOUR MOVES &middot; DRAWN BY HOW MUCH ACTUALLY TRAVELS</text>
+            <text class="w-h" x="20" y="74">LINE WEIGHT = THE SIZE OF WHAT GOES DOWN IT</text>
+            <text class="w-h" x="1180" y="74" text-anchor="end">WHAT IT COSTS YOU</text>
+
+            <g>
+              <text class="w-n" x="20" y="132">01 &middot; Ask</text>
+              <text class="w-v" x="20" y="158">who are you, are you allowed, have you room</text>
+              <text class="w-e" x="560" y="112">CLIENT</text>
+              <text class="w-e" x="900" y="112" text-anchor="end">YOUR SERVER</text>
+              <path class="w-thin" d="M560 134 L890 134"/>
+              <path class="w-ah" d="M900 134 l-13 -6 v12 z"/>
+              <text class="w-v" x="1180" y="138" text-anchor="end">a few hundred bytes</text>
+            </g>
+            <path class="w-rail" d="M20 186 L1180 186"/>
+
+            <g>
+              <text class="w-n" x="20" y="232">02 &middot; Permit</text>
+              <text class="w-v" x="20" y="258">one signed URL: one object, one place, and it expires</text>
+              <text class="w-e" x="560" y="212">CLIENT</text>
+              <text class="w-e" x="900" y="212" text-anchor="end">YOUR SERVER</text>
+              <path class="w-thin" d="M570 234 L900 234"/>
+              <path class="w-ah" d="M560 234 l13 -6 v12 z"/>
+              <text class="w-v" x="1180" y="238" text-anchor="end">a few hundred bytes</text>
+            </g>
+            <path class="w-rail" d="M20 286 L1180 286"/>
+
+            <g>
+              <text class="w-nw" x="20" y="332">03 &middot; Put</text>
+              <text class="w-v" x="20" y="358">the file itself, ten megabytes at a time</text>
+              <text class="w-ew" x="560" y="308">CLIENT</text>
+              <text class="w-ew" x="900" y="308" text-anchor="end">OBJECT STORAGE</text>
+              <path class="w-fat" d="M560 334 L884 334"/>
+              <path class="w-ahw" d="M900 334 l-18 -11 v22 z"/>
+              <text class="w-v" x="1180" y="338" text-anchor="end">five gigabytes, and none of it yours to carry</text>
+            </g>
+            <path class="w-rail" d="M20 386 L1180 386"/>
+
+            <g>
+              <text class="w-n" x="20" y="432">04 &middot; Record</text>
+              <text class="w-v" x="20" y="458">one row: owner, name, size, where it lives</text>
+              <text class="w-e" x="560" y="408">YOUR SERVER</text>
+              <text class="w-e" x="900" y="408" text-anchor="end">DATABASE</text>
+              <path class="w-thin" d="M560 434 L890 434"/>
+              <path class="w-ah" d="M900 434 l-13 -6 v12 z"/>
+              <text class="w-v" x="1180" y="438" text-anchor="end">a few hundred bytes</text>
+            </g>
+
+            <text class="w-t" x="20" y="500">THREE OF THE FOUR ARE POSTCARDS &middot; THE ONE THAT IS FIVE GIGABYTES NEVER TOUCHES YOUR SERVER</text>
+          </svg>
+
+          <div class="map__phone">
+            <div class="mband">
+              <div class="mrung mrung--mute">
+                <div class="mrung__box">
+                  <span class="mrung__n">01</span>
+                  <h5 class="mrung__t">Ask<small>client to your server: who are you, are you allowed, have you room. A few hundred bytes.</small></h5>
+                </div>
+              </div>
+
+              <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+                <span>the answer is <b>permission, not the file</b></span></p>
+
+              <div class="mrung mrung--mute">
+                <div class="mrung__box">
+                  <span class="mrung__n">02</span>
+                  <h5 class="mrung__t">Permit<small>your server back to the client: one signed URL. One object, one place, and it expires. A few hundred bytes.</small></h5>
+                </div>
+              </div>
+
+              <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+                <span>now the bytes go <b>straight past you</b></span></p>
+
+              <div class="mrung mrung--stage">
+                <div class="mrung__box">
+                  <span class="mrung__n">03</span>
+                  <h5 class="mrung__t">Put<small>client to object storage: the file itself, ten megabytes at a time. Five gigabytes, and not one of them through your server.</small></h5>
+                </div>
+              </div>
+
+              <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+                <span>all you keep is <b>the card</b></span></p>
+
+              <div class="mrung mrung--mute">
+                <div class="mrung__box">
+                  <span class="mrung__n">04</span>
+                  <h5 class="mrung__t">Record<small>your server to the database: one row saying it landed. Owner, name, size, where it lives. A few hundred bytes.</small></h5>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="legend monospace">
+            <div><i aria-hidden="true" style="border-top-color:#9fe4f3"></i>the freight: the file itself, and it goes straight to storage</div>
+            <div><i aria-hidden="true" style="border-top-color:#7a8990"></i>the paperwork: asking, permitting, recording. All of it small</div>
+          </div>
+        </figure>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">The whole design, one picture. Everything after it is annotation.</p>
+
+        <p class="monospace monospace__p" data-splitting>Take it with you:
+          <a href="artifacts/freight-card.png?v=2026-09-16-freight" download>the freight card</a>,
+          the six moves on one page, in the order you build them.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">The database is for the card, not for the cargo.</h4>
+        <p>The first version everyone writes puts the file in the database, because the database is where
+          things go. Then the backups take an hour, the restores take longer, and a query that used to be
+          instant is crawling through somebody's holiday footage to reach a filename. Split the two. Postgres
+          keeps the card: owner, name, size, and where it lives. The bytes go where bytes belong, which is
+          object storage. S3, R2, GCS, all the same shape. One of them is built to hold a five gigabyte blob
+          and hand it back cheaply, and it is not the one with the query planner in it.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">Everything that passes through you, you pay for.</h4>
+        <p>Splitting the storage out fixes the database and leaves the worse problem untouched: look at where
+          the file still goes. It is still squeezed through your API server on the way past. That server now
+          holds five gigabytes in memory or spools it to disk, for every upload, from every user, at the same
+          time. You pay for the bandwidth in and the bandwidth out again. You pay for the memory. You pay for
+          the bigger box you bought because of the memory. And the user waits through two trips instead of
+          one, so you paid for a slower upload as well. Nobody decided any of this. It is just what happens
+          when a request goes through a machine that had no reason to be in the way.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">Hand back permission, not a pipe.</h4>
+        <p>So stop carrying it. Before anything moves, the client asks: who am I, am I allowed, is there room.
+          Those are the three questions only your server can answer, and answering them costs a few hundred
+          bytes. If the answer is yes, you hand back one small signed thing. Not the file, and not a route to
+          the file through you. Permission to put one object, in one place, and it expires. That is a
+          pre-signed URL: a link your server signs with the storage credentials so the client can use storage
+          directly, once, for one object, for a few minutes. The credentials never leave your server. The
+          file never arrives at it. Storage checks the signature and takes the bytes, and you write one row
+          saying it landed.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">Twenty gigabytes will die at ninety-nine percent.</h4>
+        <p>Now make it twenty gigabytes on hotel wifi and watch it fail at the end. If the upload is one
+          object, one failure costs you all of it, and the user starts again from zero. So do not send it as
+          one object. Cut it into parts, ten megabytes each, and send them independently. One part fails and
+          you resend that one part. Storage glues them back together into a single object at the end. That is
+          multipart upload, and it is the same trick as the pre-signed URL: make the expensive thing small
+          enough that losing it does not matter. It also gives you a real progress bar and parts going up in
+          parallel, both of which you get for free once the file stopped being one indivisible lump.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">Downloads are the same four moves, backwards.</h4>
+        <p>Nothing new to design. Check the row to see the file exists and that this person may have it, sign
+          a link the same way, and let them pull from storage directly. Your server answers a question and
+          gets out of the way, exactly as it did going up. If everyone wants the same file, do not make all
+          of them cross an ocean for it: keep a copy near them. That is a CDN, a network of caches sitting
+          close to your users so the second person to ask is served locally instead of from the origin. It is
+          the fourth application of the one idea. Move the decision to your server and the bytes somewhere
+          cheaper.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">What to check in the one you already have.</h4>
+        <p>Open the upload handler you shipped. If the file arrives as a request body on your server, you are
+          paying for freight you never needed to carry, and no amount of tuning the box fixes it, because the
+          box was never the problem. If the bytes are in a database column, the backup is the thing that will
+          tell you first. If a large upload has no parts, someone on bad wifi is going to lose twenty
+          gigabytes at ninety-nine percent this week and file a bug you cannot reproduce. Four questions,
+          and you can answer all of them from one file.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="sources">Take it with you</h4>
+        <div class="buttons">
+          <a href="artifacts/freight-card.png?v=2026-09-16-freight" class="button button__big hover_effect"><span>The freight card</span> <span class="arrow">&#8599;</span></a>
+          <a href="artifacts/transcript-freight.md" class="button button__big hover_effect"><span>Full transcript</span> <span class="arrow">&#8599;</span></a>
+          <a href="#map" class="button button__big hover_effect"><span>The system map</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-small="true">The List</p>
+        <h4 aria-level="2">One a week. And the other sixteen, now.</h4>
+        <p>Confirm your address and the whole set arrives &mdash; all the field guides, exactly
+          as they are on the site, nothing held back for subscribers. After that, one new system
+          taken apart every week. No pitch, no thread-bait, and an unsubscribe link that works.</p>
+
+        <form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor"
+              method="post">
+          <label class="monospace monospace__p" for="list-email">Email address</label>
+          <div class="field">
+            <input type="email" name="email" id="list-email" placeholder="you@example.com"
+                   required autocomplete="email" inputmode="email" spellcheck="false">
+            <input type="hidden" name="tag" value="guide-17-freight">
+            <button type="submit" class="monospace">Send me the set &#8599;</button>
+          </div>
+          <label class="consent monospace monospace__p">
+            <input type="checkbox" name="consent" required>
+            <span>Send me the guides and one new one each week. I can unsubscribe at any
+              time and my address is never shared &mdash; see the
+              <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set
+              arrives the moment you click it.</span>
+          </label>
+        </form>
+<!-- build:guidenav -->
+      <div class="guideNav">
+        <h4 aria-level="2" class="guideNav__head">Keep going</h4>
+        <div class="buttons">
+        <a href="/weights.html" class="button button__big hover_effect"><span><em class="guideNav__kicker">Previous</em> Nº016 · Open weight is not open source</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__label">Related</p>
+        <div class="buttons">
+        <a href="/netflix.html" class="button button__big hover_effect"><span>Nº001 · Netflix &mdash; The play button was never the hard part.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/doorman.html" class="button button__big hover_effect"><span>Nº013 · Load balancers &mdash; Ten servers, one door.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/google-search.html" class="button button__big hover_effect"><span>Nº004 · Google Search &mdash; It doesn't search the internet. It searches a copy.</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__all"><a href="/guides/">All 16 guides &#8599;</a></p>
+      </div>
+<!-- /build:guidenav -->
+      <div class="article__footer">
+          <p class="monospace monospace__p opacity__50" data-splitting>Independent field guide. Not
+            affiliated with, endorsed by, or connected to Amazon Web Services, Cloudflare, Google, PostgreSQL,
+            or anyone else named on this page. Service names are used to point at a shape, not to recommend a
+            vendor; the diagrams are drawn to explain the design rather than to describe any one product, and
+            any error in them is mine.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="artifacts/freight-card.png?v=2026-09-16-freight" class="button button__half hover_effect" title="The freight card, as an image"><span>The card</span> <span class="arrow">↗</span></a>
+          <a href="artifacts/transcript-freight.md" class="button button__half hover_effect" title="Full narration, by section"><span>Transcript</span><span class="arrow">↗</span></a>
+          <a href="privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+
+
+
+
+<dialog id="list-modal" class="listModal" aria-labelledby="list-modal-title"><div class="listModal__inner" tabindex="-1" autofocus><p class="listModal__eyebrow">The List</p><h2 id="list-modal-title">Every guide. One email.</h2><p>Every field guide on this site, sent the moment you confirm &mdash; then one new system taken apart each week.</p><p>Nothing is held back for subscribers. The guides stay free and stay here; the list is only how the next one reaches you without an algorithm getting a vote.</p><form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor" method="post"><label class="monospace monospace__p" for="list-email-modal">Email address</label><div class="field"><input type="email" name="email" id="list-email-modal" placeholder="you@example.com" required autocomplete="email" inputmode="email" spellcheck="false"><input type="hidden" name="tag" value="popup-freight"><button type="submit" class="monospace">Send me the set &#8599;</button></div><label class="consent monospace monospace__p"><input type="checkbox" name="consent" required><span>Send me the guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set arrives the moment you click it.</span></label></form><button type="button" class="listModal__close" data-close>No thanks &mdash; just reading</button></div></dialog>
+<script src="assets/js/list-modal.js?v=2026-09-16-freight" defer></script>
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-09-16-freight"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-09-16-freight"></script>
+<script src="/assets/js/splitting.min.js?v=2026-09-16-freight"></script>
+<script src="/assets/js/site.js?v=2026-09-16-freight" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>
+
