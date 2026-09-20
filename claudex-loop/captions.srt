@@ -1,0 +1,75 @@
+1
+00:00:00,000 --> 00:00:02,392
+You move a task to Done.
+
+2
+00:00:02,392 --> 00:00:04,505
+An older save overwrites it.
+
+3
+00:00:04,505 --> 00:00:05,666
+And back it goes.
+
+4
+00:00:05,666 --> 00:00:08,475
+Technically saved. Practically gone.
+
+5
+00:00:08,475 --> 00:00:11,471
+Claudex Loop is an open-source workflow
+
+6
+00:00:11,471 --> 00:00:14,164
+connecting Claude Code and Codex.
+
+7
+00:00:14,164 --> 00:00:15,766
+One prepares the plan.
+
+8
+00:00:15,766 --> 00:00:19,600
+The other challenges it.
+
+9
+00:00:19,600 --> 00:00:24,600
+Could an older save erase a newer edit?
+
+10
+00:00:24,600 --> 00:00:28,315
+Revise the plan: reject outdated saves.
+
+11
+00:00:28,315 --> 00:00:30,400
+And test both edits.
+
+12
+00:00:30,400 --> 00:00:34,900
+First, reproduce the failure.
+
+13
+00:00:34,900 --> 00:00:38,900
+Then build the version check.
+
+14
+00:00:38,900 --> 00:00:41,942
+Replay it. The old save is rejected.
+
+15
+00:00:41,942 --> 00:00:46,100
+Your edit survives.
+
+16
+00:00:46,100 --> 00:00:49,234
+The other provider inspects the finished code.
+
+17
+00:00:49,234 --> 00:00:53,000
+Agreement isn't proof. Test the behavior.
+
+18
+00:00:53,000 --> 00:00:55,322
+Comment REVIEW for the setup guide
+
+19
+00:00:55,322 --> 00:00:59,000
+and example test on our site.
