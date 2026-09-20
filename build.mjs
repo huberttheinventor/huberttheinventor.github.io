@@ -23,6 +23,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const CHECK = process.argv.includes('--check');
+const ONLY = process.argv.includes('--page') ? process.argv[process.argv.indexOf('--page') + 1] : null;
 
 const data = JSON.parse(readFileSync(join(ROOT, '_data/guides.json'), 'utf8'));
 const TOKEN = data.cacheToken;
@@ -362,9 +363,12 @@ ${urls.map((u) => `  <url>
 
 /* ── run ──────────────────────────────────────────────────────────────── */
 const pages = readdirSync(ROOT).filter((f) => f.endsWith('.html'));
+// Companion guides use the same maintained chrome, even before archive release.
+if (existsSync(join(ROOT, 'claudex-loop/index.html'))) pages.push('claudex-loop/index.html');
 const changed = [];
 
-for (const f of pages) {
+if (ONLY && !pages.includes(ONLY)) throw new Error(`Unknown page: ${ONLY}`);
+for (const f of pages.filter((f) => !ONLY || f === ONLY)) {
   const before = readFileSync(join(ROOT, f), 'utf8');
   const guide = GUIDES.find((g) => `${g.slug}.html` === f) || null;
   const after = fill(migrate(before, guide), null, guide);
@@ -379,14 +383,14 @@ if (!existsSync(guidesDir)) mkdirSync(guidesDir, { recursive: true });
 const archivePath = join(guidesDir, 'index.html');
 const archiveOut = fill(archive(), '/guides/', null);
 const archiveBefore = existsSync(archivePath) ? readFileSync(archivePath, 'utf8') : '';
-if (archiveOut !== archiveBefore) {
+if (!ONLY && archiveOut !== archiveBefore) {
   changed.push('guides/index.html');
   if (!CHECK) writeFileSync(archivePath, archiveOut);
 }
 
 const sitemapPath = join(ROOT, 'sitemap.xml');
 const sitemapOut = sitemap();
-if (sitemapOut !== (existsSync(sitemapPath) ? readFileSync(sitemapPath, 'utf8') : '')) {
+if (!ONLY && sitemapOut !== (existsSync(sitemapPath) ? readFileSync(sitemapPath, 'utf8') : '')) {
   changed.push('sitemap.xml');
   if (!CHECK) writeFileSync(sitemapPath, sitemapOut);
 }
