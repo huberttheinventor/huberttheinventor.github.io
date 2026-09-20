@@ -1,0 +1,12 @@
+node_modules/
+.env
+.env.*
+!.env.example
+*.bin
+*.safetensors
+out/
+dist/
+.cache/
+*.log
+*.mp4
+*.mov
