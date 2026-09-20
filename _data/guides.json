@@ -3,6 +3,17 @@
   "cacheToken": "2026-09-20-hugging-face",
   "guides": [
     {
+      "n": 19,
+      "slug": "claudex-loop",
+      "path": "claudex-loop/index.html",
+      "href": "/claudex-loop/",
+      "headline": "Catch the lost edit before you ship.",
+      "system": "Cross-model review",
+      "runtime": "0:58",
+      "video": true,
+      "tags": ["ai", "tooling", "software"]
+    },
+    {
       "n": 18,
       "slug": "hugging-face",
       "headline": "Why AI leaders Dario and Sam want to slow down.",

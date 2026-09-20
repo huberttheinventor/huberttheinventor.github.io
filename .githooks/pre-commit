@@ -24,11 +24,10 @@ esac
 before=$(git diff --cached --name-only)
 node build.mjs >/dev/null
 
-# Restage only the generated files that changed AND were already part of this
-# commit, plus guides/index.html which the build owns outright.
+# Restage only generated files already explicitly staged for this commit.
+# A companion-page edit must not sweep an unrelated archive rebuild into it.
 for f in $(git diff --name-only); do
   case "$f" in
-    guides/index.html) git add "$f" ;;
     *.html)
       if echo "$before" | grep -qx "$f"; then git add "$f"; fi
       ;;

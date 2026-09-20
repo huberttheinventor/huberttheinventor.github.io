@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Catch the lost edit before you ship — Hubert’s field guides</title>
+<meta name="description" content="Field guide Nº019. Review a development plan, reproduce a lost edit, and test a version check with Claudex Loop.">
+<meta name="theme-color" content="#1a1a1a">
+
+<meta name="twitter:card" content="summary_large_image">
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-09-20-hugging-face" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-09-20-hugging-face">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-09-20-hugging-face">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-09-20-hugging-face">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-09-20-hugging-face">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-09-20-hugging-face">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-09-20-hugging-face">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-09-20-hugging-face">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+<style>
+/* Only the code surface is new; page geometry and typography use the guide canon. */
+.review-code{background:#04111f;color:#cfd8dc;border:1px solid #3a444a;padding:clamp(16px,2vw,28px);overflow:auto;max-width:100%;font:clamp(13px,1.15vw,17px)/1.6 Mono,monospace;tab-size:2;margin:24px 0 40px}
+.review-code code{font:inherit;color:inherit;white-space:pre-wrap;overflow-wrap:anywhere}
+#guide p code{color:#cfd8dc;background-color:#04111f}
+.review-proof{background:#0f0f0f;padding:0;overflow:hidden}
+.review-proof img{display:block;width:100%;height:auto}
+.review-proof figcaption{color:#cbcfd2;padding:18px 24px;margin:0;border-top:1px solid #3a444a}
+.review-proof figcaption b{color:#9fe4f3;font-weight:400}
+.proof-switch{display:flex;gap:0;background:#1a1a1a}
+.proof-switch button{flex:1;border:0;border-top:1px solid #3a444a;background:transparent;color:#bababa;font:14px/1.4 Mono,monospace;padding:18px 12px;cursor:pointer}
+.proof-switch button[aria-pressed="true"]{color:#9fe4f3;border-top-color:#9fe4f3}
+.proof-switch button:focus-visible{outline:2px solid #9fe4f3;outline-offset:-4px}
+.review-code:before{content:'EXAMPLE / COPYABLE SOURCE';display:block;border-bottom:1px solid #3a444a;padding-bottom:12px;margin-bottom:16px;color:#9fe4f3;font:12px/1.4 Mono,monospace;letter-spacing:.08em}
+.review-label{margin-top:36px}
+.review-downloads{margin-bottom:48px}
+.review-summary{border-left:2px solid var(--plate-read-dim,#54565d);padding-left:20px}
+</style>
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/claudex-loop/"><span>Nº019 · Cross-model review</span></a>
+    <a href="/hugging-face.html"><span>Nº018 · Hugging Face</span></a>
+    <a href="/weights.html"><span>Nº016 · Open weight vs open source</span></a>
+    <a href="/shadow.html"><span>Nº014 · The dot product and attention</span></a>
+    <a href="/doorman.html"><span>Nº013 · Load balancers</span></a>
+    <a href="/algo.html"><span>Nº012 · Five machine learning algorithms</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Field guide</span><strong>N&ordm;019</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>System</span><strong>Cross-model review</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Model</span><strong>Plan, challenge, test</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Annotations</span><strong>Setup + runnable fixture</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp">Filed</span>
+        </div>
+      </div>
+
+<div class="journalArticle__article" id="guide">
+<h1 data-splitting="lines">Catch the lost edit before you ship.</h1>
+<p class="lead" data-splitting>You move a task to Done. An older save moves it back. Claudex Loop gives your development plan another model’s scrutiny before you build, then gives the code an independent inspection. Start with a review-only run. Use the fixture below to see what a test can actually prove.</p>
+<figure class="journalArticle__banner review-proof" id="proof">
+<img id="proof-image" src="assets/lost-edit.png" width="1080" height="840" alt="The approved diagnostic cutaway: the older save has moved the task back out of Done.">
+<div class="proof-switch" role="group" aria-label="Compare the two saves"><button type="button" data-proof="lost" aria-pressed="true">01 / Older save wins</button><button type="button" data-proof="protected" aria-pressed="false">02 / Version check</button></div>
+<figcaption class="monospace monospace__p" id="proof-caption"><b>The lost edit.</b> The task moves to Done, then an older save overwrites it. Compare the protected replay.</figcaption>
+</figure>
+<figure class="journalArticle__banner map" id="map">
+<svg viewBox="0 0 1200 360" role="img" aria-label="Plan review challenges assumptions before building. Then run behavior tests and inspect the code with the other provider.">
+<style>.rlabel{font-family:Mono,monospace;font-size:16px;fill:#abbac2;letter-spacing:1px}.rtitle{font-family:Mono,monospace;font-size:25px;fill:#cfd8dc}.rnote{font-family:Mono,monospace;font-size:17px;fill:#abbac2}.rline{stroke:#79b0cc;stroke-width:2;fill:none}</style>
+<text class="rlabel" x="20" y="36">CLAUDEX LOOP · REVIEW THE PLAN, THEN TEST THE BEHAVIOR</text>
+<path class="rline" d="M20 72H1180"/>
+<g><text class="rlabel" x="20" y="120">01 / DEFINE</text><text class="rtitle" x="20" y="164">Write the plan</text><text class="rnote" x="20" y="200">Name the behavior</text><text class="rnote" x="20" y="225">that must hold.</text></g>
+<g><text class="rlabel" x="322" y="120">02 / CHALLENGE</text><text class="rtitle" x="322" y="164">Other provider</text><text class="rnote" x="322" y="200">Find weak assumptions.</text><text class="rnote" x="322" y="225">Resolve the findings.</text></g>
+<g><text class="rlabel" x="624" y="120">03 / BUILD + TEST</text><text class="rtitle" x="624" y="164">Run the proof</text><text class="rnote" x="624" y="200">After authorization,</text><text class="rnote" x="624" y="225">build and test it.</text></g>
+<g><text class="rlabel" x="926" y="120">04 / INSPECT</text><text class="rtitle" x="926" y="164">Fresh review</text><text class="rnote" x="926" y="200">The other provider</text><text class="rnote" x="926" y="225">inspects the code.</text></g>
+<path class="rline" d="M260 157h35m-9-7 9 7-9 7M562 157h35m-9-7 9 7-9 7M864 157h35m-9-7 9 7-9 7"/>
+<path class="rline" d="M20 268H1180"/>
+<text class="rlabel" x="20" y="316">MODEL AGREEMENT IS NOT PROOF. CHECK WHAT THE TEST ACTUALLY EXERCISES.</text>
+</svg>
+<div class="map__phone"><div class="mband"><div class="mrung mrung--stage"><div class="mrung__box"><span class="mrung__n">01</span><h5 class="mrung__t">Write the plan<small>Name the behavior that must hold.</small></h5></div></div><p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span><span>then</span></p><div class="mrung mrung--stage"><div class="mrung__box"><span class="mrung__n">02</span><h5 class="mrung__t">Challenge the plan<small>The other provider finds weak assumptions. Resolve the findings.</small></h5></div></div><p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span><span>then</span></p><div class="mrung mrung--stage"><div class="mrung__box"><span class="mrung__n">03</span><h5 class="mrung__t">Build and test<small>After authorization, implement and run the behavior checks.</small></h5></div></div><p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span><span>then</span></p><div class="mrung mrung--stage"><div class="mrung__box"><span class="mrung__n">04</span><h5 class="mrung__t">Inspect the code<small>A fresh session from the other provider inspects the result.</small></h5></div></div></div></div><figcaption class="monospace monospace__p">The workflow. The lost-edit fixture below illustrates an application test; it is not a result measured from Claudex Loop.</figcaption></figure>
+<div class="buttons review-downloads">
+<a href="#install" class="button button__big hover_effect"><span>Set up Claudex Loop</span><span class="arrow">&#8599;</span></a>
+<a href="PLAN.md" download class="button button__big hover_effect"><span>Download the example plan</span><span class="arrow">&#8599;</span></a>
+<a href="fixture.mjs" download class="button button__big hover_effect"><span>Download the runnable test</span><span class="arrow">&#8599;</span></a>
+</div><hr><div id="prerequisites">
+        
+        <h4 aria-level="2" data-splitting="lines">Check these before you start.</h4>
+        <div class="review-prerequisites">
+          <div><p class="monospace monospace__p review-label">Both CLIs</p><p>For the full cross-provider workflow, install and authenticate both Claude Code and Codex. Check the host versions and login state before starting.</p></div>
+          <div><p class="monospace monospace__p review-label">Python 3.10+</p><p>The shared adapter uses Python 3.10 or newer. The README says no runtime pip packages or separate API keys are required for the adapter.</p></div>
+          <div><p class="monospace monospace__p review-label">A real plan</p><p>Give the reviewer a plan with requirements, decisions, acceptance checks, and a proof command. A vague prompt produces a vague objection list.</p></div>
+          <div><p class="monospace monospace__p review-label">Node.js for the fixture</p><p>The copyable proof fixture uses plain Node.js. It is an in-memory illustration of a stale write, not the Claudex Loop runtime.</p></div>
+        </div>
+      </div><hr><div id="install">
+        
+        <h4 aria-level="2" data-splitting="lines">Choose one route.</h4>
+        <p class="monospace monospace__p review-label">Claude Code plugin</p>
+        <pre class="review-code"><code>/plugin marketplace add chaseai-yt/claudex-loop
+/plugin install claudex-loop@claudex-loop</code></pre>
+        <p class="monospace monospace__p review-label">Codex or manual installation — macOS / Linux</p>
+        <pre class="review-code"><code>git clone https://github.com/chaseai-yt/claudex-loop.git
+cd claudex-loop
+mkdir -p ~/.agents/skills ~/.claude/skills
+cp -R skills/. ~/.agents/skills/
+cp -R skills/. ~/.claude/skills/</code></pre>
+        <p class="monospace monospace__p review-label">Codex or manual installation — Windows PowerShell</p>
+        <pre class="review-code"><code>git clone https://github.com/chaseai-yt/claudex-loop.git
+Set-Location claudex-loop
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.agents\skills", "$env:USERPROFILE\.claude\skills" | Out-Null
+Copy-Item -Recurse -Force skills\* "$env:USERPROFILE\.agents\skills\"
+Copy-Item -Recurse -Force skills\* "$env:USERPROFILE\.claude\skills\"</code></pre>
+        <div class="review-summary"><p>Open a new session after manual installation. The commands above are displayed setup instructions; this page does not install or execute the repository for you.</p></div>
+      </div><hr><div id="review">
+        
+        <h4 aria-level="2" data-splitting="lines">Review a plan before it can touch the code.</h4>
+        <p>Save the sample plan below as <code>PLAN.md</code>, then run the review mode from the host you are using. The command asks for findings and a verdict; it does not authorise implementation.</p>
+        <pre class="review-code"><code>claudex this plan, mode=review, plan=PLAN.md, rounds=3</code></pre>
+        <p class="monospace monospace__p review-label">A small plan with a proof boundary</p>
+        <pre class="review-code"><code># Add version checks to the task update path
+
+## Requirements
+
+- Preserve the user&#x27;s newest edit when an older save arrives later.
+- Reject stale writes with a clear, inspectable result.
+- Keep the change limited to the update path.
+
+## Acceptance checks
+
+- A current write is accepted.
+- A stale write is rejected.
+- A rejected stale save leaves the stored task in `Done` at its current version.
+- A current save increments the stored version; reusing its old base is rejected.
+- In production, the version predicate and write execute atomically in the database.
+
+## Proof command
+
+node fixture.mjs
+</code></pre>
+        <p>Ask the reviewer to challenge missing failure modes, ambiguous ownership, and whether the proof command can distinguish the old behaviour from the protected behaviour. Record the findings before deciding whether to implement.</p>
+      </div><hr><div id="fixture">
+        
+        <h4 aria-level="2" data-splitting="lines">Watch the lost update fail, then add the version check.</h4>
+        <p>This tiny plain-JavaScript fixture demonstrates the concept locally. It is an explanatory test, not a Claudex Loop benchmark or a report of a repository run.</p>
+        <pre class="review-code"><code>import assert from &#x27;node:assert/strict&#x27;;
+
+// Two editors read version 18. The first moves the task to Done.
+const initial = { status: &#x27;Doing&#x27;, version: 18 };
+const firstEdit = { expectedVersion: 18, patch: { status: &#x27;Done&#x27; } };
+const olderEdit = { expectedVersion: 18, patch: { status: &#x27;Doing&#x27; } };
+
+function save(stored, edit) {
+  if (edit.expectedVersion !== stored.version) {
+    return { accepted: false, task: stored };
+  }
+  return {
+    accepted: true,
+    task: { ...stored, ...edit.patch, version: stored.version + 1 }
+  };
+}
+
+const first = save(initial, firstEdit);
+assert.equal(first.accepted, true);
+assert.deepEqual(first.task, { status: &#x27;Done&#x27;, version: 19 });
+
+// BEFORE: accepting the older payload unconditionally loses the edit.
+const unsafe = { ...first.task, ...olderEdit.patch };
+assert.equal(unsafe.status, &#x27;Doing&#x27;);
+console.log(&#x27;BEFORE: Done -&gt; Doing; the older save overwrites the edit.&#x27;);
+
+// AFTER: the old base version no longer matches the stored version.
+const rejected = save(first.task, olderEdit);
+assert.equal(rejected.accepted, false);
+assert.deepEqual(rejected.task, first.task);
+console.log(&#x27;AFTER: stale save rejected; Done and version 19 preserved.&#x27;);
+
+// A current editor can still save; its next version is assigned by save().
+const current = save(first.task, {
+  expectedVersion: 19, patch: { status: &#x27;Archived&#x27; }
+});
+assert.equal(current.accepted, true);
+assert.deepEqual(current.task, { status: &#x27;Archived&#x27;, version: 20 });
+
+// Reusing that now-old base version must fail, even if the payload differs.
+assert.equal(save(current.task, {
+  expectedVersion: 19, patch: { status: &#x27;Doing&#x27; }
+}).accepted, false);
+console.log(&#x27;PASS: stale writes rejected and current writes accepted.&#x27;);
+
+// In production, compare expectedVersion and write in ONE atomic database
+// operation. This sequential in-memory example does not test a real database.
+</code></pre>
+        <p>Run it with <code>node fixture.mjs</code>. The unsafe path regresses <code>Done</code> to <code>Doing</code>. The guarded path preserves the newer state and rejects the stale write; a save based on the current stored version is accepted and receives a new version. In a real database, the version check and write must be one atomic conditional update, otherwise two writers can still race between the read and the write.</p>
+      </div><hr><div id="controls">
+        
+        <h4 aria-level="2" data-splitting="lines">Make the decision legible.</h4>
+        <p>Keep the plan path and review log explicit. Set <code>builder=claude</code> or <code>builder=codex</code> when the author matters; the inspector follows that builder choice and uses the other provider. The inspection defaults to on, while <code>inspect=off</code> is an explicit, logged opt-out. Carry the proof command into the run.</p>
+        <p>The runner records the plan path and SHA256 for approval. Changing the plan invalidates that approval. Later code changes need another independent inspection. These controls turn “looks fine” into a decision with a trace.</p>
+        <div class="review-summary"><p><strong>Suggested first boundary:</strong> review one real plan, inspect the findings, and stop. Only then decide whether this change is allowed to enter implementation.</p></div>
+      </div><hr><h4 aria-level="2" data-splitting="lines">Take it with you.</h4>
+<div class="buttons"><a href="https://github.com/chaseai-yt/claudex-loop" class="button button__big hover_effect"><span>The maintained repository</span><span class="arrow">&#8599;</span></a><a href="PLAN.md" download class="button button__big hover_effect"><span>Example plan</span><span class="arrow">&#8599;</span></a><a href="fixture.mjs" download class="button button__big hover_effect"><span>Runnable lost-edit test</span><span class="arrow">&#8599;</span></a></div>
+<!-- build:guidenav -->
+      <div class="guideNav">
+        <h4 aria-level="2" class="guideNav__head">Keep going</h4>
+        <div class="buttons">
+        <a href="/hugging-face.html" class="button button__big hover_effect"><span><em class="guideNav__kicker">Previous</em> Nº018 · Hugging Face</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__label">Related</p>
+        <div class="buttons">
+        <a href="/design-plugins.html" class="button button__big hover_effect"><span>Nº007 · Design plugins &mdash; Taste is installable.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/weights.html" class="button button__big hover_effect"><span>Nº016 · Open weight vs open source &mdash; Open weight is not open source.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/video-as-code.html" class="button button__big hover_effect"><span>Nº010 · Rendering video from code &mdash; Your video is a web page.</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__all"><a href="/guides/">All 17 guides &#8599;</a></p>
+      </div>
+<!-- /build:guidenav -->
+<div class="article__footer"><p class="monospace monospace__p opacity__50">Independent field guide. Source checked 20 September 2026 against the maintainer’s README. The fixture is an in-memory illustration, not a Claudex Loop benchmark or a database concurrency test.</p></div>
+</div></section></div>  <section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="/guides/" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="/claudex-loop/PLAN.md" class="button button__half hover_effect" title="Download the example plan"><span>Example plan</span> <span class="arrow">↗</span></a>
+          <a href="/claudex-loop/fixture.mjs" class="button button__half hover_effect" title="Download the runnable test"><span>Runnable test</span><span class="arrow">↗</span></a>
+          <a href="/privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+
+
+
+
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-09-20-hugging-face"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-09-20-hugging-face"></script>
+<script src="/assets/js/splitting.min.js?v=2026-09-20-hugging-face"></script>
+<script src="/assets/js/site.js?v=2026-09-20-hugging-face" type="module"></script>
+<!-- /build:scripts -->
+<script>
+const proofImage=document.getElementById('proof-image'),proofCaption=document.getElementById('proof-caption');
+document.querySelectorAll('[data-proof]').forEach(button=>button.addEventListener('click',()=>{
+ const protectedEdit=button.dataset.proof==='protected';
+ proofImage.src=protectedEdit?'assets/protected-edit.png':'assets/lost-edit.png';
+ proofImage.alt=protectedEdit?'Protected replay: the version check rejects the older save, preserving the green task in Done.':'The older save has moved the task back out of Done.';
+ proofCaption.replaceChildren();
+ const title=document.createElement('b');title.textContent=protectedEdit?'The protected replay. ':'The lost edit. ';proofCaption.append(title,protectedEdit?'Reject the stale write. The newer edit stays in Done. This is an illustrative application test.':'The task moves to Done, then an older save overwrites it. Compare the protected replay.');
+ document.querySelectorAll('[data-proof]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+}));
+</script>
+</body>
+</html>
