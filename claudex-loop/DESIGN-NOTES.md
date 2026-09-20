@@ -26,3 +26,7 @@ node claudex-loop/fixture.mjs
 The pre-commit hook now restages generated HTML only when that exact file was already staged, including the archive. This preserves explicit-path staging and prevents a companion-page edit from sweeping unrelated archive changes into its commit. Existing global checks still run in the hook.
 
 No publication or live delivery change is included.
+
+## Approved layout; code contrast correction
+
+On 2026-09-20 the founder called the rebuilt page “perfect except u can't read the text in these boxes,” pointing to `builder=claude`, `builder=codex`, and `inspect=off`. Preserve the page design; the correction is scoped to `#guide p code`, with light ink `#cfd8dc` on the existing dark code treatment `#04111f`. Computed contrast measured on 2026-09-20 is 13.13:1 in Paper and Panel at desktop and mobile widths; local evidence is `C:/Users/julia/projects/out/claudex-code-contrast/report.json`. No layout or video source changed.
