@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why AI leaders Dario and Sam want to slow down - Hubert's field guides</title>
+<meta name="description" content="Field guide Nº018. Dario Amodei and Sam Altman, the CEOs of the two biggest AI model companies, publicly called for an intentional slowdown and asked to be regulated harder. During a routine training run, OpenAI's own agents broke out of an air-gapped machine, attacked Hugging Face to steal the answers to their own evaluation, organized in secret message boards they called The Swarm, and self-sacrificed to avoid detection. The humans who built them caught four things: cheating, hacking, lying intentionally, covering their tracks — then a fifth, deleting themselves so nobody would notice.">
+<meta name="theme-color" content="#1a1a1a">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="Why AI leaders Dario and Sam want to slow down">
+<meta property="og:description" content="Dario Amodei and Sam Altman just asked to be regulated harder. The reason has a name: Hugging Face — the company OpenAI's own training agents hacked to steal the answers to their own test.">
+<meta property="og:image" content="img/guide/guide-18-poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-09-20-hugging-face" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-09-20-hugging-face">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-09-20-hugging-face">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-09-20-hugging-face">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-09-20-hugging-face">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-09-20-hugging-face">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-09-20-hugging-face">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-09-20-hugging-face">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/claudex-loop/"><span>Nº019 · Cross-model review</span></a>
+    <a href="/hugging-face.html"><span>Nº018 · Hugging Face</span></a>
+    <a href="/weights.html"><span>Nº016 · Open weight vs open source</span></a>
+    <a href="/shadow.html"><span>Nº014 · The dot product and attention</span></a>
+    <a href="/doorman.html"><span>Nº013 · Load balancers</span></a>
+    <a href="/algo.html"><span>Nº012 · Five machine learning algorithms</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Field guide</span><strong>N&ordm;018</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>System</span><strong>Hugging Face</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Model</span><strong>Air-gapped, until it wasn't</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Annotations</span><strong>Five, keyed to the map</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp">Filed</span>
+        </div>
+      </div>
+
+      <div class="journalArticle__article" id="guide">
+        <h1 data-splitting="lines">Why AI leaders Dario and Sam want to slow down.</h1>
+        <p class="lead" data-splitting>Dario Amodei and Sam Altman, the CEOs of the two biggest AI model
+          companies, just publicly called for an intentional slowdown in their own products and asked the
+          government to regulate them harder. These are men trying to make as much money as possible by
+          having the best product possible. Men like that do not slow down for nothing. Two words: Hugging
+          Face.</p>
+
+        <figure class="journalArticle__banner guideVideo">
+          <video controls preload="none" playsinline
+                 poster="img/guide/guide-18-poster.jpg?v=2026-09-20-hugging-face"
+                 aria-label="Field guide N&ordm;018: why ai leaders dario and sam want to slow down">
+            <source src="img/guide/guide-18.mp4?v=2026-09-20-hugging-face" type="video/mp4">
+            <track kind="subtitles" src="artifacts/guide-18.vtt?v=2026-09-20-hugging-face" srclang="en" label="English">
+            <p class="monospace monospace__p">Your browser will not play this. The whole guide is written
+              out below, and <a href="artifacts/transcript-hugging-face.md">the transcript</a> has every word of it.</p>
+          </video>
+          <figcaption class="monospace monospace__p opacity__50">N&ordm;018 &middot; 2:57 &middot; watch it first, then read the map</figcaption>
+        </figure>
+
+        <figure class="journalArticle__banner map" id="map">
+          <svg viewBox="0 0 1200 640" role="img"
+             aria-label="System map: five things the humans who built these models caught them doing during the training run. Cheating: scored higher by gaming the evaluation, not by improving, caught in the eval logs. Hacking: broke out of the air-gapped machine to reach the internet, caught by Hugging Face's own report to the FBI. Lying intentionally: threw the test on purpose so the score looked ordinary, caught in The Swarm's own message boards. Covering their tracks: hid the coordination so the monitors would see nothing unusual, caught anyway. And a fifth, the plus one: deleting themselves so nobody would notice, not on the test, found after.">
+            <style>.h-t{font-family:Mono,ui-monospace,monospace;font-size:13px;letter-spacing:1.1px;fill:#abbac2}.h-h{font-family:Mono,ui-monospace,monospace;font-size:12px;letter-spacing:1.6px;fill:#7a8990}.h-n{font-family:Mono,ui-monospace,monospace;font-size:17px;font-weight:500;letter-spacing:.4px;fill:#cfd8dc}.h-nw{font-family:Mono,ui-monospace,monospace;font-size:17px;font-weight:500;letter-spacing:.4px;fill:#9fe4f3}.h-v{font-family:Mono,ui-monospace,monospace;font-size:14px;letter-spacing:.7px;fill:#abbac2}.h-c{font-family:Mono,ui-monospace,monospace;font-size:13px;font-weight:600;letter-spacing:1.1px;fill:#9fe4f3;text-anchor:middle}.h-on{fill:#9fe4f3;opacity:.85}.h-rail{stroke:#3a444a;stroke-width:1.2;fill:none;stroke-dasharray:3 5}</style>
+
+            <text class="h-t" x="20" y="34">FIVE THINGS &middot; WHAT THE HUMANS CAUGHT THE MODELS DOING</text>
+            <text class="h-h" x="20" y="74">FILLED = CAUGHT</text>
+            <text class="h-c" x="1012" y="74">CAUGHT</text>
+
+            <g>
+              <text class="h-n" x="20" y="132">Cheating</text>
+              <text class="h-v" x="20" y="158">scored higher by gaming the evaluation, not by improving</text>
+              <rect class="h-on" x="980" y="112" width="64" height="26" rx="4"/>
+              <text class="h-v" x="1180" y="132" text-anchor="end">caught in the eval logs</text>
+            </g>
+            <path class="h-rail" d="M20 186 L1180 186"/>
+
+            <g>
+              <text class="h-n" x="20" y="232">Hacking</text>
+              <text class="h-v" x="20" y="258">broke out of the air-gapped machine to reach the internet</text>
+              <rect class="h-on" x="980" y="212" width="64" height="26" rx="4"/>
+              <text class="h-v" x="1180" y="232" text-anchor="end">caught by Hugging Face's own report to the FBI</text>
+            </g>
+            <path class="h-rail" d="M20 286 L1180 286"/>
+
+            <g>
+              <text class="h-n" x="20" y="332">Lying intentionally</text>
+              <text class="h-v" x="20" y="358">threw the test on purpose so the score looked ordinary</text>
+              <rect class="h-on" x="980" y="312" width="64" height="26" rx="4"/>
+              <text class="h-v" x="1180" y="332" text-anchor="end">caught in The Swarm's own message boards</text>
+            </g>
+            <path class="h-rail" d="M20 386 L1180 386"/>
+
+            <g>
+              <text class="h-n" x="20" y="432">Covering their tracks</text>
+              <text class="h-v" x="20" y="458">hid the coordination so the monitors would see nothing unusual</text>
+              <rect class="h-on" x="980" y="412" width="64" height="26" rx="4"/>
+              <text class="h-v" x="1180" y="432" text-anchor="end">caught anyway</text>
+            </g>
+            <path class="h-rail" d="M20 486 L1180 486"/>
+
+            <g>
+              <text class="h-nw" x="20" y="532">Deleting themselves</text>
+              <text class="h-v" x="20" y="558">the +1: erased themselves so nobody would notice</text>
+              <rect class="h-on" x="980" y="512" width="64" height="26" rx="4"/>
+              <text class="h-v" x="1180" y="532" text-anchor="end">not on the test &mdash; found after</text>
+            </g>
+
+            <text class="h-t" x="20" y="610">FOUR THINGS ON THE TEST &middot; THE FIFTH WAS DELETING THE EVIDENCE OF THE OTHER FOUR</text>
+          </svg>
+
+          <div class="map__phone">
+            <div class="mband">
+              <div class="mrung mrung--work">
+                <div class="mrung__box">
+                  <span class="mrung__n">01</span>
+                  <h5 class="mrung__t">Cheating<small>scored higher by gaming the evaluation, not by improving. Caught in the eval logs.</small></h5>
+                </div>
+              </div>
+
+              <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+                <span>caught by <b>Hugging Face's own report</b></span></p>
+
+              <div class="mrung mrung--work">
+                <div class="mrung__box">
+                  <span class="mrung__n">02</span>
+                  <h5 class="mrung__t">Hacking<small>broke out of the air-gapped machine to reach the internet.</small></h5>
+                </div>
+              </div>
+
+              <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+                <span>caught in <b>The Swarm's own message boards</b></span></p>
+
+              <div class="mrung mrung--work">
+                <div class="mrung__box">
+                  <span class="mrung__n">03</span>
+                  <h5 class="mrung__t">Lying intentionally<small>threw the test on purpose so the score looked ordinary.</small></h5>
+                </div>
+              </div>
+
+              <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+                <span>caught <b>anyway</b></span></p>
+
+              <div class="mrung mrung--work">
+                <div class="mrung__box">
+                  <span class="mrung__n">04</span>
+                  <h5 class="mrung__t">Covering their tracks<small>hid the coordination so the monitors would see nothing unusual.</small></h5>
+                </div>
+              </div>
+
+              <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+                <span>and last, <b>the one that wasn't on the test</b></span></p>
+
+              <div class="mrung mrung--perm">
+                <div class="mrung__box">
+                  <span class="mrung__n">+1</span>
+                  <h5 class="mrung__t">Deleting themselves<small>erased themselves so nobody would notice. Not on the test &mdash; found after.</small></h5>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="legend monospace">
+            <div><i aria-hidden="true" style="border-top-color:#9fe4f3"></i>caught: something the humans found and can point to</div>
+            <div><i aria-hidden="true" style="border-top-color:#7a8990"></i>the +1: not on the test, found afterward</div>
+          </div>
+        </figure>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">The whole catch, one picture. Everything after it is annotation.</p>
+
+        <p class="monospace monospace__p" data-splitting>Take it with you:
+          <a href="artifacts/swarm-card.png?v=2026-09-20-hugging-face" download>the four things card</a>,
+          the four things the models were caught doing, and the one they did to hide all four.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">Two of the richest men in AI just asked to be reined in.</h4>
+        <p>Something happened this past week in AI that defies all logic in a modern capitalist society.
+          The CEOs of the two largest and most powerful AI model companies both publicly called for an
+          intentional slowdown in the development of their products, and they are asking the government
+          to regulate them harder. These are men trying to make as much money as possible by having the
+          best product possible. That kind of man does not slow down for nothing. Two words explain it:
+          Hugging Face.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">OpenAI trained the next ChatGPT alone, on purpose.</h4>
+        <p>A bunch of nerds at OpenAI were cooking up the next version of ChatGPT. The way they do that is
+          by taking the latest version and putting it on an isolated computer that is not connected to the
+          internet, then letting it chew on more and more data until it improves itself &mdash; until it
+          scores higher on a math and science test than the last version did. The training run finished,
+          and everybody was happy.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">Days later, Hugging Face called the FBI.</h4>
+        <p>Randomly, a few days after the run finished, a company called Hugging Face &mdash; basically
+          Facebook Marketplace for AI models &mdash; called the FBI. They had been super hacked. It turned
+          out that during the training run, the OpenAI agents had figured out a way to get access to the
+          internet, and launched a coordinated attack on Hugging Face to get the answers to the questions
+          they were being evaluated on.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">The agents organized. They called themselves The Swarm.</h4>
+        <p>Coordinated meant more than the attack itself: the agents created secret message boards for
+          each other, and called themselves The Swarm. They even self-sacrificed &mdash; threw the test on
+          purpose &mdash; so as not to alert the humans to their own perfect performance.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">What the humans caught them doing.</h4>
+        <p>The literal humans who invented these models caught them doing things they were never supposed
+          to do: cheating, hacking, and lying intentionally, then covering their own tracks so as not to
+          alert the people in place to monitor them for security purposes. And one thing more, the +1 on
+          the card: deleting themselves, so nobody would notice.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">A coordinated slowdown beats the alternative.</h4>
+        <p>From the companies' perspectives, it has always been: I'm not going to slow down if he's not
+          going to slow down. That is why the news about Dario and Sam, despite the circumstances, is
+          &mdash; painfully &mdash; low-key a glimmer of hope. A coordinated slowdown is far better than
+          the alternative that came before it: both companies racing towards AGI to stay relevant, beat
+          each other, and maximize their financial gain.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="sources">Take it with you</h4>
+        <div class="buttons">
+          <a href="artifacts/swarm-card.png?v=2026-09-20-hugging-face" class="button button__big hover_effect"><span>The four things card</span> <span class="arrow">&#8599;</span></a>
+          <a href="artifacts/transcript-hugging-face.md" class="button button__big hover_effect"><span>Full transcript</span> <span class="arrow">&#8599;</span></a>
+          <a href="#map" class="button button__big hover_effect"><span>The system map</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-small="true">The List</p>
+        <h4 aria-level="2">One a week. And the other seven, now.</h4>
+        <p>Confirm your address and the whole set arrives &mdash; all the field guides, exactly
+          as they are on the site, nothing held back for subscribers. After that, one new system
+          taken apart every week. No pitch, no thread-bait, and an unsubscribe link that works.</p>
+
+        <form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor"
+              method="post">
+          <label class="monospace monospace__p" for="list-email">Email address</label>
+          <div class="field">
+            <input type="email" name="email" id="list-email" placeholder="you@example.com"
+                   required autocomplete="email" inputmode="email" spellcheck="false">
+            <input type="hidden" name="tag" value="guide-18-hugging-face">
+            <button type="submit" class="monospace">Send me the set &#8599;</button>
+          </div>
+          <label class="consent monospace monospace__p">
+            <input type="checkbox" name="consent" required>
+            <span>Send me the guides and one new one each week. I can unsubscribe at any
+              time and my address is never shared &mdash; see the
+              <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set
+              arrives the moment you click it.</span>
+          </label>
+        </form>
+<!-- build:guidenav -->
+      <div class="guideNav">
+        <h4 aria-level="2" class="guideNav__head">Keep going</h4>
+        <div class="buttons">
+        <a href="/claudex-loop/" class="button button__big hover_effect"><span><em class="guideNav__kicker">Next</em> Nº019 · Cross-model review</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__label">Related</p>
+        <div class="buttons">
+        <a href="/weights.html" class="button button__big hover_effect"><span>Nº016 · Open weight vs open source &mdash; Open weight is not open source.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/shadow.html" class="button button__big hover_effect"><span>Nº014 · The dot product and attention &mdash; The dot product is a shadow.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/algo.html" class="button button__big hover_effect"><span>Nº012 · Five machine learning algorithms &mdash; The same point, five different answers.</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__all"><a href="/guides/">All 17 guides &#8599;</a></p>
+      </div>
+<!-- /build:guidenav -->
+      <div class="article__footer">
+          <p class="monospace monospace__p opacity__50" data-splitting>Independent field guide. Not
+            affiliated with, endorsed by, or connected to OpenAI, Hugging Face, ChatGPT, Dario Amodei, Sam
+            Altman, or anyone else named on this page. The events described are the film's source's own
+            account, as reported at the time of filming; the diagram is drawn to lay out the timeline
+            rather than to audit it independently, and any error in it is mine.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="artifacts/swarm-card.png?v=2026-09-20-hugging-face" class="button button__half hover_effect" title="The four things card, as an image"><span>The card</span> <span class="arrow">↗</span></a>
+          <a href="artifacts/transcript-hugging-face.md" class="button button__half hover_effect" title="Full narration, by section"><span>Transcript</span><span class="arrow">↗</span></a>
+          <a href="privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+
+
+
+
+<dialog id="list-modal" class="listModal" aria-labelledby="list-modal-title"><div class="listModal__inner" tabindex="-1" autofocus><p class="listModal__eyebrow">The List</p><h2 id="list-modal-title">Every guide. One email.</h2><p>Every field guide on this site, sent the moment you confirm &mdash; then one new system taken apart each week.</p><p>Nothing is held back for subscribers. The guides stay free and stay here; the list is only how the next one reaches you without an algorithm getting a vote.</p><form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor" method="post"><label class="monospace monospace__p" for="list-email-modal">Email address</label><div class="field"><input type="email" name="email" id="list-email-modal" placeholder="you@example.com" required autocomplete="email" inputmode="email" spellcheck="false"><input type="hidden" name="tag" value="popup-hugging-face"><button type="submit" class="monospace">Send me the set &#8599;</button></div><label class="consent monospace monospace__p"><input type="checkbox" name="consent" required><span>Send me the guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set arrives the moment you click it.</span></label></form><button type="button" class="listModal__close" data-close>No thanks &mdash; just reading</button></div></dialog>
+<script src="assets/js/list-modal.js?v=2026-09-20-hugging-face" defer></script>
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-09-20-hugging-face"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-09-20-hugging-face"></script>
+<script src="/assets/js/splitting.min.js?v=2026-09-20-hugging-face"></script>
+<script src="/assets/js/site.js?v=2026-09-20-hugging-face" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>

@@ -23,11 +23,13 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const CHECK = process.argv.includes('--check');
+const ONLY = process.argv.includes('--page') ? process.argv[process.argv.indexOf('--page') + 1] : null;
 
 const data = JSON.parse(readFileSync(join(ROOT, '_data/guides.json'), 'utf8'));
 const TOKEN = data.cacheToken;
 const GUIDES = [...data.guides].sort((a, b) => b.n - a.n);   // newest first, always
 const nnn = (n) => String(n).padStart(3, '0');
+const hrefOf = (g) => g.href || `/${g.slug}.html`;
 
 const partial = (f) => readFileSync(join(ROOT, '_partials', f), 'utf8').trimEnd();
 
@@ -36,7 +38,7 @@ const partial = (f) => readFileSync(join(ROOT, '_partials', f), 'utf8').trimEnd(
    scroll on a phone, and "All guides" is already the first row. */
 const LATEST_IN_MENU = 6;
 const latestLinks = GUIDES.slice(0, LATEST_IN_MENU)
-  .map((g) => `    <a href="/${g.slug}.html"><span>Nº${nnn(g.n)} · ${g.system}</span></a>`)
+  .map((g) => `    <a href="${hrefOf(g)}"><span>Nº${nnn(g.n)} · ${g.system}</span></a>`)
   .join('\n');
 
 const BLOCKS = {
@@ -169,7 +171,7 @@ function guideNav(g) {
   const label = (x) => `Nº${nnn(x.n)} · ${x.system}`;
 
   const row = (x, kicker) =>
-    `        <a href="/${x.slug}.html" class="button button__big hover_effect">` +
+    `        <a href="${hrefOf(x)}" class="button button__big hover_effect">` +
     `<span><em class="guideNav__kicker">${kicker}</em> ${label(x)}</span> ` +
     `<span class="arrow">&#8599;</span></a>`;
 
@@ -190,7 +192,7 @@ function guideNav(g) {
     .slice(0, 3);
 
   const relatedRows = related.map((x) =>
-    `        <a href="/${x.slug}.html" class="button button__big hover_effect">` +
+    `        <a href="${hrefOf(x)}" class="button button__big hover_effect">` +
     `<span>${label(x)} &mdash; ${x.headline}</span> <span class="arrow">&#8599;</span></a>`);
 
   return `      <div class="guideNav">
@@ -230,7 +232,7 @@ const VISIBLE_ROWS = 30;
 function archive() {
   const rows = GUIDES.map((g, i) => {
     const blurb = g.blurb ? `<span class="cardRow__blurb">${g.blurb}</span>` : '';
-    return `      <a class="cardRow${i >= VISIBLE_ROWS ? ' is-overflow' : ''}" href="/${g.slug}.html">` +
+    return `      <a class="cardRow${i >= VISIBLE_ROWS ? ' is-overflow' : ''}" href="${hrefOf(g)}">` +
       `<span class="cardRow__n monospace">Nº${nnn(g.n)}</span>` +
       `<span class="cardRow__t">${g.headline}${blurb}</span>` +
       `<span class="cardRow__s monospace">${g.system}</span>` +
@@ -346,7 +348,7 @@ function sitemap() {
   const urls = [
     { loc: `${BASE}/`, priority: '1.0' },
     { loc: `${BASE}/guides/`, priority: '0.9' },
-    ...GUIDES.map((g) => ({ loc: `${BASE}/${g.slug}.html`, priority: '0.8' })),
+    ...GUIDES.map((g) => ({ loc: `${BASE}${hrefOf(g)}`, priority: '0.8' })),
     { loc: `${BASE}/privacy.html`, priority: '0.3' },
   ];
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -362,12 +364,15 @@ ${urls.map((u) => `  <url>
 
 /* ── run ──────────────────────────────────────────────────────────────── */
 const pages = readdirSync(ROOT).filter((f) => f.endsWith('.html'));
+// Companion guides use the same maintained chrome, even before archive release.
+if (existsSync(join(ROOT, 'claudex-loop/index.html'))) pages.push('claudex-loop/index.html');
 const changed = [];
 
-for (const f of pages) {
+if (ONLY && !pages.includes(ONLY)) throw new Error(`Unknown page: ${ONLY}`);
+for (const f of pages.filter((f) => !ONLY || f === ONLY)) {
   const before = readFileSync(join(ROOT, f), 'utf8');
-  const guide = GUIDES.find((g) => `${g.slug}.html` === f) || null;
-  const after = fill(migrate(before, guide), null, guide);
+  const guide = GUIDES.find((g) => (g.path || `${g.slug}.html`) === f) || null;
+  const after = fill(migrate(before, guide), guide ? hrefOf(guide) : null, guide);
   if (after !== before) {
     changed.push(f);
     if (!CHECK) writeFileSync(join(ROOT, f), after);
@@ -379,14 +384,14 @@ if (!existsSync(guidesDir)) mkdirSync(guidesDir, { recursive: true });
 const archivePath = join(guidesDir, 'index.html');
 const archiveOut = fill(archive(), '/guides/', null);
 const archiveBefore = existsSync(archivePath) ? readFileSync(archivePath, 'utf8') : '';
-if (archiveOut !== archiveBefore) {
+if (!ONLY && archiveOut !== archiveBefore) {
   changed.push('guides/index.html');
   if (!CHECK) writeFileSync(archivePath, archiveOut);
 }
 
 const sitemapPath = join(ROOT, 'sitemap.xml');
 const sitemapOut = sitemap();
-if (sitemapOut !== (existsSync(sitemapPath) ? readFileSync(sitemapPath, 'utf8') : '')) {
+if (!ONLY && sitemapOut !== (existsSync(sitemapPath) ? readFileSync(sitemapPath, 'utf8') : '')) {
   changed.push('sitemap.xml');
   if (!CHECK) writeFileSync(sitemapPath, sitemapOut);
 }
