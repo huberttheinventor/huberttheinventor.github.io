@@ -366,6 +366,7 @@ ${urls.map((u) => `  <url>
 const pages = readdirSync(ROOT).filter((f) => f.endsWith('.html'));
 // Companion guides use the same maintained chrome, even before archive release.
 if (existsSync(join(ROOT, 'claudex-loop/index.html'))) pages.push('claudex-loop/index.html');
+if (existsSync(join(ROOT, 'quantum/index.html'))) pages.push('quantum/index.html');
 const changed = [];
 
 if (ONLY && !pages.includes(ONLY)) throw new Error(`Unknown page: ${ONLY}`);

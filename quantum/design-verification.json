@@ -1,0 +1,336 @@
+{
+  "date": "2026-09-21T19:41:46.800Z",
+  "reference": "shadow.html",
+  "source": "Chromium computed styles and actual interactions",
+  "cases": [
+    {
+      "width": 320,
+      "paper": {
+        "h1": {
+          "font": "SemiSqueezed, sans-serif",
+          "size": "40px",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "lead": {
+          "font": "SemiSqueezed, serif",
+          "size": "30px",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "prose": {
+          "font": "Graphik, sans-serif",
+          "size": "20px",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "meta": {
+          "font": "Mono",
+          "size": "14px",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "plate": {
+          "font": "Graphik, sans-serif",
+          "size": "20px",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgb(213, 214, 219)"
+        },
+        "footer": {
+          "font": "Graphik, sans-serif",
+          "size": "20px",
+          "color": "rgb(186, 186, 186)",
+          "background": "rgb(3, 4, 156)"
+        },
+        "header": {
+          "font": "Graphik, sans-serif",
+          "size": "20px",
+          "color": "rgb(186, 186, 186)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "fonts": [
+          "Graphik",
+          "SemiSqueezed",
+          "Mono"
+        ],
+        "viewport": 320,
+        "scroll": 320
+      },
+      "panel": {
+        "h1": {
+          "font": "SemiSqueezed, sans-serif",
+          "size": "40px",
+          "color": "rgb(210, 212, 218)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "lead": {
+          "font": "SemiSqueezed, serif",
+          "size": "30px",
+          "color": "rgb(210, 212, 218)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "prose": {
+          "font": "Graphik, sans-serif",
+          "size": "20px",
+          "color": "rgb(210, 212, 218)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "meta": {
+          "font": "Mono",
+          "size": "14px",
+          "color": "rgb(210, 212, 218)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "plate": {
+          "font": "Graphik, sans-serif",
+          "size": "20px",
+          "color": "rgb(210, 212, 218)",
+          "background": "rgb(34, 36, 43)"
+        },
+        "footer": {
+          "font": "Graphik, sans-serif",
+          "size": "20px",
+          "color": "rgb(186, 186, 186)",
+          "background": "rgb(3, 4, 156)"
+        },
+        "header": {
+          "font": "Graphik, sans-serif",
+          "size": "20px",
+          "color": "rgb(186, 186, 186)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "fonts": [
+          "Graphik",
+          "SemiSqueezed",
+          "Mono"
+        ],
+        "viewport": 320,
+        "scroll": 320
+      },
+      "probabilityControls": "pass 0/50/80/100",
+      "readingToggle": "pass including persistence",
+      "localLinks": "pass",
+      "errors": []
+    },
+    {
+      "width": 390,
+      "paper": {
+        "h1": {
+          "font": "SemiSqueezed, sans-serif",
+          "size": "40px",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "lead": {
+          "font": "SemiSqueezed, serif",
+          "size": "30px",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "prose": {
+          "font": "Graphik, sans-serif",
+          "size": "20px",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "meta": {
+          "font": "Mono",
+          "size": "14px",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "plate": {
+          "font": "Graphik, sans-serif",
+          "size": "20px",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgb(213, 214, 219)"
+        },
+        "footer": {
+          "font": "Graphik, sans-serif",
+          "size": "20px",
+          "color": "rgb(186, 186, 186)",
+          "background": "rgb(3, 4, 156)"
+        },
+        "header": {
+          "font": "Graphik, sans-serif",
+          "size": "20px",
+          "color": "rgb(186, 186, 186)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "fonts": [
+          "Graphik",
+          "SemiSqueezed",
+          "Mono"
+        ],
+        "viewport": 390,
+        "scroll": 390
+      },
+      "panel": {
+        "h1": {
+          "font": "SemiSqueezed, sans-serif",
+          "size": "40px",
+          "color": "rgb(210, 212, 218)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "lead": {
+          "font": "SemiSqueezed, serif",
+          "size": "30px",
+          "color": "rgb(210, 212, 218)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "prose": {
+          "font": "Graphik, sans-serif",
+          "size": "20px",
+          "color": "rgb(210, 212, 218)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "meta": {
+          "font": "Mono",
+          "size": "14px",
+          "color": "rgb(210, 212, 218)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "plate": {
+          "font": "Graphik, sans-serif",
+          "size": "20px",
+          "color": "rgb(210, 212, 218)",
+          "background": "rgb(34, 36, 43)"
+        },
+        "footer": {
+          "font": "Graphik, sans-serif",
+          "size": "20px",
+          "color": "rgb(186, 186, 186)",
+          "background": "rgb(3, 4, 156)"
+        },
+        "header": {
+          "font": "Graphik, sans-serif",
+          "size": "20px",
+          "color": "rgb(186, 186, 186)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "fonts": [
+          "Graphik",
+          "SemiSqueezed",
+          "Mono"
+        ],
+        "viewport": 390,
+        "scroll": 390
+      },
+      "probabilityControls": "pass 0/50/80/100",
+      "readingToggle": "pass including persistence",
+      "localLinks": "pass",
+      "errors": []
+    },
+    {
+      "width": 1440,
+      "paper": {
+        "h1": {
+          "font": "SemiSqueezed, sans-serif",
+          "size": "86.4px",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "lead": {
+          "font": "SemiSqueezed, serif",
+          "size": "40.32px",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "prose": {
+          "font": "Graphik, sans-serif",
+          "size": "24.48px",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "meta": {
+          "font": "Mono",
+          "size": "14px",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "plate": {
+          "font": "Graphik, sans-serif",
+          "size": "24.48px",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgb(213, 214, 219)"
+        },
+        "footer": {
+          "font": "Graphik, sans-serif",
+          "size": "24.48px",
+          "color": "rgb(186, 186, 186)",
+          "background": "rgb(3, 4, 156)"
+        },
+        "header": {
+          "font": "Graphik, sans-serif",
+          "size": "24.48px",
+          "color": "rgb(186, 186, 186)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "fonts": [
+          "Graphik",
+          "SemiSqueezed",
+          "Mono"
+        ],
+        "viewport": 1440,
+        "scroll": 1440
+      },
+      "panel": {
+        "h1": {
+          "font": "SemiSqueezed, sans-serif",
+          "size": "86.4px",
+          "color": "rgb(210, 212, 218)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "lead": {
+          "font": "SemiSqueezed, serif",
+          "size": "40.32px",
+          "color": "rgb(210, 212, 218)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "prose": {
+          "font": "Graphik, sans-serif",
+          "size": "24.48px",
+          "color": "rgb(210, 212, 218)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "meta": {
+          "font": "Mono",
+          "size": "14px",
+          "color": "rgb(210, 212, 218)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "plate": {
+          "font": "Graphik, sans-serif",
+          "size": "24.48px",
+          "color": "rgb(210, 212, 218)",
+          "background": "rgb(34, 36, 43)"
+        },
+        "footer": {
+          "font": "Graphik, sans-serif",
+          "size": "24.48px",
+          "color": "rgb(186, 186, 186)",
+          "background": "rgb(3, 4, 156)"
+        },
+        "header": {
+          "font": "Graphik, sans-serif",
+          "size": "24.48px",
+          "color": "rgb(186, 186, 186)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "fonts": [
+          "Graphik",
+          "SemiSqueezed",
+          "Mono"
+        ],
+        "viewport": 1440,
+        "scroll": 1440
+      },
+      "probabilityControls": "pass 0/50/80/100",
+      "readingToggle": "pass including persistence",
+      "localLinks": "pass",
+      "errors": []
+    }
+  ],
+  "noJavaScript": "Readable article, static map, download; nonfunctional controls hidden",
+  "ok": true
+}
