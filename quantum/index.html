@@ -1,49 +1,296 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Quantum measurement — Hubert the Inventor</title>
-  <meta name="description" content="A visual guide to spin measurements, preparation odds, eigenstates and eigenvalues.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
-  <style>
-    @font-face{font-family:HubertDisplay;src:url("./display.woff2") format("woff2");font-weight:500;font-display:swap}:root{--paper:#f6f2ea;--paper-2:#eee9df;--ink:#182029;--ink-soft:#52616d;--faint:#7e8791;--midnight:#000d18;--aqua:#7ca4bd;--bright:#a8d3e8;--sun:#fffbc7;--marine:#085d7f;--rule:rgba(24,32,41,.2);--font-display:Archivo,"Helvetica Neue",sans-serif;--font-body:Newsreader,Georgia,serif;--font-mono:"JetBrains Mono",ui-monospace,monospace}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-body);line-height:1.48}body:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.055;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)'/%3E%3C/svg%3E")}
-    a{color:inherit;text-underline-offset:.2em}h1,h2,h3{font-family:var(--font-display);font-weight:500;line-height:1.02;letter-spacing:-.03em;margin:0}h1{font-size:clamp(3.4rem,8vw,8rem);max-width:10ch}h2{font-size:clamp(2.1rem,5vw,4.8rem);max-width:12ch}h3{font-size:1.35rem;letter-spacing:-.015em}p{max-width:39rem}.mono{font:500 .72rem/1.3 var(--font-mono);letter-spacing:.14em;text-transform:uppercase}.rail{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;gap:1rem;padding:14px clamp(20px,5vw,72px);background:rgba(246,242,234,.88);backdrop-filter:blur(8px);border-bottom:1px solid rgba(24,32,41,.12)}.live{display:flex;align-items:center;gap:12px;color:var(--ink)}.brand-lockup{display:flex;align-items:center;gap:12px}.brand-dot{color:#01ea0d;font:500 22px/1 Arial,sans-serif;text-shadow:0 0 .15em rgba(60,255,123,.25),0 0 .5em rgba(60,255,123,.25)}.brand-wordmark{width:116px;height:auto;display:block}.brand-wordmark text{font-family:HubertDisplay,"Arial Narrow",sans-serif;font-weight:500}main{max-width:1320px;margin:auto}.hero{padding:clamp(80px,14vw,180px) clamp(20px,7vw,104px) 90px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr);gap:clamp(36px,8vw,120px);align-items:end}.hero-copy{font-size:clamp(1.2rem,2vw,1.7rem);max-width:28rem}.hero .mono{margin-bottom:22px;color:var(--marine)}.dark{background:var(--midnight);color:#c8deec;padding:clamp(60px,8vw,110px) clamp(20px,7vw,104px)}.dark h2,.dark h3{color:var(--sun)}.dark p{color:#c8deec}.section{padding:clamp(60px,8vw,110px) clamp(20px,7vw,104px)}.section-grid{display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr);gap:clamp(30px,7vw,100px);align-items:start}.rule{border-top:1px solid var(--rule);margin-top:36px;padding-top:18px}.guide-svg{width:100%;height:auto;display:block}.control{margin-top:24px;display:grid;gap:12px}.control-row{display:flex;align-items:baseline;justify-content:space-between;gap:14px}.control input{width:100%;accent-color:var(--marine)}.value{font:500 1rem var(--font-mono);color:var(--marine);white-space:nowrap}.explain{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(24,32,41,.2);margin-top:34px}.explain article{background:var(--paper);padding:24px}.explain article p{font-size:1.05rem}.equation{background:var(--paper-2);padding:clamp(28px,5vw,62px);margin-top:34px}.equation svg{width:100%;height:auto;display:block}.limits{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(30px,7vw,100px)}.limits ul{padding-left:1.2rem}.cta{background:var(--aqua);color:var(--midnight);padding:clamp(48px,7vw,90px) clamp(20px,7vw,104px);display:grid;grid-template-columns:1fr auto;gap:28px;align-items:end}.cta h2{max-width:15ch}.cta a{display:inline-block;border-top:1px solid var(--midnight);border-bottom:1px solid var(--midnight);padding:15px 0;font:500 .75rem var(--font-mono);letter-spacing:.12em;text-transform:uppercase;text-decoration:none}.source{font-size:.95rem;color:var(--ink-soft)}footer{padding:28px clamp(20px,7vw,104px);font-size:.9rem;color:var(--faint)}:focus-visible{outline:3px solid var(--marine);outline-offset:4px}@media(max-width:760px){.hero,.section-grid,.limits,.cta{grid-template-columns:1fr}.hero{padding-top:80px}.explain{grid-template-columns:1fr}.cta{align-items:start}h1{font-size:clamp(3.2rem,16vw,6rem)}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-  </style>
-  <style>.equation-display{font:500 clamp(2rem,6vw,4rem)/1.1 var(--font-mono);letter-spacing:.04em;color:var(--ink);margin-bottom:1.2rem}.equation-readings,.chart-readings{font:500 .9rem/1.5 var(--font-mono);letter-spacing:.02em;color:var(--ink-soft);margin:.8rem 0 0}.equation-readings{display:grid;gap:.45rem}.equation-readings sub{font-size:.7em;line-height:0}@media(max-width:760px){.equation-display{font-size:2rem}.equation-readings,.chart-readings{font-size:.9rem;letter-spacing:0}.chart-readings{max-width:22rem}}</style>
-  <!-- Counting. GoatCounter: canonical site analytics, no cookies or personal data. -->
-  <script data-goatcounter="https://huberttheinventor.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nothing lands in the middle — Hubert's field guides</title>
+<meta name="description" content="A visual guide to quantum measurement: two fixed spin readings, changing probabilities, and the eigenvalue equation behind a certain result.">
+<meta name="theme-color" content="#1a1a1a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nothing lands in the middle.">
+<meta property="og:description" content="Change the preparation. Change the odds. The possible readings stay fixed.">
+<link rel="canonical" href="https://huberttheinventor.github.io/quantum/">
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-09-20-hugging-face" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-09-20-hugging-face">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-09-20-hugging-face">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-09-20-hugging-face">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-09-20-hugging-face">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-09-20-hugging-face">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-09-20-hugging-face">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-09-20-hugging-face">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+<noscript><style>.quantumGuide .journalArticle__article { opacity: 1 !important; }</style></noscript>
+<style>
+/* Topic-specific apparatus only. Page chrome, type and plates are shared. */
+.quantumMap { color: #abbac2; }
+.quantumMap .quantumPlot { position: relative; padding-left: 66px; }
+.quantumPlot svg { display: block; width: 100%; height: auto; }
+.quantumPlot__upper, .quantumPlot__lower { position: absolute; left: 0; font: 16px/1.3 Mono, monospace; color: #faf6af; letter-spacing: 0; transform: translateY(-50%); }
+.quantumPlot__upper { top: 20%; }
+.quantumPlot__lower { top: 80%; }
+.quantumPlot__middle { position: absolute; top: 50%; left: 66px; right: 0; text-align: center; transform: translateY(-50%); font: 14px/1.4 Mono, monospace; text-transform: uppercase; letter-spacing: .04em; }
+.quantumMap .quantumControls { border-top: 1px solid #7a8990; margin-top: 24px; padding-top: 20px; }
+.quantumControls__row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+.quantumControls label, .quantumControls output, .quantumControls button { font: 14px/1.5 Mono, monospace; letter-spacing: .04em; text-transform: uppercase; }
+.quantumControls output { color: #faf6af; }
+.quantumControls input { display: block; width: 100%; min-height: 44px; margin: 12px 0; accent-color: #79b0cc; cursor: pointer; }
+.quantumControls input:focus-visible, .quantumControls button:focus-visible { outline: 2px solid #faf6af; outline-offset: 4px; }
+.quantumPresets { display: flex; flex-wrap: wrap; gap: 12px 24px; }
+.quantumPresets button { border: 0; border-bottom: 1px solid #7a8990; background: none; color: #abbac2; min-height: 44px; padding: 6px 0; cursor: pointer; }
+.quantumPresets button[aria-pressed="true"] { color: #faf6af; border-color: #faf6af; }
+.quantumMap .quantumNote { font: 14px/1.5 Mono, monospace; letter-spacing: .02em; color: #abbac2; margin: 18px 0 0; max-width: none; text-transform: none; }
+.quantumEquation { color: #faf6af; font: clamp(36px, 6vw, 86px)/1.2 Mono, monospace; letter-spacing: -.03em; padding-bottom: 24px; }
+.quantumTerms { margin: 0; border-top: 1px solid #7a8990; }
+.quantumTerms > div { display: grid; grid-template-columns: 100px 1fr; gap: 20px; border-bottom: 1px solid #7a8990; padding: 18px 0; }
+.quantumTerms dt { color: #faf6af; font: 18px/1.5 Mono, monospace; }
+.quantumTerms dd { color: #abbac2; font: 18px/1.5 Graphik, sans-serif; margin: 0; }
+.quantumTerms sub { font-size: .7em; }
+@media (max-width: 600px) {
+  .quantumMap { padding: 20px 16px; }
+  .quantumMap .quantumPlot { padding-left: 48px; }
+  .quantumPlot__upper, .quantumPlot__lower { font-size: 14px; }
+  .quantumPlot__middle { left: 48px; font-size: 14px; }
+  .quantumTerms > div { grid-template-columns: 56px 1fr; gap: 16px; padding: 16px 0; }
+  .quantumTerms dt, .quantumTerms dd { font-size: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .quantumGuide .scanlines, .quantumGuide .gloom, .quantumGuide .vignette { animation: none; }
+}
+</style>
 </head>
-<body>
-  <header class="rail"><a class="live" href="../index.html" aria-label="Hubert the Inventor home"><span class="brand-lockup"><span class="brand-dot" aria-hidden="true">●</span><svg class="brand-wordmark" viewBox="0 0 166 38" aria-hidden="true"><text x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg></span></a><span class="mono">FIELD GUIDE / QUANTUM</span></header>
-  <main>
-    <section class="hero">
-      <div><p class="mono">A visual guide to measurement</p><h1>Nothing lands in the middle.</h1></div>
-      <p class="hero-copy">A spin measurement can give two readings. Change how the system is prepared and you change their chances—not the levels themselves.</p>
+<body class="journal quantumGuide">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/claudex-loop/"><span>Nº019 · Cross-model review</span></a>
+    <a href="/hugging-face.html"><span>Nº018 · Hugging Face</span></a>
+    <a href="/weights.html"><span>Nº016 · Open weight vs open source</span></a>
+    <a href="/shadow.html"><span>Nº014 · The dot product and attention</span></a>
+    <a href="/doorman.html"><span>Nº013 · Load balancers</span></a>
+    <a href="/algo.html"><span>Nº012 · Five machine learning algorithms</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div><div class="gloom"></div><div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace"><span>Field guide</span><strong>Quantum</strong></div>
+        <div class="journalArticle__documentCell monospace"><span>System</span><strong>Spin and measurement</strong></div>
+        <div class="journalArticle__documentCell monospace"><span>Model</span><strong>A v = λ v</strong></div>
+        <div class="journalArticle__documentCell monospace"><span>Experiment</span><strong>One fixed direction</strong></div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace"><span>Status</span><span class="journalArticle__documentStamp">Filed</span></div>
+      </div>
+      <div class="journalArticle__article" id="guide">
+        <h1 data-splitting="lines">Nothing lands in the middle.</h1>
+        <p class="lead" data-splitting>Prepare an electron. Measure its spin along one fixed direction. Record the answer. Repeat. The dots collect on two levels. You can change the odds — but nothing fills the middle.</p>
+
+        <figure class="journalArticle__banner map quantumMap" id="map" aria-labelledby="map-caption">
+          <div class="quantumPlot">
+            <span class="quantumPlot__upper">+ℏ/2</span><span class="quantumPlot__lower">−ℏ/2</span>
+            <svg viewBox="0 0 600 300" role="img" aria-labelledby="plot-title plot-desc">
+              <title id="plot-title">Two possible spin readings</title>
+              <desc id="plot-desc">Separate trials leave records on an upper or lower row. There is no third result in between. The displayed chances are model probabilities, not a guarantee for the counts in a short batch.</desc>
+              <g fill="none" stroke="#79b0cc" stroke-width="2"><path d="M12 60H588M12 240H588"/><path d="M12 25V275" stroke="#7a8990"/></g>
+              <g id="odds-dots" fill="#79b0cc">
+                <circle cx="36" cy="60" r="8"/><circle cx="64" cy="60" r="8"/><circle cx="92" cy="240" r="8"/><circle cx="120" cy="60" r="8"/>
+                <circle cx="148" cy="240" r="8"/><circle cx="176" cy="240" r="8"/><circle cx="204" cy="60" r="8"/><circle cx="232" cy="240" r="8"/>
+                <circle cx="260" cy="60" r="8"/><circle cx="288" cy="60" r="8"/><circle cx="316" cy="240" r="8"/><circle cx="344" cy="60" r="8"/>
+                <circle cx="372" cy="240" r="8"/><circle cx="400" cy="240" r="8"/><circle cx="428" cy="60" r="8"/><circle cx="456" cy="240" r="8"/>
+                <circle cx="484" cy="60" r="8"/><circle cx="512" cy="60" r="8"/><circle cx="540" cy="240" r="8"/><circle cx="568" cy="60" r="8"/>
+              </g>
+            </svg>
+            <span class="quantumPlot__middle">No reading in between</span>
+          </div>
+          <div class="legend monospace"><div><i aria-hidden="true"></i>One dot = one independent trial</div></div>
+          <div class="quantumControls" id="preparation">
+            <div class="quantumControls__row"><label for="chance">Chance of the upper result</label><output id="chance-output" for="chance" aria-live="polite">Upper 50% / lower 50%</output></div>
+            <input id="chance" type="range" min="0" max="100" value="50" step="10" aria-label="Chance of the upper result">
+            <div class="quantumPresets" role="group" aria-label="Example preparations">
+              <button type="button" data-chance="50" aria-pressed="true">50 / 50</button>
+              <button type="button" data-chance="80" aria-pressed="false">80 / 20</button>
+              <button type="button" data-chance="100" aria-pressed="false">Certain upper</button>
+            </div>
+          </div>
+          <figcaption id="map-caption" class="quantumNote">Change the preparation to draw a fresh illustrative batch. The levels stay fixed. These are model chances, not a promise that a short batch gives those exact proportions.</figcaption>
+          <noscript><p class="quantumNote">This is the 50 / 50 example. The interactive control needs JavaScript; the full explanation and downloadable schematic work without it.</p><style>.quantumControls{display:none}</style></noscript>
+        </figure>
+        <p class="monospace monospace__p opacity__50">The whole mental model, one picture. Different odds. Same possible answers.</p>
+        <p class="monospace monospace__p">Take it with you: <a href="/quantum/quantum-schematic.svg?v=2026-09-20-hugging-face" download>the quantum schematic</a>, with the dot experiment and its equation on one sheet.</p>
+
+        <hr>
+        <h4 aria-level="2" data-splitting="lines">A dot is a record, not a particle.</h4>
+        <p>Each dot represents a separate preparation and measurement. It is not an electron travelling across the screen, and the two rows are not places where particles sit. They are the two possible readings for this spin measurement: +ℏ/2 and −ℏ/2.</p>
+        <p>Keep the measurement direction fixed. Preparing the electron differently changes how likely each reading is. It does not create a third reading halfway between them, and it does not rewrite dots already recorded.</p>
+        <hr>
+        <h4 aria-level="2" data-splitting="lines">Now make one answer certain.</h4>
+        <p>Choose “Certain upper” in the diagram. For this ideal measurement, the special upper-result state gives +ℏ/2 every time. The certainty belongs to the preparation and the chosen measurement together.</p>
+        <p>That special state is an <strong>eigenstate</strong>. Its certain reading is the corresponding <strong>eigenvalue</strong>. The names describe the relationship you just saw.</p>
+        <figure class="journalArticle__banner map quantumMap" aria-labelledby="equation-caption">
+          <div class="quantumEquation" aria-label="A times v equals lambda times v">A v = λ v</div>
+          <dl class="quantumTerms">
+            <div><dt>A = S<sub>z</sub></dt><dd>The rule representing what we measure: spin along this fixed direction.</dd></div>
+            <div><dt>v</dt><dd>The special prepared state vector.</dd></div>
+            <div><dt>λ</dt><dd>The eigenvalue: +ℏ/2 for the upper state.</dd></div>
+          </dl>
+          <figcaption id="equation-caption" class="quantumNote">Applying the rule to this special vector gives the same vector multiplied by its eigenvalue. This is a calculation, not a drawing of physical collapse.</figcaption>
+        </figure>
+        <h4 aria-level="2" data-splitting="lines">The maths names the possible answer.</h4>
+        <p>The equation connects the measurement rule, the special state and its reading. It does not mean that measuring physically multiplies an electron, or that every preparation already has a certain answer.</p>
+        <p>Return to another preparation in the diagram: the odds change, while the two possible readings remain the same.</p>
+        <hr>
+        <h4 aria-level="2" data-splitting="lines">What this picture does not prove.</h4>
+        <p>This is an ideal spin-½ example along one fixed axis. Other observables can have more than two possible outcomes, or a continuous range. The two-row record alone does not establish that the preparation was a superposition.</p>
+        <hr>
+        <h4 aria-level="2" data-splitting="lines" id="sources">Take it with you</h4>
+        <div class="buttons">
+          <a href="/quantum/quantum-schematic.svg?v=2026-09-20-hugging-face" download class="button button__big hover_effect"><span>The quantum schematic</span><span class="arrow">&#8599;</span></a>
+          <a href="#map" class="button button__big hover_effect"><span>Try the dot experiment</span><span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p opacity__50">The sources behind the model</p>
+        <div class="buttons">
+          <a href="https://quantum.cloud.ibm.com/learning/en/modules/quantum-mechanics/stern-gerlach-measurements-with-qiskit" class="button button__big hover_effect"><span>IBM · Stern–Gerlach measurements</span><span class="arrow">&#8599;</span></a>
+          <a href="https://quantum.cloud.ibm.com/learning/en/courses/basics-of-quantum-information/single-systems/quantum-information" class="button button__big hover_effect"><span>IBM · Quantum measurement</span><span class="arrow">&#8599;</span></a>
+          <a href="https://math.mit.edu/~shor/18.435/oldlectures/lecture3.html" class="button button__big hover_effect"><span>MIT · Observables and eigenvalues</span><span class="arrow">&#8599;</span></a>
+        </div>
+        <div class="guideNav">
+          <h4 aria-level="2" class="guideNav__head">Keep going</h4>
+          <div class="buttons">
+            <a href="/eigen.html" class="button button__big hover_effect"><span>Eigenvectors and linear systems</span><span class="arrow">&#8599;</span></a>
+            <a href="/shadow.html" class="button button__big hover_effect"><span>The dot product is a shadow</span><span class="arrow">&#8599;</span></a>
+            <a href="/guides/" class="button button__big hover_effect"><span>All field guides</span><span class="arrow">&#8599;</span></a>
+          </div>
+        </div>
+        <div class="article__footer"><p class="monospace monospace__p opacity__50">Independent field guide. The diagrams are illustrative, not experimental data. This companion explains the same fixed-direction spin example as the Quantum film.</p></div>
+      </div>
     </section>
-
-    <section class="dark" aria-labelledby="records-title">
-      <div class="section-grid"><div><p class="mono">01 / the record</p><h2 id="records-title">One dot. One reading.</h2></div><div><p>Each dot is a separate preparation and measurement along one fixed direction. The graphic is a record of results, not a picture of particles travelling through space.</p><svg class="guide-svg" viewBox="0 0 720 300" role="img" aria-labelledby="record-title record-desc"><title id="record-title">Two discrete spin result levels</title><desc id="record-desc">Dots appear on an upper and lower line, with an empty middle and no intermediate results.</desc><g fill="none" stroke="#7ca4bd" stroke-width="2"><line x1="100" y1="74" x2="680" y2="74"/><line x1="100" y1="226" x2="680" y2="226"/><line x1="100" y1="40" x2="100" y2="260" stroke-opacity=".5"/></g><g fill="#a8d3e8"><text x="84" y="80" text-anchor="end" font-family="JetBrains Mono" font-size="18">upper</text><text x="84" y="232" text-anchor="end" font-family="JetBrains Mono" font-size="18">lower</text><circle cx="130" cy="74" r="7"/><circle cx="164" cy="226" r="7"/><circle cx="198" cy="74" r="7"/><circle cx="232" cy="74" r="7"/><circle cx="266" cy="226" r="7"/><circle cx="300" cy="74" r="7"/><circle cx="334" cy="226" r="7"/><circle cx="368" cy="74" r="7"/><circle cx="402" cy="74" r="7"/><circle cx="436" cy="226" r="7"/><circle cx="470" cy="74" r="7"/><circle cx="504" cy="226" r="7"/><circle cx="538" cy="74" r="7"/><circle cx="572" cy="74" r="7"/><circle cx="606" cy="226" r="7"/></g><text x="390" y="158" text-anchor="middle" fill="#c8deec" font-family="JetBrains Mono" font-size="16">nothing here is a third result</text></svg></div></div>
-    </section>
-
-    <section class="section" aria-labelledby="odds-title"><div class="section-grid"><div><p class="mono">02 / the preparation</p><h2 id="odds-title">The odds can move.</h2><p>Move the control to prepare a new batch. The two result levels stay fixed. The dots are deterministic illustrations of the stated chance, not a claim that a short sample must exactly match it.</p></div><div><svg id="odds-chart" class="guide-svg" viewBox="0 0 720 330" role="img" aria-labelledby="odds-chart-title odds-chart-desc"><title id="odds-chart-title">Preparation changes the probability of two fixed outcomes</title><desc id="odds-chart-desc">An interactive deterministic sample updates between upper and lower result rows while the two rows remain fixed.</desc><g fill="none" stroke="#085d7f" stroke-width="2"><line x1="100" y1="76" x2="680" y2="76"/><line x1="100" y1="254" x2="680" y2="254"/><line x1="100" y1="42" x2="100" y2="288" stroke-opacity=".4"/></g><g id="odds-dots" fill="#085d7f"></g><g fill="#182029" font-family="JetBrains Mono" font-size="18"><text x="84" y="82" text-anchor="end">upper</text><text x="84" y="260" text-anchor="end">lower</text><text id="chance-label" x="100" y="316">chance: upper 50% / lower 50%</text></g></svg><p class="chart-readings">upper result: +ℏ/2 · lower result: −ℏ/2</p><div class="control"><div class="control-row"><label for="chance" class="mono">prepare a new batch</label><output class="value" id="chance-output" for="chance" aria-live="polite">Upper 50% · lower 50%</output></div><input id="chance" type="range" min="0" max="100" value="50" step="10" aria-label="Chance of the upper result"></div></div></div></section>
-
-    <section class="dark" aria-labelledby="certain-title"><div class="section-grid"><div><p class="mono">03 / the special state</p><h2 id="certain-title">One preparation can make an answer certain.</h2></div><div><p>For this ideal spin-½ measurement along one fixed axis, prepare the upper-result state and every independent trial gives the upper reading: <strong>+ℏ/2</strong>. That certainty belongs to the state and the chosen measurement together.</p><p class="rule"><strong>That certain reading has a name: an eigenvalue.</strong> The special preparation is the matching eigenstate.</p><div class="rule"><p class="mono">not a universal claim</p><p>Other observables can have more than two outcomes, or a continuous range. This guide is about one deliberately scoped example.</p></div></div></div></section>
-
-    <section class="section" aria-labelledby="math-title"><div class="section-grid"><div><p class="mono">04 / the mathematical bridge</p><h2 id="math-title">The rule becomes a number.</h2><p>The equation is a calculation, not a particle path or physical update. It says that the chosen measurement rule returns this state vector multiplied by one number; it does not say the physical system remains unchanged after measurement.</p></div><div class="equation"><div class="equation-display" aria-label="A times v equals lambda times v">A v = λ v</div><div class="equation-readings"><div><strong>A = S<sub>z</sub></strong>: chosen measurement rule</div><div><strong>v</strong>: this special prepared state vector</div><div><strong>λ</strong>: its certain reading, +ℏ/2 for the upper state</div></div></div></div></section>
-
-    <section class="dark" aria-labelledby="limits-title"><div class="limits"><div><p class="mono">05 / keep the boundary</p><h2 id="limits-title">A useful picture has edges.</h2></div><div><ul><li>Dots are independent measurement records.</li><li>Preparation changes probabilities; it does not rewrite earlier dots.</li><li>The two-row sample alone does not prove superposition.</li><li>The equation describes a mathematical relationship, not physical collapse.</li></ul><p class="source">Primary grounding: <a href="https://quantum.cloud.ibm.com/learning/en/modules/quantum-mechanics/stern-gerlach-measurements-with-qiskit">IBM on Stern–Gerlach measurements</a>, <a href="https://quantum.cloud.ibm.com/learning/en/courses/basics-of-quantum-information/single-systems/quantum-information">IBM on quantum measurement</a>, and <a href="https://math.mit.edu/~shor/18.435/oldlectures/lecture3.html">MIT Shor Lecture 3</a>.</p></div></div></section>
-
-    <section class="cta"><div><p class="mono">A companion to the film</p><h2>The visual guide is ready.</h2></div><a href="quantum-schematic.svg" download>Download now · schematic</a></section>
-  </main>
-  <footer><span class="mono">HUBERT THE INVENTOR</span> · Quantum measurement guide · 21 September 2026</footer>
-  <script>
-    const range=document.getElementById('chance');const dots=document.getElementById('odds-dots');const out=document.getElementById('chance-output');const label=document.getElementById('chance-label');
-    function draw(){const p=Number(range.value)/100;dots.innerHTML='';for(let i=0;i<20;i++){const upper=((i*37+11)%100)/100<p;const x=130+i*27;const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('cx',x);c.setAttribute('cy',upper?76:254);c.setAttribute('r',6);dots.appendChild(c)}out.value=`Upper ${Math.round(p*100)}% · lower ${Math.round((1-p)*100)}%`;label.textContent=`chance: upper ${Math.round(p*100)}% / lower ${Math.round((1-p)*100)}%`}
-    range.addEventListener('input',draw);draw();
-  </script>
+  </div>
+  <section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack"><svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg></div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace"><div class="address">HUBERT’S FIELD GUIDES<br>@HUBERTTHEINVENTOR<br><br>INDEPENDENT. NOT AFFILIATED<br>WITH THE SOURCES NAMED<br>IN THE GUIDES.<br><br>GMT +00:00</div></div>
+      <div class="layout__second"><div class="buttons">
+        <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect"><span>Instagram</span><span class="arrow">&#8599;</span></a>
+        <a href="/guides/" class="button button__half hover_effect"><span>All guides</span><span class="arrow">&#8599;</span></a>
+        <a href="/quantum/quantum-schematic.svg?v=2026-09-20-hugging-face" download class="button button__half hover_effect"><span>The schematic</span><span class="arrow">&#8599;</span></a>
+        <a href="/#pricing" class="button button__half hover_effect"><span>The List</span><span class="arrow">&#8599;</span></a>
+        <a href="/privacy.html" class="button button__half hover_effect"><span>Privacy note</span><span class="arrow">&#8599;</span></a>
+      </div></div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-09-20-hugging-face"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-09-20-hugging-face"></script>
+<script src="/assets/js/splitting.min.js?v=2026-09-20-hugging-face"></script>
+<script src="/assets/js/site.js?v=2026-09-20-hugging-face" type="module"></script>
+<!-- /build:scripts -->
+<script>
+(() => {
+  const input = document.getElementById('chance');
+  const dots = document.getElementById('odds-dots');
+  const output = document.getElementById('chance-output');
+  const presets = [...document.querySelectorAll('[data-chance]')];
+  function draw() {
+    const chance = Number(input.value);
+    const records = document.createDocumentFragment();
+    for (let i = 0; i < 20; i++) {
+      const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      dot.setAttribute('cx', 36 + i * 28);
+      dot.setAttribute('cy', (i * 37 + 11) % 100 < chance ? 60 : 240);
+      dot.setAttribute('r', 8);
+      records.appendChild(dot);
+    }
+    dots.replaceChildren(records);
+    output.value = 'Upper ' + chance + '% / lower ' + (100 - chance) + '%';
+    input.setAttribute('aria-valuetext', chance + '% chance of the upper reading, ' + (100 - chance) + '% chance of the lower reading');
+    for (const button of presets) button.setAttribute('aria-pressed', String(Number(button.dataset.chance) === chance));
+  }
+  input.addEventListener('input', draw);
+  for (const button of presets) button.addEventListener('click', () => { input.value = button.dataset.chance; draw(); });
+  draw();
+})();
+</script>
 </body>
 </html>
