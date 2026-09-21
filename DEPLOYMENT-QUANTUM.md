@@ -20,6 +20,8 @@ Prepared on 2026-09-21 in isolated worktree `feature/quantum-guide-publish`, bas
 
 The page uses the existing canonical GoatCounter endpoint `https://huberttheinventor.goatcounter.com/count` with the same async script standard used by the site. No new analytics account or event system was added.
 
-## Release boundary
+## Live verification
 
-No Instagram post, native DM, keyword activation, or public URL claim is made until the GitHub push, merge, and public HTTP checks complete. Remote fetch from GitHub was unavailable in this session because Windows Git credentials failed (`SEC_E_NO_CREDENTIALS`); the worktree therefore started from the existing local `develop` branch and requires remote review before merge.
+GitHub PRs `#1` (feature → develop) and `#2` (develop → main) merged on 2026-09-21. GitHub Pages deployment run `35617997158` completed successfully. Public HTTP checks returned `200` for all three routes, with `text/html`, `image/svg+xml`, and `font/woff2` content types. Downloaded public assets matched the source SHA-256 values above exactly.
+
+No Instagram post, native DM, or keyword activation was performed. The public guide is ready for the separate funnel/keyword step.
