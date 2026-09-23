@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The answer is a move - Hubert's field guides</title>
+<meta name="description" content="Field guide Nº020. TypeSafe's Jev returns a typed decision directly instead of generating text piece by piece: Choice picks one option, Score rates a defined scale, Noul estimates the probability of yes. A Doom recording shows the loop, state to question to typed choice to a rules check to action, and where it stops: movement routes to MOVE, but firing keeps going anyway. A chosen move is not an obeyed instruction.">
+<meta name="theme-color" content="#1a1a1a">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="The answer is a move">
+<meta property="og:description" content="TypeSafe's Jev returns a typed decision directly, not a generated sentence. A Doom recording shows the loop, and the moment a chosen move stops being an obeyed instruction.">
+<meta property="og:image" content="img/guide/guide-20-poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-09-20-hugging-face" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-09-20-hugging-face">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-09-20-hugging-face">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-09-20-hugging-face">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-09-20-hugging-face">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-09-20-hugging-face">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-09-20-hugging-face">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-09-20-hugging-face">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/claudex-loop/"><span>Nº019 · Cross-model review</span></a>
+    <a href="/hugging-face.html"><span>Nº018 · Hugging Face</span></a>
+    <a href="/weights.html"><span>Nº016 · Open weight vs open source</span></a>
+    <a href="/shadow.html"><span>Nº014 · The dot product and attention</span></a>
+    <a href="/doorman.html"><span>Nº013 · Load balancers</span></a>
+    <a href="/algo.html"><span>Nº012 · Five machine learning algorithms</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Field guide</span><strong>N&ordm;020</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>System</span><strong>Jev (TypeSafe)</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Model</span><strong>State, question, typed choice</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Annotations</span><strong>Five, keyed to the map</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp">Filed</span>
+        </div>
+      </div>
+
+      <div class="journalArticle__article" id="guide">
+        <h1 data-splitting="lines">The answer is a move.</h1>
+        <p class="lead" data-splitting>This Doom-playing AI doesn't answer with a paragraph. It answers with
+          the next move. The useful input is the game state, things like health, ammunition and what's
+          nearby: structured data the program can hand to a decision, not the video pixels themselves.
+          Here's how a game situation becomes a typed choice, and where that choice stops being the whole
+          instruction.</p>
+
+        <figure class="journalArticle__banner guideVideo">
+          <!-- Film not yet approved: VO generated 2026-09-23, awaiting the founder's ear-check
+               (NEXT.md, worktree jev). Poster and source are not copied into img/guide/ yet;
+               wire them up once the render is locked and founder-approved. -->
+          <video controls preload="none" playsinline
+                 poster="img/guide/guide-20-poster.jpg?v=2026-09-20-hugging-face"
+                 aria-label="Field guide N&ordm;020: the answer is a move">
+            <source src="img/guide/guide-20.mp4?v=2026-09-20-hugging-face" type="video/mp4">
+            <track kind="subtitles" src="artifacts/guide-20.vtt?v=2026-09-20-hugging-face" srclang="en" label="English">
+            <p class="monospace monospace__p">Your browser will not play this. The whole guide is written
+              out below, and <a href="artifacts/transcript-jev.md">the transcript</a> has every word of it.</p>
+          </video>
+          <figcaption class="monospace monospace__p opacity__50">N&ordm;020 &middot; 2:19 &middot; watch it first, then read the map</figcaption>
+        </figure>
+
+        <figure class="journalArticle__banner map" id="map">
+          <svg viewBox="0 0 1200 640" role="img"
+             aria-label="System map: the loop from state to action, and where the recording shows it diverging from the instruction. Row one, state: read_game_state returns structured data such as health, ammo and what's nearby, not the video pixels. Row two, question: one Choice among the allowed moves; the recording's instruction is don't fire, simply dodge. Row three, typed choice: the model returns a typed decision directly, not generated as text piece by piece. Row four, rules check: allowed_by_rules runs before the game applies the move, otherwise the program stops or asks a person. Row five, action, but: the movement branch routes to MOVE and the trigger branch routes to TRIGGER, hold fire, yet ammo still drops from 32 to 28 between 01:39 and 01:42 of the recording. A chosen move is not an obeyed instruction.">
+            <style>.j-t{font-family:Mono,ui-monospace,monospace;font-size:13px;letter-spacing:1.1px;fill:#abbac2}.j-h{font-family:Mono,ui-monospace,monospace;font-size:12px;letter-spacing:1.6px;fill:#7a8990}.j-n{font-family:Mono,ui-monospace,monospace;font-size:17px;font-weight:500;letter-spacing:.4px;fill:#cfd8dc}.j-nw{font-family:Mono,ui-monospace,monospace;font-size:17px;font-weight:500;letter-spacing:.4px;fill:#9fe4f3}.j-v{font-family:Mono,ui-monospace,monospace;font-size:14px;letter-spacing:.7px;fill:#abbac2}.j-c{font-family:Mono,ui-monospace,monospace;font-size:13px;font-weight:600;letter-spacing:1.1px;fill:#9fe4f3;text-anchor:middle}.j-on{fill:#9fe4f3;opacity:.85}.j-rail{stroke:#3a444a;stroke-width:1.2;fill:none;stroke-dasharray:3 5}</style>
+
+            <text class="j-t" x="20" y="34">THE LOOP &middot; STATE TO ACTION, AND WHERE THE RECORDING DIVERGES</text>
+            <text class="j-h" x="20" y="74">FILLED = HAPPENED IN THE RECORDING</text>
+            <text class="j-c" x="1012" y="74">01:37&ndash;01:42</text>
+
+            <g>
+              <text class="j-n" x="20" y="132">State</text>
+              <text class="j-v" x="20" y="158">read_game_state(): health, ammo, what's nearby, not the pixels</text>
+              <rect class="j-on" x="980" y="112" width="64" height="26" rx="4"/>
+              <text class="j-v" x="1180" y="132" text-anchor="end">structured input</text>
+            </g>
+            <path class="j-rail" d="M20 186 L1180 186"/>
+
+            <g>
+              <text class="j-n" x="20" y="232">Question</text>
+              <text class="j-v" x="20" y="258">one Choice among the allowed moves</text>
+              <rect class="j-on" x="980" y="212" width="64" height="26" rx="4"/>
+              <text class="j-v" x="1180" y="232" text-anchor="end">"don't fire, simply dodge"</text>
+            </g>
+            <path class="j-rail" d="M20 286 L1180 286"/>
+
+            <g>
+              <text class="j-n" x="20" y="332">Typed choice</text>
+              <text class="j-v" x="20" y="358">returned directly, not generated as text piece by piece</text>
+              <rect class="j-on" x="980" y="312" width="64" height="26" rx="4"/>
+              <text class="j-v" x="1180" y="332" text-anchor="end">no generated sentence</text>
+            </g>
+            <path class="j-rail" d="M20 386 L1180 386"/>
+
+            <g>
+              <text class="j-n" x="20" y="432">Rules check</text>
+              <text class="j-v" x="20" y="458">allowed_by_rules(state, move) runs before the game applies it</text>
+              <rect class="j-on" x="980" y="412" width="64" height="26" rx="4"/>
+              <text class="j-v" x="1180" y="432" text-anchor="end">else: stop or ask a person</text>
+            </g>
+            <path class="j-rail" d="M20 486 L1180 486"/>
+
+            <g>
+              <text class="j-nw" x="20" y="532">Action, but</text>
+              <text class="j-v" x="20" y="558">movement routes to MOVE; trigger routes to TRIGGER, hold_fire</text>
+              <rect class="j-on" x="980" y="512" width="64" height="26" rx="4"/>
+              <text class="j-v" x="1180" y="532" text-anchor="end">ammo 32&rarr;28, 01:39&ndash;01:42</text>
+            </g>
+
+            <text class="j-t" x="20" y="610">A CHOSEN MOVE IS NOT AN OBEYED INSTRUCTION &middot; RECORDING 01:37&ndash;01:42</text>
+          </svg>
+
+          <div class="map__phone">
+            <div class="mband">
+              <div class="mrung mrung--work">
+                <div class="mrung__box">
+                  <span class="mrung__n">01</span>
+                  <h5 class="mrung__t">State<small>read_game_state(): health, ammo, what's nearby. Structured data, not the pixels.</small></h5>
+                </div>
+              </div>
+
+              <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+                <span>one goal, then <b>one precise question</b></span></p>
+
+              <div class="mrung mrung--work">
+                <div class="mrung__box">
+                  <span class="mrung__n">02</span>
+                  <h5 class="mrung__t">Question<small>one Choice among the allowed moves. The recording's instruction: don't fire, simply dodge.</small></h5>
+                </div>
+              </div>
+
+              <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+                <span>Jev answers with <b>a typed choice</b>, not a sentence</span></p>
+
+              <div class="mrung mrung--work">
+                <div class="mrung__box">
+                  <span class="mrung__n">03</span>
+                  <h5 class="mrung__t">Typed choice<small>returned directly, not generated as text piece by piece.</small></h5>
+                </div>
+              </div>
+
+              <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+                <span>a valid answer can still be <b>the wrong move</b></span></p>
+
+              <div class="mrung mrung--work">
+                <div class="mrung__box">
+                  <span class="mrung__n">04</span>
+                  <h5 class="mrung__t">Rules check<small>allowed_by_rules(state, move) runs before the game applies it. Otherwise: stop, or ask a person.</small></h5>
+                </div>
+              </div>
+
+              <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
+                <span>and what the recording <b>actually shows</b></span></p>
+
+              <div class="mrung mrung--perm">
+                <div class="mrung__box">
+                  <span class="mrung__n">05</span>
+                  <h5 class="mrung__t">Action, but<small>movement routes to MOVE; trigger routes to TRIGGER, hold_fire. Ammo still drops 32 to 28 between 01:39 and 01:42.</small></h5>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="legend monospace">
+            <div><i aria-hidden="true" style="border-top-color:#9fe4f3"></i>a step in the loop, as shown in the recording</div>
+            <div><i aria-hidden="true" style="border-top-color:#7a8990"></i>the last row: where the recording and the instruction diverge</div>
+          </div>
+        </figure>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">The whole loop, one picture. Everything after it is annotation.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">The useful input is the state, not the footage.</h4>
+        <p>This AI plays Doom. Its answer isn't a paragraph, it's the next move. Pause the recording and the
+          useful input turns out to be the game state: things like health, ammunition and what's nearby.
+          That's information the program can pass into a decision. TypeSafe's own description of this demo
+          is structured game-state input, not a model watching the screen.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">One goal, a set of allowed moves, one precise question.</h4>
+        <p>Add a goal and the moves that are actually allowed, then ask one precise question: which move
+          fits this situation? In the recording, the instruction is: don't fire, simply dodge.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">The model chooses. The program applies it.</h4>
+        <p>In simplified code: read the state, ask for a decision, then let the game apply the chosen
+          action.</p>
+        <p class="monospace monospace__p">state = read_game_state()<br>
+          result = client.system_one(state=state, questions=questions)<br>
+          move = result.answers["move"].choice<br>
+          if allowed_by_rules(state, move):<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;apply_action(move)<br>
+          else:<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;stop_or_review(move)</p>
+        <p class="monospace monospace__p opacity__50">Simplified TypeSafe example, not the demo source;
+          helpers not implemented or run.</p>
+        <p>The model chooses; the surrounding program does the work. <code>read_game_state</code> and
+          <code>apply_action</code> are illustrative application helpers, and the call shape is checked
+          against TypeSafe's own documentation, not copied from the demo.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">A chosen move is not an obeyed instruction.</h4>
+        <p>Back in the recording, movement and firing have separate outputs. The movement branch routes to
+          MOVE. The trigger branch routes to TRIGGER, hold_fire. But firing continues anyway: ammo drops
+          from 32 to 28 between 01:39 and 01:42 of the recording. Choosing a move doesn't mean the whole
+          instruction got obeyed.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">Why Jev skips the sentence.</h4>
+        <p>A language model normally generates its response piece by piece, even when that response is
+          structured data. TypeSafe built Jev to return typed decisions directly, without generating that
+          text first.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">Three question types, and TypeSafe's own number.</h4>
+        <p>TypeSafe calls this a System One model. Choice selects one option. Score rates a defined scale.
+          Noul estimates the probability of yes. Independent questions can be asked together. TypeSafe
+          reports responses in 70 to 500 milliseconds end to end. That's the company's own published range
+          from its 15 September 2026 launch report, vendor-reported, not a stopwatch on this recording.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">A valid answer can still be the wrong move.</h4>
+        <p>That's the catch: a valid answer can still be the wrong move. The program has to check the
+          result against its own rules before acting, and decide when to stop, or hand the case to a
+          person.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines">Open-Jev is not TypeSafe's model.</h4>
+        <p>There's also Open-Jev: independent open-source work inspired by the idea. It isn't TypeSafe's
+          model, and the same performance isn't promised. Keep language models for explanations. Use a
+          decision model where the code needs a choice. The project is at
+          <a href="https://zefan-cai.github.io/open-jev/" rel="noopener noreferrer" target="_blank">zefan-cai.github.io/open-jev</a>
+          and <a href="https://github.com/Zefan-Cai/Open-Jev" rel="noopener noreferrer" target="_blank">github.com/Zefan-Cai/Open-Jev</a>.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="sources">Take it with you</h4>
+        <div class="buttons">
+          <a href="artifacts/transcript-jev.md" class="button button__big hover_effect"><span>Full transcript</span> <span class="arrow">&#8599;</span></a>
+          <a href="#map" class="button button__big hover_effect"><span>The system map</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://docs.typesafe.ai/introduction" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>TypeSafe docs</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-small="true">The List</p>
+        <h4 aria-level="2">One a week. And the other seven, now.</h4>
+        <p>Confirm your address and the whole set arrives &mdash; all the field guides, exactly
+          as they are on the site, nothing held back for subscribers. After that, one new system
+          taken apart every week. No pitch, no thread-bait, and an unsubscribe link that works.</p>
+
+        <form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor"
+              method="post">
+          <label class="monospace monospace__p" for="list-email">Email address</label>
+          <div class="field">
+            <input type="email" name="email" id="list-email" placeholder="you@example.com"
+                   required autocomplete="email" inputmode="email" spellcheck="false">
+            <input type="hidden" name="tag" value="guide-20-jev">
+            <button type="submit" class="monospace">Send me the set &#8599;</button>
+          </div>
+          <label class="consent monospace monospace__p">
+            <input type="checkbox" name="consent" required>
+            <span>Send me the guides and one new one each week. I can unsubscribe at any
+              time and my address is never shared &mdash; see the
+              <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set
+              arrives the moment you click it.</span>
+          </label>
+        </form>
+<!-- build:guidenav -->
+      <div class="guideNav">
+        <h4 aria-level="2" class="guideNav__head">Keep going</h4>
+        <div class="buttons">
+
+        </div>
+        <p class="monospace monospace__p guideNav__label">Related</p>
+        <div class="buttons">
+        <a href="/claudex-loop/" class="button button__big hover_effect"><span>Nº019 · Cross-model review &mdash; Catch the lost edit before you ship.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/hugging-face.html" class="button button__big hover_effect"><span>Nº018 · Hugging Face &mdash; Why AI leaders Dario and Sam want to slow down.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/weights.html" class="button button__big hover_effect"><span>Nº016 · Open weight vs open source &mdash; Open weight is not open source.</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__all"><a href="/guides/">All 18 guides &#8599;</a></p>
+      </div>
+<!-- /build:guidenav -->
+      <div class="article__footer">
+          <p class="monospace monospace__p opacity__50" data-splitting>Independent field guide. Not
+            affiliated with, endorsed by, or connected to TypeSafe, Jev, Open-Jev, or anyone else named on
+            this page. The recording is TypeSafe's own published Doom demonstration; the code shown is a
+            simplified example checked against TypeSafe's documentation, not the demo's source, and it has
+            not been run. Latency and other TypeSafe-reported figures are the vendor's own published
+            numbers, not measured here, and any error in the diagram is mine.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="artifacts/transcript-jev.md" class="button button__half hover_effect" title="Full narration, by section"><span>Transcript</span><span class="arrow">↗</span></a>
+          <a href="privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+
+
+
+
+<dialog id="list-modal" class="listModal" aria-labelledby="list-modal-title"><div class="listModal__inner" tabindex="-1" autofocus><p class="listModal__eyebrow">The List</p><h2 id="list-modal-title">Every guide. One email.</h2><p>Every field guide on this site, sent the moment you confirm &mdash; then one new system taken apart each week.</p><p>Nothing is held back for subscribers. The guides stay free and stay here; the list is only how the next one reaches you without an algorithm getting a vote.</p><form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor" method="post"><label class="monospace monospace__p" for="list-email-modal">Email address</label><div class="field"><input type="email" name="email" id="list-email-modal" placeholder="you@example.com" required autocomplete="email" inputmode="email" spellcheck="false"><input type="hidden" name="tag" value="popup-jev"><button type="submit" class="monospace">Send me the set &#8599;</button></div><label class="consent monospace monospace__p"><input type="checkbox" name="consent" required><span>Send me the guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set arrives the moment you click it.</span></label></form><button type="button" class="listModal__close" data-close>No thanks &mdash; just reading</button></div></dialog>
+<script src="assets/js/list-modal.js?v=2026-09-20-hugging-face" defer></script>
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-09-20-hugging-face"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-09-20-hugging-face"></script>
+<script src="/assets/js/splitting.min.js?v=2026-09-20-hugging-face"></script>
+<script src="/assets/js/site.js?v=2026-09-20-hugging-face" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>
