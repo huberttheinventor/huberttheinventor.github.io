@@ -3,6 +3,16 @@
   "cacheToken": "2026-09-20-hugging-face",
   "guides": [
     {
+      "n": 21,
+      "slug": "fde",
+      "path": "fde.html",
+      "headline": "Sent to live inside your world until it works.",
+      "system": "Forward Deployed Engineer",
+      "runtime": "2:45",
+      "video": true,
+      "tags": ["ai", "software"]
+    },
+    {
       "n": 20,
       "slug": "jev",
       "path": "jev.html",
