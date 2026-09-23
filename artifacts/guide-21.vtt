@@ -1,0 +1,326 @@
+WEBVTT
+
+1
+00:00:00.060 --> 00:00:00.860
+What is an FDE?
+
+2
+00:00:01.513 --> 00:00:04.013
+Forward Deployed Engineer.
+
+3
+00:00:04.013 --> 00:00:06.093
+It's the hottest
+job title in tech
+
+4
+00:00:06.093 --> 00:00:08.573
+right now. And it
+sounds way more
+
+5
+00:00:08.573 --> 00:00:11.133
+mysterious than
+it actually is.
+
+6
+00:00:11.702 --> 00:00:14.722
+Picture an engineer
+fired down a pneumatic
+
+7
+00:00:14.722 --> 00:00:17.182
+tube, laptop
+under one arm,
+
+8
+00:00:17.182 --> 00:00:19.122
+straight into a
+client's office.
+
+9
+00:00:19.618 --> 00:00:21.298
+That's the job,
+more or less.
+
+10
+00:00:21.756 --> 00:00:24.636
+The company doesn't
+just sell you software.
+
+11
+00:00:24.636 --> 00:00:27.216
+It sends someone in
+until the software
+
+12
+00:00:27.216 --> 00:00:28.316
+actually works.
+
+13
+00:00:28.941 --> 00:00:31.721
+Say an aircraft maker
+buys your platform.
+
+14
+00:00:31.721 --> 00:00:33.661
+Parts data in one system.
+
+15
+00:00:33.661 --> 00:00:35.501
+Maintenance logs
+in three more.
+
+16
+00:00:35.983 --> 00:00:40.323
+An ERP from 2009
+nobody dares touch.
+
+17
+00:00:40.323 --> 00:00:43.643
+And a spreadsheet called
+FINAL_v7_REAL that quietly
+
+18
+00:00:43.643 --> 00:00:45.003
+runs the whole company.
+
+19
+00:00:45.515 --> 00:00:47.115
+You can't hand
+them a login and
+
+20
+00:00:47.115 --> 00:00:50.295
+leave. Someone has to
+untangle all of it.
+
+21
+00:00:50.815 --> 00:00:52.295
+Enter the FDE.
+
+22
+00:00:52.295 --> 00:00:53.355
+They move in for weeks,
+
+23
+00:00:53.355 --> 00:00:54.295
+sometimes months.
+
+24
+00:00:55.241 --> 00:00:58.301
+One Palantir engineer
+spent a year at
+
+25
+00:00:58.301 --> 00:01:01.621
+Airbus in Toulouse,
+on the factory floor
+
+26
+00:01:01.621 --> 00:01:03.061
+four days a week.
+
+27
+00:01:03.734 --> 00:01:06.354
+They learn how the
+place really runs,
+
+28
+00:01:06.354 --> 00:01:08.774
+which is never what
+the manual says.
+
+29
+00:01:09.351 --> 00:01:11.331
+Then they connect
+the systems,
+
+30
+00:01:11.331 --> 00:01:14.011
+write the code and
+ship the dashboards.
+
+31
+00:01:14.011 --> 00:01:15.791
+Sometimes a whole feature,
+
+32
+00:01:15.791 --> 00:01:16.851
+for one customer.
+
+33
+00:01:17.502 --> 00:01:18.962
+So it's part engineer,
+
+34
+00:01:18.962 --> 00:01:21.602
+part architect, part
+product manager,
+
+35
+00:01:21.602 --> 00:01:25.142
+part consultant. Palantir
+has its own names
+
+36
+00:01:25.142 --> 00:01:25.502
+for this.
+
+37
+00:01:26.093 --> 00:01:28.273
+A Dev is one capability,
+
+38
+00:01:28.273 --> 00:01:32.253
+many customers. A
+Delta is one customer,
+
+39
+00:01:32.253 --> 00:01:34.173
+many capabilities.
+
+40
+00:01:34.679 --> 00:01:36.639
+And a Delta isn't
+a consultant.
+
+41
+00:01:36.639 --> 00:01:39.599
+A Delta builds, and
+leaves working code,
+
+42
+00:01:39.599 --> 00:01:40.799
+not a slide deck.
+
+43
+00:01:41.367 --> 00:01:42.907
+Why work like this?
+
+44
+00:01:42.907 --> 00:01:44.867
+Because working in
+the demo and working
+
+45
+00:01:44.867 --> 00:01:47.767
+at the customer are
+different planets.
+
+46
+00:01:48.320 --> 00:01:50.540
+Every company
+has its own data,
+
+47
+00:01:50.540 --> 00:01:54.320
+permissions, security
+rules and strange rituals.
+
+48
+00:01:54.320 --> 00:01:56.720
+The FDE closes that gap.
+
+49
+00:01:57.657 --> 00:01:59.077
+And the bonus:
+
+50
+00:01:59.077 --> 00:02:01.197
+when the same
+fix turns up at
+
+51
+00:02:01.197 --> 00:02:04.197
+five customers, it
+becomes part of the
+
+52
+00:02:04.197 --> 00:02:06.737
+product. That's how
+a lot of Palantir's
+
+53
+00:02:06.737 --> 00:02:07.897
+Foundry took shape.
+
+54
+00:02:08.482 --> 00:02:11.142
+So why is it
+exploding now? AI.
+
+55
+00:02:11.739 --> 00:02:13.679
+Nobody wants
+another chatbot.
+
+56
+00:02:13.679 --> 00:02:15.638
+They want an agent
+wired into their
+
+57
+00:02:15.638 --> 00:02:19.699
+customer records, database,
+documents and billing,
+
+58
+00:02:19.699 --> 00:02:22.639
+safely. Someone
+has to go in and
+
+59
+00:02:22.639 --> 00:02:23.359
+wire it.
+
+60
+00:02:23.908 --> 00:02:25.168
+And it's a lot.
+
+61
+00:02:25.168 --> 00:02:26.788
+A Python bug
+in the morning,
+
+62
+00:02:26.788 --> 00:02:28.348
+the ops team after lunch,
+
+63
+00:02:28.348 --> 00:02:30.668
+the product
+redesigned by dinner.
+
+64
+00:02:31.304 --> 00:02:32.864
+Easiest way to
+remember it:
+
+65
+00:02:32.864 --> 00:02:34.464
+an engineer builds it,
+
+66
+00:02:34.464 --> 00:02:36.084
+a consultant explains it,
+
+67
+00:02:36.084 --> 00:02:38.564
+an FDE moves
+in and makes it
+
+68
+00:02:38.564 --> 00:02:40.584
+work for your
+exact problem.
+
+69
+00:02:41.054 --> 00:02:43.274
+Comment DEPLOY and
+I'll send you the
+
+70
+00:02:43.274 --> 00:02:44.614
+one-page guide.
+
