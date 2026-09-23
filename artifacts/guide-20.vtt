@@ -1,0 +1,262 @@
+WEBVTT
+
+1
+00:00:00.660 --> 00:00:03.320
+This AI plays Doom.
+
+2
+00:00:03.320 --> 00:00:05.740
+Its answer isn't a
+paragraph.
+
+3
+00:00:05.740 --> 00:00:07.320
+It's the next move.
+
+4
+00:00:07.320 --> 00:00:09.140
+Let me show you how a
+game
+
+5
+00:00:09.140 --> 00:00:12.560
+situation becomes a
+decision.
+
+6
+00:00:12.629 --> 00:00:13.909
+Pause there.
+
+7
+00:00:13.909 --> 00:00:16.929
+The useful input is the
+game state:
+
+8
+00:00:16.929 --> 00:00:18.929
+things like health,
+ammunition
+
+9
+00:00:18.929 --> 00:00:20.509
+and what's nearby.
+
+10
+00:00:20.509 --> 00:00:22.029
+That's information the
+program
+
+11
+00:00:22.029 --> 00:00:24.408
+can pass into a decision.
+
+12
+00:00:24.408 --> 00:00:27.148
+Add a goal and a set of
+allowed moves.
+
+13
+00:00:27.148 --> 00:00:29.888
+Then ask one precise
+question:
+
+14
+00:00:29.888 --> 00:00:32.368
+which move fits this
+situation?
+
+15
+00:00:32.368 --> 00:00:34.328
+The recording's
+instruction says:
+
+16
+00:00:34.328 --> 00:00:37.649
+don't fire, simply dodge.
+
+17
+00:00:37.649 --> 00:00:41.209
+In simplified code, read
+the state,
+
+18
+00:00:41.209 --> 00:00:43.529
+ask for a decision, then
+let the
+
+19
+00:00:43.529 --> 00:00:46.409
+game apply the selected
+action.
+
+20
+00:00:46.409 --> 00:00:49.089
+The model chooses; the
+surrounding
+
+21
+00:00:49.089 --> 00:00:51.569
+program does the work.
+
+22
+00:00:51.659 --> 00:00:53.619
+Back in the recording,
+movement
+
+23
+00:00:53.619 --> 00:00:56.299
+and firing have separate
+outputs.
+
+24
+00:00:56.299 --> 00:00:58.979
+Follow the movement route
+to MOVE.
+
+25
+00:00:58.979 --> 00:01:01.359
+But firing continues.
+
+26
+00:01:01.359 --> 00:01:03.439
+Choosing a move doesn't
+mean the
+
+27
+00:01:03.439 --> 00:01:06.219
+whole instruction was
+obeyed.
+
+28
+00:01:06.310 --> 00:01:08.550
+A language model normally
+generates
+
+29
+00:01:08.550 --> 00:01:11.610
+its response piece by
+piece, even when
+
+30
+00:01:11.610 --> 00:01:14.090
+that response is
+structured data.
+
+31
+00:01:14.090 --> 00:01:18.030
+TypeSafe's Jev is built
+to return typed decisions
+
+32
+00:01:18.030 --> 00:01:21.233
+directly, without
+generating that text.
+
+33
+00:01:21.233 --> 00:01:24.153
+TypeSafe calls this a
+System One model.
+
+34
+00:01:24.153 --> 00:01:25.753
+Choice selects an option.
+
+35
+00:01:25.753 --> 00:01:27.793
+Score rates a defined
+scale.
+
+36
+00:01:27.793 --> 00:01:30.813
+Noul estimates the
+probability of yes.
+
+37
+00:01:30.813 --> 00:01:34.904
+Independent questions can
+be asked together.
+
+38
+00:01:34.904 --> 00:01:36.644
+TypeSafe reports
+responses
+
+39
+00:01:36.644 --> 00:01:38.324
+in half a second or less.
+
+40
+00:01:38.324 --> 00:01:40.384
+That's its published
+range, not
+
+41
+00:01:40.384 --> 00:01:43.024
+a stopwatch on this
+recording.
+
+42
+00:01:43.140 --> 00:01:44.660
+That's the catch:
+
+43
+00:01:44.660 --> 00:01:48.120
+a valid answer can still
+be the wrong move.
+
+44
+00:01:48.120 --> 00:01:50.740
+Your program must check
+the result
+
+45
+00:01:50.740 --> 00:01:53.360
+against its rules before
+acting, and
+
+46
+00:01:53.360 --> 00:01:57.445
+decide when to stop or
+ask a person.
+
+47
+00:01:57.445 --> 00:01:59.725
+There's also Open-Jev:
+
+48
+00:01:59.725 --> 00:02:01.645
+independent open-source
+
+49
+00:02:01.645 --> 00:02:04.365
+work inspired by the
+idea.
+
+50
+00:02:04.365 --> 00:02:06.585
+It's not TypeSafe's
+model, and the
+
+51
+00:02:06.585 --> 00:02:08.825
+same performance isn't
+promised.
+
+52
+00:02:08.825 --> 00:02:12.305
+Keep language models for
+explanations.
+
+53
+00:02:12.305 --> 00:02:14.025
+Use a decision model
+where
+
+54
+00:02:14.025 --> 00:02:16.935
+your code needs a choice.
+
+55
+00:02:16.935 --> 00:02:20.095
+Comment JEV and I'll send
+you the guide.
