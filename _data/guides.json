@@ -3,6 +3,16 @@
   "cacheToken": "2026-09-20-hugging-face",
   "guides": [
     {
+      "n": 20,
+      "slug": "jev",
+      "path": "jev.html",
+      "headline": "The answer is a move.",
+      "system": "Jev (TypeSafe)",
+      "runtime": "2:21",
+      "video": true,
+      "tags": ["ai", "machine-learning", "decision-models"]
+    },
+    {
       "n": 19,
       "slug": "claudex-loop",
       "path": "claudex-loop/index.html",
