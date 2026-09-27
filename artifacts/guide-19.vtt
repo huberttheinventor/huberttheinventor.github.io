@@ -1,0 +1,57 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.313
+Shazam never hears your song. It hears the circles inside it.
+
+2
+00:00:04.593 --> 00:00:12.121
+Let's design it. A few seconds of noisy audio in a loud bar, and over a million songs to pick from.
+
+3
+00:00:12.401 --> 00:00:13.595
+- Circles? In a song?
+
+4
+00:00:13.875 --> 00:00:19.706
+Any sound is a stack of spinning circles, big slow ones and small fast ones.
+
+5
+00:00:19.987 --> 00:00:23.777
+Chain them tip to tip and the last one traces the wave.
+
+6
+00:00:24.057 --> 00:00:25.915
+- So a song is just a list of circles?
+
+7
+00:00:26.194 --> 00:00:33.294
+A list of how fast each one spins and how big it is. That list is a Fourier transform.
+
+8
+00:00:33.574 --> 00:00:41.311
+Take that list many times a second and lay them side by side. Time runs this way, faster circles sit higher.
+
+9
+00:00:41.591 --> 00:00:48.828
+The bar noise smears across all of it, but the song's loudest circles still poke through, like stars.
+
+10
+00:00:49.108 --> 00:00:50.354
+- It's a constellation.
+
+11
+00:00:50.634 --> 00:00:56.446
+And that's the fingerprint. Shazam doesn't keep the sound, it keeps where the stars are.
+
+12
+00:00:56.726 --> 00:01:01.884
+It has a star map of every song, and yours lines up with only one.
+
+13
+00:01:02.164 --> 00:01:03.363
+- Found it. In here.
+
+14
+00:01:03.643 --> 00:01:11.781
+You couldn't hear it, and Shazam didn't need to. It counted the circles. Comment FOURIER and I'll send you the schematic.
