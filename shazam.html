@@ -168,7 +168,7 @@
             <style>.sz-t{font-family:Mono,ui-monospace,monospace;font-size:13px;letter-spacing:1.1px;fill:#abbac2}.sz-h{font-family:Mono,ui-monospace,monospace;font-size:12px;letter-spacing:1.6px;fill:#7a8990}.sz-n{font-family:Mono,ui-monospace,monospace;font-size:17px;font-weight:500;letter-spacing:.4px;fill:#cfd8dc}.sz-nw{font-family:Mono,ui-monospace,monospace;font-size:17px;font-weight:500;letter-spacing:.4px;fill:#9fe4f3}.sz-v{font-family:Mono,ui-monospace,monospace;font-size:14px;letter-spacing:.7px;fill:#abbac2}.sz-c{font-family:Mono,ui-monospace,monospace;font-size:13px;font-weight:600;letter-spacing:1.1px;fill:#9fe4f3;text-anchor:middle}.sz-on{fill:#9fe4f3;opacity:.85}.sz-rail{stroke:#3a444a;stroke-width:1.2;fill:none;stroke-dasharray:3 5}</style>
 
             <text class="sz-t" x="20" y="34">FIVE STEPS &middot; HOW SHAZAM TURNS SOUND INTO A MATCH</text>
-            <text class="sz-h" x="20" y="74">FILLED = WHAT SHAZAM ACTUALLY COMPUTES</text>
+            <text class="sz-h" x="20" y="74">FILLED = THE IDEA BEHIND EACH STEP</text>
             <text class="sz-c" x="1012" y="74">RESULT</text>
 
             <g>
@@ -253,7 +253,7 @@
               </div>
 
               <p class="mlift"><span class="mlift__arrow" aria-hidden="true"></span>
-                <span>checked against <b>a million star maps</b></span></p>
+                <span>checked against <b>over a million star maps</b></span></p>
 
               <div class="mrung mrung--perm">
                 <div class="mrung__box">
@@ -265,8 +265,8 @@
           </div>
 
           <div class="legend monospace">
-            <div><i aria-hidden="true" style="border-top-color:#9fe4f3"></i>one step in the pipeline Shazam actually runs, in order</div>
-            <div><i aria-hidden="true" style="border-top-color:#7a8990"></i>the match: computed live, not stored, checked against every song it knows</div>
+            <div><i aria-hidden="true" style="border-top-color:#9fe4f3"></i>one step of the idea, in order (the circles are the picture; Shazam computes the spectrogram directly)</div>
+            <div><i aria-hidden="true" style="border-top-color:#7a8990"></i>the match: computed live, not stored, looked up in the database</div>
           </div>
         </figure>
 
@@ -274,7 +274,7 @@
 
         <p class="monospace monospace__p" data-splitting>Take it with you:
           <a href="artifacts/fourier-schematic.png?v=2026-09-25-shazam" download>the Fourier schematic</a>,
-          the five steps that turn a few seconds of noisy audio into one matched song.</p>
+          the six steps that turn a few seconds of noisy audio into one matched song.</p>
 
         <hr>
 
@@ -292,16 +292,16 @@
         <p>Shazam does not take that list once. It takes it many times a second and lays the results side by
           side, time running one way across the image and faster circles sitting higher up. The result is a
           spectrogram: a picture of every frequency in the recording, moment by moment. The noise of a bar,
-          voices, glasses, other music, smears across most of it. But the song's own loudest circles still
+          voices, traffic, other music, smears across most of it. But the song's own loudest circles still
           poke through, like stars against a bright sky.</p>
 
         <hr>
 
         <h4 aria-level="2" data-splitting="lines">The fingerprint: a constellation.</h4>
         <p>Shazam keeps only those surviving peaks, the loudest points in the spectrogram, plotted across
-          time. Avery Wang, the engineer behind the algorithm, calls the result a constellation map in his
-          2003 paper on the method: the peaks are chosen precisely because they hold up in noisy audio, where
-          the paper reports they still work "in the presence of foreground voices and other dominant noise."
+          time. Avery Wang, the author of the 2003 paper on the method, calls the result a constellation map.
+          The peaks are picked "due to their robustness in the presence of noise," and the paper reports the
+          search still works "in the presence of foreground voices and other dominant noise."
           Shazam never stores the sound itself. It stores where the stars are.</p>
 
         <hr>
@@ -404,7 +404,9 @@
 
 
 <style>
-  .shazamHero { display: flex; flex-direction: column; align-items: center; gap: 40px; padding: 130px 24px; }
+  .shazamHero { display: flex; flex-direction: column; align-items: center; gap: 40px; padding: 48px 24px; opacity: 1; }
+    /* the official SVG draws the mark in the middle half of its box; the margin is Apple's clear space */
+    .shazamHero img { width: min(360px, 80vw); height: auto; }
   .shazamHero img { width: 240px; height: 240px; display: block; }
 </style>
 
