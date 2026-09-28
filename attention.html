@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ChatGPT can't tell a river bank from a money bank until the words before it vote. — Hubert's field guides</title>
+<meta name="description" content="Field guide Nº027. In a GPT-style model, a word is rebuilt from a blend of the words before it. Each earlier word (and the word itself) gets a match score for how well it fits what the word is looking for; softmax turns the scores into shares that add up to exactly 100%; the vote is the weighted blend of those shares, added onto the word's stored spot. Run it on &quot;The river flooded the bank&quot; and bank lands 77.5% of the way to WATER. Swap river for loan and the same word slides 46.5% of the way to MONEY. Source: Vaswani et al. 2017, &quot;Attention Is All You Need.&quot;">
+<meta name="theme-color" content="#1a1a1a">
+
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="ChatGPT can't tell a river bank from a money bank until the words before it vote.">
+<meta property="og:description" content="The tally card: both runs, full shares, and where bank lands.">
+<meta property="og:image" content="artifacts/attention-card.png">
+<meta property="og:image:alt" content="Field guide Nº027 cover — the tally card. Run 1, &quot;The river flooded the bank&quot;: THE 5, RIVER 55, FLOODED 25, THE 5, BANK 10; pin 77.5% of the way to WATER. Run 2, swap river for loan, &quot;The loan flooded the bank&quot;: THE 8, LOAN 60, FLOODED 15, THE 7, BANK 10; pin 46.5% of the way to MONEY. Query, key and value mapped. Claim scope and source.">
+<meta name="twitter:card" content="summary_large_image">
+
+
+
+
+<style>
+  /* ── the tally table ──────────────────────────────────────────────────
+     Same shape as temperature.html's toy-table and ticketmaster.html's
+     stats-table: tabular figures, a small caps caption above the rule.
+     Word / share / pull, so the arithmetic behind the pin sits next to
+     the number it produces. */
+  .stats-table th, .stats-table td { text-align: left; padding: 10px 6px; vertical-align: top; }
+  .stats-table td:first-child, .stats-table th:first-child {
+    font-variant-numeric: tabular-nums; font-weight: 600;
+    color: var(--plate-read-accent, #1a1a1a); white-space: nowrap;
+  }
+  .stats-table caption {
+    caption-side: top; color: var(--plate-read-dim); font-family: Mono, ui-monospace, monospace;
+    font-size: 14px; letter-spacing: -0.048em; margin-bottom: 4px; text-align: left;
+    text-transform: uppercase;
+  }
+  .stats-table tbody td { border-bottom: 1px solid var(--plate-read-rule); }
+  .stats-table tbody tr:last-child td { border-bottom: none; }
+  .stats-table tbody td:last-child { color: var(--plate-read-dim); font-size: 90%; }
+
+  @media screen and (max-width: 600px) {
+    .table-scroll {
+      margin: 0 -20px; overflow-x: auto; padding: 0 20px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .table-scroll table { min-width: 420px; }
+  }
+
+  /* Inline code, scoped back to an inline chip (the ported reset styles
+     `code` as a black block, written for fenced samples). */
+  .journalArticle__article code {
+    background: rgba(0, 0, 0, .22); border-radius: 4px; display: inline;
+    font-family: Mono, ui-monospace, monospace; font-size: 88%; margin: 0;
+    padding: .1em .38em; white-space: nowrap;
+  }
+
+  /* Block quotes carry the source's own words, set apart from the plain-
+     English paraphrase around them so a reader can see exactly which
+     sentences are quoted verbatim and which are Hubert's summary. */
+  .paper-quote {
+    border-left: 2px solid rgba(0, 0, 0, .35); font-size: 92%; font-style: italic;
+    margin: 0 0 3vw; max-width: 34em; padding-left: 20px;
+  }
+  .paper-quote cite {
+    display: block; font-family: Mono, ui-monospace, monospace; font-size: 72%;
+    font-style: normal; letter-spacing: .04em; margin-top: 8px; opacity: .55;
+    text-transform: uppercase;
+  }
+  @media screen and (max-width: 600px) {
+    .paper-quote { margin-bottom: 5vh; padding-left: 14px; }
+  }
+
+  /* The tally card, sent by DM to anyone who comments VOTE — shown here
+     too, since the page is the same artifact. Capped narrow so it reads
+     as a card, not a hero image. */
+  .card-figure { margin: 6px 0 4vw; max-width: 380px; }
+  .card-figure img { border-radius: 14px; border: 1px solid rgba(0, 0, 0, .14); display: block; width: 100%; }
+  .card-figure figcaption {
+    color: var(--plate-read-dim); font-family: Mono, ui-monospace, monospace; font-size: 13px;
+    letter-spacing: .01em; margin-top: 10px; opacity: .65;
+  }
+
+  /* The header is `position: fixed`, so an in-page jump lands the target
+     underneath it. Nº006/007/008 use a flat 116px; match it. */
+  #guide, #vote, #blend, #causal, #scope, #sources { scroll-margin-top: 116px; }
+</style>
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-10-02-attention" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-10-02-attention">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-10-02-attention">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-10-02-attention">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-10-02-attention">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-10-02-attention">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-10-02-attention">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-10-02-attention">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/attention.html"><span>Nº027 · Attention (self-attention in a transformer)</span></a>
+    <a href="/ticketmaster.html"><span>Nº026 · Ticketmaster (system design)</span></a>
+    <a href="/temperature.html"><span>Nº025 · Temperature (softmax sampling)</span></a>
+    <a href="/edge.html"><span>Nº024 · Gradient descent</span></a>
+    <a href="/pagerank.html"><span>Nº023 · PageRank</span></a>
+    <a href="/shazam.html"><span>Nº022 · Shazam</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Field guide</span><strong>Nº027</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>System</span><strong>Attention (self-attention in a transformer)</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Model</span><strong>stored spot &rarr; match score &rarr; shares &rarr; weighted blend</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Runs</span><strong>Two, one word swapped</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp">Filed</span>
+        </div>
+      </div>
+
+      <div class="journalArticle__article" id="guide">
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">You commented VOTE — this is the tally card.</p>
+        <h1 data-splitting="lines">ChatGPT can't tell a river bank from a money bank until the words before it vote.</h1>
+        <p class="lead" data-splitting>Run the sentence &ldquo;The river flooded the bank&rdquo; through a GPT-style
+          model. Before anything happens, &ldquo;bank&rdquo; is one stored spot for both meanings, dead centre
+          between water and money. Only the words before it, and the word itself, get a say &mdash; a model like this
+          reads left to right, the way it writes. Each of those words gets a match score for how well it fits what
+          bank is looking for; softmax turns the scores into shares that add up to exactly 100%; and the vote is the
+          weighted blend of those shares, added onto bank&rsquo;s stored spot. Nobody wins outright &mdash; the word
+          is nudged, not replaced &mdash; and the tally below shows exactly how far.</p>
+
+        <p class="monospace monospace__p" data-splitting>Companion to the reel &middot; Watch it on
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank">@huberttheinventor</a></p>
+
+        <figure class="card-figure">
+          <img src="artifacts/attention-card.png" alt="The tally card. Run 1, &ldquo;The river flooded the bank&rdquo;: THE 5, RIVER 55, FLOODED 25, THE 5, BANK 10; pin 77.5% of the way to WATER. Run 2, swap river for loan, &ldquo;The loan flooded the bank&rdquo;: THE 8, LOAN 60, FLOODED 15, THE 7, BANK 10; pin 46.5% of the way to MONEY, because flooded still pulls toward water and holds it short. Mapping: query is what bank is looking for, key plus query give the match score, value is the pull. Claim scope: only the words before bank vote, softmax gives the shares, the vote is the weighted blend, the tallies are toy numbers, bank is a word not a claimed single token, no head count and no square-root-d for ChatGPT. Source: Vaswani et al., Attention Is All You Need, 2017.">
+          <figcaption>The card itself, free, no email &mdash; the same file the DM sends.</figcaption>
+        </figure>
+
+        <div class="table-scroll">
+        <table class="stats-table">
+          <caption>Run 1 &mdash; &ldquo;The river flooded the bank,&rdquo; toy numbers</caption>
+          <thead><tr><th scope="col">Word</th><th scope="col">Share</th><th scope="col">Pull</th></tr></thead>
+          <tbody>
+            <tr><td>THE</td><td>5</td><td>centre (no pull)</td></tr>
+            <tr><td>RIVER</td><td>55</td><td>WATER</td></tr>
+            <tr><td>FLOODED</td><td>25</td><td>toward WATER, a little inside it</td></tr>
+            <tr><td>THE</td><td>5</td><td>centre (no pull)</td></tr>
+            <tr><td>BANK</td><td>10</td><td>centre (no pull)</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="monospace monospace__p opacity__50" data-splitting>Pin &rarr; <strong>77.5% of the way to WATER</strong> (recomputed from the rail geometry below; matches SCRIPT.md).</p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº001 · The swap</p>
+        <h4 aria-level="2" data-splitting="lines" id="vote">Change one earlier word and the same word lands somewhere else</h4>
+        <p data-splitting>Swap &ldquo;river&rdquo; for &ldquo;loan&rdquo; and nothing about bank&rsquo;s stored spot
+          changes &mdash; only the vote re-runs. Loan takes the largest share this time, the pull flips toward money,
+          and the same word, from the same starting point, slides most of the way across.</p>
+
+        <div class="table-scroll">
+        <table class="stats-table">
+          <caption>Run 2 &mdash; &ldquo;The loan flooded the bank,&rdquo; toy numbers</caption>
+          <thead><tr><th scope="col">Word</th><th scope="col">Share</th><th scope="col">Pull</th></tr></thead>
+          <tbody>
+            <tr><td>THE</td><td>8</td><td>centre (no pull)</td></tr>
+            <tr><td>LOAN</td><td>60</td><td>MONEY</td></tr>
+            <tr><td>FLOODED</td><td>15</td><td>toward WATER, a little inside it</td></tr>
+            <tr><td>THE</td><td>7</td><td>centre (no pull)</td></tr>
+            <tr><td>BANK</td><td>10</td><td>centre (no pull)</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="monospace monospace__p opacity__50" data-splitting>Pin &rarr; <strong>46.5% of the way to MONEY</strong> &mdash; short of a full swing, because &ldquo;flooded&rdquo; still pulls a little toward water and holds it back.</p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº002 · The rail, and how the pin is computed</p>
+        <h4 aria-level="2" data-splitting="lines" id="blend">The pin is a weighted blend, not a winner</h4>
+        <p data-splitting>The rail runs from WATER at &minus;1 through the stored spot at 0 to MONEY at +1. Each word
+          carries a pull along that line &mdash; river pulls at &minus;1, loan at +1, flooded a little inside water
+          at &minus;0.9, and the two THEs and bank itself sit at 0, pulling nowhere. The pin&rsquo;s position is the
+          stored spot plus the sum of each word&rsquo;s share (as a fraction of 100) times its pull. For run 1 that
+          is 0 + (0.55&times;&minus;1) + (0.25&times;&minus;0.9) = &minus;0.775, which is 77.5% of the way to WATER.
+          For run 2 it is 0 + (0.60&times;1) + (0.15&times;&minus;0.9) = 0.465, which is 46.5% of the way to MONEY.
+          Recomputed from this geometry with a short script this session, and both figures match SCRIPT.md&rsquo;s
+          numbers exactly.</p>
+        <p data-splitting>Mapped to the paper&rsquo;s own vocabulary, never spoken in the film: <strong>query</strong>
+          is what bank is looking for, <strong>key</strong> together with the query gives the match score, and
+          <strong>value</strong> is the pull each word contributes to the blend.</p>
+        <blockquote class="paper-quote">
+          <p>&ldquo;The output is computed as a weighted sum of the values, where the weight assigned to each value
+            is computed by a compatibility function of the query with the corresponding key.&rdquo;</p>
+          <cite>Vaswani et al., &ldquo;Attention Is All You Need,&rdquo; &sect;3.2</cite>
+        </blockquote>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº003 · Only the words before it</p>
+        <h4 aria-level="2" data-splitting="lines" id="causal">If bank came first, river never gets a vote on it</h4>
+        <p data-splitting>Reorder the sentence to &ldquo;the bank of the river&rdquo; and bank has to be rebuilt
+          before river is even read. A GPT-style model reads the way it writes, left to right, so a word only ever
+          hears the words before it and itself &mdash; never the words after. Bank gets just &ldquo;the&rdquo; in
+          front of it here, plus itself, and its vote stays at the centre. River still hears bank when its own turn
+          comes, and the model writes the next word from the end of the line, once the whole phrase before it has
+          voted.</p>
+        <blockquote class="paper-quote">
+          <p>&ldquo;We need to prevent leftward information flow in the decoder to preserve the auto-regressive
+            property&hellip; This masking&hellip; ensures that the predictions for position i can depend only on the
+            known outputs at positions less than i.&rdquo;</p>
+          <cite>Vaswani et al., &ldquo;Attention Is All You Need,&rdquo; &sect;3.1, &sect;3.2.3</cite>
+        </blockquote>
+        <p data-splitting>One vote settles nothing on its own. Plenty run side by side, layer after layer, each one
+          this same tally and blend &mdash; that&rsquo;s attention, the mechanism the paper built the Transformer
+          on: &ldquo;We propose a new simple network architecture, the Transformer, based solely on attention
+          mechanisms, dispensing with recurrence and convolutions entirely&rdquo; (Vaswani et al., abstract).</p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº004 · The honest scope</p>
+        <h4 aria-level="2" data-splitting="lines" id="scope">What this card does and doesn't claim</h4>
+        <p data-splitting><strong>Only the words before bank, and bank itself, vote.</strong> &ldquo;Every word
+          votes&rdquo; is never claimed here &mdash; the causal mask in &sect;3.1 and &sect;3.2.3 rules it out.
+          <strong>Softmax gives the shares; the vote is the weighted blend.</strong> Nobody wins outright: the blend
+          lands between the voters&rsquo; pulls, never past them (&sect;3.2.1). <strong>The tallies are toy
+          numbers</strong> &mdash; 55/25/10/5/5 and 60/15/10/8/7 &mdash; chosen to be readable, not a real model&rsquo;s
+          weights. This card says &ldquo;word&rdquo; throughout, and never claims that &ldquo; bank&rdquo; is a single
+          token in any tokenizer. It names no head count, no layer count and no &radic;d for ChatGPT or GPT-4, whose
+          architecture details beyond &ldquo;a Transformer-style model pre-trained to predict the next token&rdquo;
+          are unpublished (GPT-4 Technical Report). And it does not claim these shares explain why the model answered
+          what it did &mdash; one vote, in one head, in one layer of many, is not the whole computation.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="next">One system, taken apart.</h4>
+        <p data-splitting>Same treatment, different machine. No pitch, no thread-bait, and an unsubscribe
+          link that works.</p>
+        <div class="buttons">
+          <a href="index.html#pricing" class="button button__big hover_effect"><span>The List</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="sources">Take it with you</h4>
+        <p class="monospace monospace__p opacity__50" data-splitting>The tally card is this page: both runs, full shares, the rail geometry, and the query / key / value mapping, free, no email.</p>
+        <div class="buttons">
+          <a href="#blend" class="button button__big hover_effect"><span>The rail</span> <span class="arrow">&#8599;</span></a>
+          <a href="#scope" class="button button__big hover_effect"><span>The scope</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://arxiv.org/abs/1706.03762" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Vaswani et al., Attention Is All You Need</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-small="true">The List</p>
+        <h4 aria-level="2">One a week. And the other seven, now.</h4>
+        <p>Confirm your address and the whole set arrives &mdash; all ten field guides, exactly
+          as they are on the site, nothing held back for subscribers. After that, one new system
+          taken apart every week. No pitch, no thread-bait, and an unsubscribe link that works.</p>
+
+        <form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor"
+              method="post">
+          <label class="monospace monospace__p" for="list-email">Email address</label>
+          <div class="field">
+            <input type="email" name="email" id="list-email" placeholder="you@example.com"
+                   required autocomplete="email" inputmode="email" spellcheck="false">
+            <input type="hidden" name="tag" value="guide-27-attention">
+            <button type="submit" class="monospace">Send me the set &#8599;</button>
+          </div>
+          <label class="consent monospace monospace__p">
+            <input type="checkbox" name="consent" required>
+            <span>Send me the ten guides and one new one each week. I can unsubscribe at any
+              time and my address is never shared &mdash; see the
+              <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set
+              arrives the moment you click it.</span>
+          </label>
+        </form>
+<!-- build:guidenav -->
+      <div class="guideNav">
+        <h4 aria-level="2" class="guideNav__head">Keep going</h4>
+        <div class="buttons">
+        <a href="/ticketmaster.html" class="button button__big hover_effect"><span><em class="guideNav__kicker">Previous</em> Nº026 · Ticketmaster (system design)</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__label">Related</p>
+        <div class="buttons">
+        <a href="/temperature.html" class="button button__big hover_effect"><span>Nº025 · Temperature (softmax sampling) &mdash; The temperature setting behind ChatGPT runs on gas physics from 1868.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/jev.html" class="button button__big hover_effect"><span>Nº020 · Jev (TypeSafe) &mdash; The answer is a move.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/hugging-face.html" class="button button__big hover_effect"><span>Nº018 · Hugging Face &mdash; Why AI leaders Dario and Sam want to slow down.</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__all"><a href="/guides/">All 25 guides &#8599;</a></p>
+      </div>
+<!-- /build:guidenav -->
+      <div class="article__footer">
+          <p class="monospace monospace__p opacity__50" data-splitting><strong>An independent educational
+            breakdown.</strong> Not affiliated with, endorsed by, or produced in cooperation with OpenAI or any
+            company named. The tallies and rail geometry above are toy numbers picked for a readable film and page,
+            not a real model's weights. Every claim about the mechanism itself is sourced to Vaswani et al. 2017,
+            &ldquo;Attention Is All You Need&rdquo; (arXiv 1706.03762), cited throughout. Any error in the summary is
+            mine.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="#blend" class="button button__half hover_effect" title="The rail"><span>The rail</span><span class="arrow">↗</span></a>
+          <a href="#scope" class="button button__half hover_effect" title="Take it with you"><span>The scope</span><span class="arrow">↗</span></a>
+          <a href="privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+
+
+
+
+<dialog id="list-modal" class="listModal" aria-labelledby="list-modal-title"><div class="listModal__inner" tabindex="-1" autofocus><p class="listModal__eyebrow">The List</p><h2 id="list-modal-title">Ten guides. One email.</h2><p>Every field guide on this site, sent the moment you confirm &mdash; then one new system taken apart each week.</p><p>Nothing is held back for subscribers. The guides stay free and stay here; the list is only how the next one reaches you without an algorithm getting a vote.</p><form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor" method="post"><label class="monospace monospace__p" for="list-email-modal">Email address</label><div class="field"><input type="email" name="email" id="list-email-modal" placeholder="you@example.com" required autocomplete="email" inputmode="email" spellcheck="false"><input type="hidden" name="tag" value="popup-attention"><button type="submit" class="monospace">Send me the set &#8599;</button></div><label class="consent monospace monospace__p"><input type="checkbox" name="consent" required><span>Send me the ten guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set arrives the moment you click it.</span></label></form><button type="button" class="listModal__close" data-close>No thanks &mdash; just reading</button></div></dialog>
+<script src="assets/js/list-modal.js" defer></script>
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-10-02-attention"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-10-02-attention"></script>
+<script src="/assets/js/splitting.min.js?v=2026-10-02-attention"></script>
+<script src="/assets/js/site.js?v=2026-10-02-attention" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>
