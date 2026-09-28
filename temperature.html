@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The temperature setting behind ChatGPT runs on gas physics from 1868. — Hubert's field guides</title>
+<meta name="description" content="Field guide Nº025. Before a language model picks its next word, it divides every candidate's score by one number, T, and softmax turns the results into odds — the same division Ludwig Boltzmann wrote in 1868 for a hot gas, with the model's score standing in for energy. Toy example, computed this session: at T 0.2 the favourite word gets 99 of 100 chances; at T 5, 29. Only the formula is shared — the model has no gas and no physical temperature.">
+<meta name="theme-color" content="#1a1a1a">
+
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="The temperature setting behind ChatGPT runs on gas physics from 1868.">
+<meta property="og:description" content="The formula card: the gas equation and the softmax equation side by side, term by term, the mapping E = −z and kT → T, the toy counts at three temperatures, and the ranking that never flips.">
+<meta property="og:image" content="artifacts/temperature-card.png">
+<meta property="og:image:alt" content="Field guide Nº025 cover — the formula card: the gas equation and the softmax equation side by side.">
+<meta name="twitter:card" content="summary_large_image">
+
+
+
+
+<style>
+  /* ── the toy-numbers table ────────────────────────────────────────────
+     Same shape as edge.html's mult-table: tabular figures, right-aligned
+     numeric columns, a small caps caption above the rule. Five numeric
+     columns (mat/floor/sofa/roof/moon) instead of edge's four. */
+  .toy-table th, .toy-table td { font-variant-numeric: tabular-nums; }
+  .toy-table td { text-align: right; }
+  .toy-table td:first-child { text-align: left; color: var(--plate-read-accent, #1a1a1a); font-weight: 600; }
+  .toy-table caption {
+    caption-side: top; color: var(--plate-read-dim); font-family: Mono, ui-monospace, monospace;
+    font-size: 14px; letter-spacing: -0.048em; margin-bottom: 4px; text-align: left;
+    text-transform: uppercase;
+  }
+  .toy-table tr.toy-line td { border-top: 2px solid var(--plate-read-rule); font-weight: 600; }
+
+  @media screen and (max-width: 600px) {
+    .table-scroll {
+      margin: 0 -20px; overflow-x: auto; padding: 0 20px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .table-scroll table { min-width: 480px; }
+  }
+
+  /* Inline code, scoped back to an inline chip (the ported reset styles
+     `code` as a black block, written for fenced samples). */
+  .journalArticle__article code {
+    background: rgba(0, 0, 0, .22); border-radius: 4px; display: inline;
+    font-family: Mono, ui-monospace, monospace; font-size: 88%; margin: 0;
+    padding: .1em .38em; white-space: nowrap;
+  }
+
+  /* Block quotes carry the source's own words, set apart from the plain-
+     English paraphrase around them so a reader can see exactly which
+     sentences are quoted verbatim and which are Hubert's summary. */
+  .paper-quote {
+    border-left: 2px solid rgba(0, 0, 0, .35); font-size: 92%; font-style: italic;
+    margin: 0 0 3vw; max-width: 34em; padding-left: 20px;
+  }
+  .paper-quote cite {
+    display: block; font-family: Mono, ui-monospace, monospace; font-size: 72%;
+    font-style: normal; letter-spacing: .04em; margin-top: 8px; opacity: .55;
+    text-transform: uppercase;
+  }
+  @media screen and (max-width: 600px) {
+    .paper-quote { margin-bottom: 5vh; padding-left: 14px; }
+  }
+
+  /* The formula card image, sent by DM to anyone who comments HEAT — shown
+     here too, since the page is the same artifact. Capped narrow so it
+     reads as a card, not a hero image. */
+  .card-figure { margin: 6px 0 4vw; max-width: 380px; }
+  .card-figure img { border-radius: 14px; border: 1px solid rgba(0, 0, 0, .14); display: block; width: 100%; }
+  .card-figure figcaption {
+    color: var(--plate-read-dim); font-family: Mono, ui-monospace, monospace; font-size: 13px;
+    letter-spacing: .01em; margin-top: 10px; opacity: .65;
+  }
+
+  /* The header is `position: fixed`, so an in-page jump lands the target
+     underneath it. Nº006/007/008 use a flat 116px; match it. */
+  #guide, #mapping, #toy-numbers, #scope, #sources { scroll-margin-top: 116px; }
+</style>
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-09-28-temperature" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-09-28-temperature">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-09-28-temperature">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-09-28-temperature">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-09-28-temperature">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-09-28-temperature">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-09-28-temperature">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-09-28-temperature">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/temperature.html"><span>Nº025 · Temperature (softmax sampling)</span></a>
+    <a href="/edge.html"><span>Nº024 · Gradient descent</span></a>
+    <a href="/pagerank.html"><span>Nº023 · PageRank</span></a>
+    <a href="/shazam.html"><span>Nº022 · Shazam</span></a>
+    <a href="/fde.html"><span>Nº021 · Forward Deployed Engineer</span></a>
+    <a href="/jev.html"><span>Nº020 · Jev (TypeSafe)</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Field guide</span><strong>Nº025</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>System</span><strong>Temperature (softmax sampling)</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Model</span><strong>p&#7522; = softmax(z&#7522; / T)</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Annotations</span><strong>Four, keyed to the formula card</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp">Filed</span>
+        </div>
+      </div>
+
+      <div class="journalArticle__article" id="guide">
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">You commented HEAT — this is the formula card.</p>
+        <h1 data-splitting="lines">The temperature setting behind ChatGPT runs on gas physics from 1868.</h1>
+        <p class="lead" data-splitting>Before a language model picks its next word, it divides every
+          candidate's score by one number, T, and softmax turns the results into odds. Write energy as the
+          score with its sign flipped &mdash; E = &minus;z &mdash; and that division is exactly the rule
+          Ludwig Boltzmann wrote for how a hot gas spreads its particles across energy levels, with the
+          physics product k<sub>B</sub>T collapsed into the model's single unitless T. Cold (small T) piles
+          the odds on the favourite word; hot (large T) spreads them toward even. Dividing by a positive
+          number never changes which word was favourite to begin with.</p>
+
+        <p class="monospace monospace__p" data-splitting>Companion to the reel · Watch it on
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank">@huberttheinventor</a></p>
+
+        <figure class="card-figure">
+          <img src="artifacts/temperature-card.png" alt="The formula card: p sub i equals e to the minus E sub i over kT, over the sum, for the gas; p sub i equals e to the z sub i over T, over the sum, for the model. E equals minus z, kT arrow T. Toy counts out of 100 for mat, floor, sofa, roof and moon at T 0.2 (99 1 0 0 0), T 1 (64 23 9 3 1) and T 5 (29 23 19 16 13). The ranking never flips for T greater than 0. Only the formula is shared.">
+          <figcaption>The card itself, free, no email — the same file the DM sends.</figcaption>
+        </figure>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº001 · The gas side</p>
+        <h4 aria-level="2" data-splitting="lines" id="mapping">Boltzmann's rule divides each shelf's energy by kT</h4>
+        <p data-splitting>Picture five energy shelves holding a hundred particles. Each shelf's share of the
+          particles is proportional to <code>e^(&minus;E&#7522;/kT)</code>, where E&#7522; is that shelf's
+          energy and kT is the temperature in energy units &mdash; Boltzmann's constant, k, times the
+          absolute temperature, T, collapsed into one figure. Divide by a small kT and the gaps between
+          shelves stretch, so climbing costs a lot and almost everything settles on the lowest shelf. Divide
+          by a large kT and the gaps shrink, so climbing gets cheap and the shelves nearly even out.</p>
+        <blockquote class="paper-quote">
+          <p>&ldquo;In statistical mechanics, the softargmax function is known as the Boltzmann distribution
+            (or Gibbs distribution) &hellip; the index set 1, &hellip;, k are the microstates of the system;
+            the inputs z&#7522; are the energies of that state.&rdquo;</p>
+          <cite>Wikipedia, &ldquo;Softmax function&rdquo;</cite>
+        </blockquote>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº002 · The model side</p>
+        <h4 aria-level="2" data-splitting="lines">Relabel the shelves, and it's the same division</h4>
+        <p data-splitting>Before the model picks its next word, every candidate word has a score. Flip the
+          sign of that score and it plays the role of energy &mdash; E = &minus;z &mdash; so the
+          highest-scoring word sits on the lowest, most likely shelf. The model has no degrees, so k times T
+          collapses into one unitless number: k<sub>B</sub>T &rarr; T. T = 1 means &ldquo;use the scores as
+          they are.&rdquo; Divide every score by T and <code>softmax(z&#7522;/T)</code> turns the scores into
+          odds &mdash; the same division Boltzmann wrote for the gas, with the model's raw score standing in
+          for energy.</p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº003 · The toy numbers</p>
+        <h4 aria-level="2" data-splitting="lines" id="toy-numbers">Three temperatures, one prompt, and a ranking that never flips</h4>
+        <p data-splitting>For the prompt &ldquo;The cat sat on the &#8230;&rdquo;, give <em>mat</em>, <em>floor</em>,
+          <em>sofa</em>, <em>roof</em> and <em>moon</em> the toy scores 4, 3, 2, 1 and 0 &mdash; illustrative
+          numbers chosen only so the shelves are evenly spaced, not a real model's logits. Stepping T through
+          0.2, 1 and 5 redistributes the odds, out of 100:</p>
+
+        <div class="table-scroll">
+        <table class="toy-table">
+          <caption>Toy example, recomputed this session (Node.js, p&#7522; &prop; e^(&minus;E&#7522;/T), E = 0&#8230;4, N = 100) — matches SCRIPT.md's judge-verified table</caption>
+          <thead><tr><th scope="col">T</th><th scope="col">mat</th><th scope="col">floor</th><th scope="col">sofa</th><th scope="col">roof</th><th scope="col">moon</th></tr></thead>
+          <tbody>
+            <tr><td>0.2</td><td>99</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr class="toy-line"><td>1</td><td>64</td><td>23</td><td>9</td><td>3</td><td>1</td></tr>
+            <tr><td>5</td><td>29</td><td>23</td><td>19</td><td>16</td><td>13</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="monospace monospace__p opacity__50" data-splitting><em>mat</em> stays the fullest shelf at
+          every temperature in this toy example: dividing by a positive T never reorders the scores, so the
+          ranking never flips for T &gt; 0.</p>
+        <blockquote class="paper-quote">
+          <p>&ldquo;It preserves the rank order of its input values.&rdquo;</p>
+          <cite>Wikipedia, &ldquo;Softmax function&rdquo;</cite>
+        </blockquote>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº004 · Scope: what this is and is not</p>
+        <h4 aria-level="2" data-splitting="lines" id="scope">Only the formula is shared</h4>
+        <p data-splitting>Boltzmann's derivation needs a closed physical system in thermal equilibrium with
+          a heat bath. A language model has none of that: nothing inside it is a gas, nothing gets hot, and
+          it has no physical temperature. A running model does not get hotter when T goes up, and T is not
+          GPU temperature. No specific kelvin value maps to any specific T, and a higher T does not make the
+          model more &ldquo;creative&rdquo; &mdash; it only reshapes the odds over the same ranked list.</p>
+        <p data-splitting>This page also does not claim: that the ChatGPT consumer app exposes a temperature
+          slider (say &ldquo;the setting behind ChatGPT&rdquo; or &ldquo;in the API&rdquo;, not
+          &ldquo;ChatGPT's slider&rdquo;); an API temperature range of 0 to 2 (the vendor's own docs returned
+          403 when this was checked); that T = 0 always gives the same answer (real serving can still vary);
+          or that temperature is the only setting that shapes sampling &mdash; others, such as top-p, do too.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="next">One system, taken apart.</h4>
+        <p data-splitting>Same treatment, different machine. No pitch, no thread-bait, and an unsubscribe
+          link that works.</p>
+        <div class="buttons">
+          <a href="index.html#pricing" class="button button__big hover_effect"><span>The List</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="sources">Take it with you</h4>
+        <p class="monospace monospace__p opacity__50" data-splitting>The one-pager is this page: both formulas, the mapping, the toy numbers and the scope, free, no email.</p>
+        <div class="buttons">
+          <a href="#mapping" class="button button__big hover_effect"><span>The mapping</span> <span class="arrow">&#8599;</span></a>
+          <a href="#scope" class="button button__big hover_effect"><span>The scope</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://en.wikipedia.org/wiki/Softmax_function" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Wikipedia, Softmax function</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://en.wikipedia.org/wiki/Boltzmann_distribution" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Wikipedia, Boltzmann distribution</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-small="true">The List</p>
+        <h4 aria-level="2">One a week. And the other seven, now.</h4>
+        <p>Confirm your address and the whole set arrives &mdash; all ten field guides, exactly
+          as they are on the site, nothing held back for subscribers. After that, one new system
+          taken apart every week. No pitch, no thread-bait, and an unsubscribe link that works.</p>
+
+        <form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor"
+              method="post">
+          <label class="monospace monospace__p" for="list-email">Email address</label>
+          <div class="field">
+            <input type="email" name="email" id="list-email" placeholder="you@example.com"
+                   required autocomplete="email" inputmode="email" spellcheck="false">
+            <input type="hidden" name="tag" value="guide-25-temperature">
+            <button type="submit" class="monospace">Send me the set &#8599;</button>
+          </div>
+          <label class="consent monospace monospace__p">
+            <input type="checkbox" name="consent" required>
+            <span>Send me the ten guides and one new one each week. I can unsubscribe at any
+              time and my address is never shared &mdash; see the
+              <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set
+              arrives the moment you click it.</span>
+          </label>
+        </form>
+<!-- build:guidenav -->
+      <div class="guideNav">
+        <h4 aria-level="2" class="guideNav__head">Keep going</h4>
+        <div class="buttons">
+        <a href="/edge.html" class="button button__big hover_effect"><span><em class="guideNav__kicker">Previous</em> Nº024 · Gradient descent</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__label">Related</p>
+        <div class="buttons">
+        <a href="/jev.html" class="button button__big hover_effect"><span>Nº020 · Jev (TypeSafe) &mdash; The answer is a move.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/hugging-face.html" class="button button__big hover_effect"><span>Nº018 · Hugging Face &mdash; Why AI leaders Dario and Sam want to slow down.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/weights.html" class="button button__big hover_effect"><span>Nº016 · Open weight vs open source &mdash; Open weight is not open source.</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__all"><a href="/guides/">All 23 guides &#8599;</a></p>
+      </div>
+<!-- /build:guidenav -->
+      <div class="article__footer">
+          <p class="monospace monospace__p opacity__50" data-splitting><strong>An independent educational
+            breakdown.</strong> Not affiliated with, endorsed by, or produced in cooperation with OpenAI or
+            any company named. The toy shelf counts above are a computed illustration (Node.js, p&#7522;
+            &prop; e^(&minus;E&#7522;/T), this session) and are not a real model's scores. Softmax with
+            temperature and the Boltzmann distribution follow Wikipedia, &ldquo;Softmax function&rdquo; and
+            &ldquo;Boltzmann distribution&rdquo;, as cited above; the machine-learning temperature definition
+            (T normally set to 1, dividing logits before softmax) follows Hinton, Vinyals &amp; Dean, 2015,
+            &ldquo;Distilling the Knowledge in a Neural Network&rdquo; (arXiv 1503.02531), cited for the
+            formula only. Any error in the summary is mine.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="#mapping" class="button button__half hover_effect" title="The gas side"><span>The mapping</span><span class="arrow">↗</span></a>
+          <a href="#scope" class="button button__half hover_effect" title="Take it with you"><span>The scope</span><span class="arrow">↗</span></a>
+          <a href="privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+
+
+
+
+<dialog id="list-modal" class="listModal" aria-labelledby="list-modal-title"><div class="listModal__inner" tabindex="-1" autofocus><p class="listModal__eyebrow">The List</p><h2 id="list-modal-title">Ten guides. One email.</h2><p>Every field guide on this site, sent the moment you confirm &mdash; then one new system taken apart each week.</p><p>Nothing is held back for subscribers. The guides stay free and stay here; the list is only how the next one reaches you without an algorithm getting a vote.</p><form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor" method="post"><label class="monospace monospace__p" for="list-email-modal">Email address</label><div class="field"><input type="email" name="email" id="list-email-modal" placeholder="you@example.com" required autocomplete="email" inputmode="email" spellcheck="false"><input type="hidden" name="tag" value="popup-temperature"><button type="submit" class="monospace">Send me the set &#8599;</button></div><label class="consent monospace monospace__p"><input type="checkbox" name="consent" required><span>Send me the ten guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set arrives the moment you click it.</span></label></form><button type="button" class="listModal__close" data-close>No thanks &mdash; just reading</button></div></dialog>
+<script src="assets/js/list-modal.js" defer></script>
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-09-28-temperature"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-09-28-temperature"></script>
+<script src="/assets/js/splitting.min.js?v=2026-09-28-temperature"></script>
+<script src="/assets/js/site.js?v=2026-09-28-temperature" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>
