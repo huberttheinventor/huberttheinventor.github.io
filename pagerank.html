@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PageRank is an eigenvector. — Hubert's field guides</title>
+<meta name="description" content="Field guide Nº023. Click random links forever and the share of time you spend on each page stops changing. Freeze those six settled shares into a column, multiply by the link matrix once more, and it comes back unchanged — an eigenvector. Sorted biggest first, that was the first score Google gave every page (Brin &amp; Page, 1998).">
+<meta name="theme-color" content="#1a1a1a">
+
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="PageRank is an eigenvector.">
+<meta property="og:description" content="The six-page worked example: pour sand on a web of linked pages, add a 15% boredom jump, and the settled column is the first score Google ever gave every page.">
+<meta property="og:image" content="artifacts/pagerank-card.png">
+<meta property="og:image:alt" content="Field guide Nº023 cover — PageRank is an eigenvector, the six-page web resized by its settled rank.">
+<meta name="twitter:card" content="summary_large_image">
+
+
+
+
+<style>
+  /* ── the Google mark ──────────────────────────────────────────────────
+     The global reset sets `img { width: 100%; height: 100%; object-fit:
+     cover }` for full-bleed photography, which would crop a 272x92 wordmark
+     to a square. Told to contain, at a size close to its own aspect ratio,
+     the way git.html scopes its two square marks. */
+  .marks { align-items: center; display: flex; gap: 16px; margin-bottom: 28px; }
+  .marks img.google-mark { height: 34px; object-fit: contain; width: 100px; }
+
+  /* ── the six-page web ─────────────────────────────────────────────────
+     Same geometry the reel draws from (web.json), scaled to a 1080x660
+     viewBox: node centres and radius unchanged, so the shape a viewer
+     recognises from the video is the same shape here. */
+  .pr-link { fill: none; stroke: #7a8990; stroke-width: 2.6; }
+  .pr-node { fill: #04111f; stroke: #79b0cc; stroke-width: 2.6; }
+  .pr-node-label {
+    dominant-baseline: central; fill: #faf6af; font-family: Mono, ui-monospace, monospace;
+    font-size: 46px; font-weight: 600; text-anchor: middle;
+  }
+  .pr-t {
+    fill: #abbac2; font-family: Mono, ui-monospace, monospace; font-size: 20px;
+    letter-spacing: 1.1px; text-transform: uppercase;
+  }
+
+  /* Below the port's own 600px map breakpoint, `.map > svg` is display:none
+     (99-hubert.css, founder's call 2026-08-29: viewBox-unit caption text
+     renders unreadably small once scaled to a phone column, so the drawing
+     is replaced, not scaled, and the SVG leaves the accessibility tree so
+     only one representation of the diagram is exposed per viewport). Every
+     other map on the site swaps in a phone-shaped ladder; a six-node graph
+     has no ladder to be, so this is the same swap in its own shape: the
+     eleven links as plain reflowable text. */
+  .pr-web-phone { display: none; }
+  @media screen and (max-width: 600px) {
+    .pr-web-phone {
+      display: block; list-style: none; margin: 0; padding: 0;
+    }
+    .pr-web-phone li {
+      border-bottom: 1px solid rgba(255, 255, 255, .15);
+      color: #cbcfd2; font-family: Mono, ui-monospace, monospace;
+      font-size: 15px; padding: 10px 2px;
+    }
+    .pr-web-phone li:last-child { border-bottom: 0; }
+    .pr-web-phone li b { color: #faf6af; margin-right: 10px; }
+  }
+
+  /* ── the two number tables ────────────────────────────────────────────
+     The base table rule (99-hubert.css) handles rules and spacing; this adds
+     tabular figures to every numeric column, including the row headers the
+     matrix uses on its left edge, which the base rule only gives td:first-child. */
+  .matrix-table th, .matrix-table td,
+  .column-table td, .column-table tfoot td { font-variant-numeric: tabular-nums; }
+  .matrix-table td, .column-table td { text-align: right; }
+  .matrix-table caption, .column-table caption {
+    caption-side: top; color: var(--plate-read-dim); font-family: Mono, ui-monospace, monospace;
+    font-size: 14px; letter-spacing: -0.048em; margin-bottom: 4px; text-align: left;
+    text-transform: uppercase;
+  }
+  .column-table tfoot td {
+    border-bottom: 0; border-top: 2px solid var(--plate-read-rule); font-weight: 600;
+  }
+
+  /* The matrix is 7 columns of numbers; the ported table rule's 12px/16px
+     cell padding is sized for two- and three-column reference tables and
+     does not fit 7 in a 390px phone column no matter the font size. Scroll
+     the table sideways inside its own bounded box instead of letting it
+     overflow the page. */
+  @media screen and (max-width: 600px) {
+    .table-scroll {
+      margin: 0 -20px; overflow-x: auto; padding: 0 20px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .table-scroll table { min-width: 560px; }
+  }
+
+  /* Inline code. The ported reset styles `code` as a black BLOCK — it was
+     written for fenced code samples; scoped back to an inline chip here for
+     the one inline mention of web.json. */
+  .journalArticle__article code {
+    background: rgba(0, 0, 0, .22); border-radius: 4px; display: inline;
+    font-family: Mono, ui-monospace, monospace; font-size: 88%; margin: 0;
+    padding: .1em .38em; white-space: nowrap;
+  }
+
+  .ann-aside {
+    border-left: 2px solid rgba(0, 0, 0, .35); font-size: 85%; margin: 0 0 3vw;
+    max-width: 34em; padding-left: 20px;
+  }
+  .ann-aside b {
+    display: block; font-family: Mono, ui-monospace, monospace; font-size: 72%;
+    font-weight: 400; letter-spacing: .04em; margin-bottom: 6px; opacity: .55;
+    text-transform: uppercase;
+  }
+  .ann-aside p { opacity: .8; padding-bottom: 0; }
+  @media screen and (max-width: 600px) {
+    .ann-aside { margin-bottom: 5vh; padding-left: 14px; }
+  }
+
+  /* The header is `position: fixed`, so an in-page jump lands the target
+     underneath it. Nº006/007/008 use a flat 116px; match it. */
+  #guide, #web, #matrix, #next, #sources { scroll-margin-top: 116px; }
+</style>
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-09-28-pagerank" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-09-28-pagerank">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-09-28-pagerank">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-09-28-pagerank">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-09-28-pagerank">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-09-28-pagerank">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-09-28-pagerank">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-09-28-pagerank">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/pagerank.html"><span>Nº023 · PageRank</span></a>
+    <a href="/shazam.html"><span>Nº022 · Shazam</span></a>
+    <a href="/fde.html"><span>Nº021 · Forward Deployed Engineer</span></a>
+    <a href="/jev.html"><span>Nº020 · Jev (TypeSafe)</span></a>
+    <a href="/claudex-loop/"><span>Nº019 · Cross-model review</span></a>
+    <a href="/hugging-face.html"><span>Nº018 · Hugging Face</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Field guide</span><strong>Nº023</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>System</span><strong>PageRank</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Model</span><strong>M r = r (d = 0.85)</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Annotations</span><strong>Five, keyed to the web</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp">Filed</span>
+        </div>
+      </div>
+
+      <div class="journalArticle__article" id="guide">
+        <div class="marks" aria-hidden="true">
+          <img class="google-mark" src="img/guide/google-logo-color-272x92dp.png?v=2026-09-28-pagerank" alt="" width="272" height="92" decoding="async">
+        </div>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">You commented RANK — this is the worked example.</p>
+        <h1 data-splitting="lines">PageRank is an eigenvector.</h1>
+        <p class="lead" data-splitting>Click random links forever, and the share of time you spend on each
+          page stops changing. Freeze those six settled shares into a column, multiply by the page-to-page
+          link matrix once more, and the same column comes straight back — which is what makes it an
+          eigenvector. Sorted biggest first, that column was the first score Google ever gave every page.</p>
+
+        <p class="monospace monospace__p" data-splitting>Companion to the reel · Watch it on
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank">@huberttheinventor</a></p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">The whole mental model, one picture</p>
+        <h4 aria-level="2" data-splitting="lines">Six pages, joined by links, and one bored random clicker</h4>
+
+        <figure class="journalArticle__banner map" id="web">
+          <svg viewBox="0 0 1080 660" role="img" aria-labelledby="web-title web-desc">
+            <title id="web-title">The six-page web</title>
+            <desc id="web-desc">Six pages lettered A to F. A and C link to each other, B and C link to
+              each other, C also links to D, D links to A, B, C and E, and E and F link only to each
+              other. A cursor that follows these links at random, forever, spends most of its time on E
+              and F, because that pair never sends it back out.</desc>
+            <defs>
+              <marker id="pr-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 z" fill="#7a8990"/>
+              </marker>
+            </defs>
+            <text class="pr-t" x="20" y="30">A B C D E F &middot; RANDOM CLICKER, FOREVER</text>
+
+            <path class="pr-link" marker-end="url(#pr-arrow)" d="M219.1 157.0 Q268.2 228.9 342.2 274.7"/>
+            <path class="pr-link" marker-end="url(#pr-arrow)" d="M219.1 503.0 Q293.1 457.2 342.2 385.3"/>
+            <path class="pr-link" marker-end="url(#pr-arrow)" d="M350.9 283.0 Q276.9 237.2 227.8 165.3"/>
+            <path class="pr-link" marker-end="url(#pr-arrow)" d="M350.9 377.0 Q301.8 448.9 227.8 494.7"/>
+            <path class="pr-link" marker-end="url(#pr-arrow)" d="M468.0 330.0 Q534.0 348.0 600.0 330.0"/>
+            <path class="pr-link" marker-end="url(#pr-arrow)" d="M617.6 303.1 Q423.4 238.9 243.5 141.7"/>
+            <path class="pr-link" marker-end="url(#pr-arrow)" d="M617.6 356.9 Q437.6 454.2 243.5 518.3"/>
+            <path class="pr-link" marker-end="url(#pr-arrow)" d="M612.0 330.0 Q546.0 348.0 480.0 330.0"/>
+            <path class="pr-link" marker-end="url(#pr-arrow)" d="M729.1 283.0 Q803.1 237.2 852.2 165.3"/>
+            <path class="pr-link" marker-end="url(#pr-arrow)" d="M910.0 178.0 Q892.0 324.0 910.0 470.0"/>
+            <path class="pr-link" marker-end="url(#pr-arrow)" d="M910.0 482.0 Q892.0 336.0 910.0 190.0"/>
+
+            <circle class="pr-node" cx="170" cy="110" r="68"/>
+            <text class="pr-node-label" x="170" y="112">A</text>
+            <circle class="pr-node" cx="170" cy="550" r="68"/>
+            <text class="pr-node-label" x="170" y="552">B</text>
+            <circle class="pr-node" cx="400" cy="330" r="68"/>
+            <text class="pr-node-label" x="400" y="332">C</text>
+            <circle class="pr-node" cx="680" cy="330" r="68"/>
+            <text class="pr-node-label" x="680" y="332">D</text>
+            <circle class="pr-node" cx="910" cy="110" r="68"/>
+            <text class="pr-node-label" x="910" y="112">E</text>
+            <circle class="pr-node" cx="910" cy="550" r="68"/>
+            <text class="pr-node-label" x="910" y="552">F</text>
+          </svg>
+
+          <ul class="pr-web-phone">
+            <li><b>A</b> &rarr; C</li>
+            <li><b>B</b> &rarr; C</li>
+            <li><b>C</b> &rarr; A, B, D</li>
+            <li><b>D</b> &rarr; A, B, C, E</li>
+            <li><b>E</b> &rarr; F</li>
+            <li><b>F</b> &rarr; E</li>
+          </ul>
+
+          <div class="legend monospace">
+            <div><i aria-hidden="true"></i>Link &mdash; sand flows this way each round</div>
+          </div>
+          <figcaption class="monospace monospace__p opacity__50">Same geometry the reel draws (<code>web.json</code>):
+            A&rarr;C, B&rarr;C, C&rarr;A, B, D, D&rarr;A, B, C, E, E&harr;F.</figcaption>
+        </figure>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">The whole mental model, one picture. Everything after it is annotation.</p>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº001 · Twenty-four million pages, no time to read any of them</p>
+        <h4 aria-level="2" data-splitting="lines">Score every page by imagining one clicker who never stops</h4>
+        <p data-splitting>The first Google held at least twenty-four million pages, far too many to rank by
+          hand or by reading. Brin and Page's fix was a thought experiment: imagine a clicker who starts
+          anywhere and follows links at random, forever. The share of time that clicker spends on a page,
+          in the long run, is the page's score. Six pages are enough to run the whole idea by hand.</p>
+        <div class="ann-aside">
+          <b>Source</b>
+          <p>The random surfer is defined in Brin &amp; Page 1998, &sect;2.1.2: a surfer who "keeps clicking
+            on links... but eventually gets bored and starts on another random page."</p>
+        </div>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº002 · Split evenly, but a busy page pours more</p>
+        <h4 aria-level="2" data-splitting="lines">Every round, each page hands its sand to whatever it links to</h4>
+        <p data-splitting>Pour sand on every page as a picture of the clicker's time. Each round, a page's
+          sand flows out along its own links, split evenly among them. A page with three out-links keeps a
+          third of its sand on each; a page with one keeps it all on that one. A link from a page that is
+          currently holding a lot of sand therefore pours more than the same link from a page holding
+          little &mdash; a busy page's vote counts for more than a quiet page's.</p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº003 · Two pages that only ever talk to each other</p>
+        <h4 aria-level="2" data-splitting="lines">E and F trap the sand, and every other page drains to zero</h4>
+        <p data-splitting>Run the rounds with no fix and watch pages A, B, C and D empty out: every page
+          that eventually points only at E or F loses its sand for good, because E and F's only out-links
+          point at each other. After 400 rounds with links alone, A, B, C and D all read 0, while E holds
+          0.467 and F holds 0.533 &mdash; the two of them keeping the clicker's entire attention, and nothing
+          else.</p>
+        <div class="ann-aside">
+          <b>Why it matters</b>
+          <p>A pair like this is called a rank sink: sand flows in and never leaves. Left alone, it breaks
+            the whole score, because most of the web reads exactly zero.</p>
+        </div>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº004 · The boredom rule, folded into one table</p>
+        <h4 aria-level="2" data-splitting="lines">15% of the time, the clicker ignores the links and jumps anywhere</h4>
+        <p data-splitting>Brin and Page's actual fix: with probability <em>d</em> = 0.85 the clicker follows
+          a link as usual; the rest of the time &mdash; 1&minus;<em>d</em> = 15% &mdash; it gets bored and
+          jumps to any of the six pages at random. That trickle is enough to leak every trap. Folding the
+          jump into the link table gives the link matrix: one column per page, showing exactly where that
+          page's sand goes each round, jump included.</p>
+
+        <div class="table-scroll">
+        <table class="matrix-table">
+          <caption>Reference &middot; the link matrix (columns sum to 1)</caption>
+          <thead><tr><th scope="col">To &darr; / From &rarr;</th><th scope="col">A</th><th scope="col">B</th><th scope="col">C</th><th scope="col">D</th><th scope="col">E</th><th scope="col">F</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">A</th><td>0.025</td><td>0.025</td><td>0.308</td><td>0.238</td><td>0.025</td><td>0.025</td></tr>
+            <tr><th scope="row">B</th><td>0.025</td><td>0.025</td><td>0.308</td><td>0.238</td><td>0.025</td><td>0.025</td></tr>
+            <tr><th scope="row">C</th><td>0.875</td><td>0.875</td><td>0.025</td><td>0.238</td><td>0.025</td><td>0.025</td></tr>
+            <tr><th scope="row">D</th><td>0.025</td><td>0.025</td><td>0.308</td><td>0.025</td><td>0.025</td><td>0.025</td></tr>
+            <tr><th scope="row">E</th><td>0.025</td><td>0.025</td><td>0.025</td><td>0.238</td><td>0.025</td><td>0.875</td></tr>
+            <tr><th scope="row">F</th><td>0.025</td><td>0.025</td><td>0.025</td><td>0.025</td><td>0.875</td><td>0.025</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="monospace monospace__p opacity__50" data-splitting>Read a column top to bottom: page A
+          has one out-link, to C, so its column sends 0.875 to C alone (0.85/1 + 0.15/6, the whole link
+          plus the jump share) and 0.025 &mdash; the jump floor alone &mdash; everywhere else. Page C has
+          three out-links, to A, B and D, so its column sends 0.308 to each of them (0.85/3 + 0.15/6).
+          Every cell carries the 0.025 jump floor (0.15/6) even where no link exists.</p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº005 · The column the matrix hands back unchanged</p>
+        <h4 aria-level="2" data-splitting="lines">That column is an eigenvector, and sorted it is the first score</h4>
+        <p data-splitting>Run the damped rounds and the six shares stop moving: within 0.0005 of their final
+          value after 29 rounds, from a flat 1/6 start. Freeze them and they read A 0.109, B 0.109, C 0.230,
+          D 0.090, E 0.236, F 0.225 &mdash; a probability distribution, since the six numbers add to 1.000.
+          Multiply that column by the link matrix above one more time and the same six numbers come straight
+          back. A column a matrix only stretches, never rotates, is called an eigenvector; here the stretch
+          is exactly 1, which is why one more multiply changes nothing.</p>
+        <p data-splitting>Sorted biggest first &mdash; E, C, F, A, B, D &mdash; that was the first score Google
+          gave every page: how often the random clicker lands on it. The trap pair does not sweep the top:
+          E leads at 0.236, but hub C is second at 0.230, ahead of F at 0.225. E and F still rank high because
+          a page whose only out-link is to its own partner keeps the clicker the longest &mdash; the 15% jump
+          is the only way out for either of them &mdash; but the jump also gives every other page, C included,
+          enough of a trickle to compete. This score was one input Google combined with the words on a page
+          (&sect;4.5.1); it was never the whole ranking, and whether Google still uses it today is
+          unverified and not claimed here.</p>
+
+        <table class="column-table">
+          <caption>The steady column</caption>
+          <thead><tr><th scope="col">Page</th><th scope="col">Steady share</th></tr></thead>
+          <tbody>
+            <tr><td>A</td><td>0.109</td></tr>
+            <tr><td>B</td><td>0.109</td></tr>
+            <tr><td>C</td><td>0.230</td></tr>
+            <tr><td>D</td><td>0.090</td></tr>
+            <tr><td>E</td><td>0.236</td></tr>
+            <tr><td>F</td><td>0.225</td></tr>
+          </tbody>
+          <tfoot><tr><td>Sum</td><td>1.000</td></tr></tfoot>
+        </table>
+
+        <table class="column-table" id="matrix">
+          <caption>Sorted biggest first &middot; the first score</caption>
+          <thead><tr><th scope="col">Rank</th><th scope="col">Page</th><th scope="col">First score</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>E</td><td>0.236</td></tr>
+            <tr><td>2</td><td>C</td><td>0.230</td></tr>
+            <tr><td>3</td><td>F</td><td>0.225</td></tr>
+            <tr><td>4</td><td>A</td><td>0.109</td></tr>
+            <tr><td>5</td><td>B</td><td>0.109</td></tr>
+            <tr><td>6</td><td>D</td><td>0.090</td></tr>
+          </tbody>
+        </table>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="next">One system, taken apart.</h4>
+        <p data-splitting>Same treatment, different machine. No pitch, no thread-bait, and an unsubscribe
+          link that works.</p>
+        <div class="buttons">
+          <a href="index.html#pricing" class="button button__big hover_effect"><span>The List</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="sources">Take it with you</h4>
+        <p class="monospace monospace__p opacity__50" data-splitting>The worked example is this page: the six-page web, its link matrix and the final column, free, no email.</p>
+        <div class="buttons">
+          <a href="#web" class="button button__big hover_effect"><span>The six-page web</span> <span class="arrow">&#8599;</span></a>
+          <a href="#matrix" class="button button__big hover_effect"><span>The final column</span> <span class="arrow">&#8599;</span></a>
+          <a href="http://snap.stanford.edu/class/cs224w-readings/Brin98Anatomy.pdf" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Brin &amp; Page, 1998</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-small="true">The List</p>
+        <h4 aria-level="2">One a week. And the other seven, now.</h4>
+        <p>Confirm your address and the whole set arrives &mdash; all ten field guides, exactly
+          as they are on the site, nothing held back for subscribers. After that, one new system
+          taken apart every week. No pitch, no thread-bait, and an unsubscribe link that works.</p>
+
+        <form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor"
+              method="post">
+          <label class="monospace monospace__p" for="list-email">Email address</label>
+          <div class="field">
+            <input type="email" name="email" id="list-email" placeholder="you@example.com"
+                   required autocomplete="email" inputmode="email" spellcheck="false">
+            <input type="hidden" name="tag" value="guide-23-pagerank">
+            <button type="submit" class="monospace">Send me the set &#8599;</button>
+          </div>
+          <label class="consent monospace monospace__p">
+            <input type="checkbox" name="consent" required>
+            <span>Send me the ten guides and one new one each week. I can unsubscribe at any
+              time and my address is never shared &mdash; see the
+              <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set
+              arrives the moment you click it.</span>
+          </label>
+        </form>
+<!-- build:guidenav -->
+      <div class="guideNav">
+        <h4 aria-level="2" class="guideNav__head">Keep going</h4>
+        <div class="buttons">
+        <a href="/shazam.html" class="button button__big hover_effect"><span><em class="guideNav__kicker">Previous</em> Nº022 · Shazam</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__label">Related</p>
+        <div class="buttons">
+        <a href="/shadow.html" class="button button__big hover_effect"><span>Nº014 · The dot product and attention &mdash; The dot product is a shadow.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/eigen.html" class="button button__big hover_effect"><span>Nº011 · Eigenvectors and linear systems &mdash; Two directions the wind cannot turn.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/determinant.html" class="button button__big hover_effect"><span>Nº009 · The determinant &mdash; The determinant is a volume.</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__all"><a href="/guides/">All 21 guides &#8599;</a></p>
+      </div>
+<!-- /build:guidenav -->
+      <div class="article__footer">
+          <p class="monospace monospace__p opacity__50" data-splitting><strong>An independent educational
+            breakdown.</strong> Not affiliated with, endorsed by, or produced in cooperation with Google
+            LLC, or with Brin, Page or the authors of the papers cited. The six-page web, its numbers and
+            its steady column are computed for this guide (Python, power iteration, d = 0.85) and are not a
+            claim about any real web; the mechanism and the historical claim &mdash; "scored", not "ranks
+            today" &mdash; follow Brin &amp; Page 1998 as cited above. Any error in the summary is mine.</p>
+          <p class="monospace monospace__p credit">The Google mark is Google's own brand asset, shown
+            unaltered.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="#web" class="button button__half hover_effect" title="The six-page web"><span>The web</span><span class="arrow">↗</span></a>
+          <a href="#matrix" class="button button__half hover_effect" title="Take it with you"><span>The matrix</span><span class="arrow">↗</span></a>
+          <a href="privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+
+
+
+
+<dialog id="list-modal" class="listModal" aria-labelledby="list-modal-title"><div class="listModal__inner" tabindex="-1" autofocus><p class="listModal__eyebrow">The List</p><h2 id="list-modal-title">Ten guides. One email.</h2><p>Every field guide on this site, sent the moment you confirm &mdash; then one new system taken apart each week.</p><p>Nothing is held back for subscribers. The guides stay free and stay here; the list is only how the next one reaches you without an algorithm getting a vote.</p><form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor" method="post"><label class="monospace monospace__p" for="list-email-modal">Email address</label><div class="field"><input type="email" name="email" id="list-email-modal" placeholder="you@example.com" required autocomplete="email" inputmode="email" spellcheck="false"><input type="hidden" name="tag" value="popup-pagerank"><button type="submit" class="monospace">Send me the set &#8599;</button></div><label class="consent monospace monospace__p"><input type="checkbox" name="consent" required><span>Send me the ten guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set arrives the moment you click it.</span></label></form><button type="button" class="listModal__close" data-close>No thanks &mdash; just reading</button></div></dialog>
+<script src="assets/js/list-modal.js?v=2026-09-28-pagerank" defer></script>
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-09-28-pagerank"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-09-28-pagerank"></script>
+<script src="/assets/js/splitting.min.js?v=2026-09-28-pagerank"></script>
+<script src="/assets/js/site.js?v=2026-09-28-pagerank" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>
