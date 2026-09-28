@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Every piece of Ticketmaster's system arrived only after the one before it broke. — Hubert's field guides</title>
+<meta name="description" content="Field guide Nº026. On 15 November 2022, Taylor Swift's Eras Tour presale took 3.5 billion requests in one day, 4x Ticketmaster's previous peak (Ticketmaster, 19 Nov 2022). 14 million hit the site, bots included (Fortune, 18 Nov 2022); over 2 million tickets sold, and about 15% of interactions ran into issues (Ticketmaster, 19 Nov 2022). Let's design the system that bent instead of going flat: a load balancer, a cache, a queue and a replica, each one added only after the piece before it broke.">
+<meta name="theme-color" content="#1a1a1a">
+
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="Every piece of Ticketmaster's system arrived only after the one before it broke.">
+<meta property="og:description" content="The diagram: all four components, each labelled with the failure that forced it in, plus the day's real numbers.">
+<meta property="og:image" content="artifacts/ticketmaster-card.png">
+<meta property="og:image:alt" content="Field guide Nº026 cover — the diagram: load balancer, cache, queue and replica, each labelled with the failure that forced it in, and the day's numbers: 14,000,000 hit the site bots included, 2,000,000+ tickets sold, 3.5 billion requests, 4x the previous peak, about 15% of interactions had issues.">
+<meta name="twitter:card" content="summary_large_image">
+
+
+
+
+<style>
+  /* ── the day's-numbers table ──────────────────────────────────────────
+     Same shape as edge.html's mult-table and temperature.html's toy-table:
+     tabular figures, a small caps caption above the rule. Three columns
+     (number / what it counts / source) instead of a grid of bare figures,
+     because every number here needs its source sitting next to it. */
+  .stats-table th, .stats-table td { text-align: left; padding: 10px 6px; vertical-align: top; }
+  .stats-table td:first-child, .stats-table th:first-child {
+    font-variant-numeric: tabular-nums; font-weight: 600;
+    color: var(--plate-read-accent, #1a1a1a); white-space: nowrap;
+  }
+  .stats-table caption {
+    caption-side: top; color: var(--plate-read-dim); font-family: Mono, ui-monospace, monospace;
+    font-size: 14px; letter-spacing: -0.048em; margin-bottom: 4px; text-align: left;
+    text-transform: uppercase;
+  }
+  .stats-table tbody td { border-bottom: 1px solid var(--plate-read-rule); }
+  .stats-table tbody tr:last-child td { border-bottom: none; }
+  .stats-table tbody td:last-child { color: var(--plate-read-dim); font-size: 90%; }
+
+  @media screen and (max-width: 600px) {
+    .table-scroll {
+      margin: 0 -20px; overflow-x: auto; padding: 0 20px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .table-scroll table { min-width: 480px; }
+  }
+
+  /* Inline code, scoped back to an inline chip (the ported reset styles
+     `code` as a black block, written for fenced samples). */
+  .journalArticle__article code {
+    background: rgba(0, 0, 0, .22); border-radius: 4px; display: inline;
+    font-family: Mono, ui-monospace, monospace; font-size: 88%; margin: 0;
+    padding: .1em .38em; white-space: nowrap;
+  }
+
+  /* Block quotes carry the source's own words, set apart from the plain-
+     English paraphrase around them so a reader can see exactly which
+     sentences are quoted verbatim and which are Hubert's summary. */
+  .paper-quote {
+    border-left: 2px solid rgba(0, 0, 0, .35); font-size: 92%; font-style: italic;
+    margin: 0 0 3vw; max-width: 34em; padding-left: 20px;
+  }
+  .paper-quote cite {
+    display: block; font-family: Mono, ui-monospace, monospace; font-size: 72%;
+    font-style: normal; letter-spacing: .04em; margin-top: 8px; opacity: .55;
+    text-transform: uppercase;
+  }
+  @media screen and (max-width: 600px) {
+    .paper-quote { margin-bottom: 5vh; padding-left: 14px; }
+  }
+
+  /* The diagram image, sent by DM to anyone who comments TICKETS — shown
+     here too, since the page is the same artifact. Capped narrow so it
+     reads as a card, not a hero image. */
+  .card-figure { margin: 6px 0 4vw; max-width: 380px; }
+  .card-figure img { border-radius: 14px; border: 1px solid rgba(0, 0, 0, .14); display: block; width: 100%; }
+  .card-figure figcaption {
+    color: var(--plate-read-dim); font-family: Mono, ui-monospace, monospace; font-size: 13px;
+    letter-spacing: .01em; margin-top: 10px; opacity: .65;
+  }
+
+  /* The header is `position: fixed`, so an in-page jump lands the target
+     underneath it. Nº006/007/008 use a flat 116px; match it. */
+  #guide, #load-balancer, #cache, #queue, #scope, #sources { scroll-margin-top: 116px; }
+</style>
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-09-28-ticketmaster" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-09-28-ticketmaster">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-09-28-ticketmaster">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-09-28-ticketmaster">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-09-28-ticketmaster">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-09-28-ticketmaster">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-09-28-ticketmaster">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-09-28-ticketmaster">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/ticketmaster.html"><span>Nº026 · Ticketmaster (system design)</span></a>
+    <a href="/temperature.html"><span>Nº025 · Temperature (softmax sampling)</span></a>
+    <a href="/edge.html"><span>Nº024 · Gradient descent</span></a>
+    <a href="/pagerank.html"><span>Nº023 · PageRank</span></a>
+    <a href="/shazam.html"><span>Nº022 · Shazam</span></a>
+    <a href="/fde.html"><span>Nº021 · Forward Deployed Engineer</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Field guide</span><strong>Nº026</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>System</span><strong>Ticketmaster (system design)</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Model</span><strong>server &rarr; balancer &rarr; cache &rarr; queue &rarr; replica</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Annotations</span><strong>Four, keyed to the diagram</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp">Filed</span>
+        </div>
+      </div>
+
+      <div class="journalArticle__article" id="guide">
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">You commented TICKETS — this is the diagram.</p>
+        <h1 data-splitting="lines">Every piece of Ticketmaster's system arrived only after the one before it broke.</h1>
+        <p class="lead" data-splitting>On 15 November 2022, Taylor Swift's Eras Tour presale hit Ticketmaster with
+          3.5 billion requests in a single day &mdash; four times its previous peak. Fourteen million hit the site,
+          bots included; over two million tickets sold that day; and Ticketmaster's own estimate put the trouble at
+          about 15% of interactions across the site. One server was never going to survive that. Here is the system
+          that grew underneath it, one piece at a time &mdash; each piece added only after the piece before it broke.</p>
+
+        <p class="monospace monospace__p" data-splitting>Companion to the reel &middot; Watch it on
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank">@huberttheinventor</a></p>
+
+        <figure class="card-figure">
+          <img src="artifacts/ticketmaster-card.png" alt="The diagram: load balancer, cache, queue and replica, each labelled with the failure that forced it in &mdash; one server falling over, a million fans refreshing the same seating map, everyone pressing buy at once, and the queue's one machine dying. The day's numbers: 14,000,000 hit the site, bots included; 2,000,000+ tickets sold; 3.5 billion total system requests; 4x the previous peak; about 15% of interactions across the site had issues. Scope note: the load balancer, cache and replica are the textbook build, not Ticketmaster's real architecture &mdash; the queue is the one piece it names itself.">
+          <figcaption>The card itself, free, no email &mdash; the same file the DM sends.</figcaption>
+        </figure>
+
+        <div class="table-scroll">
+        <table class="stats-table">
+          <caption>The day&rsquo;s numbers, sourced &mdash; 15 November 2022</caption>
+          <thead><tr><th scope="col">Number</th><th scope="col">What it counts</th><th scope="col">Source</th></tr></thead>
+          <tbody>
+            <tr><td>14,000,000</td><td>hit the site, bots included</td><td>Greg Maffei, Liberty Media, in Fortune, 18 Nov 2022</td></tr>
+            <tr><td>2,000,000+</td><td>tickets sold</td><td>Ticketmaster, 19 Nov 2022</td></tr>
+            <tr><td>3.5 billion</td><td>total system requests</td><td>Ticketmaster, 19 Nov 2022</td></tr>
+            <tr><td>4&times;</td><td>the previous peak</td><td>Ticketmaster, 19 Nov 2022</td></tr>
+            <tr><td>&asymp;15%</td><td>of interactions across the site had issues</td><td>Ticketmaster, 19 Nov 2022</td></tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº001 · The first fitting</p>
+        <h4 aria-level="2" data-splitting="lines" id="load-balancer">One server falls over the instant every fan arrives</h4>
+        <p data-splitting>Start with one server holding every ticket. The sale opens, every fan hits it in the same
+          second, and one machine answering that many requests at once falls over immediately. The textbook fix for
+          a surge like that: run the same service on dozens of servers behind a load balancer, so every click lands
+          on whichever server has room to answer it, and any server that stalls gets pulled out of the rotation
+          before it drags the others down.</p>
+        <blockquote class="paper-quote">
+          <p>&ldquo;A load balancer distributes network traffic across a group of servers, and continuously monitors
+            the health of these servers so it only sends requests to those that are able to respond in a timely
+            manner.&rdquo;</p>
+          <cite>AWS, &ldquo;What is Load Balancing?&rdquo;</cite>
+        </blockquote>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº002 · The second fitting</p>
+        <h4 aria-level="2" data-splitting="lines" id="cache">A million fans keep asking the exact same question</h4>
+        <p data-splitting>Now watch what those servers keep getting asked. A million fans refresh the exact same
+          seating map, again and again, and every refresh was hitting the database fresh. Cache it instead: keep the
+          answer sitting ready, and only redraw the map once a seat actually sells, instead of asking the database
+          every time.</p>
+        <blockquote class="paper-quote">
+          <p>&ldquo;Caching improves application performance by storing frequently accessed data items in a fast,
+            in-memory store &hellip; instead of fetching them from a slower back-end store on every request.&rdquo;</p>
+          <cite>AWS, &ldquo;What is Caching?&rdquo;</cite>
+        </blockquote>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº003 · The third fitting</p>
+        <h4 aria-level="2" data-splitting="lines" id="queue">The queue is the one piece Ticketmaster names itself</h4>
+        <p data-splitting>The real crush hits next: everyone stops looking and presses buy in the same instant. The
+          fix is to make them wait in line first, and only let in as many as the servers can take &mdash; a queue.
+          Ticketmaster runs exactly that: a virtual waiting room, fans call it &ldquo;the queue,&rdquo; and it is the
+          one piece of this build that is not a hypothetical &mdash; it is the real, named system Ticketmaster's
+          presale ran on. That day it took three and a half billion requests, four times the site's worst day on
+          record, and not every fan in the line was real: bots were hammering it too, pretending to be fans, hoping
+          to grab tickets they could resell before a real fan even got through the door.</p>
+        <blockquote class="paper-quote">
+          <p>&ldquo;A queue is a temporary repository for messages that are awaiting processing &hellip; the
+            receiving application can retrieve the message and process it, at its own pace, without being
+            overwhelmed.&rdquo;</p>
+          <cite>AWS, Simple Queue Service developer guide</cite>
+        </blockquote>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº004 · The fourth fitting, and the honest ending</p>
+        <h4 aria-level="2" data-splitting="lines" id="scope">A mirrored queue, and no build invents seats that don't exist</h4>
+        <p data-splitting>And if the one machine running that queue goes down, everybody in line loses their spot.
+          So you mirror it live, in a second place, ready to step in the moment the first one fails, so the line
+          doesn't just vanish &mdash; a replica. Four fixes, each one added only after something broke. That's the
+          difference between a site that bends and a site that goes flat.</p>
+        <p data-splitting>It still bent. Ticketmaster's own numbers say about one in seven interactions on the site
+          ran into a problem that day. The fixes kept it bending instead of going flat &mdash; but even a flawless
+          site can't invent seats that don't exist. Fourteen million hit the site that day, bots included; there
+          were two million tickets to sell. No build on earth was ever going to close that gap.</p>
+        <blockquote class="paper-quote">
+          <p>&ldquo;We estimate that of the total 3.5 billion system requests Ticketmaster received &hellip; system
+            interruptions were at a scale we have never seen before &hellip; roughly 15% of interactions across the
+            site experienced issues.&rdquo;</p>
+          <cite>Ticketmaster, &ldquo;Taylor Swift | The Eras Tour Onsale Explained,&rdquo; 19 Nov 2022</cite>
+        </blockquote>
+        <p data-splitting><strong>Scope: what this build is and is not.</strong> The load balancer, cache and
+          replica above are the textbook build for a surge like this (component definitions: AWS's own
+          documentation on load balancing, caching and read replicas) &mdash; not a claim about Ticketmaster's real
+          internal architecture. The queue is the one piece Ticketmaster names as its own.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="next">One system, taken apart.</h4>
+        <p data-splitting>Same treatment, different machine. No pitch, no thread-bait, and an unsubscribe
+          link that works.</p>
+        <div class="buttons">
+          <a href="index.html#pricing" class="button button__big hover_effect"><span>The List</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="sources">Take it with you</h4>
+        <p class="monospace monospace__p opacity__50" data-splitting>The diagram is this page: all four components, each labelled with the failure that forced it, and the day's real numbers, free, no email.</p>
+        <div class="buttons">
+          <a href="#queue" class="button button__big hover_effect"><span>The queue</span> <span class="arrow">&#8599;</span></a>
+          <a href="#scope" class="button button__big hover_effect"><span>The scope</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://business.ticketmaster.com/press-release/taylor-swift-the-eras-tour-onsale-explained/" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Ticketmaster, the onsale explained</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://fortune.com/2022/11/18/taylor-swift-ticket-fiasco-bots-ticketmaster-greg-maffei/" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Fortune, Greg Maffei on the bots</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-small="true">The List</p>
+        <h4 aria-level="2">One a week. And the other seven, now.</h4>
+        <p>Confirm your address and the whole set arrives &mdash; all ten field guides, exactly
+          as they are on the site, nothing held back for subscribers. After that, one new system
+          taken apart every week. No pitch, no thread-bait, and an unsubscribe link that works.</p>
+
+        <form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor"
+              method="post">
+          <label class="monospace monospace__p" for="list-email">Email address</label>
+          <div class="field">
+            <input type="email" name="email" id="list-email" placeholder="you@example.com"
+                   required autocomplete="email" inputmode="email" spellcheck="false">
+            <input type="hidden" name="tag" value="guide-26-ticketmaster">
+            <button type="submit" class="monospace">Send me the set &#8599;</button>
+          </div>
+          <label class="consent monospace monospace__p">
+            <input type="checkbox" name="consent" required>
+            <span>Send me the ten guides and one new one each week. I can unsubscribe at any
+              time and my address is never shared &mdash; see the
+              <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set
+              arrives the moment you click it.</span>
+          </label>
+        </form>
+<!-- build:guidenav -->
+      <div class="guideNav">
+        <h4 aria-level="2" class="guideNav__head">Keep going</h4>
+        <div class="buttons">
+        <a href="/temperature.html" class="button button__big hover_effect"><span><em class="guideNav__kicker">Previous</em> Nº025 · Temperature (softmax sampling)</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__label">Related</p>
+        <div class="buttons">
+        <a href="/doorman.html" class="button button__big hover_effect"><span>Nº013 · Load balancers &mdash; Ten servers, one door.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/gps.html" class="button button__big hover_effect"><span>Nº005 · GPS &mdash; Zero bars. Still found.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/google-search.html" class="button button__big hover_effect"><span>Nº004 · Google Search &mdash; It doesn't search the internet. It searches a copy.</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__all"><a href="/guides/">All 24 guides &#8599;</a></p>
+      </div>
+<!-- /build:guidenav -->
+      <div class="article__footer">
+          <p class="monospace monospace__p opacity__50" data-splitting><strong>An independent educational
+            breakdown.</strong> Not affiliated with, endorsed by, or produced in cooperation with Ticketmaster,
+            Live Nation, or any company named. The load balancer, cache and replica above are a textbook
+            illustration of how a surge like this is normally handled (component definitions from AWS's own
+            documentation: load balancing, caching and RDS read replicas) and are not a claim about Ticketmaster's
+            actual internal architecture; only the queue is a real, named Ticketmaster system. Every number above
+            is Ticketmaster's own release, &ldquo;Taylor Swift | The Eras Tour Onsale Explained&rdquo; (19 Nov
+            2022), or Greg Maffei, CEO of Liberty Media, quoted in Fortune (18 Nov 2022), both cited above. Any
+            error in the summary is mine.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="#queue" class="button button__half hover_effect" title="The queue"><span>The queue</span><span class="arrow">↗</span></a>
+          <a href="#scope" class="button button__half hover_effect" title="Take it with you"><span>The scope</span><span class="arrow">↗</span></a>
+          <a href="privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+
+
+
+
+<dialog id="list-modal" class="listModal" aria-labelledby="list-modal-title"><div class="listModal__inner" tabindex="-1" autofocus><p class="listModal__eyebrow">The List</p><h2 id="list-modal-title">Ten guides. One email.</h2><p>Every field guide on this site, sent the moment you confirm &mdash; then one new system taken apart each week.</p><p>Nothing is held back for subscribers. The guides stay free and stay here; the list is only how the next one reaches you without an algorithm getting a vote.</p><form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor" method="post"><label class="monospace monospace__p" for="list-email-modal">Email address</label><div class="field"><input type="email" name="email" id="list-email-modal" placeholder="you@example.com" required autocomplete="email" inputmode="email" spellcheck="false"><input type="hidden" name="tag" value="popup-ticketmaster"><button type="submit" class="monospace">Send me the set &#8599;</button></div><label class="consent monospace monospace__p"><input type="checkbox" name="consent" required><span>Send me the ten guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set arrives the moment you click it.</span></label></form><button type="button" class="listModal__close" data-close>No thanks &mdash; just reading</button></div></dialog>
+<script src="assets/js/list-modal.js" defer></script>
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-09-28-ticketmaster"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-09-28-ticketmaster"></script>
+<script src="/assets/js/splitting.min.js?v=2026-09-28-ticketmaster"></script>
+<script src="/assets/js/site.js?v=2026-09-28-ticketmaster" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>
