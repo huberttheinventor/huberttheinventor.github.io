@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Every GPU core is slower than your CPU's. It still wins. — Hubert's field guides</title>
+<meta name="description" content="Field guide Nº028. A GPU lane (Nvidia calls it a CUDA core) boosts to 2.52 GHz on a GeForce RTX 4090; an Intel Core i9-14900K CPU core boosts to 6.0 GHz. Race them on a matrix multiply, the operation behind most of a language model's arithmetic, and the 16,384-lane card still wins: every output cell is one row times one column, added up, and needs no other cell's answer. In one study, over 99% of BERT's training arithmetic was exactly this. Toy race, recomputed this session: 1,024 cells, 128 lanes, full by tick 8. Sources: nvidia.com, Intel ARK, Ivanov et al. 2020.">
+<meta name="theme-color" content="#1a1a1a">
+
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="Every GPU core is slower than your CPU's. It still wins.">
+<meta property="og:description" content="The race card: the toy grid at tick 8, both clock readouts, and the one case where the fast core wins.">
+<meta property="og:image" content="artifacts/gpu-card.png">
+<meta property="og:image:alt" content="Field guide Nº028 cover — the race card. A graphics-card board with a glowing schematic grid, full at tick 8: 128 LANES above it, CPU CORE 6.0 GHz and GPU LANE 2.52 GHz readouts, a counter reading TICK 8 · GRID FULL · CPU 80, and a marker on the stalled CPU cursor, CPU · ROW 3.">
+<meta name="twitter:card" content="summary_large_image">
+
+
+
+
+<style>
+  /* ── the race table ───────────────────────────────────────────────────
+     Same shape as temperature.html's toy-table: tabular figures, right-
+     aligned numeric columns. Wall vs cursor cell counts, tick by tick,
+     recomputed with toy-race.mjs (SCRIPT.md, Mechanism, 2026-09-28). */
+  .race-table th, .race-table td, .bert-table th, .bert-table td { font-variant-numeric: tabular-nums; }
+  .race-table td, .bert-table td { text-align: right; }
+  .race-table td:first-child, .bert-table td:first-child {
+    text-align: left; color: var(--plate-read-accent, #1a1a1a); font-weight: 600;
+  }
+  .race-table caption, .bert-table caption {
+    caption-side: top; color: var(--plate-read-dim); font-family: Mono, ui-monospace, monospace;
+    font-size: 14px; letter-spacing: -0.048em; margin-bottom: 4px; text-align: left;
+    text-transform: uppercase;
+  }
+  .race-table tr.race-line td, .bert-table tbody tr:first-child td { border-top: 2px solid var(--plate-read-rule); font-weight: 600; }
+  .race-table tbody td, .bert-table tbody td { border-bottom: 1px solid var(--plate-read-rule); padding: 8px 6px; }
+  .race-table tbody tr:last-child td, .bert-table tbody tr:last-child td { border-bottom: none; }
+  .bert-table td:last-child { color: var(--plate-read-dim); }
+
+  @media screen and (max-width: 600px) {
+    .table-scroll {
+      margin: 0 -20px; overflow-x: auto; padding: 0 20px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .table-scroll table { min-width: 420px; }
+  }
+
+  /* Inline code, scoped back to an inline chip (the ported reset styles
+     `code` as a black block, written for fenced samples). */
+  .journalArticle__article code {
+    background: rgba(0, 0, 0, .22); border-radius: 4px; display: inline;
+    font-family: Mono, ui-monospace, monospace; font-size: 88%; margin: 0;
+    padding: .1em .38em; white-space: nowrap;
+  }
+
+  /* Block quotes carry the source's own words, set apart from the plain-
+     English paraphrase around them so a reader can see exactly which
+     sentences are quoted verbatim and which are Hubert's summary. */
+  .paper-quote {
+    border-left: 2px solid rgba(0, 0, 0, .35); font-size: 92%; font-style: italic;
+    margin: 0 0 3vw; max-width: 34em; padding-left: 20px;
+  }
+  .paper-quote cite {
+    display: block; font-family: Mono, ui-monospace, monospace; font-size: 72%;
+    font-style: normal; letter-spacing: .04em; margin-top: 8px; opacity: .55;
+    text-transform: uppercase;
+  }
+  @media screen and (max-width: 600px) {
+    .paper-quote { margin-bottom: 5vh; padding-left: 14px; }
+  }
+
+  /* The race card, sent by DM to anyone who comments CORES — shown here
+     too, since the page is the same artifact. It is a real frame from the
+     approved master render (0.5s), not a mock-up. Capped narrow so it
+     reads as a card, not a hero image. */
+  .card-figure { margin: 6px 0 4vw; max-width: 380px; }
+  .card-figure img { border-radius: 14px; border: 1px solid rgba(0, 0, 0, .14); display: block; width: 100%; }
+  .card-figure figcaption {
+    color: var(--plate-read-dim); font-family: Mono, ui-monospace, monospace; font-size: 13px;
+    letter-spacing: .01em; margin-top: 10px; opacity: .65;
+  }
+
+  /* The header is `position: fixed`, so an in-page jump lands the target
+     underneath it. Nº006/007/008 use a flat 116px; match it. */
+  #guide, #lane, #grids, #chain, #scope, #sources { scroll-margin-top: 116px; }
+</style>
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-10-02-gpu" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-10-02-gpu">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-10-02-gpu">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-10-02-gpu">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-10-02-gpu">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-10-02-gpu">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-10-02-gpu">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-10-02-gpu">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/gpu.html"><span>Nº028 · GPUs (why AI runs on graphics cards)</span></a>
+    <a href="/attention.html"><span>Nº027 · Attention (self-attention in a transformer)</span></a>
+    <a href="/ticketmaster.html"><span>Nº026 · Ticketmaster (system design)</span></a>
+    <a href="/temperature.html"><span>Nº025 · Temperature (softmax sampling)</span></a>
+    <a href="/edge.html"><span>Nº024 · Gradient descent</span></a>
+    <a href="/pagerank.html"><span>Nº023 · PageRank</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Field guide</span><strong>Nº028</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>System</span><strong>GPUs (why AI runs on graphics cards)</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Model</span><strong>clock speed &rarr; independent sums &rarr; lane count &rarr; race</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Race</span><strong>One toy grid, 1,024 cells, 128 lanes</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp">Filed</span>
+        </div>
+      </div>
+
+      <div class="journalArticle__article" id="guide">
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">You commented CORES — this is the race card.</p>
+        <h1 data-splitting="lines">Every GPU core is slower than your CPU's. It still wins.</h1>
+        <p class="lead" data-splitting>An Intel Core i9-14900K CPU core boosts to 6.0 GHz. A GPU lane on a GeForce
+          RTX 4090, what Nvidia calls a CUDA core, boosts to 2.52 GHz &mdash; slower, on paper, every time. Race them
+          on a matrix multiply, the operation behind most of a language model's arithmetic, and the slower lane wins.
+          The reason isn't speed. Every output cell of a matrix multiply is one row times one column, multiplied pair
+          by pair and added up, and it needs no other cell's answer. So the job splits into thousands of independent
+          little sums, and how many workers you have matters more than how fast any one of them is.</p>
+
+        <p class="monospace monospace__p" data-splitting>Companion to the reel &middot; Watch it on
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank">@huberttheinventor</a></p>
+
+        <figure class="card-figure">
+          <img src="artifacts/gpu-card.png" alt="The race card. A graphics-card board with a glowing schematic grid over it, full at tick 8: 128 LANES written above it, CPU CORE 6.0 GHz and GPU LANE 2.52 GHz readouts above that, a counter reading TICK 8 &middot; GRID FULL &middot; CPU 80, and a marker on the stalled CPU cursor, CPU &middot; ROW 3.">
+          <figcaption>The race card itself, free, no email &mdash; a real frame from the film's master render, the same file the DM sends.</figcaption>
+        </figure>
+
+        <div class="table-scroll">
+        <table class="race-table">
+          <caption>The toy race, tick by tick (recomputed with <code>toy-race.mjs</code>, 2026-09-28)</caption>
+          <thead><tr><th scope="col">Tick</th><th scope="col">Wall (128 lanes), cells filled</th><th scope="col">CPU cursor, cells filled</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>128</td><td>10</td></tr>
+            <tr><td>2</td><td>256</td><td>20</td></tr>
+            <tr><td>3</td><td>384</td><td>30</td></tr>
+            <tr><td>4</td><td>512</td><td>40</td></tr>
+            <tr><td>5</td><td>640</td><td>50</td></tr>
+            <tr><td>6</td><td>768</td><td>60</td></tr>
+            <tr><td>7</td><td>896</td><td>70</td></tr>
+            <tr class="race-line"><td>8</td><td>1,024 &mdash; grid full</td><td>80 &mdash; row 3, cell 16</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="monospace monospace__p opacity__50" data-splitting>Left alone, the CPU core's cursor would finish
+          the whole 1,024-cell grid at tick 102.4. The wall of 128 lanes finishes at tick 8, each lane taking one
+          cell a tick, all 128 at once (matches SCRIPT.md exactly).</p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº001 · What a lane is</p>
+        <h4 aria-level="2" data-splitting="lines" id="lane">Nvidia calls each lane a core</h4>
+        <p data-splitting>One lane is a small thing: it does one multiply and one add at a time, nothing more.
+          A GeForce RTX 4090 packs 16,384 of them, boosting to 2.52 GHz. The fastest core on an Intel Core i9-14900K
+          reaches 6.0 GHz &mdash; more than double, on the one number that compares directly. The race isn't run on
+          that number. It's run on how many small things you have.</p>
+        <blockquote class="paper-quote">
+          <p>&ldquo;The GPU is specialized for highly parallel computations and therefore designed such that more
+            transistors are devoted to data processing rather than data caching and flow control.&rdquo;</p>
+          <cite>NVIDIA CUDA C++ Programming Guide 12.4, &sect;1.1</cite>
+        </blockquote>
+        <p class="monospace monospace__p opacity__50" data-splitting>Sourced: nvidia.com, GeForce RTX 4090
+          specifications (NVIDIA CUDA Cores 16384, Boost Clock 2.52 GHz) &middot; Intel ARK, Core i9-14900K
+          specifications (Max Turbo Frequency 6.00 GHz, Thermal Velocity Boost, one P-core).</p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº002 · Why it wins</p>
+        <h4 aria-level="2" data-splitting="lines" id="grids">Independent sums, and a model that's mostly grids</h4>
+        <p data-splitting>Open up one cell of the output grid: take a row, take a column, multiply the pairs, add
+          them up. That's the cell &mdash; and it needed no other cell. A thousand-cell grid is a thousand of those,
+          each its own little sum, none waiting on any other. Give the job enough hands and every cell happens in
+          the same instant. That's what the wall of lanes is: hands.</p>
+        <p data-splitting>It's also most of what a language model actually computes. One study counted the training
+          arithmetic of BERT, a transformer, operation by operation:</p>
+        <div class="table-scroll">
+        <table class="bert-table">
+          <caption>BERT training arithmetic, by operation (Ivanov et al., &ldquo;Data Movement Is All You Need,&rdquo; Table 1)</caption>
+          <thead><tr><th scope="col">Operation</th><th scope="col">Share of arithmetic</th><th scope="col">Share of runtime</th></tr></thead>
+          <tbody>
+            <tr><td>Tensor contractions (matrix multiplies)</td><td>99.80%</td><td>61.0%</td></tr>
+            <tr><td>Statistical normalization</td><td>0.17%</td><td>25.5%</td></tr>
+            <tr><td>Element-wise operations</td><td>0.03%</td><td>13.5%</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="monospace monospace__p opacity__50" data-splitting>Over 99% of the arithmetic, in one study, on one
+          model, in training &mdash; not 99% of the time (the same table puts matrix multiplies at 61.0% of runtime;
+          the other 39% is memory movement and smaller operations, which this page doesn't cover). A nearly-all-grids
+          job is exactly the shape the card was built for.</p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº003 · Where it loses</p>
+        <h4 aria-level="2" data-splitting="lines" id="chain">A running total is a chain</h4>
+        <p data-splitting>The trick only works when the pieces don't wait on each other. Clear the grid to a single
+          running total &mdash; step 2 needs step 1's answer before it can add anything &mdash; and the wall stalls:
+          one lane works, the other 127 sit idle, waiting their turn on a chain that can only move one link at a
+          time. On that job, the fast core wins outright. The race in this guide is never claimed to run in one
+          direction only.</p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº004 · The honest scope</p>
+        <h4 aria-level="2" data-splitting="lines" id="scope">What this card does and doesn't claim</h4>
+        <p data-splitting><strong>The toy race is a toy.</strong> Ten cells a tick for the CPU cursor is a ratio
+          picked to be readable on screen, not derived from the two clock numbers and not a benchmark of any real
+          hardware &mdash; a real CPU core also does more than one multiply-add per clock, so no real speed ratio is
+          claimed either way. <strong>The 99% figure is BERT training arithmetic, from one study</strong> &mdash; not
+          a measurement across every model, and not a claim about runtime. <strong>&ldquo;Most of a language model's
+          arithmetic&rdquo; is the weaker, general claim</strong> the same BERT figure and Kaplan et al.'s
+          compute-counting (&ldquo;Scaling Laws for Neural Language Models,&rdquo; 2020) support for transformers in
+          general. <strong>No H100 clock figure appears anywhere on this page.</strong> Nvidia's own H100 whitepaper
+          lists its boost clock as &ldquo;Not Finalized,&rdquo; so it isn't a sourceable number.</p>
+        <p data-splitting>This page also never calls a data-centre chip a graphics card. The only card it names is a
+          gaming card, the RTX 4090, which is one. Nvidia's own architecture whitepaper is explicit about the chip
+          that actually trains most large models today:</p>
+        <blockquote class="paper-quote">
+          <p>&ldquo;The H100 GPUs are primarily built for executing datacenter and edge compute workloads for AI,
+            HPC, and data analytics, but not graphics processing. Only two TPCs in both the SXM5 and PCIe H100 GPUs
+            are graphics-capable.&rdquo;</p>
+          <cite>NVIDIA H100 Tensor Core GPU Architecture whitepaper, V1.01</cite>
+        </blockquote>
+        <p data-splitting>Nothing here is said about memory, caching, or the prefill/decode split in serving a model
+          &mdash; a different guide's job.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="next">One system, taken apart.</h4>
+        <p data-splitting>Same treatment, different machine. No pitch, no thread-bait, and an unsubscribe
+          link that works.</p>
+        <div class="buttons">
+          <a href="index.html#pricing" class="button button__big hover_effect"><span>The List</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="sources">Take it with you</h4>
+        <p class="monospace monospace__p opacity__50" data-splitting>The race card is this page: the finished race
+          at tick 8, both clock readouts, the tick-by-tick table, and the one case where the fast core wins, free,
+          no email.</p>
+        <div class="buttons">
+          <a href="#chain" class="button button__big hover_effect"><span>Where it loses</span> <span class="arrow">&#8599;</span></a>
+          <a href="#scope" class="button button__big hover_effect"><span>The scope</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4090/" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>nvidia.com, RTX 4090 specifications</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://www.intel.com/content/www/us/en/products/sku/236773/intel-core-i9-processor-14900k-36m-cache-up-to-6-00-ghz/specifications.html" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Intel ARK, Core i9-14900K specifications</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://arxiv.org/abs/2007.00072" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Ivanov et al., Data Movement Is All You Need</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-small="true">The List</p>
+        <h4 aria-level="2">One a week. And the other seven, now.</h4>
+        <p>Confirm your address and the whole set arrives &mdash; all ten field guides, exactly
+          as they are on the site, nothing held back for subscribers. After that, one new system
+          taken apart every week. No pitch, no thread-bait, and an unsubscribe link that works.</p>
+
+        <form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor"
+              method="post">
+          <label class="monospace monospace__p" for="list-email">Email address</label>
+          <div class="field">
+            <input type="email" name="email" id="list-email" placeholder="you@example.com"
+                   required autocomplete="email" inputmode="email" spellcheck="false">
+            <input type="hidden" name="tag" value="guide-28-gpu">
+            <button type="submit" class="monospace">Send me the set &#8599;</button>
+          </div>
+          <label class="consent monospace monospace__p">
+            <input type="checkbox" name="consent" required>
+            <span>Send me the ten guides and one new one each week. I can unsubscribe at any
+              time and my address is never shared &mdash; see the
+              <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set
+              arrives the moment you click it.</span>
+          </label>
+        </form>
+<!-- build:guidenav -->
+      <div class="guideNav">
+        <h4 aria-level="2" class="guideNav__head">Keep going</h4>
+        <div class="buttons">
+        <a href="/attention.html" class="button button__big hover_effect"><span><em class="guideNav__kicker">Previous</em> Nº027 · Attention (self-attention in a transformer)</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__label">Related</p>
+        <div class="buttons">
+        <a href="/temperature.html" class="button button__big hover_effect"><span>Nº025 · Temperature (softmax sampling) &mdash; The temperature setting behind ChatGPT runs on gas physics from 1868.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/jev.html" class="button button__big hover_effect"><span>Nº020 · Jev (TypeSafe) &mdash; The answer is a move.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/hugging-face.html" class="button button__big hover_effect"><span>Nº018 · Hugging Face &mdash; Why AI leaders Dario and Sam want to slow down.</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__all"><a href="/guides/">All 26 guides &#8599;</a></p>
+      </div>
+<!-- /build:guidenav -->
+      <div class="article__footer">
+          <p class="monospace monospace__p opacity__50" data-splitting><strong>An independent educational
+            breakdown.</strong> Not affiliated with, endorsed by, or produced in cooperation with Nvidia, Intel, or
+            any company named. The toy race (1,024 cells, 128 lanes, ten cells a tick for the CPU cursor) is a
+            labelled toy, not a benchmark of any real hardware. Every claim about the real hardware is sourced to
+            nvidia.com (GeForce RTX 4090 specifications), Intel ARK (Core i9-14900K specifications) and Ivanov et
+            al., &ldquo;Data Movement Is All You Need&rdquo; (arXiv 2007.00072), cited throughout. Any error in the
+            summary is mine.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="#chain" class="button button__half hover_effect" title="Where it loses"><span>Where it loses</span><span class="arrow">↗</span></a>
+          <a href="#scope" class="button button__half hover_effect" title="Take it with you"><span>The scope</span><span class="arrow">↗</span></a>
+          <a href="privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+
+
+
+
+<dialog id="list-modal" class="listModal" aria-labelledby="list-modal-title"><div class="listModal__inner" tabindex="-1" autofocus><p class="listModal__eyebrow">The List</p><h2 id="list-modal-title">Ten guides. One email.</h2><p>Every field guide on this site, sent the moment you confirm &mdash; then one new system taken apart each week.</p><p>Nothing is held back for subscribers. The guides stay free and stay here; the list is only how the next one reaches you without an algorithm getting a vote.</p><form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor" method="post"><label class="monospace monospace__p" for="list-email-modal">Email address</label><div class="field"><input type="email" name="email" id="list-email-modal" placeholder="you@example.com" required autocomplete="email" inputmode="email" spellcheck="false"><input type="hidden" name="tag" value="popup-gpu"><button type="submit" class="monospace">Send me the set &#8599;</button></div><label class="consent monospace monospace__p"><input type="checkbox" name="consent" required><span>Send me the ten guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set arrives the moment you click it.</span></label></form><button type="button" class="listModal__close" data-close>No thanks &mdash; just reading</button></div></dialog>
+<script src="assets/js/list-modal.js" defer></script>
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-10-02-gpu"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-10-02-gpu"></script>
+<script src="/assets/js/splitting.min.js?v=2026-10-02-gpu"></script>
+<script src="/assets/js/site.js?v=2026-10-02-gpu" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>
