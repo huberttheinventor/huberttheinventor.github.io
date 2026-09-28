@@ -13,14 +13,14 @@
 <meta property="og:image" content="img/guide/guide-21-poster.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <!-- build:head-assets -->
-<link rel="icon" href="/img/favicon.svg?v=2026-09-28-edge" type="image/svg+xml">
-<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-09-28-edge">
-<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-09-28-edge">
-<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-09-28-edge">
-<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-09-28-edge">
-<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-09-28-edge">
-<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-09-28-edge">
-<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-09-28-edge">
+<link rel="icon" href="/img/favicon.svg?v=2026-09-28-temperature" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-09-28-temperature">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-09-28-temperature">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-09-28-temperature">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-09-28-temperature">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-09-28-temperature">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-09-28-temperature">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-09-28-temperature">
 
 <!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
      which is why privacy.html could name it and stay honest. Disclosed there
@@ -91,12 +91,12 @@
 <div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
   <div class="mobilenav__main">
     <a href="/guides/"><span>All guides</span></a>
+    <a href="/temperature.html"><span>Nº025 · Temperature (softmax sampling)</span></a>
     <a href="/edge.html"><span>Nº024 · Gradient descent</span></a>
     <a href="/pagerank.html"><span>Nº023 · PageRank</span></a>
     <a href="/shazam.html"><span>Nº022 · Shazam</span></a>
     <a href="/fde.html"><span>Nº021 · Forward Deployed Engineer</span></a>
     <a href="/jev.html"><span>Nº020 · Jev (TypeSafe)</span></a>
-    <a href="/claudex-loop/"><span>Nº019 · Cross-model review</span></a>
     <a href="/#pricing" class="start"><span>The List</span></a>
   </div>
   <div class="mobilenav__social">
@@ -150,10 +150,10 @@
                source are not copied into img/guide/ yet; wire them up once the render is locked
                and founder-approved. -->
           <video controls preload="none" playsinline
-                 poster="img/guide/guide-21-poster.jpg?v=2026-09-28-edge"
+                 poster="img/guide/guide-21-poster.jpg?v=2026-09-28-temperature"
                  aria-label="Field guide N&ordm;021: what is an FDE?">
-            <source src="img/guide/guide-21.mp4?v=2026-09-28-edge" type="video/mp4">
-            <track kind="subtitles" src="artifacts/guide-21.vtt?v=2026-09-28-edge" srclang="en" label="English">
+            <source src="img/guide/guide-21.mp4?v=2026-09-28-temperature" type="video/mp4">
+            <track kind="subtitles" src="artifacts/guide-21.vtt?v=2026-09-28-temperature" srclang="en" label="English">
             <p class="monospace monospace__p">Your browser will not play this. The whole guide is written
               out below, and <a href="artifacts/transcript-fde.md">the transcript</a> has every word of it.</p>
           </video>
@@ -370,10 +370,10 @@
         <p class="monospace monospace__p guideNav__label">Related</p>
         <div class="buttons">
         <a href="/claudex-loop/" class="button button__big hover_effect"><span>Nº019 · Cross-model review &mdash; Catch the lost edit before you ship.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/temperature.html" class="button button__big hover_effect"><span>Nº025 · Temperature (softmax sampling) &mdash; The temperature setting behind ChatGPT runs on gas physics from 1868.</span> <span class="arrow">&#8599;</span></a>
         <a href="/hugging-face.html" class="button button__big hover_effect"><span>Nº018 · Hugging Face &mdash; Why AI leaders Dario and Sam want to slow down.</span> <span class="arrow">&#8599;</span></a>
-        <a href="/weights.html" class="button button__big hover_effect"><span>Nº016 · Open weight vs open source &mdash; Open weight is not open source.</span> <span class="arrow">&#8599;</span></a>
         </div>
-        <p class="monospace monospace__p guideNav__all"><a href="/guides/">All 22 guides &#8599;</a></p>
+        <p class="monospace monospace__p guideNav__all"><a href="/guides/">All 23 guides &#8599;</a></p>
       </div>
 <!-- /build:guidenav -->
       <div class="article__footer">
@@ -414,12 +414,12 @@
 
 
 <dialog id="list-modal" class="listModal" aria-labelledby="list-modal-title"><div class="listModal__inner" tabindex="-1" autofocus><p class="listModal__eyebrow">The List</p><h2 id="list-modal-title">Every guide. One email.</h2><p>Every field guide on this site, sent the moment you confirm &mdash; then one new system taken apart each week.</p><p>Nothing is held back for subscribers. The guides stay free and stay here; the list is only how the next one reaches you without an algorithm getting a vote.</p><form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor" method="post"><label class="monospace monospace__p" for="list-email-modal">Email address</label><div class="field"><input type="email" name="email" id="list-email-modal" placeholder="you@example.com" required autocomplete="email" inputmode="email" spellcheck="false"><input type="hidden" name="tag" value="popup-fde"><button type="submit" class="monospace">Send me the set &#8599;</button></div><label class="consent monospace monospace__p"><input type="checkbox" name="consent" required><span>Send me the guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set arrives the moment you click it.</span></label></form><button type="button" class="listModal__close" data-close>No thanks &mdash; just reading</button></div></dialog>
-<script src="assets/js/list-modal.js?v=2026-09-28-edge" defer></script>
+<script src="assets/js/list-modal.js?v=2026-09-28-temperature" defer></script>
 <!-- build:scripts -->
-<script src="/assets/js/gsap.min.js?v=2026-09-28-edge"></script>
-<script src="/assets/js/ScrollTrigger.min.js?v=2026-09-28-edge"></script>
-<script src="/assets/js/splitting.min.js?v=2026-09-28-edge"></script>
-<script src="/assets/js/site.js?v=2026-09-28-edge" type="module"></script>
+<script src="/assets/js/gsap.min.js?v=2026-09-28-temperature"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-09-28-temperature"></script>
+<script src="/assets/js/splitting.min.js?v=2026-09-28-temperature"></script>
+<script src="/assets/js/site.js?v=2026-09-28-temperature" type="module"></script>
 <!-- /build:scripts -->
 </body>
 </html>
