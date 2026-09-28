@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gradient descent trains right on the line where it should explode. — Hubert's field guides</title>
+<meta name="description" content="Field guide Nº024. Past a learning rate times steepness of 2, each gradient step overshoots further than the last. Full-batch gradient descent typically climbs its own steepness until it sits a hair above that line, then trains there — the loss jumping step to step but still falling. Cohen, Kaur, Li, Kolter &amp; Talwalkar, ICLR 2021 (arXiv 2103.00065). Quoted verbatim: the paper's own scope is full-batch gradient descent only.">
+<meta name="theme-color" content="#1a1a1a">
+
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="Gradient descent trains right on the line where it should explode.">
+<meta property="og:description" content="The one-pager: the per-step multiplier that makes a run explode, progressive sharpening in plain words, and the paper's own caveat, quoted verbatim, that all of it is for full-batch gradient descent only.">
+<meta property="og:image" content="artifacts/edge-card.png">
+<meta property="og:image:alt" content="Field guide Nº024 cover — Gradient descent trains right on the line where it should explode.">
+<meta name="twitter:card" content="summary_large_image">
+
+
+
+
+<style>
+  /* ── the worked-numbers table ─────────────────────────────────────────
+     Same shape as pagerank.html's column-table: tabular figures, right-
+     aligned numeric columns, a small caps caption above the rule. No new
+     component; this page has no diagram, so no map/phone-fallback CSS. */
+  .mult-table th, .mult-table td { font-variant-numeric: tabular-nums; }
+  .mult-table td { text-align: right; }
+  .mult-table td:last-child { text-align: left; }
+  .mult-table caption {
+    caption-side: top; color: var(--plate-read-dim); font-family: Mono, ui-monospace, monospace;
+    font-size: 14px; letter-spacing: -0.048em; margin-bottom: 4px; text-align: left;
+    text-transform: uppercase;
+  }
+  .mult-table tr.mult-line td { border-top: 2px solid var(--plate-read-rule); font-weight: 600; }
+
+  @media screen and (max-width: 600px) {
+    .table-scroll {
+      margin: 0 -20px; overflow-x: auto; padding: 0 20px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .table-scroll table { min-width: 480px; }
+  }
+
+  /* Inline code, scoped back to an inline chip (the ported reset styles
+     `code` as a black block, written for fenced samples). One inline mention
+     of eta below. */
+  .journalArticle__article code {
+    background: rgba(0, 0, 0, .22); border-radius: 4px; display: inline;
+    font-family: Mono, ui-monospace, monospace; font-size: 88%; margin: 0;
+    padding: .1em .38em; white-space: nowrap;
+  }
+
+  /* Block quotes carry the paper's own words, set apart from the plain-
+     English paraphrase around them so a reader can see exactly which
+     sentences are quoted verbatim and which are Hubert's summary. */
+  .paper-quote {
+    border-left: 2px solid rgba(0, 0, 0, .35); font-size: 92%; font-style: italic;
+    margin: 0 0 3vw; max-width: 34em; padding-left: 20px;
+  }
+  .paper-quote cite {
+    display: block; font-family: Mono, ui-monospace, monospace; font-size: 72%;
+    font-style: normal; letter-spacing: .04em; margin-top: 8px; opacity: .55;
+    text-transform: uppercase;
+  }
+  @media screen and (max-width: 600px) {
+    .paper-quote { margin-bottom: 5vh; padding-left: 14px; }
+  }
+
+  /* The header is `position: fixed`, so an in-page jump lands the target
+     underneath it. Nº006/007/008 use a flat 116px; match it. */
+  #guide, #multiplier, #edge-of-stability, #scope, #sources { scroll-margin-top: 116px; }
+</style>
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-09-28-edge" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-09-28-edge">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-09-28-edge">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-09-28-edge">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-09-28-edge">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-09-28-edge">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-09-28-edge">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-09-28-edge">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/edge.html"><span>Nº024 · Gradient descent</span></a>
+    <a href="/pagerank.html"><span>Nº023 · PageRank</span></a>
+    <a href="/shazam.html"><span>Nº022 · Shazam</span></a>
+    <a href="/fde.html"><span>Nº021 · Forward Deployed Engineer</span></a>
+    <a href="/jev.html"><span>Nº020 · Jev (TypeSafe)</span></a>
+    <a href="/claudex-loop/"><span>Nº019 · Cross-model review</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Field guide</span><strong>Nº024</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>System</span><strong>Gradient descent</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Model</span><strong>multiplier = 1 &minus; &eta; &times; a</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Annotations</span><strong>Four, keyed to the multiplier</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp">Filed</span>
+        </div>
+      </div>
+
+      <div class="journalArticle__article" id="guide">
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">You commented EDGE — this is the one-pager.</p>
+        <h1 data-splitting="lines">Gradient descent trains right on the line where it should explode.</h1>
+        <p class="lead" data-splitting>In a bowl-shaped loss valley, each gradient step multiplies your
+          distance from the minimum by 1 minus your learning rate times the valley's steepness. Push that
+          product past 2 and the multiplier drops below &minus;1: every step overshoots further than the
+          last, and the run explodes. Full-batch gradient descent &mdash; the whole training set, every step
+          &mdash; does not sit safely under that line. It makes the valley steeper on its own until the
+          steepness reaches it, then hovers a hair above, the loss jumping step to step but still falling
+          over the long run. The paper that found this called it the edge of stability.</p>
+
+        <p class="monospace monospace__p" data-splitting>Companion to the reel · Watch it on
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank">@huberttheinventor</a></p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº001 · The speed limit</p>
+        <h4 aria-level="2" data-splitting="lines" id="multiplier">Two over the learning rate is where every hop starts landing higher</h4>
+        <p data-splitting>Near the bottom of a bowl-shaped valley, gradient descent's error from one step to
+          the next obeys one rule: multiply the previous error by <code>1 &minus; &eta; &times; a</code>,
+          where &eta; is the learning rate and <em>a</em> is the steepness of the valley's steepest wall (its
+          curvature's top eigenvalue). Stay under &eta; &times; a = 2 and each hop lands closer to the floor
+          than the last. Land exactly on it and hops bounce at constant height, forever. Go past it and the
+          multiplier's size passes 1, so every hop lands further out than the last, until the step leaves the
+          valley.</p>
+
+        <div class="table-scroll">
+        <table class="mult-table">
+          <caption>Worked example, computed this session (Node.js, &eta; = 0.1, so 2/&eta; = 20)</caption>
+          <thead><tr><th scope="col">Steepness <em>a</em></th><th scope="col">&eta; &times; a</th><th scope="col">Multiplier</th><th scope="col">Hop sizes, step 0&ndash;5</th></tr></thead>
+          <tbody>
+            <tr><td>15</td><td>1.50</td><td>&minus;0.50</td><td>shrink: 1, 0.50, 0.25, 0.13, 0.06, 0.03</td></tr>
+            <tr class="mult-line"><td>20 (= 2/&eta;)</td><td>2.00</td><td>&minus;1.00</td><td>constant: 1, 1, 1, 1, 1, 1 — bounces forever</td></tr>
+            <tr><td>27.4</td><td>2.74</td><td>&minus;1.74</td><td>grow: 1, 1.74, 3.03, 5.27, 9.17, 15.95 — leaves the valley</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="monospace monospace__p opacity__50" data-splitting>A multiplier whose size is bigger than 1
+          means each hop lands further from the floor than the last one did, not just on the opposite wall:
+          the hop sizes form a geometric sequence with a ratio bigger than 1, which has no ceiling. That is
+          why, in a fixed bowl, &eta; &times; a &gt; 2 does not just make training worse — it makes it
+          diverge. The paper states the case for a single quadratic direction directly: &ldquo;If a&gt;2/&eta;,
+          then (1&minus;&eta;a)&lt;&minus;1, so the sequence will diverge.&rdquo;</p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº002 · Progressive sharpening</p>
+        <h4 aria-level="2" data-splitting="lines">Nobody touches the learning rate — the valley steepens on its own</h4>
+        <p data-splitting>The learning rate here is fixed, chosen once and never adjusted mid-run. What moves
+          is the valley itself. While its steepest wall stays safely under the 2/&eta; line, gradient descent
+          has an active bias toward making that wall steeper, step after step, run after run — not because
+          anything went wrong, but because that is what plain gradient descent does by default on the way to
+          the edge. The paper calls this progressive sharpening.</p>
+        <blockquote class="paper-quote">
+          <p>&ldquo;So long as the sharpness is small enough for gradient descent to be stable (&lt;2/&eta;),
+            gradient descent has an overwhelming tendency to continually increase the sharpness.&rdquo;</p>
+          <cite>Cohen, Kaur, Li, Kolter &amp; Talwalkar, 2021, arXiv 2103.00065</cite>
+        </blockquote>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº003 · The edge of stability</p>
+        <h4 aria-level="2" data-splitting="lines" id="edge-of-stability">The steepness stalls just above the line, and the loss keeps falling anyway</h4>
+        <p data-splitting>Once the valley's steepest wall reaches the 2/&eta; line, it stops climbing and
+          hovers there instead of crossing it. The loss trace does not fall smoothly while that happens: it
+          jumps step to step, yet its long-run slope still points down. A fixed bowl at that same steepness
+          would already have flown out of the valley (Nº001); a real network's loss surface keeps reshaping
+          itself under the ball instead, and holds. Why it holds there is a question the paper leaves open —
+          no mechanism for the survival is claimed here or in the film.</p>
+        <blockquote class="paper-quote">
+          <p>&ldquo;The sharpness hovers right at, or just above, the value 2/&eta;; and (2) the train loss
+            behaves non-monotonically, yet consistently decreases over long timescales.&rdquo;</p>
+          <cite>Cohen, Kaur, Li, Kolter &amp; Talwalkar, 2021, arXiv 2103.00065</cite>
+        </blockquote>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº004 · Scope: what this is and is not</p>
+        <h4 aria-level="2" data-splitting="lines" id="scope">Full-batch gradient descent only — the paper says so itself</h4>
+        <p data-splitting>Every claim on this page is about full-batch gradient descent: one gradient step
+          computed over the entire training set, learning rate fixed. The authors are explicit that it does
+          not carry over to the stochastic version almost everyone actually trains with:</p>
+        <blockquote class="paper-quote">
+          <p>&ldquo;Our precise characterization of the behavior of the sharpness only applies to full-batch
+            gradient descent.&rdquo;</p>
+          <cite>Cohen, Kaur, Li, Kolter &amp; Talwalkar, 2021, arXiv 2103.00065, Section 6</cite>
+        </blockquote>
+        <p data-splitting>For SGD they found something closer to the opposite:</p>
+        <blockquote class="paper-quote">
+          <p>&ldquo;In contrast, during SGD, the sharpness does not always settle at any fixed value, let
+            alone one that can be numerically predicted from the hyperparameters.&rdquo;</p>
+          <cite>Cohen, Kaur, Li, Kolter &amp; Talwalkar, 2021, arXiv 2103.00065, Section 6</cite>
+        </blockquote>
+        <p data-splitting>Nothing on this page or in the film is a claim about SGD, minibatches, Adam or any
+          other adaptive optimiser; about ChatGPT or any other LLM's training run; about a share of training
+          time spent at the edge; or about a speed-up from training there. None of that is in the paper's
+          full-batch results, and none of it is said here.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="next">One system, taken apart.</h4>
+        <p data-splitting>Same treatment, different machine. No pitch, no thread-bait, and an unsubscribe
+          link that works.</p>
+        <div class="buttons">
+          <a href="index.html#pricing" class="button button__big hover_effect"><span>The List</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="sources">Take it with you</h4>
+        <p class="monospace monospace__p opacity__50" data-splitting>The one-pager is this page: the multiplier, progressive sharpening, the edge of stability and the paper's own scope, free, no email.</p>
+        <div class="buttons">
+          <a href="#multiplier" class="button button__big hover_effect"><span>The multiplier</span> <span class="arrow">&#8599;</span></a>
+          <a href="#scope" class="button button__big hover_effect"><span>The scope</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://arxiv.org/abs/2103.00065" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Cohen, Kaur, Li, Kolter &amp; Talwalkar, 2021</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-small="true">The List</p>
+        <h4 aria-level="2">One a week. And the other seven, now.</h4>
+        <p>Confirm your address and the whole set arrives &mdash; all ten field guides, exactly
+          as they are on the site, nothing held back for subscribers. After that, one new system
+          taken apart every week. No pitch, no thread-bait, and an unsubscribe link that works.</p>
+
+        <form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor"
+              method="post">
+          <label class="monospace monospace__p" for="list-email">Email address</label>
+          <div class="field">
+            <input type="email" name="email" id="list-email" placeholder="you@example.com"
+                   required autocomplete="email" inputmode="email" spellcheck="false">
+            <input type="hidden" name="tag" value="guide-24-edge">
+            <button type="submit" class="monospace">Send me the set &#8599;</button>
+          </div>
+          <label class="consent monospace monospace__p">
+            <input type="checkbox" name="consent" required>
+            <span>Send me the ten guides and one new one each week. I can unsubscribe at any
+              time and my address is never shared &mdash; see the
+              <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set
+              arrives the moment you click it.</span>
+          </label>
+        </form>
+<!-- build:guidenav -->
+      <div class="guideNav">
+        <h4 aria-level="2" class="guideNav__head">Keep going</h4>
+        <div class="buttons">
+        <a href="/pagerank.html" class="button button__big hover_effect"><span><em class="guideNav__kicker">Previous</em> Nº023 · PageRank</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__label">Related</p>
+        <div class="buttons">
+        <a href="/shadow.html" class="button button__big hover_effect"><span>Nº014 · The dot product and attention &mdash; The dot product is a shadow.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/algo.html" class="button button__big hover_effect"><span>Nº012 · Five machine learning algorithms &mdash; The same point, five different answers.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/shazam.html" class="button button__big hover_effect"><span>Nº022 · Shazam &mdash; Shazam never hears your song. It hears the circles inside it.</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__all"><a href="/guides/">All 22 guides &#8599;</a></p>
+      </div>
+<!-- /build:guidenav -->
+      <div class="article__footer">
+          <p class="monospace monospace__p opacity__50" data-splitting><strong>An independent educational
+            breakdown.</strong> Not affiliated with, endorsed by, or produced in cooperation with the authors
+            of the paper cited, their institutions, or ICLR. The worked-numbers table above is a computed
+            illustration of a quadratic bowl (Node.js, this session) and is not a measurement of any real
+            network; the edge-of-stability findings and every quoted sentence follow Cohen, Kaur, Li, Kolter
+            &amp; Talwalkar, &ldquo;Gradient Descent on Neural Networks Typically Occurs at the Edge of
+            Stability&rdquo; (ICLR 2021, arXiv 2103.00065), as cited above. Any error in the summary is
+            mine.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="#multiplier" class="button button__half hover_effect" title="The speed limit"><span>The multiplier</span><span class="arrow">↗</span></a>
+          <a href="#scope" class="button button__half hover_effect" title="Take it with you"><span>The scope</span><span class="arrow">↗</span></a>
+          <a href="privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+
+
+
+
+<dialog id="list-modal" class="listModal" aria-labelledby="list-modal-title"><div class="listModal__inner" tabindex="-1" autofocus><p class="listModal__eyebrow">The List</p><h2 id="list-modal-title">Ten guides. One email.</h2><p>Every field guide on this site, sent the moment you confirm &mdash; then one new system taken apart each week.</p><p>Nothing is held back for subscribers. The guides stay free and stay here; the list is only how the next one reaches you without an algorithm getting a vote.</p><form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor" method="post"><label class="monospace monospace__p" for="list-email-modal">Email address</label><div class="field"><input type="email" name="email" id="list-email-modal" placeholder="you@example.com" required autocomplete="email" inputmode="email" spellcheck="false"><input type="hidden" name="tag" value="popup-edge"><button type="submit" class="monospace">Send me the set &#8599;</button></div><label class="consent monospace monospace__p"><input type="checkbox" name="consent" required><span>Send me the ten guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set arrives the moment you click it.</span></label></form><button type="button" class="listModal__close" data-close>No thanks &mdash; just reading</button></div></dialog>
+<script src="assets/js/list-modal.js" defer></script>
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-09-28-edge"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-09-28-edge"></script>
+<script src="/assets/js/splitting.min.js?v=2026-09-28-edge"></script>
+<script src="/assets/js/site.js?v=2026-09-28-edge" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>
