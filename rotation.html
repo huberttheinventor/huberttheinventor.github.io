@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rotating your photo is four numbers. Two are the same. — Hubert's field guides</title>
+<meta name="description" content="Field guide Nº029. Turning a photo is a 2x2 grid of four numbers: cos θ, −sin θ, sin θ, cos θ. Draw two arrows of length one from a corner, one along the bottom edge and one up the side; every pixel is an address in those two arrows. Turn the arrows and read the tips off a circle of radius one: at 30°, the first tip lands at across 0.87, up 0.50 (cos 30°, sin 30°); the second tip, a quarter turn ahead, lands at −0.50, 0.87 — the same 0.87 twice. Both tips stay on the circle at every angle, so the arrows keep their length and their right angle, and the photo turns without stretching. Sources: Wikipedia (Rotation matrix, Unit circle, trigonometric identities), Pillow's Image.rotate source, OpenCV's geometric transformations tutorial.">
+<meta name="theme-color" content="#1a1a1a">
+
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rotating your photo is four numbers. Two are the same.">
+<meta property="og:description" content="The four-number card: the circle, both arrow tips, the filled rotation matrix, and where one pixel lands.">
+<meta property="og:image" content="artifacts/rotation-card.png">
+<meta property="og:image:alt" content="Field guide Nº029 cover — the four-number card. A small photo on a pin turned 30° beside a glowing cyan circle. Two arrow tips sit a quarter turn apart on the circle with drop-lines to the axes, and a two by two card labelled ROTATION MATRIX holds 0.87, −0.50 on top and 0.50, 0.87 below, with the two 0.87 slots marked as the same number.">
+<meta name="twitter:card" content="summary_large_image">
+
+
+
+
+<style>
+  /* ── the matrix tables ────────────────────────────────────────────────
+     Same shape as gpu.html's race-table: tabular figures, right-aligned
+     numeric cells, so a 2x2 grid of numbers reads as a grid rather than a
+     sentence. Numbers from SCRIPT.md's Sources table, computed 2026-09-29. */
+  .matrix-table th, .matrix-table td { font-variant-numeric: tabular-nums; }
+  .matrix-table td { text-align: right; }
+  .matrix-table td:first-child { text-align: left; color: var(--plate-read-accent, #1a1a1a); font-weight: 600; }
+  .matrix-table caption {
+    caption-side: top; color: var(--plate-read-dim); font-family: Mono, ui-monospace, monospace;
+    font-size: 14px; letter-spacing: -0.048em; margin-bottom: 4px; text-align: left;
+    text-transform: uppercase;
+  }
+  .matrix-table tbody td { border-bottom: 1px solid var(--plate-read-rule); padding: 8px 6px; }
+  .matrix-table tbody tr:last-child td { border-bottom: none; }
+  .matrix-table .same-number { color: var(--plate-read-accent, #1a1a1a); font-weight: 700; }
+
+  @media screen and (max-width: 600px) {
+    .table-scroll {
+      margin: 0 -20px; overflow-x: auto; padding: 0 20px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .table-scroll table { min-width: 320px; }
+  }
+
+  /* Inline code, scoped back to an inline chip (the ported reset styles
+     `code` as a black block, written for fenced samples). */
+  .journalArticle__article code {
+    background: rgba(0, 0, 0, .22); border-radius: 4px; display: inline;
+    font-family: Mono, ui-monospace, monospace; font-size: 88%; margin: 0;
+    padding: .1em .38em; white-space: nowrap;
+  }
+
+  /* Block quotes carry the source's own words, set apart from the plain-
+     English paraphrase around them so a reader can see exactly which
+     sentences are quoted verbatim and which are Hubert's summary. */
+  .paper-quote {
+    border-left: 2px solid rgba(0, 0, 0, .35); font-size: 92%; font-style: italic;
+    margin: 0 0 3vw; max-width: 34em; padding-left: 20px;
+  }
+  .paper-quote cite {
+    display: block; font-family: Mono, ui-monospace, monospace; font-size: 72%;
+    font-style: normal; letter-spacing: .04em; margin-top: 8px; opacity: .55;
+    text-transform: uppercase;
+  }
+  @media screen and (max-width: 600px) {
+    .paper-quote { margin-bottom: 5vh; padding-left: 14px; }
+  }
+
+  /* The four-number card, sent by DM to anyone who comments TURN — shown
+     here too, since the page is the same artifact. It is a real frame from
+     the approved master render (101s, beat 9), not a mock-up. Capped narrow
+     so it reads as a card, not a hero image. */
+  .card-figure { margin: 6px 0 4vw; max-width: 380px; }
+  .card-figure img { border-radius: 14px; border: 1px solid rgba(0, 0, 0, .14); display: block; width: 100%; }
+  .card-figure figcaption {
+    color: var(--plate-read-dim); font-family: Mono, ui-monospace, monospace; font-size: 13px;
+    letter-spacing: .01em; margin-top: 10px; opacity: .65;
+  }
+
+  /* The header is `position: fixed`, so an in-page jump lands the target
+     underneath it. Nº006/007/008 use a flat 116px; match it. */
+  #guide, #address, #circle, #stretch, #scope, #sources { scroll-margin-top: 116px; }
+</style>
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-10-05-rotation" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-10-05-rotation">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-10-05-rotation">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-10-05-rotation">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-10-05-rotation">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-10-05-rotation">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-10-05-rotation">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-10-05-rotation">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/rotation.html"><span>Nº029 · Rotation matrix (2D image rotation)</span></a>
+    <a href="/gpu.html"><span>Nº028 · GPUs (why AI runs on graphics cards)</span></a>
+    <a href="/attention.html"><span>Nº027 · Attention (self-attention in a transformer)</span></a>
+    <a href="/ticketmaster.html"><span>Nº026 · Ticketmaster (system design)</span></a>
+    <a href="/temperature.html"><span>Nº025 · Temperature (softmax sampling)</span></a>
+    <a href="/edge.html"><span>Nº024 · Gradient descent</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Field guide</span><strong>Nº029</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>System</span><strong>Rotation matrix (2D image rotation)</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Model</span><strong>two arrows &rarr; a circle &rarr; four numbers &rarr; matrix</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Worked example</span><strong>30&deg; turn: 0.87, &minus;0.50, 0.50, 0.87</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp">Filed</span>
+        </div>
+      </div>
+
+      <div class="journalArticle__article" id="guide">
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">You commented TURN — this is the four-number card.</p>
+        <h1 data-splitting="lines">Rotating your photo is four numbers. Two are the same.</h1>
+        <p class="lead" data-splitting>Lay the photo on a grid and draw two arrows of length one from one corner,
+          one along the bottom edge and one up the side. Every pixel is an address written in those two arrows, so
+          turning the arrows turns every pixel with them. Put a circle of radius one around that corner and turn the
+          photo: each arrow's tip slides along the circle, and its two coordinates are two of the four numbers.
+          The second arrow started a quarter turn ahead of the first and stays there, so its tip is the first tip
+          moved ninety degrees round the same circle &mdash; which is why one number in the grid shows up twice.
+          Because both tips never leave the circle, the arrows keep their length and their right angle at every
+          angle, so the photo turns and nothing in it stretches.</p>
+
+        <p class="monospace monospace__p" data-splitting>Companion to the reel &middot; Watch it on
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank">@huberttheinventor</a></p>
+
+        <figure class="journalArticle__banner guideVideo">
+          <video controls preload="none" playsinline
+                 poster="img/guide/guide-29-poster.jpg?v=2026-10-05-rotation"
+                 aria-label="Field guide Nº029: rotating your photo is four numbers, two are the same">
+            <source src="img/guide/guide-29.mp4?v=2026-10-05-rotation" type="video/mp4">
+            <track kind="subtitles" src="artifacts/guide-29.vtt?v=2026-10-05-rotation" srclang="en" label="English">
+            <p class="monospace monospace__p">Your browser will not play this. The whole guide is written
+              out below, and <a href="artifacts/transcript-rotation.md">the transcript</a> has every word of it.</p>
+          </video>
+          <figcaption class="monospace monospace__p opacity__50">Nº029 &middot; 2:09 &middot; watch it first, then read the card</figcaption>
+        </figure>
+
+        <figure class="card-figure">
+          <img src="artifacts/rotation-card.png" alt="The four-number card. A small photo on a pin turned 30 degrees beside a glowing cyan circle. Two arrow tips sit a quarter turn apart on the circle with drop-lines to the axes, and a two by two card labelled ROTATION MATRIX holds 0.87, minus 0.50 on top and 0.50, 0.87 below, with the two 0.87 slots marked as the same number.">
+          <figcaption>The four-number card itself, free, no email &mdash; a real frame from the film's master render, the same file the DM sends.</figcaption>
+        </figure>
+
+        <div class="table-scroll">
+        <table class="matrix-table">
+          <caption>The rotation matrix, general form (Wikipedia, &ldquo;Rotation matrix&rdquo;)</caption>
+          <tbody>
+            <tr><td>Top row</td><td>cos &theta;</td><td>&minus;sin &theta;</td></tr>
+            <tr><td>Bottom row</td><td>sin &theta;</td><td>cos &theta;</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="monospace monospace__p opacity__50" data-splitting>Each column is where one axis arrow lands: the
+          first column is the bottom-edge arrow's tip after the turn, the second column is the side arrow's tip.</p>
+
+        <div class="table-scroll">
+        <table class="matrix-table">
+          <caption>Worked example at 30&deg; (cos 30&deg; = 0.8660, sin 30&deg; = 0.5, rounded to two decimals)</caption>
+          <tbody>
+            <tr><td>Top row</td><td>0.87</td><td class="same-number">&minus;0.50</td></tr>
+            <tr><td>Bottom row</td><td class="same-number">0.50</td><td>0.87</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="monospace monospace__p opacity__50" data-splitting>The two 0.87 slots are the same number, not a
+          coincidence: cos(&theta; + 90&deg;) = &minus;sin &theta; and sin(&theta; + 90&deg;) = cos &theta;
+          (Wikipedia, &ldquo;List of trigonometric identities,&rdquo; shifts and periodicity), so the second
+          arrow's tip, a quarter turn ahead, always reuses the first tip's own two numbers, swapped and one negated.</p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº001 · The address</p>
+        <h4 aria-level="2" data-splitting="lines" id="address">Every pixel is a recipe in two arrows</h4>
+        <p data-splitting>Pick a pixel three steps along the first arrow and two steps up the second: address
+          (3, 2). It never needs its own angle, because it is only ever a recipe written in the two arrows &mdash;
+          three of the first, plus two of the second. Turn the arrows, and the same recipe, re-laid along the turned
+          arrows, lands the pixel in its new spot. Feed the address into the matrix and the turned position falls
+          out directly:</p>
+        <div class="table-scroll">
+        <table class="matrix-table">
+          <caption>Pixel (3, 2) after a 30&deg; turn (3 &times; 0.8660 &minus; 2 &times; 0.5 = 1.598; 3 &times; 0.5 + 2 &times; 0.8660 = 3.232)</caption>
+          <tbody>
+            <tr><td>Before</td><td>3</td><td>2</td></tr>
+            <tr><td>After</td><td>1.60</td><td>3.23</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="monospace monospace__p opacity__50" data-splitting>That is the whole reason every pixel follows
+          when the photo turns: none of them are tracked one by one, they are all the same two arrows, read at a
+          different address.</p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº002 · The circle</p>
+        <h4 aria-level="2" data-splitting="lines" id="circle">Sine and cosine are just where a tip lands</h4>
+        <p data-splitting>Put a circle of radius one around the corner the two arrows share. Turn the photo 30&deg;
+          and the first arrow's tip slides along that circle to a point 0.87 across and 0.50 up &mdash; and that is
+          all cosine and sine are: the across and up coordinates of a point on a circle of radius one (Wikipedia,
+          &ldquo;Unit circle&rdquo;). At 90&deg; the same tip sits straight up, and both tips' readings tick round
+          the full matrix to 0, &minus;1, 1, 0.</p>
+        <div class="table-scroll">
+        <table class="matrix-table">
+          <caption>The 90&deg; check (same recipe, &theta; = 90&deg;)</caption>
+          <tbody>
+            <tr><td>Top row</td><td>0</td><td>&minus;1</td></tr>
+            <tr><td>Bottom row</td><td>1</td><td>0</td></tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº003 · Why it doesn't stretch</p>
+        <h4 aria-level="2" data-splitting="lines" id="stretch">Both tips stay on the circle, at every angle</h4>
+        <p data-splitting>A rotation matrix is orthogonal, which is the source's word for a plainer fact: it leaves
+          every length and every angle inside the picture exactly as it found them (Wikipedia, &ldquo;Rotation
+          matrix&rdquo;). The two arrows started at length one with a right angle between them; because their tips
+          never leave the circle of radius one as the angle sweeps, they keep that length and that right angle at
+          every angle in between. Every pixel is still an address in the same two unchanged arrows, so the photo
+          turns and nothing in it bends or stretches.</p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº004 · The honest scope</p>
+        <h4 aria-level="2" data-splitting="lines" id="scope">What this card does and doesn't claim</h4>
+        <p data-splitting><strong>The four numbers are the turn itself.</strong> Image libraries carry two more
+          numbers beside them for where the centre of the picture sits, and they run the recipe backwards: each
+          output pixel asks which input pixel it came from, so that every output pixel gets a colour. Pillow's
+          <code>Image.rotate()</code> builds a matrix of <code>cos &theta;</code>, <code>sin &theta;</code>,
+          <code>0.0</code>, <code>&minus;sin &theta;</code>, <code>cos &theta;</code>, <code>0.0</code> and calls it
+          as the reverse transform, the two <code>0.0</code> slots filled with the centre offset; OpenCV's
+          <code>getRotationMatrix2D</code> builds the same four numbers into a 2&times;3 form with a centre column
+          added. <strong>Nothing here is said about area or the determinant</strong> &mdash; a different guide's job
+          &mdash; and cosine is read only as a tip's coordinate, never as a shadow cast by anything. <strong>Whether a
+          phone gallery app rotates pixels at all, or only writes an orientation flag, is unverified</strong> and
+          this page claims neither.</p>
+        <blockquote class="paper-quote">
+          <p>&ldquo;These transformed vectors form the columns of the rotation matrix.&rdquo;</p>
+          <cite>Wikipedia, Rotation matrix</cite>
+        </blockquote>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="next">One system, taken apart.</h4>
+        <p data-splitting>Same treatment, different machine. No pitch, no thread-bait, and an unsubscribe
+          link that works.</p>
+        <div class="buttons">
+          <a href="index.html#pricing" class="button button__big hover_effect"><span>The List</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="sources">Take it with you</h4>
+        <p class="monospace monospace__p opacity__50" data-splitting>The four-number card is this page: the circle,
+          both tips, the filled rotation matrix, and the pixel at (3, 2) landing at (1.60, 3.23), free, no email.</p>
+        <div class="buttons">
+          <a href="#stretch" class="button button__big hover_effect"><span>Why it doesn't stretch</span> <span class="arrow">&#8599;</span></a>
+          <a href="#scope" class="button button__big hover_effect"><span>The scope</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://en.wikipedia.org/wiki/Rotation_matrix" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Wikipedia, Rotation matrix</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://en.wikipedia.org/wiki/Unit_circle" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Wikipedia, Unit circle</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://en.wikipedia.org/wiki/List_of_trigonometric_identities" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Wikipedia, List of trigonometric identities</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://raw.githubusercontent.com/python-pillow/Pillow/main/src/PIL/Image.py" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Pillow, Image.py (rotate source)</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://raw.githubusercontent.com/opencv/opencv/4.x/doc/py_tutorials/py_imgproc/py_geometric_transformations/py_geometric_transformations.markdown" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>OpenCV, geometric transformations tutorial</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-small="true">The List</p>
+        <h4 aria-level="2">One a week. And the other seven, now.</h4>
+        <p>Confirm your address and the whole set arrives &mdash; all ten field guides, exactly
+          as they are on the site, nothing held back for subscribers. After that, one new system
+          taken apart every week. No pitch, no thread-bait, and an unsubscribe link that works.</p>
+
+        <form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor"
+              method="post">
+          <label class="monospace monospace__p" for="list-email">Email address</label>
+          <div class="field">
+            <input type="email" name="email" id="list-email" placeholder="you@example.com"
+                   required autocomplete="email" inputmode="email" spellcheck="false">
+            <input type="hidden" name="tag" value="guide-29-rotation">
+            <button type="submit" class="monospace">Send me the set &#8599;</button>
+          </div>
+          <label class="consent monospace monospace__p">
+            <input type="checkbox" name="consent" required>
+            <span>Send me the ten guides and one new one each week. I can unsubscribe at any
+              time and my address is never shared &mdash; see the
+              <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set
+              arrives the moment you click it.</span>
+          </label>
+        </form>
+<!-- build:guidenav -->
+      <div class="guideNav">
+        <h4 aria-level="2" class="guideNav__head">Keep going</h4>
+        <div class="buttons">
+        <a href="/gpu.html" class="button button__big hover_effect"><span><em class="guideNav__kicker">Previous</em> Nº028 · GPUs (why AI runs on graphics cards)</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__label">Related</p>
+        <div class="buttons">
+        <a href="/pagerank.html" class="button button__big hover_effect"><span>Nº023 · PageRank &mdash; PageRank is an eigenvector.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/shadow.html" class="button button__big hover_effect"><span>Nº014 · The dot product and attention &mdash; The dot product is a shadow.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/eigen.html" class="button button__big hover_effect"><span>Nº011 · Eigenvectors and linear systems &mdash; Two directions the wind cannot turn.</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__all"><a href="/guides/">All 27 guides &#8599;</a></p>
+      </div>
+<!-- /build:guidenav -->
+      <div class="article__footer">
+          <p class="monospace monospace__p opacity__50" data-splitting><strong>An independent educational
+            breakdown.</strong> No company is named or shown in this guide. Every number is sourced to Wikipedia
+            (Rotation matrix, Unit circle, List of trigonometric identities), computed and rounded to two decimals
+            where noted, and to Pillow's and OpenCV's own published source for how image libraries apply the same
+            four numbers. Any error in the summary is mine.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="#stretch" class="button button__half hover_effect" title="Why it doesn't stretch"><span>Why it doesn't stretch</span><span class="arrow">↗</span></a>
+          <a href="#scope" class="button button__half hover_effect" title="Take it with you"><span>The scope</span><span class="arrow">↗</span></a>
+          <a href="privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+
+
+
+
+<dialog id="list-modal" class="listModal" aria-labelledby="list-modal-title"><div class="listModal__inner" tabindex="-1" autofocus><p class="listModal__eyebrow">The List</p><h2 id="list-modal-title">Ten guides. One email.</h2><p>Every field guide on this site, sent the moment you confirm &mdash; then one new system taken apart each week.</p><p>Nothing is held back for subscribers. The guides stay free and stay here; the list is only how the next one reaches you without an algorithm getting a vote.</p><form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor" method="post"><label class="monospace monospace__p" for="list-email-modal">Email address</label><div class="field"><input type="email" name="email" id="list-email-modal" placeholder="you@example.com" required autocomplete="email" inputmode="email" spellcheck="false"><input type="hidden" name="tag" value="popup-rotation"><button type="submit" class="monospace">Send me the set &#8599;</button></div><label class="consent monospace monospace__p"><input type="checkbox" name="consent" required><span>Send me the ten guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set arrives the moment you click it.</span></label></form><button type="button" class="listModal__close" data-close>No thanks &mdash; just reading</button></div></dialog>
+<script src="assets/js/list-modal.js" defer></script>
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-10-05-rotation"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-10-05-rotation"></script>
+<script src="/assets/js/splitting.min.js?v=2026-10-05-rotation"></script>
+<script src="/assets/js/site.js?v=2026-10-05-rotation" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>
