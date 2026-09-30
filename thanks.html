@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>You're in — Hubert's field guides</title>
+<meta name="description" content="You're on the list. All 27 guides are on this page — no inbox trip.">
+<meta name="theme-color" content="#1a1a1a">
+<meta name="robots" content="noindex">
+<meta property="og:image" content="artifacts/site-card.png">
+<meta property="og:image:alt" content="Hubert — field guides to large systems. You're in.">
+<meta name="twitter:card" content="summary_large_image">
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-10-05-rotation" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-10-05-rotation">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-10-05-rotation">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-10-05-rotation">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-10-05-rotation">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-10-05-rotation">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-10-05-rotation">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-10-05-rotation">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/rotation.html"><span>Nº029 · Rotation matrix (2D image rotation)</span></a>
+    <a href="/gpu.html"><span>Nº028 · GPUs (why AI runs on graphics cards)</span></a>
+    <a href="/attention.html"><span>Nº027 · Attention (self-attention in a transformer)</span></a>
+    <a href="/ticketmaster.html"><span>Nº026 · Ticketmaster (system design)</span></a>
+    <a href="/temperature.html"><span>Nº025 · Temperature (softmax sampling)</span></a>
+    <a href="/edge.html"><span>Nº024 · Gradient descent</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Document</span><strong>You're in</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Guides</span><strong id="doc-guide-count">27, right now</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Delivery</span><strong>This page, immediately</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Next guide</span><strong>One a week, by email</strong>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp" id="doc-status">Active</span>
+        </div>
+      </div>
+
+      <div class="journalArticle__article" id="thanks">
+        <h1 data-splitting="lines" id="hero-h1">You're in.</h1>
+        <p class="lead" data-splitting id="hero-sub">No confirmation email to go and find — the address you
+          typed is on the list now. Every guide the site has published so far is right below, and one new
+          one lands by email each week from here.</p>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº001 / The set</p>
+        <h4 aria-level="2" data-splitting="lines">All 27 guides, right now</h4>
+        <p data-splitting>Every field guide this site has published, newest first. Open any of them —
+          nothing here is gated behind the email you just gave.</p>
+        <div class="cardDrawer__rows" id="set-rows">
+        <a class="cardRow" href="/rotation.html"><span class="cardRow__n monospace">Nº029</span><span class="cardRow__t">Rotating your photo is four numbers. Two are the same.</span><span class="cardRow__s monospace">Rotation matrix (2D image rotation)</span><span class="cardRow__r monospace">2:09</span></a>
+        <a class="cardRow" href="/gpu.html"><span class="cardRow__n monospace">Nº028</span><span class="cardRow__t">Every GPU core is slower than your CPU's. It still wins.</span><span class="cardRow__s monospace">GPUs (why AI runs on graphics cards)</span><span class="cardRow__r monospace">2:08</span></a>
+        <a class="cardRow" href="/attention.html"><span class="cardRow__n monospace">Nº027</span><span class="cardRow__t">ChatGPT can't tell a river bank from a money bank until the words before it vote.</span><span class="cardRow__s monospace">Attention (self-attention in a transformer)</span><span class="cardRow__r monospace">2:31</span></a>
+        <a class="cardRow" href="/ticketmaster.html"><span class="cardRow__n monospace">Nº026</span><span class="cardRow__t">Every piece of Ticketmaster's system arrived only after the one before it broke.</span><span class="cardRow__s monospace">Ticketmaster (system design)</span><span class="cardRow__r monospace">2:13</span></a>
+        <a class="cardRow" href="/temperature.html"><span class="cardRow__n monospace">Nº025</span><span class="cardRow__t">The temperature setting behind ChatGPT runs on gas physics from 1868.</span><span class="cardRow__s monospace">Temperature (softmax sampling)</span><span class="cardRow__r monospace">2:29</span></a>
+        <a class="cardRow" href="/edge.html"><span class="cardRow__n monospace">Nº024</span><span class="cardRow__t">Gradient descent trains right on the line where it should explode.</span><span class="cardRow__s monospace">Gradient descent</span><span class="cardRow__r monospace">2:08</span></a>
+        <a class="cardRow" href="/pagerank.html"><span class="cardRow__n monospace">Nº023</span><span class="cardRow__t">PageRank is an eigenvector.</span><span class="cardRow__s monospace">PageRank</span><span class="cardRow__r monospace">2:11</span></a>
+        <a class="cardRow" href="/shazam.html"><span class="cardRow__n monospace">Nº022</span><span class="cardRow__t">Shazam never hears your song. It hears the circles inside it.</span><span class="cardRow__s monospace">Shazam</span><span class="cardRow__r monospace">1:16</span></a>
+        <a class="cardRow" href="/fde.html"><span class="cardRow__n monospace">Nº021</span><span class="cardRow__t">Sent to live inside your world until it works.</span><span class="cardRow__s monospace">Forward Deployed Engineer</span><span class="cardRow__r monospace">2:45</span></a>
+        <a class="cardRow" href="/jev.html"><span class="cardRow__n monospace">Nº020</span><span class="cardRow__t">The answer is a move.</span><span class="cardRow__s monospace">Jev (TypeSafe)</span><span class="cardRow__r monospace">2:21</span></a>
+        <a class="cardRow" href="/claudex-loop/"><span class="cardRow__n monospace">Nº019</span><span class="cardRow__t">Catch the lost edit before you ship.</span><span class="cardRow__s monospace">Cross-model review</span><span class="cardRow__r monospace">0:58</span></a>
+        <a class="cardRow" href="/hugging-face.html"><span class="cardRow__n monospace">Nº018</span><span class="cardRow__t">Why AI leaders Dario and Sam want to slow down.</span><span class="cardRow__s monospace">Hugging Face</span><span class="cardRow__r monospace">2:57</span></a>
+        <a class="cardRow" href="/weights.html"><span class="cardRow__n monospace">Nº016</span><span class="cardRow__t">Open weight is not open source.</span><span class="cardRow__s monospace">Open weight vs open source</span><span class="cardRow__r monospace">2:11</span></a>
+        <a class="cardRow" href="/shadow.html"><span class="cardRow__n monospace">Nº014</span><span class="cardRow__t">The dot product is a shadow.</span><span class="cardRow__s monospace">The dot product and attention</span><span class="cardRow__r monospace">1:48</span></a>
+        <a class="cardRow" href="/doorman.html"><span class="cardRow__n monospace">Nº013</span><span class="cardRow__t">Ten servers, one door.</span><span class="cardRow__s monospace">Load balancers</span><span class="cardRow__r monospace">2:07</span></a>
+        <a class="cardRow" href="/algo.html"><span class="cardRow__n monospace">Nº012</span><span class="cardRow__t">The same point, five different answers.</span><span class="cardRow__s monospace">Five machine learning algorithms</span><span class="cardRow__r monospace">2:34</span></a>
+        <a class="cardRow" href="/eigen.html"><span class="cardRow__n monospace">Nº011</span><span class="cardRow__t">Two directions the wind cannot turn.</span><span class="cardRow__s monospace">Eigenvectors and linear systems</span><span class="cardRow__r monospace">1:27</span></a>
+        <a class="cardRow" href="/video-as-code.html"><span class="cardRow__n monospace">Nº010</span><span class="cardRow__t">Your video is a web page.</span><span class="cardRow__s monospace">Rendering video from code</span><span class="cardRow__r monospace">1:14</span></a>
+        <a class="cardRow" href="/determinant.html"><span class="cardRow__n monospace">Nº009</span><span class="cardRow__t">The determinant is a volume.</span><span class="cardRow__s monospace">The determinant</span><span class="cardRow__r monospace">2:55</span></a>
+        <a class="cardRow" href="/alternatives.html"><span class="cardRow__n monospace">Nº008</span><span class="cardRow__t">Every paid tool has an open twin.</span><span class="cardRow__s monospace">Open-source swaps</span><span class="cardRow__r monospace">&mdash;</span></a>
+        <a class="cardRow" href="/design-plugins.html"><span class="cardRow__n monospace">Nº007</span><span class="cardRow__t">Taste is installable.</span><span class="cardRow__s monospace">Design plugins</span><span class="cardRow__r monospace">&mdash;</span></a>
+        <a class="cardRow" href="/git.html"><span class="cardRow__n monospace">Nº006</span><span class="cardRow__t">A change has to climb.</span><span class="cardRow__s monospace">Version control</span><span class="cardRow__r monospace">&mdash;</span></a>
+        <a class="cardRow" href="/gps.html"><span class="cardRow__n monospace">Nº005</span><span class="cardRow__t">Zero bars. Still found.</span><span class="cardRow__s monospace">GPS</span><span class="cardRow__r monospace">1:44</span></a>
+        <a class="cardRow" href="/google-search.html"><span class="cardRow__n monospace">Nº004</span><span class="cardRow__t">It doesn't search the internet. It searches a copy.</span><span class="cardRow__s monospace">Google Search</span><span class="cardRow__r monospace">1:31</span></a>
+        <a class="cardRow" href="/whatsapp.html"><span class="cardRow__n monospace">Nº003</span><span class="cardRow__t">Five machines carry your message. None of them can read it.</span><span class="cardRow__s monospace">WhatsApp</span><span class="cardRow__r monospace">1:39</span></a>
+        <a class="cardRow" href="/kubernetes.html"><span class="cardRow__n monospace">Nº002</span><span class="cardRow__t">Kubernetes has never started a container.</span><span class="cardRow__s monospace">Kubernetes / Docker</span><span class="cardRow__r monospace">1:42</span></a>
+        <a class="cardRow" href="/netflix.html"><span class="cardRow__n monospace">Nº001</span><span class="cardRow__t">The play button was never the hard part.</span><span class="cardRow__s monospace">Netflix</span><span class="cardRow__r monospace">2:53</span></a>
+        </div>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº002 / What happens next</p>
+        <h4 aria-level="2" data-splitting="lines">One new guide a week, nothing else</h4>
+        <ul>
+          <li><strong>One new system taken apart</strong> — a guide a week, each one a large system
+            most people use and nobody explains.</li>
+          <li><strong>Reply and a person reads it</strong> — the list is not a broadcast-only address.</li>
+          <li><strong>Unsubscribe any time</strong> — every email carries a working link, and your
+            address is never shared, sold, or used for anything else. See the
+            <a href="privacy.html">privacy note</a>.</li>
+        </ul>
+
+        <div class="buttons">
+          <a href="/guides/" class="button button__big hover_effect"><span>Browse every guide</span><span class="arrow">↗</span></a>
+          <a href="netflix.html" class="button button__big hover_effect"><span>Start with Guide 01</span><span class="arrow">↗</span></a>
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Follow on Instagram</span><span class="arrow">↗</span></a>
+        </div>
+
+        <div class="article__footer">
+          <p class="monospace monospace__p opacity__50" data-splitting>Independent educational work. Not affiliated
+            with, endorsed by, or connected to any company discussed in the guides.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↑</span></a>
+          <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↑</span></a>
+          <a href="netflix.html" class="button button__half hover_effect" title="Guide 01"><span>Guide 01</span><span class="arrow">↑</span></a>
+          <a href="artifacts/netflix-system-map.png" class="button button__half hover_effect" title="The schematic, as an image"><span>The schematic</span> <span class="arrow">↑</span></a>
+          <a href="artifacts/transcript.md" class="button button__half hover_effect" title="Full narration, by section"><span>Transcript</span><span class="arrow">↑</span></a>
+          <a href="artifacts/reading-list.md" class="button button__half hover_effect" title="Six primary sources"><span>Sources</span><span class="arrow">↑</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-10-05-rotation"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-10-05-rotation"></script>
+<script src="/assets/js/splitting.min.js?v=2026-10-05-rotation"></script>
+<script src="/assets/js/site.js?v=2026-10-05-rotation" type="module"></script>
+<!-- /build:scripts -->
+<script>
+(function () {
+  // Never tell someone they are on the list when they are not. The Worker sets
+  // ?e= (email | rate | api) when signup did not succeed; say so plainly and
+  // still hand over the set below — it costs nothing and nobody should have
+  // to prove they are worth the payoff.
+  var e = new URLSearchParams(location.search).get('e');
+  function count(path) {
+    if (window.goatcounter && window.goatcounter.count) {
+      window.goatcounter.count({ path: path, event: true });
+    }
+  }
+  (function fire(tries) {
+    if (window.goatcounter && window.goatcounter.count) {
+      count(e ? 'subscribe-failed-' + e : 'subscribe-complete');
+    } else if (tries < 40) {
+      setTimeout(function () { fire(tries + 1); }, 150);
+    }
+  })(0);
+
+  if (!e) return;
+  var h1 = document.getElementById('hero-h1');
+  var sub = document.getElementById('hero-sub');
+  var status = document.getElementById('doc-status');
+  var count_el = document.getElementById('doc-guide-count');
+  var messages = {
+    email: "That didn't look like a real address, so nothing was added to the list. Try the form again with the address you actually check.",
+    rate: 'Too many signups from this connection in a short time, so this one was held back rather than added. Wait a few minutes and try the form again.',
+    api: "Something went wrong on this end adding you to the list, so you're not subscribed yet. Please try the form again in a minute — if it keeps failing, message @huberttheinventor on Instagram."
+  };
+  if (h1) h1.textContent = 'Almost.';
+  if (status) { status.textContent = 'Not added'; status.classList.add('is-warn'); }
+  if (count_el) count_el.textContent = '27 — free to read either way';
+  if (sub) sub.textContent = messages[e] || messages.api;
+})();
+</script>
+</body>
+</html>
