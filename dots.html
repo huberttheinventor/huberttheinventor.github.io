@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>It works while you sleep. Four settings decide how far. — Hubert's field guides</title>
+<meta name="description" content="Field guide Nº030. OpenAI's dot is an agent with its own cloud computer, its own browser, and connections to over 4,000 apps (OpenAI's numbers) that keeps working after you close the chat. What it can do alone is not left to chance: OpenAI's Help Center lists four Custom Rules behaviours you set — take action without asking, take action if pre-approved, ask before taking action, or hand off to you. Underneath sits Auto-review, a separate safety system OpenAI built to check a planned step before the dot runs it; OpenAI says the dot cannot switch off a required check, and your own approval cannot override the core safety requirements either. Sources: OpenAI, 'Introducing dots' and 'How we build safety, security, and privacy into dots' (2026-09-29); OpenAI Help Center, 'Getting started with your dot'.">
+<meta name="theme-color" content="#1a1a1a">
+
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="It works while you sleep. Four settings decide how far.">
+<meta property="og:description" content="The rules card: the assembled dot with its four parts labelled, and OpenAI's own line on what always comes back to you.">
+<meta property="og:image" content="artifacts/dots-card.png">
+<meta property="og:image:alt" content="Field guide Nº030 cover — the rules card. A blue dot character assembled from four labelled parts around it — computer, loop, night shift, brakes — inside a glowing cyan ring, under a HUBERT header reading WORKS WHILE YOU SLEEP, with a footnote: at launch, Pro users in the EEA, Switzerland and the UK are excluded (OpenAI Help Center).">
+<meta name="twitter:card" content="summary_large_image">
+
+
+
+
+<style>
+  /* ── the rules tables ─────────────────────────────────────────────────
+     Same shape as rotation.html's matrix-table and gpu.html's race-table:
+     tabular figures, a mono caption naming the source. Facts from
+     research/DOTS-SOURCES-2026-09-30.md, read 2026-09-30. */
+  .rules-table th, .rules-table td { font-variant-numeric: tabular-nums; }
+  .rules-table td:first-child { text-align: left; color: var(--plate-read-accent, #1a1a1a); font-weight: 600; }
+  .rules-table caption {
+    caption-side: top; color: var(--plate-read-dim); font-family: Mono, ui-monospace, monospace;
+    font-size: 14px; letter-spacing: -0.048em; margin-bottom: 4px; text-align: left;
+    text-transform: uppercase;
+  }
+  .rules-table tbody td { border-bottom: 1px solid var(--plate-read-rule); padding: 8px 6px; }
+  .rules-table tbody tr:last-child td { border-bottom: none; }
+
+  @media screen and (max-width: 600px) {
+    .table-scroll {
+      margin: 0 -20px; overflow-x: auto; padding: 0 20px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .table-scroll table { min-width: 320px; }
+  }
+
+  /* Inline code, scoped back to an inline chip (the ported reset styles
+     `code` as a black block, written for fenced samples). */
+  .journalArticle__article code {
+    background: rgba(0, 0, 0, .22); border-radius: 4px; display: inline;
+    font-family: Mono, ui-monospace, monospace; font-size: 88%; margin: 0;
+    padding: .1em .38em; white-space: nowrap;
+  }
+
+  /* Block quotes carry the source's own words, set apart from the plain-
+     English paraphrase around them so a reader can see exactly which
+     sentences are quoted verbatim and which are Hubert's summary. */
+  .paper-quote {
+    border-left: 2px solid rgba(0, 0, 0, .35); font-size: 92%; font-style: italic;
+    margin: 0 0 3vw; max-width: 34em; padding-left: 20px;
+  }
+  .paper-quote cite {
+    display: block; font-family: Mono, ui-monospace, monospace; font-size: 72%;
+    font-style: normal; letter-spacing: .04em; margin-top: 8px; opacity: .55;
+    text-transform: uppercase;
+  }
+  @media screen and (max-width: 600px) {
+    .paper-quote { margin-bottom: 5vh; padding-left: 14px; }
+  }
+
+  /* A suggestion of Hubert's own, not a sourced OpenAI fact — set apart so
+     the two never blur into one voice. */
+  .hubert-note {
+    background: rgba(0, 0, 0, .06); border-radius: 10px; font-size: 92%;
+    margin: 0 0 3vw; max-width: 34em; padding: 12px 16px;
+  }
+  .hubert-note strong { text-transform: uppercase; font-size: 78%; letter-spacing: .04em; opacity: .6; display: block; margin-bottom: 6px; }
+
+  /* The rules card, sent by DM to anyone who comments DOTS — shown here
+     too, since the page is the same artifact. It is a real frame from the
+     approved master render (beat 17, the resolution), not a mock-up.
+     Capped narrow so it reads as a card, not a hero image. */
+  .card-figure { margin: 6px 0 4vw; max-width: 380px; }
+  .card-figure img { border-radius: 14px; border: 1px solid rgba(0, 0, 0, .14); display: block; width: 100%; }
+  .card-figure figcaption {
+    color: var(--plate-read-dim); font-family: Mono, ui-monospace, monospace; font-size: 13px;
+    letter-spacing: .01em; margin-top: 10px; opacity: .65;
+  }
+
+  /* The header is `position: fixed`, so an in-page jump lands the target
+     underneath it. Nº006/007/008 use a flat 116px; match it. */
+  #guide, #settings, #sharing, #review, #examples, #scope, #sources { scroll-margin-top: 116px; }
+</style>
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-10-06-dots" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-10-06-dots">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-10-06-dots">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-10-06-dots">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-10-06-dots">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-10-06-dots">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-10-06-dots">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-10-06-dots">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/dots.html"><span>Nº030 · OpenAI dots (agent permission rules)</span></a>
+    <a href="/rotation.html"><span>Nº029 · Rotation matrix (2D image rotation)</span></a>
+    <a href="/gpu.html"><span>Nº028 · GPUs (why AI runs on graphics cards)</span></a>
+    <a href="/attention.html"><span>Nº027 · Attention (self-attention in a transformer)</span></a>
+    <a href="/ticketmaster.html"><span>Nº026 · Ticketmaster (system design)</span></a>
+    <a href="/temperature.html"><span>Nº025 · Temperature (softmax sampling)</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Field guide</span><strong>Nº030</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>System</span><strong>OpenAI dots (agent permission rules)</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Model</span><strong>your rules &rarr; auto-review checks it &rarr; the dot acts</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Worked example</span><strong>the invoice: noticed &rarr; prepared &rarr; approved &rarr; sent</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp">Filed</span>
+        </div>
+      </div>
+
+      <div class="journalArticle__article" id="guide">
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">You commented DOTS — this is the rules card.</p>
+        <h1 data-splitting="lines">It works while you sleep. Four settings decide how far.</h1>
+        <p class="lead" data-splitting>OpenAI's dot keeps working after you close the chat: its own cloud
+          computer, its own browser, and connections to over 4,000 apps, by OpenAI's own count. What it is
+          allowed to do without you is not left to chance. OpenAI's Help Center names four Custom Rules
+          behaviours you set for it: take action without asking, take action if pre-approved, ask before
+          taking action, or hand off to you entirely. Underneath those sits Auto-review, a separate safety
+          system OpenAI built to check a planned step before the dot runs it &mdash; and OpenAI says the dot
+          cannot switch off a required check, and your own approval cannot override the core safety
+          requirements either.</p>
+
+        <p class="monospace monospace__p" data-splitting>Companion to the reel &middot; Watch it on
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank">@huberttheinventor</a></p>
+
+        <figure class="card-figure">
+          <img src="artifacts/dots-card.png" alt="The rules card. A blue dot character assembled from four labelled parts around it &mdash; computer, loop, night shift, brakes &mdash; inside a glowing cyan ring, under a HUBERT header reading WORKS WHILE YOU SLEEP, with a footnote: at launch, Pro users in the EEA, Switzerland and the UK are excluded (OpenAI Help Center).">
+          <figcaption>The rules card itself, free, no email &mdash; a real frame from the film's master render, the same file the DM sends.</figcaption>
+        </figure>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº001 · The four settings</p>
+        <h4 aria-level="2" data-splitting="lines" id="settings">You choose how much it asks first</h4>
+        <p data-splitting>OpenAI's Help Center article &ldquo;Getting started with your dot&rdquo; names four
+          Custom Rules behaviours, in this order, and they are the whole menu &mdash; there is no fifth
+          setting hiding underneath.</p>
+        <div class="table-scroll">
+        <table class="rules-table">
+          <caption>Custom Rules, OpenAI's own four behaviours (Help Center)</caption>
+          <tbody>
+            <tr><td>1</td><td>Take action without asking</td></tr>
+            <tr><td>2</td><td>Take action if pre-approved</td></tr>
+            <tr><td>3</td><td>Ask before taking action</td></tr>
+            <tr><td>4</td><td>Hand off to you</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="monospace monospace__p opacity__50" data-splitting>You set these per rule, not once for the
+          whole dot &mdash; OpenAI's launch post describes the same four options as allow, require approval,
+          or block.</p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº002 · Email, money and sharing</p>
+        <h4 aria-level="2" data-splitting="lines" id="sharing">The rule scales with what's at risk</h4>
+        <p data-splitting>OpenAI scales the sharing rule to how sensitive the data is. Sharing health data
+          needs a named recipient &mdash; OpenAI's own example is &ldquo;share my medical history with Dr.
+          Thompson.&rdquo; Sharing something like an email address or a phone number only needs a class of
+          recipient, OpenAI's example being &ldquo;any airline company.&rdquo; A purchase on a saved card
+          needs your approval first. Changing a password or moving money is handed back to you outright &mdash;
+          OpenAI does not let the dot carry out either on its own. Three further actions need your confirmation
+          every single time, not just the first, by OpenAI's own list: permanently deleting data, running
+          software from an unrecognised source, and granting new security-sensitive access.</p>
+        <div class="hubert-note">
+          <strong>Hubert's suggestion, not OpenAI's</strong>
+          Until you've watched a rule run for a week, set anything touching money or outside messages to
+          &ldquo;ask before taking action&rdquo; rather than &ldquo;without asking.&rdquo; OpenAI does not
+          recommend a default here; this is only how I'd start.
+        </div>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº003 · Auto-review</p>
+        <h4 aria-level="2" data-splitting="lines" id="review">A system it can't switch off</h4>
+        <p data-splitting>Auto-review is a separate safety system, OpenAI's own term for it &mdash; not a second
+          opinion from you. Before the dot runs a step, Auto-review checks it against your instructions, your
+          rules and OpenAI's safety requirements. Each dot's cloud computer is isolated from other users, and
+          OpenAI says the code a dot runs is kept apart from the systems that enforce these checks, which is
+          why, in OpenAI's own words, a dot cannot switch off its own checks. If Auto-review blocks a step,
+          OpenAI says the dot can ask you, try a different permitted approach, hand the step back, or stop.
+          What neither the dot nor you can do is override the core safety requirements &mdash; OpenAI states
+          that plainly. Its controls sit outside anything the dot itself can change.</p>
+        <blockquote class="paper-quote">
+          <p>&ldquo;Dots can still make mistakes, so always review consequential work.&rdquo;</p>
+          <cite>OpenAI, &ldquo;Introducing dots&rdquo;</cite>
+        </blockquote>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº004 · What OpenAI says it already does</p>
+        <h4 aria-level="2" data-splitting="lines" id="examples">OpenAI's own examples, not Hubert's guesses</h4>
+        <p data-splitting>Every job on this list is one OpenAI names itself in its launch post, not a
+          hypothetical &mdash; including the one this film's job runs end to end.</p>
+        <div class="table-scroll">
+        <table class="rules-table">
+          <caption>OpenAI's own examples (&ldquo;Introducing dots&rdquo;)</caption>
+          <tbody>
+            <tr><td>Engineering</td><td>Turns customer feedback into tested pull requests, with videos</td></tr>
+            <tr><td>Launch work</td><td>Revises launch material when the scope changes</td></tr>
+            <tr><td>Research</td><td>Reruns a scientist's analyses</td></tr>
+            <tr><td>Creator</td><td>Finds clip moments, writes show notes, drafts posts for approval</td></tr>
+            <tr><td>Early tester</td><td>Noticed a forgotten invoice, prepared it, sent it after he approved</td></tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº005 · The honest scope</p>
+        <h4 aria-level="2" data-splitting="lines" id="scope">Who gets one, at launch</h4>
+        <p data-splitting><strong>Pro users in the EEA, Switzerland and the UK are excluded at launch</strong>
+          &mdash; OpenAI's Help Center's own line. Business Premium accounts get every supported region from
+          day one; Enterprise gets a beta. <strong>Nothing here is drawn from the Codex sandbox documentation
+          or any system-card figures</strong> &mdash; a dot's Auto-review is described only in OpenAI's own
+          two launch posts and its Help Center, and this page states nothing beyond what those three pages
+          say.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="next">One system, taken apart.</h4>
+        <p data-splitting>Same treatment, different machine. No pitch, no thread-bait, and an unsubscribe
+          link that works.</p>
+        <div class="buttons">
+          <a href="index.html#pricing" class="button button__big hover_effect"><span>The List</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="sources">Take it with you</h4>
+        <p class="monospace monospace__p opacity__50" data-splitting>The rules card is this page: the assembled
+          dot, its four parts, and the footnote on who gets one at launch, free, no email.</p>
+        <div class="buttons">
+          <a href="#review" class="button button__big hover_effect"><span>Auto-review</span> <span class="arrow">&#8599;</span></a>
+          <a href="#scope" class="button button__big hover_effect"><span>The honest scope</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://openai.com/index/introducing-dots/" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>OpenAI, Introducing dots</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://openai.com/index/how-we-build-safety-security-and-privacy-into-dots/" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>OpenAI, How we build safety, security, and privacy into dots</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://help.openai.com/articles/20001530" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>OpenAI Help Center, Getting started with your dot</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-small="true">The List</p>
+        <h4 aria-level="2">One a week. And the other seven, now.</h4>
+        <p>Confirm your address and the whole set arrives &mdash; all ten field guides, exactly
+          as they are on the site, nothing held back for subscribers. After that, one new system
+          taken apart every week. No pitch, no thread-bait, and an unsubscribe link that works.</p>
+
+        <form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor"
+              method="post">
+          <label class="monospace monospace__p" for="list-email">Email address</label>
+          <div class="field">
+            <input type="email" name="email" id="list-email" placeholder="you@example.com"
+                   required autocomplete="email" inputmode="email" spellcheck="false">
+            <input type="hidden" name="tag" value="guide-30-dots">
+            <button type="submit" class="monospace">Send me the set &#8599;</button>
+          </div>
+          <label class="consent monospace monospace__p">
+            <input type="checkbox" name="consent" required>
+            <span>Send me the ten guides and one new one each week. I can unsubscribe at any
+              time and my address is never shared &mdash; see the
+              <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set
+              arrives the moment you click it.</span>
+          </label>
+        </form>
+<!-- build:guidenav -->
+      <div class="guideNav">
+        <h4 aria-level="2" class="guideNav__head">Keep going</h4>
+        <div class="buttons">
+        <a href="/rotation.html" class="button button__big hover_effect"><span><em class="guideNav__kicker">Previous</em> Nº029 · Rotation matrix (2D image rotation)</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__label">Related</p>
+        <div class="buttons">
+        <a href="/hugging-face.html" class="button button__big hover_effect"><span>Nº018 · Hugging Face &mdash; Why AI leaders Dario and Sam want to slow down.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/gpu.html" class="button button__big hover_effect"><span>Nº028 · GPUs (why AI runs on graphics cards) &mdash; Every GPU core is slower than your CPU's. It still wins.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/attention.html" class="button button__big hover_effect"><span>Nº027 · Attention (self-attention in a transformer) &mdash; ChatGPT can't tell a river bank from a money bank until the words before it vote.</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__all"><a href="/guides/">All 28 guides &#8599;</a></p>
+      </div>
+<!-- /build:guidenav -->
+      <div class="article__footer">
+          <p class="monospace monospace__p opacity__50" data-splitting><strong>An independent educational
+            breakdown.</strong> Not affiliated with, endorsed by, or produced in cooperation with OpenAI.
+            Every claim about dots is sourced to OpenAI's own published pages, &ldquo;Introducing dots&rdquo;
+            and &ldquo;How we build safety, security, and privacy into dots&rdquo; (openai.com, 2026-09-29),
+            and OpenAI's Help Center article &ldquo;Getting started with your dot.&rdquo; One paragraph in
+            Nº002, marked as such, is Hubert's own suggestion, not OpenAI's. Any error in the summary is
+            mine.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="#review" class="button button__half hover_effect" title="Auto-review"><span>Auto-review</span><span class="arrow">↗</span></a>
+          <a href="#scope" class="button button__half hover_effect" title="Take it with you"><span>The honest scope</span><span class="arrow">↗</span></a>
+          <a href="privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+
+
+
+
+<dialog id="list-modal" class="listModal" aria-labelledby="list-modal-title"><div class="listModal__inner" tabindex="-1" autofocus><p class="listModal__eyebrow">The List</p><h2 id="list-modal-title">Ten guides. One email.</h2><p>Every field guide on this site, sent the moment you confirm &mdash; then one new system taken apart each week.</p><p>Nothing is held back for subscribers. The guides stay free and stay here; the list is only how the next one reaches you without an algorithm getting a vote.</p><form class="sub-form" action="https://buttondown.com/api/emails/embed-subscribe/huberttheinventor" method="post"><label class="monospace monospace__p" for="list-email-modal">Email address</label><div class="field"><input type="email" name="email" id="list-email-modal" placeholder="you@example.com" required autocomplete="email" inputmode="email" spellcheck="false"><input type="hidden" name="tag" value="popup-dots"><button type="submit" class="monospace">Send me the set &#8599;</button></div><label class="consent monospace monospace__p"><input type="checkbox" name="consent" required><span>Send me the ten guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. A confirmation email comes first; the set arrives the moment you click it.</span></label></form><button type="button" class="listModal__close" data-close>No thanks &mdash; just reading</button></div></dialog>
+<script src="assets/js/list-modal.js" defer></script>
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-10-06-dots"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-10-06-dots"></script>
+<script src="/assets/js/splitting.min.js?v=2026-10-06-dots"></script>
+<script src="/assets/js/site.js?v=2026-10-06-dots" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>
