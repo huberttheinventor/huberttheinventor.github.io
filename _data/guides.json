@@ -1,7 +1,16 @@
 {
   "_comment": "The spine. Every guide, newest first is derived from `n` descending. The archive at /guides/, the prev/next pairs and the mobile menu's latest-few list are all generated from this file — add a guide here and they all update. `blurb` is optional and renders only when present. `tags` are unused by the current nav (reverse-chronological, no groups) and exist so related-guides and archive filtering can be added later without a migration.",
-  "cacheToken": "2026-10-06-dots",
+  "cacheToken": "2026-10-07-axis",
   "guides": [
+    {
+      "n": 31,
+      "slug": "axis",
+      "headline": "The leap wasn't sudden. You were reading the wrong axis.",
+      "system": "Training compute (semi-log axis)",
+      "runtime": "2:37",
+      "video": false,
+      "tags": ["ai", "machine-learning", "maths"]
+    },
     {
       "n": 30,
       "slug": "dots",
