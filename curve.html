@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>An option's gamma isn't new maths. It's the bend you already met in training. — Hubert's field guides</title>
+<meta name="description" content="Field guide Nº033. An option's value plotted against its stock's price is a bent curve: the slope is delta, the shares whoever sold the option holds against it; the bend is gamma, the second derivative, how fast that share count changes. On a made-up stock at price 100, strike 100, volatility 0.30, zero interest rates (Black-Scholes, recomputed 2026-10-02): with 63 trading days left a one-dollar move changes the slope from 0.53 to 0.56, about 3 more shares on 100; with 1 trading day left the same one-dollar move changes it from 0.50 to 0.70, about 20 more shares, because gamma grows as expiry nears. Gamma exposure (GEX) sums this bend across every option on a stock; its sign is a convention about who holds the calls and puts, not a result of the calculus. The same second derivative caps the safe step size when training a model (Cohen et al., ICLR 2021). Maths education only: made-up numbers, no real security, not investment advice.">
+<meta name="theme-color" content="#1a1a1a">
+
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="An option's gamma isn't new maths. It's the bend you already met in training.">
+<meta property="og:description" content="The one-page calculus sheet: slope, bend, the curvature circle, the made-up arithmetic, and gamma exposure's sign stated as a convention. A real frame from the film's master render.">
+<meta property="og:image" content="artifacts/curve-card.png">
+<meta property="og:image:alt" content="Field guide Nº033 cover — a real frame from the film's master render: a dark instrument panel, an option-value curve bent sharply at a vertical STRIKE line, a cyan curvature circle hugging the corner, two slope readouts (SLOPE 0.50 and SLOPE 0.70) either side of a +1 DOLLAR marker, a TIME LEFT dial reading 1 TRADING DAY, a SHARES readout 50 to 70 with +20 beside an older +3, the line 'Maths education. Made-up prices. Not investment advice.' in small mono type, a HUBERT header, and Hubert raising his arms.">
+<meta name="twitter:card" content="summary_large_image">
+
+
+
+
+<style>
+  /* ── the data tables ──────────────────────────────────────────────────
+     Same shape as dots.html's rules-table and axis.html/bayes.html's
+     tables: tabular figures, a mono caption naming the source. Facts from
+     videos/film-11-gex-gamma-curvature/SCRIPT.md's Claim and Sources
+     tables, read 2026-10-02. */
+  .rules-table th, .rules-table td { font-variant-numeric: tabular-nums; }
+  .rules-table td:first-child { text-align: left; color: var(--plate-read-accent, #1a1a1a); font-weight: 600; }
+  .rules-table caption {
+    caption-side: top; color: var(--plate-read-dim); font-family: Mono, ui-monospace, monospace;
+    font-size: 14px; letter-spacing: -0.048em; margin-bottom: 4px; text-align: left;
+    text-transform: uppercase;
+  }
+  .rules-table tbody td { border-bottom: 1px solid var(--plate-read-rule); padding: 8px 6px; }
+  .rules-table tbody tr:last-child td { border-bottom: none; }
+
+  @media screen and (max-width: 600px) {
+    .table-scroll {
+      margin: 0 -20px; overflow-x: auto; padding: 0 20px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .table-scroll table { min-width: 320px; }
+  }
+
+  /* Inline code, scoped back to an inline chip (the ported reset styles
+     `code` as a black block, written for fenced samples). */
+  .journalArticle__article code {
+    background: rgba(0, 0, 0, .22); border-radius: 4px; display: inline;
+    font-family: Mono, ui-monospace, monospace; font-size: 88%; margin: 0;
+    padding: .1em .38em; white-space: nowrap;
+  }
+
+  /* Block quotes carry the source's own words, set apart from the plain-
+     English paraphrase around them so a reader can see exactly which
+     sentences are quoted verbatim and which are Hubert's summary. Used
+     here only for the Cohen et al. abstract (open access, arXiv); the
+     SqueezeMetrics white paper is cited by name only, never quoted, under
+     its own republication clause (PROPOSAL.md Legal check). */
+  .paper-quote {
+    border-left: 2px solid rgba(0, 0, 0, .35); font-size: 92%; font-style: italic;
+    margin: 0 0 3vw; max-width: 34em; padding-left: 20px;
+  }
+  .paper-quote cite {
+    display: block; font-family: Mono, ui-monospace, monospace; font-size: 72%;
+    font-style: normal; letter-spacing: .04em; margin-top: 8px; opacity: .55;
+    text-transform: uppercase;
+  }
+  @media screen and (max-width: 600px) {
+    .paper-quote { margin-bottom: 5vh; padding-left: 14px; }
+  }
+
+  /* A caveat Hubert states explicitly, not a sourced fact — set apart so
+     the two never blur into one voice. Also carries the mandatory legal
+     notice (PROPOSAL.md Legal check, Producer's brief). */
+  .hubert-note {
+    background: rgba(0, 0, 0, .06); border-radius: 10px; font-size: 92%;
+    margin: 0 0 3vw; max-width: 34em; padding: 12px 16px;
+  }
+  .hubert-note strong { text-transform: uppercase; font-size: 78%; letter-spacing: .04em; opacity: .6; display: block; margin-bottom: 6px; }
+
+  /* The calculus sheet's cover frame, sent by DM to anyone who comments
+     CURVE — shown here too, since the page is the same artifact. It is a
+     real frame from the approved master render (t=108s, the film's
+     screenshot-worthy frame, SCRIPT.md beat 12 AUD-04), not a mock-up.
+     Capped narrow so it reads as a card, not a hero image. */
+  .card-figure { margin: 6px 0 4vw; max-width: 380px; }
+  .card-figure img { border-radius: 14px; border: 1px solid rgba(0, 0, 0, .14); display: block; width: 100%; }
+  .card-figure figcaption {
+    color: var(--plate-read-dim); font-family: Mono, ui-monospace, monospace; font-size: 13px;
+    letter-spacing: .01em; margin-top: 10px; opacity: .65;
+  }
+
+  /* The header is `position: fixed`, so an in-page jump lands the target
+     underneath it. Nº031/032 use a flat 116px; match it. */
+  #guide, #slope, #bend, #arithmetic, #bridge, #gex, #scope, #sources { scroll-margin-top: 116px; }
+</style>
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-10-09-curve" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-10-09-curve">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-10-09-curve">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-10-09-curve">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-10-09-curve">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-10-09-curve">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-10-09-curve">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-10-09-curve">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/curve.html"><span>Nº033 · Options gamma (the bend in an option's price curve)</span></a>
+    <a href="/bayes.html"><span>Nº032 · Naive Bayes spam filter (word-weight scale)</span></a>
+    <a href="/axis.html"><span>Nº031 · Training compute (semi-log axis)</span></a>
+    <a href="/dots.html"><span>Nº030 · OpenAI dots (agent permission rules)</span></a>
+    <a href="/rotation.html"><span>Nº029 · Rotation matrix (2D image rotation)</span></a>
+    <a href="/gpu.html"><span>Nº028 · GPUs (why AI runs on graphics cards)</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Field guide</span><strong>Nº033</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>System</span><strong>Options gamma (the bend in an option's price curve)</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Model</span><strong>slope = delta (1st derivative) &middot; bend = gamma (2nd derivative) &middot; the bend sharpens as time to expiry shrinks</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Worked example</span><strong>made-up stock at 100: slope .53 &rarr; .56 (+3 shares) at 63 trading days left; .50 &rarr; .70 (+20 shares) at 1 trading day left</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp">Filed</span>
+        </div>
+      </div>
+
+      <div class="journalArticle__article" id="guide">
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">You commented CURVE — this is the one-page calculus sheet.</p>
+        <h1 data-splitting="lines">An option's gamma isn't new maths. It's the bend you already met in training.</h1>
+        <p class="lead" data-splitting>Plot an option's value against its stock's price and you get a bent curve: flat
+          on one side, a straight ramp on the other, with a bend between them. The curve's slope is delta &mdash; how
+          many shares whoever sold the option holds against it, to stay even on a small move. The curve's bend is
+          gamma, the second derivative, how fast that share count has to change. On a made-up stock at price 100,
+          strike 100, volatility 0.30 and zero interest rates, the bend is gentle with three months left (a one-dollar
+          move nudges the slope from 0.53 to 0.56, about 3 more shares) and sharp with one trading day left (the same
+          move nudges it from 0.50 to 0.70, about 20 more shares) &mdash; the bend concentrates into one corner at the
+          strike as expiry nears, and it is the same second derivative that caps a safe step size when training a
+          model.</p>
+
+        <p class="monospace monospace__p" data-splitting>Companion to the reel &middot; Watch it on
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank">@huberttheinventor</a></p>
+
+        <figure class="card-figure">
+          <img src="artifacts/curve-card.png" alt="A dark instrument panel. The option-value curve bends sharply into a corner at a vertical STRIKE line, a cyan curvature circle hugging the corner. Either side of a +1 DOLLAR marker, two slope readouts: SLOPE 0.50 and SLOPE 0.70. A TIME LEFT dial reads 1 TRADING DAY. A SHARES readout runs 50 to 70 with +20 beside an older +3. Small mono type reads Maths education. Made-up prices. Not investment advice. Under a HUBERT header, Hubert raises his arms.">
+          <figcaption>The sheet's cover frame &mdash; a real frame from the film's master render (t=108s), free, no email, not a mock-up.</figcaption>
+        </figure>
+
+        <div class="hubert-note">
+          <strong>Maths education, not investment advice</strong>
+          Maths education only: this video explains the calculus behind option pricing using made-up numbers and no
+          real security. It is not investment advice and not a recommendation to buy or sell anything. No ticker, no
+          index, no price level, no date, no direction, no buy or sell, no vendor chart appears anywhere on this
+          page or in the film.
+        </div>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº001 · The slope</p>
+        <h4 aria-level="2" data-splitting="lines" id="slope">Delta is the slope, not a forecast</h4>
+        <p data-splitting>An option's value, plotted against the stock's price, is flat on one side of the strike and
+          a straight ramp on the other (the expiry payoff is max(price &minus; strike, 0), Black&ndash;Scholes'
+          terminal condition), joined by a bend. Delta is that curve's slope at the current price: the first
+          derivative of value with respect to price, &Phi;(d&#8321;) in Black&ndash;Scholes. It is also, by
+          construction, how many shares of stock whoever sold the option holds against it, so that a small move in
+          the stock leaves their combined position roughly unchanged (Wikipedia, &ldquo;Greeks (finance)&rdquo;: a
+          hedged position &ldquo;will not depend on the price of the stock&rdquo; to first order). For a made-up
+          stock priced at 100 with an option struck at 100, delta starts at 0.5299 with 63 trading days left &mdash;
+          on a hundred-share contract, the seller holds about 53 shares.</p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº002 · The bend</p>
+        <h4 aria-level="2" data-splitting="lines" id="bend">Gamma is the slope's own slope</h4>
+        <p data-splitting>Gamma is the curve's bend: the second derivative of value with respect to price,
+          &part;&sup2;V / &part;S&sup2;, which in Black&ndash;Scholes works out to &phi;(d&#8321;) / (S&sigma;&radic;&tau;)
+          (Wikipedia, &ldquo;Greeks (finance)&rdquo;). It is how fast delta itself changes, so it is how many more
+          shares the hedge needs on the next dollar. A circle that hugs the curve at the price marker &mdash; the
+          osculating circle, the one circle that shares the curve's own curvature at that point &mdash; makes the
+          bend visible: a wide circle is a gentle bend, a tight circle is a sharp one.</p>
+        <div class="hubert-note">
+          <strong>What the circle does and doesn't show</strong>
+          A circle's curvature is the reciprocal of its radius, and a curve's curvature is &kappa; = |V&Prime;| /
+          (1 + V&prime;&sup2;)<sup>3/2</sup> (Wikipedia, &ldquo;Curvature&rdquo; and &ldquo;Osculating circle&rdquo;).
+          That equals gamma only where the slope is near zero. Near the strike, close to expiry, the slope is near
+          0.5 and the two are close enough to read the bend by eye; this page never prints a radius-equals-one-over-
+          gamma number, only the circle itself.
+        </div>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº003 · The arithmetic</p>
+        <h4 aria-level="2" data-splitting="lines" id="arithmetic">One made-up stock, four points in time</h4>
+        <p data-splitting>Made-up inputs throughout: stock price 100, strike 100 (at the money), volatility 30%, zero
+          interest rates, one option assumed to cover 100 shares. Time to expiry is counted in trading days, 252 a
+          year, so &ldquo;63 trading days&rdquo; is a quarter of a year and &ldquo;1 trading day&rdquo; is
+          1/252 of one. Gamma and delta recomputed 2026-10-02 from Black&ndash;Scholes at these inputs; delta at 101
+          is the same formula one dollar higher, and the share counts are 100 &times; delta on the made-up
+          hundred-share contract.</p>
+        <div class="table-scroll">
+        <table class="rules-table">
+          <caption>Black&ndash;Scholes at made-up inputs: price 100, strike 100, volatility 0.30, zero rates (recomputed 2026-10-02)</caption>
+          <tbody>
+            <tr><td>63 trading days left (&tau; = 0.25)</td><td>gamma 0.0265 &middot; delta 0.5299 &rarr; 0.5562 on +$1 &middot; shares 53.0 &rarr; 55.6 &middot; <strong>+2.6</strong> (spoken &ldquo;about three&rdquo;)</td></tr>
+            <tr><td>30 trading days left</td><td>gamma 0.0385 &middot; delta 0.5206 &rarr; 0.5588 &middot; shares 52.1 &rarr; 55.9 &middot; <strong>+3.8</strong></td></tr>
+            <tr><td>7 trading days left</td><td>gamma 0.0798 &middot; delta 0.5100 &rarr; 0.5886 &middot; shares 51.0 &rarr; 58.9 &middot; <strong>+7.9</strong></td></tr>
+            <tr><td>1 trading day left (&tau; = 1/252)</td><td>gamma 0.2111 &middot; delta 0.5038 &rarr; 0.7040 &middot; shares 50.4 &rarr; 70.4 &middot; <strong>+20.0</strong> (spoken &ldquo;twenty&rdquo;)</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="monospace monospace__p opacity__50" data-splitting>Delta stays inside 0 and 1 the whole time
+          (&ldquo;delta will be a number between 0.0 and 1.0 for a long call,&rdquo; Wikipedia, Greeks (finance));
+          gamma is what grows, because &Gamma; carries &radic;&tau; in its denominator and so rises as &tau; &rarr; 0,
+          greatest at the money (Wikipedia, Greeks (finance); Macroption, &ldquo;Option Gamma&rdquo;: &ldquo;as
+          expiration nears, gamma of at-the-money options increases&rdquo;). The same one-dollar step that needed 3
+          more shares three months out needs 20 more shares with a day left.</p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº004 · The training bridge</p>
+        <h4 aria-level="2" data-splitting="lines" id="bridge">The same second derivative caps a training step</h4>
+        <p data-splitting>Plot a model's loss against one of its weights and that curve bends too. Its bend &mdash;
+          the top eigenvalue of the loss's Hessian, the matrix of its second derivatives &mdash; bounds how large a
+          training step can be before gradient descent stops converging and starts oscillating.</p>
+        <blockquote class="paper-quote">
+          the maximum eigenvalue of the training loss Hessian hovers just above the numerical value 2 / (step size)
+          <cite>Cohen, Kaur, Li, Kolter, Talwalkar &mdash; Gradient Descent on Neural Networks Typically Occurs at the Edge of Stability, ICLR 2021 (arXiv 2103.00065)</cite>
+        </blockquote>
+        <p data-splitting>Same shape, different curve: an option's gamma is a price curve's bend and bounds the next
+          hedge; a loss's curvature is a training curve's bend and bounds the next step. Neither film draws the other
+          one's picture on top of it; they share only the one mechanism &mdash; a bend is how fast a slope changes,
+          and how fast a slope changes sets a limit on how big the next move can safely be.</p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº005 · Gamma exposure</p>
+        <h4 aria-level="2" data-splitting="lines" id="gex">One sum, one sign that's a convention</h4>
+        <p data-splitting>Gamma exposure (GEX) adds this same bend up across every option on a stock: each strike's
+          gamma, multiplied by its open interest (how many contracts are open there) and the 100 shares a standard
+          contract represents, summed over every strike. The sign of each strike's contribution is a convention, not
+          a result of the calculus: the method this page is describing assumes market-makers bought every call and
+          sold every put, so a call's line is counted positive and a put's line negative. Flip who is assumed to hold
+          the options and every sign flips with it &mdash; the bend itself never changes, only the label on it. This
+          page states that convention; it does not take a side on it, and it makes no claim about what any gamma
+          exposure number does to a real stock's price.</p>
+        <p class="monospace monospace__p opacity__50" data-splitting>Definition only, not reproduced: SqueezeMetrics,
+          &ldquo;Gamma Exposure (GEX)&rdquo;, white paper, March 2016, revised December 2017. Its own terms restrict
+          republication of the paper itself, so this page paraphrases the definition and cites the source rather
+          than quoting or showing it.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="scope">The honest scope</h4>
+        <p data-splitting>Every number on this page is made up: one stock, one strike, one volatility, zero rates,
+          chosen to show the shape of the arithmetic, not to describe any real security. Nothing here names a ticker,
+          an index, a price level, a date, a direction, a buy or sell, or shows a vendor's chart. The training bridge
+          is a second shared mechanism, not a claim that calculus for options and calculus for training are the same
+          system &mdash; they are two different curves that happen to share one piece of maths.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="next">One system, taken apart.</h4>
+        <p data-splitting>Same treatment, different machine. No pitch, no thread-bait, and an unsubscribe
+          link that works.</p>
+        <div class="buttons">
+          <a href="index.html#pricing" class="button button__big hover_effect"><span>The List</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="sources">Take it with you</h4>
+        <p class="monospace monospace__p opacity__50" data-splitting>The one-page calculus sheet is this page: slope,
+          bend, the curvature circle, the made-up arithmetic, the training bridge and gamma exposure's sign, free, no
+          email.</p>
+        <div class="buttons">
+          <a href="#arithmetic" class="button button__big hover_effect"><span>The arithmetic</span> <span class="arrow">&#8599;</span></a>
+          <a href="#bridge" class="button button__big hover_effect"><span>The training bridge</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://en.wikipedia.org/wiki/Greeks_(finance)" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Wikipedia, Greeks (finance)</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://arxiv.org/abs/2103.00065" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Cohen et al., Edge of Stability, ICLR 2021</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-small="true">The List</p>
+        <h4 aria-level="2">One a week. And the other seven, now.</h4>
+        <p>Confirm your address and the whole set arrives &mdash; all ten field guides, exactly
+          as they are on the site, nothing held back for subscribers. After that, one new system
+          taken apart every week. No pitch, no thread-bait, and an unsubscribe link that works.</p>
+
+        <form class="sub-form" action="https://huberttheinventor-ig-dm.vektor-fm.workers.dev/signup"
+              method="post">
+          <label class="monospace monospace__p" for="list-email">Email address</label>
+          <div class="field">
+            <input type="email" name="email" id="list-email" placeholder="you@example.com"
+                   required autocomplete="email" inputmode="email" spellcheck="false">
+            <input type="hidden" name="tag" value="guide-33-curve"><input type="text" name="company" value="" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
+            <button type="submit" class="monospace">Send me the set &#8599;</button>
+          </div>
+          <label class="consent monospace monospace__p">
+            <input type="checkbox" name="consent" required>
+            <span>Send me the guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. The set opens right away on the next page.</span>
+          </label>
+        </form>
+<!-- build:guidenav -->
+      <div class="guideNav">
+        <h4 aria-level="2" class="guideNav__head">Keep going</h4>
+        <div class="buttons">
+        <a href="/bayes.html" class="button button__big hover_effect"><span><em class="guideNav__kicker">Previous</em> Nº032 · Naive Bayes spam filter (word-weight scale)</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__label">Related</p>
+        <div class="buttons">
+        <a href="/axis.html" class="button button__big hover_effect"><span>Nº031 · Training compute (semi-log axis) &mdash; The leap wasn't sudden. You were reading the wrong axis.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/gpu.html" class="button button__big hover_effect"><span>Nº028 · GPUs (why AI runs on graphics cards) &mdash; Every GPU core is slower than your CPU's. It still wins.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/attention.html" class="button button__big hover_effect"><span>Nº027 · Attention (self-attention in a transformer) &mdash; ChatGPT can't tell a river bank from a money bank until the words before it vote.</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__all"><a href="/guides/">All 31 guides &#8599;</a></p>
+      </div>
+<!-- /build:guidenav -->
+      <div class="article__footer">
+          <p class="monospace monospace__p opacity__50" data-splitting><strong>An independent educational
+            breakdown.</strong> Not affiliated with, endorsed by, or produced in cooperation with any exchange,
+            broker, data vendor, or company named here. The calculus (Black&ndash;Scholes, the Greeks, curvature) is
+            sourced to Wikipedia's &ldquo;Greeks (finance)&rdquo;, &ldquo;Black&ndash;Scholes model&rdquo;,
+            &ldquo;Curvature&rdquo; and &ldquo;Osculating circle&rdquo; articles; the training bridge to Cohen,
+            Kaur, Li, Kolter and Talwalkar, &ldquo;Gradient Descent on Neural Networks Typically Occurs at the Edge
+            of Stability&rdquo; (ICLR 2021, arXiv 2103.00065); the gamma exposure definition to SqueezeMetrics'
+            &ldquo;Gamma Exposure (GEX)&rdquo; white paper (March 2016, rev. December 2017), paraphrased and cited,
+            not reproduced, under that paper's own republication terms. Every price, strike, date and direction on
+            this page is made up. This is maths education, not investment advice, and not a recommendation to buy
+            or sell anything. Any error in the summary is mine.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="#arithmetic" class="button button__half hover_effect" title="The arithmetic"><span>The arithmetic</span><span class="arrow">↗</span></a>
+          <a href="#scope" class="button button__half hover_effect" title="The honest scope"><span>The honest scope</span><span class="arrow">↗</span></a>
+          <a href="privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+
+
+
+
+<dialog id="list-modal" class="listModal" aria-labelledby="list-modal-title"><div class="listModal__inner" tabindex="-1" autofocus><p class="listModal__eyebrow">The List</p><h2 id="list-modal-title">Ten guides. One email.</h2><p>Every field guide on this site, sent the moment you confirm &mdash; then one new system taken apart each week.</p><p>Nothing is held back for subscribers. The guides stay free and stay here; the list is only how the next one reaches you without an algorithm getting a vote.</p><form class="sub-form" action="https://huberttheinventor-ig-dm.vektor-fm.workers.dev/signup" method="post"><label class="monospace monospace__p" for="list-email-modal">Email address</label><div class="field"><input type="email" name="email" id="list-email-modal" placeholder="you@example.com" required autocomplete="email" inputmode="email" spellcheck="false"><input type="hidden" name="tag" value="popup-curve"><input type="text" name="company" value="" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none"><button type="submit" class="monospace">Send me the set &#8599;</button></div><label class="consent monospace monospace__p"><input type="checkbox" name="consent" required><span>Send me the guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. The set opens right away on the next page.</span></label></form><button type="button" class="listModal__close" data-close>No thanks &mdash; just reading</button></div></dialog>
+<script src="assets/js/list-modal.js" defer></script>
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-10-09-curve"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-10-09-curve"></script>
+<script src="/assets/js/splitting.min.js?v=2026-10-09-curve"></script>
+<script src="/assets/js/site.js?v=2026-10-09-curve" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>
