@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The leap wasn't sudden. You were reading the wrong axis. — Hubert's field guides</title>
-<meta name="description" content="Field guide Nº031. A chessboard doubled square by square, 64 squares, already shows it: every square holds more than every square before it, combined, so a normal axis always draws a wall at whatever square you stop on. Change what a tick means — each one multiplies by ten instead of adding — and the same growth becomes a straight line. Epoch AI's fit for frontier AI training compute since 2010 is about 5.3x a year; on that axis GPT-3 (2020, 3e23 FLOP) and GPT-4 (2023, Epoch's estimate of 2e25 FLOP) both sit on it. Sources: Epoch AI, 'Training compute of frontier AI models grows by 4-5x per year' (2024) and its 2024-06-19 data insight; Wikipedia, 'Wheat and chessboard problem', 'Semi-log plot', 'Logarithmic scale'.">
+<title>The classic spam filter never reads a word. It weighs it. — Hubert's field guides</title>
+<meta name="description" content="Field guide Nº032. Paul Graham split his own inbox into two piles in August 2002, about 4,000 spam messages and about 4,000 he wanted, and counted how often each word showed up in each pile. The ratio of those two counts is the word's weight — 'madam' sits at 99 to 1 because it never appeared in his real mail, not because it's an inherently bad word. He kept only the fifteen words furthest from a neutral .5, turned each ratio into its log base 10 so a scale that can only add still obeys Bayes' rule (which multiplies odds with every word), and set the notch at 9 to 1 (.9). A real 'atypical spam' from his own inbox that August has seven words on the spam pan against eight on the real side, and it still tips to .9027 — a hair past the notch — because the real side's heaviest word is only about 20 to 1. On his inbox that year: fewer than 5 spams in 1,000 got past, and not one real email was flagged. This is Graham's 2002 filter on his own mail; no claim is made about what Gmail or any provider runs today. Source: Paul Graham, 'A Plan for Spam', August 2002, paulgraham.com.">
 <meta name="theme-color" content="#1a1a1a">
 
 
 
 
 <meta property="og:type" content="article">
-<meta property="og:title" content="The leap wasn't sudden. You were reading the wrong axis.">
-<meta property="og:description" content="The two-axis card: the same compute numbers plotted on an axis that adds and an axis that multiplies.">
-<meta property="og:image" content="artifacts/axis-card.png">
-<meta property="og:image:alt" content="Field guide Nº031 cover — the two-axis card. A real frame from the film's master render: two charts side by side, Axis A (ticks add) showing a wall and Axis B (each tick ×10) showing a straight ramp, both plotting the same Epoch AI frontier-model compute marks from 2010 to 2024, under a HUBERT header reading TWO AXES · 1 line · SAME NUMBERS, with Hubert saying 'So that's how the sudden leaps are possible.'">
+<meta property="og:title" content="The classic spam filter never reads a word. It weighs it.">
+<meta property="og:description" content="The spam scale card: all fifteen of Paul Graham's weighed words, settled on the beam at .9027.">
+<meta property="og:image" content="artifacts/bayes-card.png">
+<meta property="og:image:alt" content="Field guide Nº032 cover — the spam scale card. A real frame from the film's master render: a lit balance beam on a dark instrument panel, a cyan block (SPAM, 7 words, +9.34, 99 : 1 beside it) outweighing a grey block (REAL MAIL, 8 words, -8.37, 20 : 1 beside it), a readout above reading SETTLES PAST .9 / .9027 / SPAM · GRAHAM, AUG 2002, under a HUBERT header, Hubert raising his arms.">
 <meta name="twitter:card" content="summary_large_image">
 
 
@@ -22,10 +22,10 @@
 
 <style>
   /* ── the data tables ──────────────────────────────────────────────────
-     Same shape as dots.html's rules-table and rotation.html's matrix-table:
+     Same shape as dots.html's rules-table and axis.html's two tables:
      tabular figures, a mono caption naming the source. Facts from
-     videos/film-09-gex-gamma-curvature/SCRIPT.md's Sources table, read
-     2026-10-01. */
+     videos/film-10-bayes-monty-hall-spam/SCRIPT.md's Sources table and
+     REFERENCE.md, read 2026-10-02. */
   .rules-table th, .rules-table td { font-variant-numeric: tabular-nums; }
   .rules-table td:first-child { text-align: left; color: var(--plate-read-accent, #1a1a1a); font-weight: 600; }
   .rules-table caption {
@@ -68,18 +68,19 @@
     .paper-quote { margin-bottom: 5vh; padding-left: 14px; }
   }
 
-  /* A caveat Hubert states explicitly, not a sourced Epoch/OpenAI fact — set
-     apart so the two never blur into one voice. */
+  /* A caveat Hubert states explicitly, not a sourced Graham fact — set apart
+     so the two never blur into one voice. */
   .hubert-note {
     background: rgba(0, 0, 0, .06); border-radius: 10px; font-size: 92%;
     margin: 0 0 3vw; max-width: 34em; padding: 12px 16px;
   }
   .hubert-note strong { text-transform: uppercase; font-size: 78%; letter-spacing: .04em; opacity: .6; display: block; margin-bottom: 6px; }
 
-  /* The two-axis card, sent by DM to anyone who comments AXIS — shown here
+  /* The spam scale card, sent by DM to anyone who comments BAYES — shown here
      too, since the page is the same artifact. It is a real frame from the
-     approved master render (beat 15, the resolution), not a mock-up.
-     Capped narrow so it reads as a card, not a hero image. */
+     approved master render (the screenshot-worthy frame at t=118.5s, BUILD-
+     NOTES.md AUD-04), not a mock-up. Capped narrow so it reads as a card, not
+     a hero image. */
   .card-figure { margin: 6px 0 4vw; max-width: 380px; }
   .card-figure img { border-radius: 14px; border: 1px solid rgba(0, 0, 0, .14); display: block; width: 100%; }
   .card-figure figcaption {
@@ -89,7 +90,7 @@
 
   /* The header is `position: fixed`, so an in-page jump lands the target
      underneath it. Nº006/007/008 use a flat 116px; match it. */
-  #guide, #chessboard, #wall, #axis, #marks, #scope, #sources { scroll-margin-top: 116px; }
+  #guide, #piles, #ratio, #weights, #marks, #scope, #sources { scroll-margin-top: 116px; }
 </style>
 <!-- build:head-assets -->
 <link rel="icon" href="/img/favicon.svg?v=2026-10-08-bayes" type="image/svg+xml">
@@ -192,16 +193,16 @@
     <section class="section section__lightgrey">
       <div class="journalArticle__documentHeader">
         <div class="journalArticle__documentCell monospace">
-          <span>Field guide</span><strong>Nº031</strong>
+          <span>Field guide</span><strong>Nº032</strong>
         </div>
         <div class="journalArticle__documentCell monospace">
-          <span>System</span><strong>Training compute (semi-log axis)</strong>
+          <span>System</span><strong>Naive Bayes spam filter (word-weight scale)</strong>
         </div>
         <div class="journalArticle__documentCell monospace">
-          <span>Model</span><strong>same-factor growth &rarr; axis where ticks multiply &rarr; straight line</strong>
+          <span>Model</span><strong>word's spam : real ratio &rarr; log weight &rarr; pans add, odds multiply</strong>
         </div>
         <div class="journalArticle__documentCell monospace">
-          <span>Worked example</span><strong>chessboard: grain doubles each square &rarr; wall unfolds into a ramp</strong>
+          <span>Worked example</span><strong>Graham's &ldquo;atypical spam,&rdquo; Aug 2002: 7 spam words vs 8 real words &rarr; settles .9027</strong>
         </div>
         <div class="journalArticle__documentCell monospace">
           <span>Reading</span>
@@ -217,104 +218,112 @@
       </div>
 
       <div class="journalArticle__article" id="guide">
-        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">You commented AXIS — this is the two-axis card.</p>
-        <h1 data-splitting="lines">The leap wasn't sudden. You were reading the wrong axis.</h1>
-        <p class="lead" data-splitting>A chessboard doubled square by square, 64 squares, already proves the point: every square
-          holds more than every square before it, combined, so a normal axis always draws a wall wherever you
-          happen to stop counting &mdash; stop at square twenty or square sixty and the picture looks the
-          same. Change what one tick on the axis means &mdash; instead of adding the same amount each tick, it
-          multiplies by ten &mdash; and the same growth becomes a straight line instead of a wall. Epoch AI's
-          own fit for the training compute behind frontier AI models since 2010 runs at about 5.3x a year; on
-          that axis, GPT-3 (2020) and GPT-4 (2023, roughly 67 times the compute, by Epoch's estimate) both sit
-          on it. The leap looks sudden only on the axis that hides it.</p>
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">You commented BAYES — this is the spam scale card.</p>
+        <h1 data-splitting="lines">The classic spam filter never reads a word. It weighs it.</h1>
+        <p class="lead" data-splitting>Paul Graham split his own inbox into two piles in August 2002: about 4,000
+          spam messages and about 4,000 he wanted, and counted how often each word showed up in each pile. The ratio
+          of those two counts is the word's weight &mdash; &ldquo;madam&rdquo; sits at 99 to 1 because it never
+          appeared in his real mail, not because it's an inherently bad word. He kept only the fifteen words furthest
+          from a neutral .5, turned each ratio into its log base 10 so a scale that can only add still obeys Bayes'
+          rule, which multiplies odds with every word, and set the notch at 9 to 1 (.9). A real &ldquo;atypical
+          spam&rdquo; from his own inbox that August has seven words on the spam pan against eight on the real side,
+          and it still tips to .9027 &mdash; a hair past the notch &mdash; because the real side's heaviest word is
+          only about 20 to 1.</p>
 
         <p class="monospace monospace__p" data-splitting>Companion to the reel &middot; Watch it on
           <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank">@huberttheinventor</a></p>
 
         <figure class="card-figure">
-          <img src="artifacts/axis-card.png" alt="The two-axis card. Two charts side by side on a dark plate: Axis A (ticks add) shows the same compute marks climbing into a wall near 2023-2024; Axis B (each tick &times;10) shows the identical marks on one straight ramp. Caption: SAME NUMBERS &middot; TWO AXES &middot; ONE LINE, Epoch AI frontier models, 2010 to May 2024. Hubert: &ldquo;So that's how the sudden leaps are possible.&rdquo;">
-          <figcaption>The two-axis card itself, free, no email &mdash; a real frame from the film's master render, the same file the DM sends.</figcaption>
+          <img src="artifacts/bayes-card.png" alt="The spam scale card. A lit balance beam on a dark instrument panel: a cyan block labelled SPAM, 7 words, +9.34, with 99 : 1 beside it, outweighs a grey block labelled REAL MAIL, 8 words, &minus;8.37, with 20 : 1 beside it. A readout above reads SETTLES PAST .9 &middot; .9027 &middot; SPAM &middot; GRAHAM, AUG 2002, under a HUBERT header, Hubert raising his arms.">
+          <figcaption>The spam scale card itself, free, no email &mdash; a real frame from the film's master render, the same file the DM sends.</figcaption>
         </figure>
 
-        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº001 · The chessboard</p>
-        <h4 aria-level="2" data-splitting="lines" id="chessboard">One grain, doubled square after square, beats itself</h4>
-        <p data-splitting>One grain of rice on the chessboard's first square, doubled on every square after:
-          by Wikipedia's &ldquo;Wheat and chessboard problem,&rdquo; the 64th square alone holds
-          9,223,372,036,854,775,808 grains &mdash; &ldquo;one more grain than the entire first half&rdquo; of
-          the board combined. The whole 64-square board holds 18,446,744,073,709,551,615 grains in total.</p>
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº001 · The two piles</p>
+        <h4 aria-level="2" data-splitting="lines" id="piles">Spam, and the mail he actually wanted</h4>
+        <p data-splitting>In August 2002 Paul Graham published &ldquo;A Plan for Spam,&rdquo; describing a filter
+          built on two corpora of his own mail: one of spam, one of mail he wanted. By his own account, &ldquo;at the
+          moment each one has about 4000 messages in it.&rdquo; He counted how many times each word appeared in each
+          pile. No word is read for meaning; it is only ever counted.</p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº002 · The ratio, not the word</p>
+        <h4 aria-level="2" data-splitting="lines" id="ratio">A word is never spam by itself</h4>
+        <p data-splitting>Graham's own example is &ldquo;madam&rdquo;: &ldquo;obviously from spams beginning
+          &lsquo;Dear Sir or Madam,&rsquo; &hellip; the word &lsquo;madam&rsquo; never occurs in my legitimate email,
+          and it's all about the ratio.&rdquo; &ldquo;Madam&rdquo; is a perfectly polite word; it only weighs 99 to 1
+          because of how unevenly it falls across his two piles. Counting every word in two inboxes of 4,000
+          messages each would be noisy and slow, so Graham kept only &ldquo;the most interesting fifteen tokens,
+          where interesting is measured by how far their spam probability is from a neutral .5&rdquo; &mdash; the
+          words whose ratio says the most.</p>
         <div class="table-scroll">
         <table class="rules-table">
-          <caption>The chessboard, doubled each square (Wikipedia, Wheat and chessboard problem)</caption>
+          <caption>Three of Graham's fifteen, by ratio (A Plan for Spam, Aug 2002)</caption>
           <tbody>
-            <tr><td>Square 1</td><td>1 grain</td></tr>
-            <tr><td>Square 12</td><td>2,048 grains</td></tr>
-            <tr><td>Square 64 (alone)</td><td>9,223,372,036,854,775,808 grains</td></tr>
-            <tr><td>All 64 squares</td><td>18,446,744,073,709,551,615 grains</td></tr>
+            <tr><td>madam</td><td>.99 &mdash; 99 : 1, spam-heavy (&ldquo;never occurs in my legitimate email&rdquo;)</td></tr>
+            <tr><td>shortest / mandatory</td><td>.0472 &mdash; about 20 : 1 real-mail-heavy, the heaviest word on the real side</td></tr>
+            <tr><td>&ldquo;the&rdquo;</td><td>.5 &mdash; illustrative: a word that shows up in both piles alike, not one of Graham's fifteen</td></tr>
           </tbody>
         </table>
         </div>
-
-        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº002 · Why a normal axis always shows a wall</p>
-        <h4 aria-level="2" data-splitting="lines" id="wall">The wall is wherever you stop</h4>
-        <p data-splitting>Plot each square's count on an axis whose ticks add the same amount, and the bars
-          have to keep rescaling so the newest one fits &mdash; every earlier bar sinks toward the floor. That
-          isn't a quirk of rice: for the chessboard's doubling (factor 2), the newest square always beats every
-          square before it combined, by exactly one grain. The same holds for any constant growth factor of 2
-          or more (the geometric-series identity 1 + 2 + &hellip; + 2<sup>n&minus;1</sup> = 2<sup>n</sup>
-          &minus; 1 &lt; 2<sup>n</sup>, and its general form for any factor r &ge; 2). Stop the count at square
-          twenty, or at square sixty, and you get the same silhouette: a flat floor and a wall at whatever
-          squares are newest. The axis manufactures the surprise.</p>
 
         <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº003 · The fix</p>
-        <h4 aria-level="2" data-splitting="lines" id="axis">An axis where each tick multiplies</h4>
-        <p data-splitting>Change what one tick on the axis means. Instead of adding the same amount each tick
-          (0, 1,000, 2,000&hellip;), make each tick multiply by ten (1, 10, 100, 1,000&hellip;) &mdash; a
-          semi-log plot. Wikipedia's &ldquo;Semi-log plot&rdquo; states the rule directly: &ldquo;All equations
-          of the form y = &lambda;a<sup>&gamma;x</sup> form straight lines when plotted
-          semi-logarithmically.&rdquo; Wikipedia's &ldquo;Logarithmic scale&rdquo; describes the mechanism:
-          &ldquo;each unit of length&hellip;corresponds to the multiplication of the previous value in the
-          scale by the base value.&rdquo; Any quantity growing by the same factor every step &mdash; the
-          chessboard's doubling, or a yearly compute multiplier &mdash; draws a straight line on that axis,
-          because every step is now the same size.</p>
+        <h4 aria-level="2" data-splitting="lines" id="weights">A scale adds. Bayes' rule multiplies.</h4>
+        <p data-splitting>Graham: &ldquo;if you combine these numbers according to Bayes' Rule, you get the
+          probability that the mail is spam.&rdquo; Bayes' rule multiplies the odds of every word together. A
+          physical scale can only add, so each word's weight is set to the log, base 10, of its ratio &mdash;
+          stacking weights on a beam is the same arithmetic as multiplying odds. A 99-to-1 word (log<sub>10</sub>
+          99 &asymp; 1.996) weighs about twice as much as a 10-to-1 word (log<sub>10</sub> 10 = 1). The notch sits at
+          9 to 1, log<sub>10</sub> 9 &asymp; 0.954, labelled &ldquo;.9&rdquo;: Graham says plainly, &ldquo;I treat
+          mail as spam if this probability is more than .9&hellip; in practice few probabilities end up in the
+          middle of the range.&rdquo;</p>
+        <div class="hubert-note">
+          <strong>Where the beam starts</strong>
+          Graham's combined-probability formula has no separate prior term &mdash; it is the product of the
+          per-word probabilities over itself plus the product of their opposites &mdash; so in his filter the beam
+          starts level, with equal weight given to either side before a single word lands. That is derived from the
+          formula, not a sentence Graham wrote himself.
+        </div>
 
         <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº004 · The real marks</p>
-        <h4 aria-level="2" data-splitting="lines" id="marks">AI training compute, on the same two axes</h4>
-        <p data-splitting>Epoch AI tracks the training compute of frontier AI models back to 2010, from 333
-          compute estimates, and fits a line: about 5.3x a year (90% confidence interval 4.9x&ndash;5.7x) for
-          the frontier set &mdash; the biggest models of their year &mdash; by Epoch's blog post &ldquo;Training
-          compute of frontier AI models grows by 4-5x per year.&rdquo; On that axis, two named models both sit
-          on the line.</p>
+        <h4 aria-level="2" data-splitting="lines" id="marks">A real spam from his own inbox, Aug 2002</h4>
+        <p data-splitting>Graham linked an &ldquo;actually quite atypical spam&rdquo; with these fifteen weighed
+          words: seven on the spam pan (madam, promotion and republic at .99 each, then enter, quality, investment
+          and valuable) and eight on the real-mail pan (shortest and mandatory at .0472, the heaviest real-side
+          words, then standardization, sorry, supported, people's, organization and very). Recomputed this session
+          (2026-10-02) from those fifteen values, weight = log<sub>10</sub> of the odds:</p>
         <div class="table-scroll">
         <table class="rules-table">
-          <caption>Two marks on the ramp (Epoch AI, read 2026-10-01)</caption>
+          <caption>The fifteen weights on the beam (recomputed 2026-10-02 from Graham's figures, Aug 2002)</caption>
           <tbody>
-            <tr><td>GPT-3</td><td>May 2020 &middot; 3e23 FLOP</td></tr>
-            <tr><td>GPT-4</td><td>2023 &middot; about 2e25 FLOP, Epoch's estimate</td></tr>
-            <tr><td>Ratio</td><td>&times;67 (2e25 &divide; 3e23, computed 2026-10-01)</td></tr>
+            <tr><td>Spam pan, 7 words</td><td>madam 1.996 + promotion 1.996 + republic 1.996 + enter 0.992 + quality 0.917 + investment 0.777 + valuable 0.669 = <strong>+9.342</strong></td></tr>
+            <tr><td>Real pan, 8 words</td><td>shortest 1.305 + mandatory 1.305 + standardization 1.101 + sorry 1.048 + supported 1.004 + people's 1.004 + organization 0.847 + very 0.762 = <strong>&minus;8.375</strong></td></tr>
+            <tr><td>Net</td><td>+0.967, past the notch at +0.954 (log<sub>10</sub> 9)</td></tr>
+            <tr><td>Combined probability</td><td>0.90265, computed 2026-10-02 from these rounded weights &mdash; Graham's own figure: <strong>.9027</strong></td></tr>
           </tbody>
         </table>
         </div>
-        <p class="monospace monospace__p opacity__50" data-splitting>The 2.8 years between GPT-3 and GPT-4
-          implies a per-year factor of about 4.5x &mdash; inside the scatter of Epoch's own frontier fit (5.3x,
-          CI 4.9x&ndash;5.7x), not exactly on it; &ldquo;sits on the ramp&rdquo; means within that scatter. Read
-          the same two marks back on the adding axis and GPT-3 sinks toward the floor while GPT-4 looks like it
-          came from nowhere &mdash; the same move square 12 makes against the full 64-square board.</p>
+        <p class="monospace monospace__p opacity__50" data-splitting>Eight ordinary real-mail words still lose to
+          seven heavier spam words, not because any single spam word is crushing &mdash; the real side's heaviest
+          word, at .0472, is only about 20 to 1 against (odds (1&minus;.0472)/.0472 &asymp; 20.2), well inside reach
+          of three spam words alone at 99 to 1 (3 &times; 1.996 = 5.99, which would lose to 8.375). It takes the
+          full seven spam words, together, to tip the beam.</p>
         <div class="hubert-note">
-          <strong>What this film doesn't claim</strong>
-          The film's claim stops at the compute line: it held, on this axis, through 2024. Whether that
-          compute is the reason the models got better is a separate argument, said aloud as such in the film
-          (the Researcher's claim limit) &mdash; this page makes no causal claim either.
+          <strong>What this page doesn't claim</strong>
+          This is Paul Graham's own filter, run on his own mail, in August 2002. Nothing here asserts that Gmail,
+          Outlook, or any current provider runs naive Bayes, and no current figure for what share of email is spam
+          is used anywhere on this page.
         </div>
+        <p data-splitting>Graham's own result, from the same essay: &ldquo;we now miss less than 5 per 1000 spams,
+          with 0 false positives&rdquo; &mdash; on his inbox, that year.</p>
 
         <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº005 · The honest scope</p>
-        <h4 aria-level="2" data-splitting="lines" id="scope">Which set, and whose estimate</h4>
-        <p data-splitting><strong>5.3x a year is the frontier-only fit.</strong> Epoch's wider &ldquo;notable
-          models&rdquo; set (every model it tracks, not just the biggest of each year) scatters more and fits
-          slower over the same 2010&ndash;2024 window: about 4.1x a year (90% CI 3.7x&ndash;4.6x) by the same
-          blog post, or about 4.4x a year by Epoch's separate 2024-06-19 data insight, &ldquo;Training compute
-          has been doubling roughly every six months.&rdquo; <strong>The GPT-4 compute figure is Epoch's own
-          estimate</strong>, not a number OpenAI has disclosed. Nothing on this page is drawn from anywhere but
-          Epoch AI's two published pages and the Wikipedia articles cited below.</p>
+        <h4 aria-level="2" data-splitting="lines" id="scope">One inbox, one year, one man's filter</h4>
+        <p data-splitting>Graham calls his own method &ldquo;a slightly tweaked &hellip; Bayesian filter,&rdquo; and
+          it is naive-Bayes-style &mdash; word evidence multiplied as if every word were independent of every other
+          &mdash; with his own biases layered on: real-mail counts are doubled in his code to bias against false
+          positives, each word's probability is clamped between .01 and .99, and only the top fifteen words are
+          kept. None of that is a claim this page extends past 2002 or past his own inbox. The independence
+          assumption itself &mdash; that one word's presence tells you nothing about another's &mdash; is a separate
+          question this page does not take up.</p>
 
         <hr>
 
@@ -328,16 +337,12 @@
         <hr>
 
         <h4 aria-level="2" data-splitting="lines" id="sources">Take it with you</h4>
-        <p class="monospace monospace__p opacity__50" data-splitting>The two-axis card is this page: the same
-          compute marks on an axis that adds and an axis that multiplies, free, no email.</p>
+        <p class="monospace monospace__p opacity__50" data-splitting>The spam scale card is this page: all fifteen
+          of Graham's weighed words, settled on the beam, free, no email.</p>
         <div class="buttons">
           <a href="#marks" class="button button__big hover_effect"><span>The real marks</span> <span class="arrow">&#8599;</span></a>
           <a href="#scope" class="button button__big hover_effect"><span>The honest scope</span> <span class="arrow">&#8599;</span></a>
-          <a href="https://epoch.ai/blog/training-compute-of-frontier-ai-models-grows-by-4-5x-per-year" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Epoch AI, Training compute of frontier AI models grows by 4-5x per year</span> <span class="arrow">&#8599;</span></a>
-          <a href="https://epoch.ai/data-insights/compute-trend-post-2010" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Epoch AI, Training compute has been doubling roughly every six months</span> <span class="arrow">&#8599;</span></a>
-          <a href="https://en.wikipedia.org/wiki/Wheat_and_chessboard_problem" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Wikipedia, Wheat and chessboard problem</span> <span class="arrow">&#8599;</span></a>
-          <a href="https://en.wikipedia.org/wiki/Semi-log_plot" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Wikipedia, Semi-log plot</span> <span class="arrow">&#8599;</span></a>
-          <a href="https://en.wikipedia.org/wiki/Logarithmic_scale" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Wikipedia, Logarithmic scale</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://paulgraham.com/spam.html" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Paul Graham, A Plan for Spam (Aug 2002)</span> <span class="arrow">&#8599;</span></a>
         </div>
 
         <hr>
@@ -354,7 +359,7 @@
           <div class="field">
             <input type="email" name="email" id="list-email" placeholder="you@example.com"
                    required autocomplete="email" inputmode="email" spellcheck="false">
-            <input type="hidden" name="tag" value="guide-31-axis"><input type="text" name="company" value="" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
+            <input type="hidden" name="tag" value="guide-32-bayes"><input type="text" name="company" value="" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
             <button type="submit" class="monospace">Send me the set &#8599;</button>
           </div>
           <label class="consent monospace monospace__p">
@@ -366,8 +371,7 @@
       <div class="guideNav">
         <h4 aria-level="2" class="guideNav__head">Keep going</h4>
         <div class="buttons">
-        <a href="/bayes.html" class="button button__big hover_effect"><span><em class="guideNav__kicker">Next</em> Nº032 · Naive Bayes spam filter (word-weight scale)</span> <span class="arrow">&#8599;</span></a>
-        <a href="/dots.html" class="button button__big hover_effect"><span><em class="guideNav__kicker">Previous</em> Nº030 · OpenAI dots (agent permission rules)</span> <span class="arrow">&#8599;</span></a>
+        <a href="/axis.html" class="button button__big hover_effect"><span><em class="guideNav__kicker">Previous</em> Nº031 · Training compute (semi-log axis)</span> <span class="arrow">&#8599;</span></a>
         </div>
         <p class="monospace monospace__p guideNav__label">Related</p>
         <div class="buttons">
@@ -380,13 +384,12 @@
 <!-- /build:guidenav -->
       <div class="article__footer">
           <p class="monospace monospace__p opacity__50" data-splitting><strong>An independent educational
-            breakdown.</strong> Not affiliated with, endorsed by, or produced in cooperation with Epoch AI,
-            OpenAI, or any company named here. Every claim about training-compute growth is sourced to Epoch
-            AI's own published pages, &ldquo;Training compute of frontier AI models grows by 4-5x per year&rdquo;
-            and the 2024-06-19 data insight &ldquo;Training compute has been doubling roughly every six
-            months&rdquo; (epoch.ai), and to Wikipedia's &ldquo;Wheat and chessboard problem,&rdquo;
-            &ldquo;Semi-log plot&rdquo; and &ldquo;Logarithmic scale&rdquo; articles, all read 2026-10-01. The
-            film's causal claim stops at the compute line; this page makes none beyond it. Any error in the
+            breakdown.</strong> Not affiliated with, endorsed by, or produced in cooperation with Paul Graham or any
+            company named here. Every claim about the filter's mechanism and its numbers is sourced to Paul Graham's
+            own essay, &ldquo;A Plan for Spam&rdquo; (paulgraham.com, August 2002), read 2026-10-02, and the
+            arithmetic from its fifteen published values is recomputed this session and labelled as such. This
+            describes Graham's own filter on his own mail in 2002; this page makes no claim about what Gmail,
+            Outlook, or any current provider runs today, and uses no current spam-share figure. Any error in the
             summary is mine.</p>
         </div>
       </div>
@@ -419,7 +422,7 @@
 
 
 
-<dialog id="list-modal" class="listModal" aria-labelledby="list-modal-title"><div class="listModal__inner" tabindex="-1" autofocus><p class="listModal__eyebrow">The List</p><h2 id="list-modal-title">Ten guides. One email.</h2><p>Every field guide on this site, sent the moment you confirm &mdash; then one new system taken apart each week.</p><p>Nothing is held back for subscribers. The guides stay free and stay here; the list is only how the next one reaches you without an algorithm getting a vote.</p><form class="sub-form" action="https://huberttheinventor-ig-dm.vektor-fm.workers.dev/signup" method="post"><label class="monospace monospace__p" for="list-email-modal">Email address</label><div class="field"><input type="email" name="email" id="list-email-modal" placeholder="you@example.com" required autocomplete="email" inputmode="email" spellcheck="false"><input type="hidden" name="tag" value="popup-axis"><input type="text" name="company" value="" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none"><button type="submit" class="monospace">Send me the set &#8599;</button></div><label class="consent monospace monospace__p"><input type="checkbox" name="consent" required><span>Send me the guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. The set opens right away on the next page.</span></label></form><button type="button" class="listModal__close" data-close>No thanks &mdash; just reading</button></div></dialog>
+<dialog id="list-modal" class="listModal" aria-labelledby="list-modal-title"><div class="listModal__inner" tabindex="-1" autofocus><p class="listModal__eyebrow">The List</p><h2 id="list-modal-title">Ten guides. One email.</h2><p>Every field guide on this site, sent the moment you confirm &mdash; then one new system taken apart each week.</p><p>Nothing is held back for subscribers. The guides stay free and stay here; the list is only how the next one reaches you without an algorithm getting a vote.</p><form class="sub-form" action="https://huberttheinventor-ig-dm.vektor-fm.workers.dev/signup" method="post"><label class="monospace monospace__p" for="list-email-modal">Email address</label><div class="field"><input type="email" name="email" id="list-email-modal" placeholder="you@example.com" required autocomplete="email" inputmode="email" spellcheck="false"><input type="hidden" name="tag" value="popup-bayes"><input type="text" name="company" value="" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none"><button type="submit" class="monospace">Send me the set &#8599;</button></div><label class="consent monospace monospace__p"><input type="checkbox" name="consent" required><span>Send me the guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. The set opens right away on the next page.</span></label></form><button type="button" class="listModal__close" data-close>No thanks &mdash; just reading</button></div></dialog>
 <script src="assets/js/list-modal.js" defer></script>
 <!-- build:scripts -->
 <script src="/assets/js/gsap.min.js?v=2026-10-08-bayes"></script>

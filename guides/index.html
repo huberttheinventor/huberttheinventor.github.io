@@ -13,14 +13,14 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://huberttheinventor.github.io/guides/">
 <!-- build:head-assets -->
-<link rel="icon" href="/img/favicon.svg?v=2026-10-07-axis" type="image/svg+xml">
-<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-10-07-axis">
-<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-10-07-axis">
-<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-10-07-axis">
-<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-10-07-axis">
-<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-10-07-axis">
-<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-10-07-axis">
-<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-10-07-axis">
+<link rel="icon" href="/img/favicon.svg?v=2026-10-08-bayes" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-10-08-bayes">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-10-08-bayes">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-10-08-bayes">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-10-08-bayes">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-10-08-bayes">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-10-08-bayes">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-10-08-bayes">
 
 <!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
      which is why privacy.html could name it and stay honest. Disclosed there
@@ -91,12 +91,12 @@
 <div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
   <div class="mobilenav__main">
     <a href="/guides/" aria-current="page"><span>All guides</span></a>
+    <a href="/bayes.html"><span>Nº032 · Naive Bayes spam filter (word-weight scale)</span></a>
     <a href="/axis.html"><span>Nº031 · Training compute (semi-log axis)</span></a>
     <a href="/dots.html"><span>Nº030 · OpenAI dots (agent permission rules)</span></a>
     <a href="/rotation.html"><span>Nº029 · Rotation matrix (2D image rotation)</span></a>
     <a href="/gpu.html"><span>Nº028 · GPUs (why AI runs on graphics cards)</span></a>
     <a href="/attention.html"><span>Nº027 · Attention (self-attention in a transformer)</span></a>
-    <a href="/ticketmaster.html"><span>Nº026 · Ticketmaster (system design)</span></a>
     <a href="/#pricing" class="start"><span>The List</span></a>
   </div>
   <div class="mobilenav__social">
@@ -119,10 +119,11 @@
           <input type="search" id="guide-filter" autocomplete="off"
                  placeholder="system, title, or number" aria-describedby="guide-count">
         </label>
-        <p class="monospace monospace__p" id="guide-count" role="status" aria-live="polite">29 guides</p>
+        <p class="monospace monospace__p" id="guide-count" role="status" aria-live="polite">30 guides</p>
       </div>
       <div class="cardDrawer__rows" id="guide-rows">
         <span class="cardRow cardRow--head monospace" aria-hidden="true"><span>Nº</span><span>Title</span><span>System</span><span>Run</span></span>
+      <a class="cardRow" href="/bayes.html"><span class="cardRow__n monospace">Nº032</span><span class="cardRow__t">The classic spam filter never reads a word. It weighs it.</span><span class="cardRow__s monospace">Naive Bayes spam filter (word-weight scale)</span><span class="cardRow__r monospace">2:32</span></a>
       <a class="cardRow" href="/axis.html"><span class="cardRow__n monospace">Nº031</span><span class="cardRow__t">The leap wasn't sudden. You were reading the wrong axis.</span><span class="cardRow__s monospace">Training compute (semi-log axis)</span><span class="cardRow__r monospace">2:37</span></a>
       <a class="cardRow" href="/dots.html"><span class="cardRow__n monospace">Nº030</span><span class="cardRow__t">It works while you sleep. Four settings decide how far.</span><span class="cardRow__s monospace">OpenAI dots (agent permission rules)</span><span class="cardRow__r monospace">2:26</span></a>
       <a class="cardRow" href="/rotation.html"><span class="cardRow__n monospace">Nº029</span><span class="cardRow__t">Rotating your photo is four numbers. Two are the same.</span><span class="cardRow__s monospace">Rotation matrix (2D image rotation)</span><span class="cardRow__r monospace">2:09</span></a>
@@ -161,10 +162,10 @@
   </section>
 </main>
 <!-- build:scripts -->
-<script src="/assets/js/gsap.min.js?v=2026-10-07-axis"></script>
-<script src="/assets/js/ScrollTrigger.min.js?v=2026-10-07-axis"></script>
-<script src="/assets/js/splitting.min.js?v=2026-10-07-axis"></script>
-<script src="/assets/js/site.js?v=2026-10-07-axis" type="module"></script>
+<script src="/assets/js/gsap.min.js?v=2026-10-08-bayes"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-10-08-bayes"></script>
+<script src="/assets/js/splitting.min.js?v=2026-10-08-bayes"></script>
+<script src="/assets/js/site.js?v=2026-10-08-bayes" type="module"></script>
 <!-- /build:scripts -->
 <script>
 /* Filter and "show more" both work on rows that are already in the HTML — the
@@ -172,7 +173,7 @@
    off you get every guide. Filtering searches the whole set, including rows the
    "show more" button is currently holding back. */
 (function () {
-  var HAY = ["31 031 the leap wasn't sudden. you were reading the wrong axis. training compute (semi-log axis) ai machine-learning maths","30 030 it works while you sleep. four settings decide how far. openai dots (agent permission rules) ai agents safety","29 029 rotating your photo is four numbers. two are the same. rotation matrix (2d image rotation) maths linear-algebra computer-graphics","28 028 every gpu core is slower than your cpu's. it still wins. gpus (why ai runs on graphics cards) ai machine-learning hardware","27 027 chatgpt can't tell a river bank from a money bank until the words before it vote. attention (self-attention in a transformer) ai machine-learning language-models","26 026 every piece of ticketmaster's system arrived only after the one before it broke. ticketmaster (system design) infrastructure distributed-systems scalability","25 025 the temperature setting behind chatgpt runs on gas physics from 1868. temperature (softmax sampling) ai machine-learning physics","24 024 gradient descent trains right on the line where it should explode. gradient descent maths machine-learning","23 023 pagerank is an eigenvector. pagerank maths linear-algebra","22 022 shazam never hears your song. it hears the circles inside it. shazam maths signal-processing audio","21 021 sent to live inside your world until it works. forward deployed engineer ai software","20 020 the answer is a move. jev (typesafe) ai machine-learning decision-models","19 019 catch the lost edit before you ship. cross-model review ai tooling software","18 018 why ai leaders dario and sam want to slow down. hugging face ai machine-learning safety","16 016 open weight is not open source. open weight vs open source machine-learning ai open-source","14 014 the dot product is a shadow. the dot product and attention maths linear-algebra machine-learning","13 013 ten servers, one door. load balancers infrastructure distributed-systems","12 012 the same point, five different answers. five machine learning algorithms maths machine-learning","11 011 two directions the wind cannot turn. eigenvectors and linear systems maths linear-algebra","10 010 your video is a web page. rendering video from code video html tooling","9 009 the determinant is a volume. the determinant maths linear-algebra","8 008 every paid tool has an open twin. open-source swaps open-source tooling","7 007 taste is installable. design plugins design tooling ai","6 006 a change has to climb. version control git tooling","5 005 zero bars. still found. gps infrastructure radio","4 004 it doesn't search the internet. it searches a copy. google search infrastructure indexing","3 003 five machines carry your message. none of them can read it. whatsapp infrastructure encryption","2 002 kubernetes has never started a container. kubernetes / docker infrastructure containers","1 001 the play button was never the hard part. netflix infrastructure streaming cdn"];
+  var HAY = ["32 032 the classic spam filter never reads a word. it weighs it. naive bayes spam filter (word-weight scale) ai machine-learning maths","31 031 the leap wasn't sudden. you were reading the wrong axis. training compute (semi-log axis) ai machine-learning maths","30 030 it works while you sleep. four settings decide how far. openai dots (agent permission rules) ai agents safety","29 029 rotating your photo is four numbers. two are the same. rotation matrix (2d image rotation) maths linear-algebra computer-graphics","28 028 every gpu core is slower than your cpu's. it still wins. gpus (why ai runs on graphics cards) ai machine-learning hardware","27 027 chatgpt can't tell a river bank from a money bank until the words before it vote. attention (self-attention in a transformer) ai machine-learning language-models","26 026 every piece of ticketmaster's system arrived only after the one before it broke. ticketmaster (system design) infrastructure distributed-systems scalability","25 025 the temperature setting behind chatgpt runs on gas physics from 1868. temperature (softmax sampling) ai machine-learning physics","24 024 gradient descent trains right on the line where it should explode. gradient descent maths machine-learning","23 023 pagerank is an eigenvector. pagerank maths linear-algebra","22 022 shazam never hears your song. it hears the circles inside it. shazam maths signal-processing audio","21 021 sent to live inside your world until it works. forward deployed engineer ai software","20 020 the answer is a move. jev (typesafe) ai machine-learning decision-models","19 019 catch the lost edit before you ship. cross-model review ai tooling software","18 018 why ai leaders dario and sam want to slow down. hugging face ai machine-learning safety","16 016 open weight is not open source. open weight vs open source machine-learning ai open-source","14 014 the dot product is a shadow. the dot product and attention maths linear-algebra machine-learning","13 013 ten servers, one door. load balancers infrastructure distributed-systems","12 012 the same point, five different answers. five machine learning algorithms maths machine-learning","11 011 two directions the wind cannot turn. eigenvectors and linear systems maths linear-algebra","10 010 your video is a web page. rendering video from code video html tooling","9 009 the determinant is a volume. the determinant maths linear-algebra","8 008 every paid tool has an open twin. open-source swaps open-source tooling","7 007 taste is installable. design plugins design tooling ai","6 006 a change has to climb. version control git tooling","5 005 zero bars. still found. gps infrastructure radio","4 004 it doesn't search the internet. it searches a copy. google search infrastructure indexing","3 003 five machines carry your message. none of them can read it. whatsapp infrastructure encryption","2 002 kubernetes has never started a container. kubernetes / docker infrastructure containers","1 001 the play button was never the hard part. netflix infrastructure streaming cdn"];
   var input = document.getElementById('guide-filter');
   var rows = [].slice.call(document.querySelectorAll('#guide-rows .cardRow:not(.cardRow--head)'));
   var count = document.getElementById('guide-count');
