@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nobody told the computer where anyone lived. It drew a map of Europe anyway. — Hubert's field guides</title>
+<meta name="description" content="Field guide Nº034. Each person in a 2008 genetics study is about two hundred thousand numbers read from their DNA (197,146 SNPs, Novembre et al., Nature 2008). Principal component analysis (PCA) squashes that list to the two directions along which 1,387 people sampled across Europe differ most: together those two directions hold less than half a percent of the variation (0.30% + 0.15% = 0.45%), and after a 16-degree rotation fitted to match them, they line up with where people's grandparents came from (r² 0.77 against latitude, 0.78 against longitude). The method was given no geography; the map is the output, not the input. The height-and-weight chart is an illustration, a made-up person, not study data.">
+<meta name="theme-color" content="#1a1a1a">
+
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nobody told the computer where anyone lived. It drew a map of Europe anyway.">
+<meta property="og:description" content="The one-page PCA sheet: the squash, the arithmetic, the authors' rotation disclosed, and the one line about eigenvectors the film leaves out. A real frame from the film's master render.">
+<meta property="og:image" content="artifacts/squash-card.png">
+<meta property="og:image:alt" content="Field guide Nº034 cover — a real frame from the film's master render: a navy grid-sea instrument panel, a thin ink viewfinder frame holding a green land mass shaped like Europe dotted with small ink points, tagged 'illustrative · after Novembre et al., Nature 2008 · redrawn', edge labels TALLEST and WIDEST, the caption THE CAMERA ONLY HUNTED FOR THE WIDEST VIEW, a HUBERT header, and Hubert with his arms spread saying 'Nobody. The camera only hunted for the widest view.'">
+<meta name="twitter:card" content="summary_large_image">
+
+
+
+
+<style>
+  /* ── the data tables ──────────────────────────────────────────────────
+     Same shape as curve.html/bayes.html/axis.html's tables: tabular
+     figures, a mono caption naming the source. Facts from
+     videos/film-12-pca-columns-into-two/SCRIPT.md's Claim and Sources
+     tables, read 2026-10-03 (paper read as the PMC2735096 author
+     manuscript through NCBI E-utilities). */
+  .rules-table th, .rules-table td { font-variant-numeric: tabular-nums; }
+  .rules-table td:first-child { text-align: left; color: var(--plate-read-accent, #1a1a1a); font-weight: 600; }
+  .rules-table caption {
+    caption-side: top; color: var(--plate-read-dim); font-family: Mono, ui-monospace, monospace;
+    font-size: 14px; letter-spacing: -0.048em; margin-bottom: 4px; text-align: left;
+    text-transform: uppercase;
+  }
+  .rules-table tbody td { border-bottom: 1px solid var(--plate-read-rule); padding: 8px 6px; }
+  .rules-table tbody tr:last-child td { border-bottom: none; }
+
+  @media screen and (max-width: 600px) {
+    .table-scroll {
+      margin: 0 -20px; overflow-x: auto; padding: 0 20px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .table-scroll table { min-width: 320px; }
+  }
+
+  /* Inline code, scoped back to an inline chip (the ported reset styles
+     `code` as a black block, written for fenced samples). */
+  .journalArticle__article code {
+    background: rgba(0, 0, 0, .22); border-radius: 4px; display: inline;
+    font-family: Mono, ui-monospace, monospace; font-size: 88%; margin: 0;
+    padding: .1em .38em; white-space: nowrap;
+  }
+
+  /* Block quotes carry the source's own words, set apart from the plain-
+     English paraphrase around them so a reader can see exactly which
+     sentences are quoted verbatim and which are Hubert's summary. Used
+     here for the Novembre et al. abstract (open-access author
+     manuscript, PMC2735096). */
+  .paper-quote {
+    border-left: 2px solid rgba(0, 0, 0, .35); font-size: 92%; font-style: italic;
+    margin: 0 0 3vw; max-width: 34em; padding-left: 20px;
+  }
+  .paper-quote cite {
+    display: block; font-family: Mono, ui-monospace, monospace; font-size: 72%;
+    font-style: normal; letter-spacing: .04em; margin-top: 8px; opacity: .55;
+    text-transform: uppercase;
+  }
+  @media screen and (max-width: 600px) {
+    .paper-quote { margin-bottom: 5vh; padding-left: 14px; }
+  }
+
+  /* A caveat Hubert states explicitly, not a sourced fact, or a sensitivity
+     note — set apart so the two never blur into one voice. */
+  .hubert-note {
+    background: rgba(0, 0, 0, .06); border-radius: 10px; font-size: 92%;
+    margin: 0 0 3vw; max-width: 34em; padding: 12px 16px;
+  }
+  .hubert-note strong { text-transform: uppercase; font-size: 78%; letter-spacing: .04em; opacity: .6; display: block; margin-bottom: 6px; }
+
+  /* The one-page sheet's cover frame, sent by DM to anyone who comments
+     SQUASH — shown here too, since the page is the same artifact. It is a
+     real frame from the approved master render (beat 13, the film's
+     screenshot-worthy frame, SCRIPT.md AUD-04), not a mock-up. Capped
+     narrow so it reads as a card, not a hero image. */
+  .card-figure { margin: 6px 0 4vw; max-width: 380px; }
+  .card-figure img { border-radius: 14px; border: 1px solid rgba(0, 0, 0, .14); display: block; width: 100%; }
+  .card-figure figcaption {
+    color: var(--plate-read-dim); font-family: Mono, ui-monospace, monospace; font-size: 13px;
+    letter-spacing: .01em; margin-top: 10px; opacity: .65;
+  }
+
+  /* The header is `position: fixed`, so an in-page jump lands the target
+     underneath it. Nº032/033 use a flat 116px; match it. */
+  #guide, #list, #squash, #arithmetic, #turn, #withheld, #scope, #sources { scroll-margin-top: 116px; }
+</style>
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-10-10-squash" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-10-10-squash">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-10-10-squash">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-10-10-squash">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-10-10-squash">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-10-10-squash">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-10-10-squash">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-10-10-squash">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/squash.html"><span>Nº034 · PCA on DNA (Novembre et al., 2008)</span></a>
+    <a href="/curve.html"><span>Nº033 · Options gamma (the bend in an option's price curve)</span></a>
+    <a href="/bayes.html"><span>Nº032 · Naive Bayes spam filter (word-weight scale)</span></a>
+    <a href="/axis.html"><span>Nº031 · Training compute (semi-log axis)</span></a>
+    <a href="/dots.html"><span>Nº030 · OpenAI dots (agent permission rules)</span></a>
+    <a href="/rotation.html"><span>Nº029 · Rotation matrix (2D image rotation)</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Field guide</span><strong>Nº034</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>System</span><strong>PCA on DNA (Novembre et al., Nature 2008)</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Model</span><strong>squash 200,000 numbers to 2 &middot; keep the pair the people differ most along, widest then tallest at right angles</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Worked example</span><strong>1,387 people, 197,146 DNA numbers each &rarr; two directions holding 0.30% + 0.15% = 0.45% of the variation, rotated 16&deg; to match the map, r&sup2; 0.77 / 0.78 against latitude / longitude</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp">Filed</span>
+        </div>
+      </div>
+
+      <div class="journalArticle__article" id="guide">
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">You commented SQUASH — this is the one-page PCA sheet.</p>
+        <h1 data-splitting="lines">Nobody told the computer where anyone lived. It drew a map of Europe anyway.</h1>
+        <p class="lead" data-splitting>Every person in a 2008 study is a long list of numbers read from their DNA
+          &mdash; about two hundred thousand of them (197,146, to be exact). Two numbers about a person make one dot
+          on a chart; two hundred thousand numbers make one dot in a space with that many directions. Principal
+          component analysis (PCA) photographs that cloud from the angle where the dots are most spread out, which is
+          the view that keeps the biggest differences between people, and throws the rest away. Novembre et al.
+          (Nature, 2008) ran exactly this on 1,387 people sampled across Europe, gave the method no geography at all,
+          and the resulting photo &mdash; just two numbers per person &mdash; turned out to look like a map of
+          Europe.</p>
+
+        <p class="monospace monospace__p" data-splitting>Companion to the reel &middot; Watch it on
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank">@huberttheinventor</a></p>
+
+        <figure class="card-figure">
+          <img src="artifacts/squash-card.png" alt="A navy grid-sea instrument panel. A thin ink viewfinder frame holds a green land mass shaped like Europe, dotted with small ink points, tagged illustrative, after Novembre et al., Nature 2008, redrawn. The frame's edges read TALLEST and WIDEST. The caption reads THE CAMERA ONLY HUNTED FOR THE WIDEST VIEW. Under a HUBERT header, Hubert spreads his arms and says Nobody. The camera only hunted for the widest view.">
+          <figcaption>The sheet's cover frame &mdash; a real frame from the film's master render (beat 13), free, no email, not a mock-up.</figcaption>
+        </figure>
+
+        <div class="hubert-note">
+          <strong>What this page is and isn't</strong>
+          This is maths and genetics education, built from one published study. The plotted positions are the
+          paper's own published summary (PC1/PC2 per person), redrawn and relabelled, never the raw genotypes, which
+          are controlled-access data. Nothing here makes a claim about any single person, their health, or their
+          ancestry beyond the paper's own geographic comparison. No country, flag, or group colour appears on the
+          film's plate; this page names the study's own method honestly instead.
+        </div>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº001 · The list</p>
+        <h4 aria-level="2" data-splitting="lines" id="list">A list of numbers becomes a dot</h4>
+        <p data-splitting>Say you know a person's height and weight: height goes left to right, weight goes up and
+          down, and that person is one dot on a chart. Give each person two hundred thousand numbers instead of two,
+          and the same rule holds &mdash; every number is one more direction, so the chart grows into a space with
+          two hundred thousand directions, and every person is still just one dot, now floating in that huge cloud.
+          Similar lists of numbers sit close together in it. Nobody can picture two hundred thousand directions at
+          once, but the geometry does not care: the dots, and the distances between them, are still well defined.</p>
+        <div class="hubert-note">
+          <strong>Illustrative, not data</strong>
+          The height-and-weight chart above is a worked example with a made-up person, the kind of two-number chart
+          anyone already knows how to read. It is not from the study: no participant's height or weight is in the
+          paper, and the dataset used here is 197,146 points read from DNA, not body measurements.
+        </div>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº002 · The squash</p>
+        <h4 aria-level="2" data-splitting="lines" id="squash">The view that keeps the most spread</h4>
+        <p data-splitting>A photograph of the cloud is flat, so it gives each dot two numbers again: how far left,
+          how far up. From most camera angles the dots hide behind each other and the photo is a tight, uninformative
+          bunch &mdash; from a random direction in a 197,146-dimensional cloud, the expected spread captured is only
+          about 1/590th of what the best direction captures (a standard result, not in the paper: for a random unit
+          direction <code>u</code>, the expected variance is tr(C)/n). So the method carries the camera around the
+          cloud and stops at the angle that makes it widest; holding that, it tilts to the angle, at right angles to
+          the first, that makes it tallest. Spread out is what lets you tell people apart, so that view keeps the
+          biggest differences between the lists and throws the rest away. That is PCA: the first direction is the one
+          along which people differ most, the second the one that differs most at right angles to it (Wikipedia,
+          &ldquo;Principal component analysis&rdquo;: the first component &ldquo;maximizes the variance of the
+          projected data&rdquo;; the second is &ldquo;a direction orthogonal to the first&hellip; that maximizes the
+          variance of the projected data&rdquo;). Nobody told the method where anyone lives; it only ever hunted for
+          the widest view, run with the <code>smartpca</code> program on the genotype data alone.</p>
+        <blockquote class="paper-quote">
+          a geographical map of Europe arises naturally as an efficient two-dimensional summary of genetic variation
+          in Europeans
+          <cite>Novembre, Johnson, Bryc, Kutalik, Boyko, Auton, Indap, King, Bergmann, Nelson, Stephens, Bustamante &mdash; Genes Mirror Geography within Europe, Nature 456, 98&ndash;101 (2008)</cite>
+        </blockquote>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº003 · The arithmetic</p>
+        <h4 aria-level="2" data-splitting="lines" id="arithmetic">1,387 people, two numbers each</h4>
+        <p data-splitting>The study genotyped its 1,387 individuals at 500,568 positions in their DNA (loci) and
+          used 197,146 of those for PCA after quality filtering &mdash; the figure this guide rounds to &ldquo;about
+          two hundred thousand.&rdquo; The two kept directions (PC1 and PC2) are not spoken as percentages in the
+          film, but together they hold well under one percent of the total variation, and even so, line up with
+          geography once rotated to match it.</p>
+        <div class="table-scroll">
+        <table class="rules-table">
+          <caption>Novembre et al., Nature 2008 (PMC2735096, re-read 2026-10-03); figures as published</caption>
+          <tbody>
+            <tr><td>Sample</td><td>1,387 individuals, sampled across Europe (POPRES panel); one dot each</td></tr>
+            <tr><td>DNA numbers used</td><td>500,568 genotyped &middot; <strong>197,146</strong> used for the two components (&ldquo;about two hundred thousand&rdquo;)</td></tr>
+            <tr><td>Variance kept</td><td>PC1 0.30% &middot; PC2 0.15% &middot; <strong>0.45% combined</strong>, under 1% &middot; eigenvalues 4.09 / 2.04</td></tr>
+            <tr><td>Fit to geography, before rotation</td><td>r&sup2; 0.71 (PC1 vs latitude) &middot; r&sup2; 0.72 (PC2 vs longitude)</td></tr>
+            <tr><td>The authors' rotation</td><td><strong>16&deg;</strong> counterclockwise, fitted to maximise the correlation of median PC1/PC2 with latitude/longitude &mdash; applied after PCA, never seen by it</td></tr>
+            <tr><td>Fit to geography, after rotation</td><td>r&sup2; <strong>0.77</strong> (&ldquo;north&ndash;south&rdquo; vs latitude) &middot; r&sup2; <strong>0.78</strong> (&ldquo;east&ndash;west&rdquo; vs longitude)</td></tr>
+            <tr><td>Placement by the photo alone</td><td>a separate regression places 50% of individuals within 540&nbsp;km of their reported origin, 90% within 840&nbsp;km (not on the film's plate; here only)</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="monospace monospace__p opacity__50" data-splitting>Geographic origin, where available, is each
+          individual's grandparents' country (a &ldquo;strict consensus&rdquo; rule across grandparents); otherwise
+          the individual's own self-reported country of birth.</p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº004 · The turn</p>
+        <h4 aria-level="2" data-splitting="lines" id="turn">The authors turned the photo. The method never saw a map.</h4>
+        <p data-splitting>PCA itself ran on the genotype data only, with no geographic input of any kind &mdash; it
+          has no concept of latitude, longitude, or country. After it finished, the authors compared the two
+          components to each person's reported geographic origin, and rotated the whole photo 16&deg; counterclockwise
+          to line its axes up with the map's north&ndash;south and east&ndash;west. The rotation does not change which
+          two directions were kept, or how spread out anyone is relative to anyone else within the photo &mdash; it
+          only turns the finished picture to match a map drawn afterward. The honest order is: squash first, geography
+          compared after.</p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº005 · What the film leaves out</p>
+        <h4 aria-level="2" data-splitting="lines" id="withheld">The two directions have a name</h4>
+        <p data-splitting>The film never says the word, to keep the maths out of the way of the picture: the widest
+          and tallest directions PCA hunts for are the eigenvectors of the data's covariance matrix, and the amount
+          of spread each one captures is its eigenvalue &mdash; 4.09 and 2.04 here, out of 197,146 such numbers in
+          total (Wikipedia, &ldquo;Principal component analysis&rdquo;). &ldquo;Widest, then tallest at right
+          angles&rdquo; is the same operation as &ldquo;top two eigenvectors of the covariance matrix, by
+          eigenvalue&rdquo;; the film teaches the geometry, this page names the algebra underneath it.</p>
+        <div class="hubert-note">
+          <strong>Any pile of numbers, not just DNA</strong>
+          PCA has nothing DNA-specific about it: it is a general method for flattening any list of numbers &mdash;
+          pixels in an image, words in a document, sensors on a machine &mdash; onto the two (or few) directions that
+          carry the most of their spread. A geography-shaped result here is specific to this dataset; the method
+          itself is domain-agnostic (Wikipedia, &ldquo;Principal component analysis&rdquo;: &ldquo;applications in
+          exploratory data analysis, visualization and data preprocessing&rdquo;).
+        </div>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="scope">The honest scope</h4>
+        <p data-splitting>Every number on this page is sourced to the published paper, read as the open-access author
+          manuscript (PMC2735096) and cross-checked against the Nature abstract. Nothing here is a claim about any
+          individual's identity, health, or ancestry beyond the paper's own comparison of genetic summary positions to
+          self-reported or grandparental country of origin; the correlation (r&sup2; 0.77 / 0.78) describes the
+          sampled group, not any one person. The dots on the film's plate and on this page are redrawn and relabelled
+          from the published figure, never the controlled-access genotype data itself. The height-and-weight chart is
+          an illustration with a made-up person, included to show how any two numbers become a dot, and carries no
+          claim about the study.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="next">One system, taken apart.</h4>
+        <p data-splitting>Same treatment, different machine. No pitch, no thread-bait, and an unsubscribe
+          link that works.</p>
+        <div class="buttons">
+          <a href="index.html#pricing" class="button button__big hover_effect"><span>The List</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="sources">Take it with you</h4>
+        <p class="monospace monospace__p opacity__50" data-splitting>The one-page PCA sheet is this page: the squash,
+          the arithmetic, the authors' rotation disclosed, and the one line about eigenvectors the film doesn't say,
+          free, no email.</p>
+        <div class="buttons">
+          <a href="#arithmetic" class="button button__big hover_effect"><span>The arithmetic</span> <span class="arrow">&#8599;</span></a>
+          <a href="#turn" class="button button__big hover_effect"><span>The authors' turn</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://en.wikipedia.org/wiki/Principal_component_analysis" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Wikipedia, Principal component analysis</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2735096/" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Novembre et al., Nature 2008 (PMC2735096)</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-small="true">The List</p>
+        <h4 aria-level="2">One a week. And the other seven, now.</h4>
+        <p>Confirm your address and the whole set arrives &mdash; all ten field guides, exactly
+          as they are on the site, nothing held back for subscribers. After that, one new system
+          taken apart every week. No pitch, no thread-bait, and an unsubscribe link that works.</p>
+
+        <form class="sub-form" action="https://huberttheinventor-ig-dm.vektor-fm.workers.dev/signup"
+              method="post">
+          <label class="monospace monospace__p" for="list-email">Email address</label>
+          <div class="field">
+            <input type="email" name="email" id="list-email" placeholder="you@example.com"
+                   required autocomplete="email" inputmode="email" spellcheck="false">
+            <input type="hidden" name="tag" value="guide-34-squash"><input type="text" name="company" value="" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
+            <button type="submit" class="monospace">Send me the set &#8599;</button>
+          </div>
+          <label class="consent monospace monospace__p">
+            <input type="checkbox" name="consent" required>
+            <span>Send me the guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. The set opens right away on the next page.</span>
+          </label>
+        </form>
+<!-- build:guidenav -->
+      <div class="guideNav">
+        <h4 aria-level="2" class="guideNav__head">Keep going</h4>
+        <div class="buttons">
+        <a href="/curve.html" class="button button__big hover_effect"><span><em class="guideNav__kicker">Previous</em> Nº033 · Options gamma (the bend in an option's price curve)</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__label">Related</p>
+        <div class="buttons">
+        <a href="/shadow.html" class="button button__big hover_effect"><span>Nº014 · The dot product and attention &mdash; The dot product is a shadow.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/bayes.html" class="button button__big hover_effect"><span>Nº032 · Naive Bayes spam filter (word-weight scale) &mdash; The classic spam filter never reads a word. It weighs it.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/axis.html" class="button button__big hover_effect"><span>Nº031 · Training compute (semi-log axis) &mdash; The leap wasn't sudden. You were reading the wrong axis.</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__all"><a href="/guides/">All 32 guides &#8599;</a></p>
+      </div>
+<!-- /build:guidenav -->
+      <div class="article__footer">
+          <p class="monospace monospace__p opacity__50" data-splitting><strong>An independent educational
+            breakdown.</strong> Not affiliated with, endorsed by, or produced in cooperation with the study's authors
+            or any institution named here. Every figure is sourced to Novembre, Johnson, Bryc, Kutalik, Boyko, Auton,
+            Indap, King, Bergmann, Nelson, Stephens and Bustamante, &ldquo;Genes Mirror Geography within Europe,&rdquo;
+            Nature 456, 98&ndash;101 (2008), doi 10.1038/nature07331, read as the open-access author manuscript
+            PMC2735096; the general PCA mechanism to Wikipedia's &ldquo;Principal component analysis&rdquo; article.
+            The plotted dots are redrawn from the published figure, never the controlled-access genotype data. This is
+            maths and genetics education, not a claim about any individual's identity, health, or ancestry. Any error
+            in the summary is mine.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="#arithmetic" class="button button__half hover_effect" title="The arithmetic"><span>The arithmetic</span><span class="arrow">↗</span></a>
+          <a href="#scope" class="button button__half hover_effect" title="The honest scope"><span>The honest scope</span><span class="arrow">↗</span></a>
+          <a href="privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+
+
+
+
+<dialog id="list-modal" class="listModal" aria-labelledby="list-modal-title"><div class="listModal__inner" tabindex="-1" autofocus><p class="listModal__eyebrow">The List</p><h2 id="list-modal-title">Ten guides. One email.</h2><p>Every field guide on this site, sent the moment you confirm &mdash; then one new system taken apart each week.</p><p>Nothing is held back for subscribers. The guides stay free and stay here; the list is only how the next one reaches you without an algorithm getting a vote.</p><form class="sub-form" action="https://huberttheinventor-ig-dm.vektor-fm.workers.dev/signup" method="post"><label class="monospace monospace__p" for="list-email-modal">Email address</label><div class="field"><input type="email" name="email" id="list-email-modal" placeholder="you@example.com" required autocomplete="email" inputmode="email" spellcheck="false"><input type="hidden" name="tag" value="popup-squash"><input type="text" name="company" value="" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none"><button type="submit" class="monospace">Send me the set &#8599;</button></div><label class="consent monospace monospace__p"><input type="checkbox" name="consent" required><span>Send me the guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. The set opens right away on the next page.</span></label></form><button type="button" class="listModal__close" data-close>No thanks &mdash; just reading</button></div></dialog>
+<script src="assets/js/list-modal.js" defer></script>
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-10-10-squash"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-10-10-squash"></script>
+<script src="/assets/js/splitting.min.js?v=2026-10-10-squash"></script>
+<script src="/assets/js/site.js?v=2026-10-10-squash" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>
