@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What the model gets instead of letters. — Hubert's field guides</title>
+<meta name="description" content="Field guide Nº035. Measured 2026-10-06 with OpenAI's tiktoken (o200k_base, the encoding it maps to gpt-4o, gpt-4.1, gpt-5, o1, o3 and o4-mini). A cutter chops your text into pieces from a fixed 200,019-entry list before the model ever reads it; the model gets the row of piece numbers, never the letters. With a leading space, &quot; strawberry&quot; is one piece, number 101830 — all three r's sealed inside it. Without the space, &quot;strawberry&quot; falls back to three pieces: st + raw + berry. In 2024 ChatGPT (GPT-4o) answered two, because counting the r's meant recalling the spelling from memory. Later OpenAI models may use a different list; the numbers can differ, the mechanism does not.">
+<meta name="theme-color" content="#1a1a1a">
+
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="What the model gets instead of letters.">
+<meta property="og:description" content="The strawberry card: the 1-piece and 3-piece cuts with their numbers, and four lines of Python to see your own prompt's pieces. A real frame from the film's master render.">
+<meta property="og:image" content="artifacts/pieces-card.png">
+<meta property="og:image:alt" content="Field guide Nº035: The reel's end card, a real frame from the film's master render: on a dark background, COMMENT, then PIECES in large cyan letters, then: and I'll send you the strawberry card.">
+<meta name="twitter:card" content="summary_large_image">
+
+
+
+
+<style>
+  /* ── the data table ───────────────────────────────────────────────────
+     Same shape as curve.html/bayes.html/axis.html/squash.html's tables:
+     tabular figures, a mono caption naming the source. Facts from
+     resource/strawberry-card.md (videos/film-15-strawberry-pieces),
+     sha256 1e24fa9847b207676eb8e215fb74af5886e983fde15f343e0fe63695870acf75,
+     measured 2026-10-06 with tiktoken 0.14.0, encoding o200k_base. */
+  .rules-table th, .rules-table td { font-variant-numeric: tabular-nums; }
+  .rules-table td:first-child { text-align: left; color: var(--plate-read-accent, #1a1a1a); font-weight: 600; }
+  .rules-table caption {
+    caption-side: top; color: var(--plate-read-dim); font-family: Mono, ui-monospace, monospace;
+    font-size: 14px; letter-spacing: -0.048em; margin-bottom: 4px; text-align: left;
+    text-transform: uppercase;
+  }
+  .rules-table tbody td { border-bottom: 1px solid var(--plate-read-rule); padding: 8px 6px; }
+  .rules-table tbody tr:last-child td { border-bottom: none; }
+
+  @media screen and (max-width: 600px) {
+    .table-scroll {
+      margin: 0 -20px; overflow-x: auto; padding: 0 20px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .table-scroll table { min-width: 320px; }
+  }
+
+  /* Inline code, scoped back to an inline chip (the ported reset styles
+     `code` as a black block, written for fenced samples). */
+  .journalArticle__article code {
+    background: rgba(0, 0, 0, .22); border-radius: 4px; display: inline;
+    font-family: Mono, ui-monospace, monospace; font-size: 88%; margin: 0;
+    padding: .1em .38em; white-space: nowrap;
+  }
+
+  /* The four-line Python sample from the card, set as a block so it reads
+     as a runnable snippet, not inline prose. */
+  .code-sample {
+    background: rgba(0, 0, 0, .85); border-radius: 10px; color: #d8f4f0;
+    font-family: Mono, ui-monospace, monospace; font-size: 13px; line-height: 1.6;
+    margin: 0 0 4vw; max-width: 34em; overflow-x: auto; padding: 16px 18px;
+    white-space: pre;
+  }
+
+  /* Block quotes carry the source's own words, set apart from the plain-
+     English paraphrase around them. Used here for tiktoken's own README
+     line. */
+  .paper-quote {
+    border-left: 2px solid rgba(0, 0, 0, .35); font-size: 92%; font-style: italic;
+    margin: 0 0 3vw; max-width: 34em; padding-left: 20px;
+  }
+  .paper-quote cite {
+    display: block; font-family: Mono, ui-monospace, monospace; font-size: 72%;
+    font-style: normal; letter-spacing: .04em; margin-top: 8px; opacity: .55;
+    text-transform: uppercase;
+  }
+  @media screen and (max-width: 600px) {
+    .paper-quote { margin-bottom: 5vh; padding-left: 14px; }
+  }
+
+  /* A caveat Hubert states explicitly, not a sourced fact — set apart so
+     the two never blur into one voice. */
+  .hubert-note {
+    background: rgba(0, 0, 0, .06); border-radius: 10px; font-size: 92%;
+    margin: 0 0 3vw; max-width: 34em; padding: 12px 16px;
+  }
+  .hubert-note strong { text-transform: uppercase; font-size: 78%; letter-spacing: .04em; opacity: .6; display: block; margin-bottom: 6px; }
+
+  /* The one-page sheet's cover frame, sent by DM to anyone who comments
+     PIECES — shown here too, since the page is the same artifact. It is a
+     real frame from the approved master render (the CTA card, ~84 s in
+     the x1.5-pace master), not a mock-up. Capped narrow so it reads as a
+     card, not a hero image. */
+  .card-figure { margin: 6px 0 4vw; max-width: 380px; }
+  .card-figure img { border-radius: 14px; border: 1px solid rgba(0, 0, 0, .14); display: block; width: 100%; }
+  .card-figure figcaption {
+    color: var(--plate-read-dim); font-family: Mono, ui-monospace, monospace; font-size: 13px;
+    letter-spacing: .01em; margin-top: 10px; opacity: .65;
+  }
+
+  /* The header is `position: fixed`, so an in-page jump lands the target
+     underneath it. Match Nº032-034's flat 116px. */
+  #guide, #cuts, #build, #try, #why, #scope, #sources { scroll-margin-top: 116px; }
+</style>
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-10-07-pieces" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-10-07-pieces">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/pieces.html"><span>Nº035 · Tokenization (OpenAI tiktoken, o200k_base)</span></a>
+    <a href="/squash.html"><span>Nº034 · PCA on DNA (Novembre et al., 2008)</span></a>
+    <a href="/curve.html"><span>Nº033 · Options gamma (the bend in an option's price curve)</span></a>
+    <a href="/bayes.html"><span>Nº032 · Naive Bayes spam filter (word-weight scale)</span></a>
+    <a href="/axis.html"><span>Nº031 · Training compute (semi-log axis)</span></a>
+    <a href="/dots.html"><span>Nº030 · OpenAI dots (agent permission rules)</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Field guide</span><strong>Nº035</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>System</span><strong>Tokenization (OpenAI tiktoken, o200k_base)</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Model</span><strong>a cutter chops your text into pieces from a fixed list before the model ever sees it &middot; the model reads piece numbers, never letters</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Worked example</span><strong>&ldquo; strawberry&rdquo; (space in front) &rarr; 1 piece, 101830 &middot; &ldquo;strawberry&rdquo; (no space) &rarr; 3 pieces, st + raw + berry = 302, 1618, 19772</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp">Filed</span>
+        </div>
+      </div>
+
+      <div class="journalArticle__article" id="guide">
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">You commented PIECES — this is the strawberry card.</p>
+        <h1 data-splitting="lines">What the model gets instead of letters.</h1>
+        <p class="lead" data-splitting>In 2024, ChatGPT said strawberry has two r's. It was never shown the letters.
+          Before a chat model reads your question, a cutter chops the text into pieces from a fixed list, and every
+          piece on that list has a number — the model gets the row of numbers, the letters stay on your screen.
+          Measured 2026-10-06 with OpenAI's tiktoken, encoding <code>o200k_base</code> (the encoding tiktoken maps to
+          gpt-4o, gpt-4.1, gpt-5, o1, o3 and o4-mini). Later OpenAI models may use a different encoding; the mechanism
+          is the same, the numbers may differ.</p>
+
+        <p class="monospace monospace__p" data-splitting>Companion to the reel &middot; Watch it on
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank">@huberttheinventor</a></p>
+
+        <figure class="card-figure">
+          <img src="artifacts/pieces-card.png" alt="The reel's end card, a real frame from the film's master render: on a dark background, COMMENT, then PIECES in large cyan letters, then: and I'll send you the strawberry card.">
+          <figcaption>The reel's end card &mdash; a real frame from the film's master render, free, no email, not a mock-up.</figcaption>
+        </figure>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº001 · The two cuts</p>
+        <h4 aria-level="2" data-splitting="lines" id="cuts">The same word, two different counts</h4>
+        <p data-splitting>A space changes everything. With a space in front, as it sits inside a sentence,
+          &ldquo; strawberry&rdquo; is one entry on tiktoken's list: a single piece, number 101830 &mdash; all three
+          r's sealed inside it. Take the space away, as if the word opened a line, and the list has no match:
+          &ldquo;strawberry&rdquo; falls back to three smaller pieces. Same letters, three times the pieces.</p>
+        <div class="table-scroll">
+        <table class="rules-table">
+          <caption>tiktoken 0.14.0, encoding o200k_base &middot; resource/strawberry-card.md, measured 2026-10-06</caption>
+          <tbody>
+            <tr><td>&ldquo; strawberry&rdquo; (space in front, as inside a sentence)</td><td><code>[101830]</code></td><td>1</td></tr>
+            <tr><td>&ldquo;strawberry&rdquo; (no space, as at the start of a line)</td><td><code>st</code> + <code>raw</code> + <code>berry</code> = <code>[302, 1618, 19772]</code></td><td>3</td></tr>
+            <tr><td>&ldquo;How many r's are in strawberry?&rdquo;</td><td><code>How</code> <code> many</code> <code> r</code> <code>'s</code> <code> are</code> <code> in</code> <code> strawberry</code> <code>?</code></td><td>8</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="monospace monospace__p opacity__50" data-splitting>Headers read left to right: what you type,
+          what the model gets, how many pieces. Engineers call the pieces &ldquo;tokens,&rdquo; and OpenAI's API
+          pricing is per token (developers.openai.com/api/docs/pricing, &ldquo;Prices per 1M tokens,&rdquo; read
+          2026-10-06; no rate is quoted here).</p>
+
+        <blockquote class="paper-quote">
+          Language models don't see text like you and I, instead they see a sequence of numbers (known as tokens)
+          <cite>github.com/openai/tiktoken, README</cite>
+        </blockquote>
+
+        <p data-splitting>The rule in one line: the model reads piece numbers, never letters. The letters inside a
+          piece are sealed, so a letter count is a memory task for the model &mdash; which is why counting the r's in
+          one sealed piece meant recalling the spelling, not reading it.</p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº002 · How the list is built</p>
+        <h4 aria-level="2" data-splitting="lines" id="build">Glue the most common pair, repeat</h4>
+        <p data-splitting>Byte-pair encoding, the method behind the list: start from single bytes, glue together
+          whichever pair of pieces appears most often across a huge amount of text, and repeat until the list is
+          full &mdash; 200,019 entries for o200k_base. Common words earn one piece of their own this way, usually
+          with the leading space folded in, because &ldquo; strawberry&rdquo; (with the space) turns up often enough
+          in ordinary writing to win its own slot; &ldquo;strawberry&rdquo; alone, at the start of a line, does not,
+          so it falls back to the three smaller pieces that do have slots.</p>
+
+        <div class="hubert-note">
+          <strong>Why not cut everything into single letters?</strong>
+          Every question would get many times longer, and the model (and the person paying for it) would be billed
+          for every one of those extra pieces. Big pieces keep the bill small; the cost is that the letters inside
+          each one are hidden from the model.
+        </div>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº003 · Try it yourself</p>
+        <h4 aria-level="2" data-splitting="lines" id="try">Your own prompt, cut the same way</h4>
+        <p data-splitting>Four lines of Python reproduce every number on this page, with tiktoken installed
+          (<code>pip install tiktoken</code>):</p>
+        <pre class="code-sample"><code>import tiktoken
+enc = tiktoken.get_encoding("o200k_base")
+ids = enc.encode("How many r's are in strawberry?")
+print(ids, [enc.decode([i]) for i in ids])</code></pre>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº004 · The 2024 miss</p>
+        <h4 aria-level="2" data-splitting="lines" id="why">Why ChatGPT said &ldquo;two&rdquo; in 2024</h4>
+        <p data-splitting>It was handed one number for the whole word and asked what was inside it. It had to recall
+          the spelling from memory, and the recall was wrong &mdash; ChatGPT (GPT-4o) answered two (blog.legoktm.com,
+          10 Aug 2024; community.openai.com thread 829618, 19 Jun 2024). Most chat models cut text into pieces this
+          way; what has changed since is training and tools, which this page does not measure.</p>
+
+        <div class="hubert-note">
+          <strong>What this page is and isn't</strong>
+          This documents one measured mechanism (byte-pair encoding, tiktoken's o200k_base list) and one dated
+          failure (ChatGPT / GPT-4o, 2024). It is not a claim that today's models still miscount letters &mdash;
+          newer tools and training change the outcome even though the underlying cutting mechanism is the same.
+          Later OpenAI models may use a different encoding than o200k_base; the numbers on this page would differ,
+          the mechanism would not.
+        </div>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="scope">The honest scope</h4>
+        <p data-splitting>Every number on this page is read directly from tiktoken 0.14.0, encoding o200k_base,
+          measured 2026-10-06, and matches the hash-locked card in the video repo (sha256
+          <code>1e24fa98&hellip;acf75</code>). No rate or price figure is quoted, only the fact that OpenAI bills per
+          token. The 2024 ChatGPT answer is reported from two outside sources, not re-tested here; no claim is made
+          about which model or version answers this question today.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="next">One system, taken apart.</h4>
+        <p data-splitting>Same treatment, different machine. No pitch, no thread-bait, and an unsubscribe
+          link that works.</p>
+        <div class="buttons">
+          <a href="index.html#pricing" class="button button__big hover_effect"><span>The List</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="sources">Take it with you</h4>
+        <p class="monospace monospace__p opacity__50" data-splitting>The strawberry card is this page: both cuts
+          with their numbers, the rule in one line, and four lines of Python that show your own prompt's pieces,
+          free, no email.</p>
+        <div class="buttons">
+          <a href="#try" class="button button__big hover_effect"><span>Try your own prompt</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://github.com/openai/tiktoken" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>github.com/openai/tiktoken</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://developers.openai.com/api/docs/pricing" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>OpenAI API pricing</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-small="true">The List</p>
+        <h4 aria-level="2">One a week. And the other seven, now.</h4>
+        <p>Confirm your address and the whole set arrives &mdash; all ten field guides, exactly
+          as they are on the site, nothing held back for subscribers. After that, one new system
+          taken apart every week. No pitch, no thread-bait, and an unsubscribe link that works.</p>
+
+        <form class="sub-form" action="https://huberttheinventor-ig-dm.vektor-fm.workers.dev/signup"
+              method="post">
+          <label class="monospace monospace__p" for="list-email">Email address</label>
+          <div class="field">
+            <input type="email" name="email" id="list-email" placeholder="you@example.com"
+                   required autocomplete="email" inputmode="email" spellcheck="false">
+            <input type="hidden" name="tag" value="guide-35-pieces"><input type="text" name="company" value="" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
+            <button type="submit" class="monospace">Send me the set &#8599;</button>
+          </div>
+          <label class="consent monospace monospace__p">
+            <input type="checkbox" name="consent" required>
+            <span>Send me the guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. The set opens right away on the next page.</span>
+          </label>
+        </form>
+<!-- build:guidenav -->
+      <div class="guideNav">
+        <h4 aria-level="2" class="guideNav__head">Keep going</h4>
+        <div class="buttons">
+        <a href="/squash.html" class="button button__big hover_effect"><span><em class="guideNav__kicker">Previous</em> Nº034 · PCA on DNA (Novembre et al., 2008)</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__label">Related</p>
+        <div class="buttons">
+        <a href="/curve.html" class="button button__big hover_effect"><span>Nº033 · Options gamma (the bend in an option's price curve) &mdash; An option's gamma isn't new maths. It's the bend you already met in training.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/bayes.html" class="button button__big hover_effect"><span>Nº032 · Naive Bayes spam filter (word-weight scale) &mdash; The classic spam filter never reads a word. It weighs it.</span> <span class="arrow">&#8599;</span></a>
+        <a href="/axis.html" class="button button__big hover_effect"><span>Nº031 · Training compute (semi-log axis) &mdash; The leap wasn't sudden. You were reading the wrong axis.</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__all"><a href="/guides/">All 33 guides &#8599;</a></p>
+      </div>
+<!-- /build:guidenav -->
+      <div class="article__footer">
+          <p class="monospace monospace__p opacity__50" data-splitting><strong>An independent educational
+            breakdown.</strong> Not affiliated with, endorsed by, or produced in cooperation with OpenAI. Every
+            number is read directly from OpenAI's tiktoken library (github.com/openai/tiktoken), encoding
+            o200k_base, measured 2026-10-06; the 2024 ChatGPT answer is reported from blog.legoktm.com (10 Aug 2024)
+            and an OpenAI community forum thread (19 Jun 2024), not re-tested here. Any error in the summary is
+            mine.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="#try" class="button button__half hover_effect" title="Try your own prompt"><span>Try it yourself</span><span class="arrow">↗</span></a>
+          <a href="#scope" class="button button__half hover_effect" title="The honest scope"><span>The honest scope</span><span class="arrow">↗</span></a>
+          <a href="privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+
+
+
+
+<dialog id="list-modal" class="listModal" aria-labelledby="list-modal-title"><div class="listModal__inner" tabindex="-1" autofocus><p class="listModal__eyebrow">The List</p><h2 id="list-modal-title">Ten guides. One email.</h2><p>Every field guide on this site, sent the moment you confirm &mdash; then one new system taken apart each week.</p><p>Nothing is held back for subscribers. The guides stay free and stay here; the list is only how the next one reaches you without an algorithm getting a vote.</p><form class="sub-form" action="https://huberttheinventor-ig-dm.vektor-fm.workers.dev/signup" method="post"><label class="monospace monospace__p" for="list-email-modal">Email address</label><div class="field"><input type="email" name="email" id="list-email-modal" placeholder="you@example.com" required autocomplete="email" inputmode="email" spellcheck="false"><input type="hidden" name="tag" value="popup-pieces"><input type="text" name="company" value="" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none"><button type="submit" class="monospace">Send me the set &#8599;</button></div><label class="consent monospace monospace__p"><input type="checkbox" name="consent" required><span>Send me the guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. The set opens right away on the next page.</span></label></form><button type="button" class="listModal__close" data-close>No thanks &mdash; just reading</button></div></dialog>
+<script src="assets/js/list-modal.js" defer></script>
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/splitting.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/site.js?v=2026-10-07-pieces" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>
