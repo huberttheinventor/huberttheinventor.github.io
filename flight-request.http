@@ -1,0 +1,5 @@
+GET /flights/482 HTTP/1.1
+Host: api.skyline.example
+Authorization: Bearer EXAMPLE_TOKEN
+Accept: application/json
+

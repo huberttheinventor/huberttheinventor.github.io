@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 590" role="img" aria-labelledby="title desc">
+  <title id="title">The API flight exchange</title>
+  <desc id="desc">TripNote's backend asks the SkyLine service for flight 482. The service checks the request, looks up only the permitted flight record and returns a JSON response. TripNote renders Delayed, B12 and 7:40 on its screen. A separate webhook arrow runs from the airline to the TripNote backend when a subscribed event happens. The app, airline, records and values are fictional examples.</desc>
+  <defs>
+    <style>
+      @font-face{font-family:Mono;src:url('assets/fonts/PPNeueMontrealMono-Book.D9DlBA0F.woff2') format('woff2')}
+      @font-face{font-family:SemiSqueezed;src:url('assets/fonts/SemiSqueezedMedium.DVwdXl-1.woff2') format('woff2')}
+      text{font-family:Mono,monospace;fill:#111111;font-size:18px} .title{font-family:SemiSqueezed,sans-serif;font-size:37px}.small{font-size:15px;fill:#54565d}.node{fill:none;stroke:#111111;stroke-width:1.5}.arrow{fill:none;stroke:#111111;stroke-width:2;marker-end:url(#head)}.rule{stroke:#111111;stroke-opacity:.28;stroke-width:1}.accent{fill:#03049c}
+    </style>
+    <marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#111111"/></marker>
+  </defs>
+  <rect width="1100" height="590" fill="#d5d6db"/>
+  <text x="35" y="48" class="title">One request. A controlled answer.</text>
+  <text x="35" y="78" class="small">ILLUSTRATIVE · FICTIONAL APP, AIRLINE, FLIGHT AND VALUES</text>
+  <rect x="35" y="180" width="275" height="150" rx="8" class="node"/>
+  <text x="53" y="211">TRIPNOTE BACKEND</text>
+  <text x="53" y="246" class="small">Credentials stay here</text>
+  <text x="53" y="277" class="small">Request → response</text>
+  <text x="53" y="307" class="small">Then draw the phone screen</text>
+  <rect x="540" y="180" width="245" height="150" rx="8" class="node"/>
+  <text x="558" y="211">SKYLINE SERVICE</text>
+  <text x="558" y="246" class="small">2 · Check the request</text>
+  <text x="558" y="277" class="small">Check allowed operation</text>
+  <text x="558" y="307" class="small">Prepare the answer</text>
+  <rect x="840" y="180" width="225" height="150" rx="8" class="node"/>
+  <text x="858" y="211">INTERNAL RECORDS</text>
+  <text x="858" y="247" class="small">3 · Flight 482 only</text>
+  <text x="858" y="277" class="small">Private records remain</text>
+  <text x="858" y="307" class="small">inside the airline</text>
+  <path d="M310 220H540" class="arrow"/>
+  <text x="327" y="156" class="small">1 · REQUEST</text>
+  <text x="327" y="186" class="small">GET /flights/482</text>
+  <path d="M785 240H840" class="arrow"/>
+  <path d="M840 285H785" class="arrow"/>
+  <path d="M540 300H310" class="arrow"/>
+  <text x="325" y="345" class="small">4 · RESPONSE · JSON</text>
+  <text x="35" y="395">5 · SCREEN: Delayed / Gate B12 / Departure 7:40</text>
+  <path d="M35 420H1065" class="rule"/>
+  <text x="35" y="456">WHEN A SUBSCRIBED EVENT CHANGES:</text>
+  <path d="M680 498H178" class="arrow"/>
+  <text x="325" y="483" class="small">WEBHOOK · POST event to TripNote's URL</text>
+  <text x="35" y="553" class="small">Register the callback first. Delivery can be delayed or fail; validate received events.</text>
+  <text x="1065" y="48" text-anchor="end" class="small">HUBERT / REQUEST</text>
+</svg>

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 730" role="img" aria-labelledby="title desc">
+<title id="title">The API flight exchange, vertical card</title><desc id="desc">The app backend requests flight 482, the airline checks access and looks up its permitted flight record, returns JSON, and the app draws the screen. A webhook is a supported event request in the reverse direction.</desc>
+<defs><style>@font-face{font-family:Mono;src:url('assets/fonts/PPNeueMontrealMono-Book.D9DlBA0F.woff2') format('woff2')}@font-face{font-family:SemiSqueezed;src:url('assets/fonts/SemiSqueezedMedium.DVwdXl-1.woff2') format('woff2')}text{font-family:Mono,monospace;font-size:15px;fill:#111111}.title{font-family:SemiSqueezed,sans-serif;font-size:28px}.small{font-size:12px;fill:#54565d}.node{fill:none;stroke:#111111;stroke-width:1.2}.arrow{fill:none;stroke:#111111;stroke-width:1.5;marker-end:url(#head)}</style><marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#111111"/></marker></defs>
+<rect width="380" height="730" fill="#d5d6db"/>
+<text x="22" y="39" class="title">The flight exchange</text><text x="22" y="64" class="small">FICTIONAL EXAMPLE / HUBERT</text>
+<rect x="22" y="88" width="336" height="86" rx="7" class="node"/><text x="38" y="116">1 · TRIPNOTE BACKEND</text><text x="38" y="143" class="small">GET /flights/482 · protected credential</text>
+<path d="M190 174V204" class="arrow"/>
+<rect x="22" y="210" width="336" height="86" rx="7" class="node"/><text x="38" y="238">2 · SKYLINE SERVICE</text><text x="38" y="265" class="small">Check request and allowed operation</text>
+<path d="M190 296V326" class="arrow"/>
+<rect x="22" y="332" width="336" height="86" rx="7" class="node"/><text x="38" y="360">3 · PERMITTED FLIGHT RECORD</text><text x="38" y="387" class="small">Other private records stay inside</text>
+<path d="M190 418V448" class="arrow"/>
+<rect x="22" y="454" width="336" height="86" rx="7" class="node"/><text x="38" y="482">4 · RESPONSE → TRIPNOTE</text><text x="38" y="509" class="small">JSON: Delayed / B12 / 7:40</text>
+<path d="M190 540V570" class="arrow"/>
+<text x="22" y="596">5 · DRAW THE FLIGHT SCREEN</text>
+<path d="M22 619H358" stroke="#111111" stroke-opacity=".28"/>
+<text x="22" y="648">WEBHOOK: REVERSE INITIATOR</text><text x="22" y="674" class="small">Airline event → TripNote callback URL</text><text x="22" y="700" class="small">Register first. Delivery can fail.</text>
+</svg>

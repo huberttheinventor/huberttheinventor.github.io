@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en" data-reading="paper" class="reading-ready">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>REQUEST: the flight API cheat sheet — Hubert</title>
+<meta name="description" content="An original API field card: request, endpoint, response and webhook, with a fictional flight exchange, valid JSON and primary-source caveats.">
+<meta name="robots" content="noindex,nofollow">
+<style>
+/* Structural additions use the deployed reading-plate colors and typefaces.
+   The header/article/document-cell markup is the current squash.html system.
+   No alternate palette, typeface, source art, tracker or message form. */
+#model.journalArticle__article{opacity:1}
+header .logo .line__inner{transform:none;opacity:1}
+.journalArticle__article code{background:rgba(0,0,0,.08);border-radius:4px;display:inline;font-family:Mono,ui-monospace,monospace;font-size:88%;padding:.1em .38em;white-space:normal;overflow-wrap:anywhere}
+.journalArticle__article pre{border:1px solid var(--plate-read-rule);border-radius:8px;margin:20px 0 32px;padding:20px;overflow:auto}
+.journalArticle__article pre code{background:none;font-size:15px;padding:0;white-space:pre}
+.hubert-note{background:rgba(0,0,0,.06);border-radius:10px;font-size:92%;margin:0 0 3vw;max-width:34em;padding:12px 16px}
+.hubert-note strong{display:block;font-size:78%;letter-spacing:.04em;margin-bottom:6px;text-transform:uppercase}
+.exchange{border:1px solid var(--plate-read-rule);border-radius:12px;display:block;margin:18px 0 28px;width:100%;height:auto}
+.definitions{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:34px}.definitions .term{border-top:1px solid var(--plate-read-rule);padding-top:14px}.definitions h3{font-size:32px;line-height:1.05;margin:0 0 10px}.definitions p{font-size:17px;line-height:1.5;margin:0}
+.rules-table{width:100%;border-collapse:collapse;font-size:17px}.rules-table th,.rules-table td{border-bottom:1px solid var(--plate-read-rule);padding:12px 8px;text-align:left;vertical-align:top}.rules-table th{font-family:Mono,ui-monospace,monospace;font-size:14px;color:var(--plate-read-dim)}
+.download-row{display:flex;gap:20px;flex-wrap:wrap;margin:18px 0 28px;font-family:Mono,ui-monospace,monospace;font-size:14px}.download-row a{text-decoration:underline}
+.journalArticle__article h2{font-size:48px;letter-spacing:-.02em;line-height:1;margin-top:46px;margin-bottom:18px}.source-list{font-size:16px}.source-list li{margin-bottom:8px}.resource-scope{font-size:14px;color:var(--plate-read-dim)}
+#model,#terms,#example,#codes,#webhook,#sources{scroll-margin-top:116px}.hover_effect{opacity:1!important}
+@media(max-width:600px){.definitions{grid-template-columns:1fr}.definitions h3{font-size:28px}.journalArticle__article h2{font-size:36px}.rules-table{font-size:15px}.table-scroll{overflow-x:auto}.rules-table{min-width:420px}.exchange-wide{display:none}.exchange-mobile{display:block}.hubert-note{margin-bottom:24px}}
+@media(min-width:601px){.exchange-mobile{display:none}}
+@media print{header,.topOverlay,.scanlines,.gloom,.vignette,.download-row{display:none}.main{padding-top:0}.wrapper,.section{margin:0;padding:16px}.journalArticle__article{max-width:none}.journalArticle__article h1{font-size:35px}.journalArticle__article h2{font-size:25px;margin-top:24px}.source-list{font-size:12px}.definitions{gap:10px}a{color:inherit}.exchange{max-height:320px}article,figure,pre{break-inside:avoid}}
+</style>
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-10-07-pieces" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-10-07-pieces">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/pieces.html"><span>Nº035 · Tokenization (OpenAI tiktoken, o200k_base)</span></a>
+    <a href="/squash.html"><span>Nº034 · PCA on DNA (Novembre et al., 2008)</span></a>
+    <a href="/curve.html"><span>Nº033 · Options gamma (the bend in an option's price curve)</span></a>
+    <a href="/bayes.html"><span>Nº032 · Naive Bayes spam filter (word-weight scale)</span></a>
+    <a href="/axis.html"><span>Nº031 · Training compute (semi-log axis)</span></a>
+    <a href="/dots.html"><span>Nº030 · OpenAI dots (agent permission rules)</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div><div class="gloom"></div><div class="vignette"></div>
+  <div class="wrapper"><section class="section section__lightgrey">
+    <div class="journalArticle__documentHeader">
+      <div class="journalArticle__documentCell monospace"><span>Field card</span><strong>REQUEST</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>System</span><strong>HTTP API exchange</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>Model</span><strong>Ask through a supported interface; read its response.</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>Worked example</span><strong>Fictional flight 482 · Delayed / B12 / 7:40</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>Prepared</span><strong>6 October 2026</strong></div>
+      <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace"><span>Scope</span><span class="journalArticle__documentStamp">EXAMPLE</span></div>
+    </div>
+    <div class="journalArticle__article" id="model">
+      <p class="monospace monospace__p opacity__50">REQUEST / THE FLIGHT API CHEAT SHEET</p>
+      <h1>A request crosses the gap.<br>A controlled answer comes back.</h1>
+      <p class="lead">Your app asks another system for a supported operation. The service checks the request and sends a response your app can use.</p>
+      <p class="hubert-note"><strong>Illustrative example</strong>TripNote, SkyLine, flight 482, the delay, gate B12 and departure 7:40 are fictional teaching examples. The host uses the reserved <code>.example</code> domain. The credential is visibly fake. No live travel data is shown.</p>
+      <figure>
+        <svg class="exchange exchange-wide" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 590" role="img" aria-labelledby="wide-title wide-desc" id="api-exchange-wide">
+  <title id="wide-title">The API flight exchange</title>
+  <desc id="wide-desc">TripNote's backend asks the SkyLine service for flight 482. The service checks the request, looks up only the permitted flight record and returns a JSON response. TripNote renders Delayed, B12 and 7:40 on its screen. A separate webhook arrow runs from the airline to the TripNote backend when a subscribed event happens. The app, airline, records and values are fictional examples.</desc>
+  <defs>
+    <style>
+      @font-face{font-family:Mono;src:url('assets/fonts/PPNeueMontrealMono-Book.D9DlBA0F.woff2') format('woff2')}
+      @font-face{font-family:SemiSqueezed;src:url('assets/fonts/SemiSqueezedMedium.DVwdXl-1.woff2') format('woff2')}#api-exchange-wide text{font-family:Mono,monospace;fill:#111111;font-size:18px}#api-exchange-wide .title{font-family:SemiSqueezed,sans-serif;font-size:37px}#api-exchange-wide .small{font-size:15px;fill:#54565d}#api-exchange-wide .node{fill:none;stroke:#111111;stroke-width:1.5}#api-exchange-wide .arrow{fill:none;stroke:#111111;stroke-width:2;marker-end:url(#wide-head)}#api-exchange-wide .rule{stroke:#111111;stroke-opacity:.28;stroke-width:1}#api-exchange-wide .accent{fill:#03049c}
+    </style>
+    <marker id="wide-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#111111"/></marker>
+  </defs>
+  <rect width="1100" height="590" fill="#d5d6db"/>
+  <text x="35" y="48" class="title">One request. A controlled answer.</text>
+  <text x="35" y="78" class="small">ILLUSTRATIVE · FICTIONAL APP, AIRLINE, FLIGHT AND VALUES</text>
+  <rect x="35" y="180" width="275" height="150" rx="8" class="node"/>
+  <text x="53" y="211">TRIPNOTE BACKEND</text>
+  <text x="53" y="246" class="small">Credentials stay here</text>
+  <text x="53" y="277" class="small">Request → response</text>
+  <text x="53" y="307" class="small">Then draw the phone screen</text>
+  <rect x="540" y="180" width="245" height="150" rx="8" class="node"/>
+  <text x="558" y="211">SKYLINE SERVICE</text>
+  <text x="558" y="246" class="small">2 · Check the request</text>
+  <text x="558" y="277" class="small">Check allowed operation</text>
+  <text x="558" y="307" class="small">Prepare the answer</text>
+  <rect x="840" y="180" width="225" height="150" rx="8" class="node"/>
+  <text x="858" y="211">INTERNAL RECORDS</text>
+  <text x="858" y="247" class="small">3 · Flight 482 only</text>
+  <text x="858" y="277" class="small">Private records remain</text>
+  <text x="858" y="307" class="small">inside the airline</text>
+  <path d="M310 220H540" class="arrow"/>
+  <text x="327" y="156" class="small">1 · REQUEST</text>
+  <text x="327" y="186" class="small">GET /flights/482</text>
+  <path d="M785 240H840" class="arrow"/>
+  <path d="M840 285H785" class="arrow"/>
+  <path d="M540 300H310" class="arrow"/>
+  <text x="325" y="345" class="small">4 · RESPONSE · JSON</text>
+  <text x="35" y="395">5 · SCREEN: Delayed / Gate B12 / Departure 7:40</text>
+  <path d="M35 420H1065" class="rule"/>
+  <text x="35" y="456">WHEN A SUBSCRIBED EVENT CHANGES:</text>
+  <path d="M680 498H178" class="arrow"/>
+  <text x="325" y="483" class="small">WEBHOOK · POST event to TripNote's URL</text>
+  <text x="35" y="553" class="small">Register the callback first. Delivery can be delayed or fail; validate received events.</text>
+  <text x="1065" y="48" text-anchor="end" class="small">HUBERT / REQUEST</text>
+</svg>
+
+        <svg class="exchange exchange-mobile" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 730" role="img" aria-labelledby="mobile-title mobile-desc" id="api-exchange-mobile">
+<title id="mobile-title">The API flight exchange, vertical card</title><desc id="mobile-desc">The app backend requests flight 482, the airline checks access and looks up its permitted flight record, returns JSON, and the app draws the screen. A webhook is a supported event request in the reverse direction.</desc>
+<defs><style>@font-face{font-family:Mono;src:url('assets/fonts/PPNeueMontrealMono-Book.D9DlBA0F.woff2') format('woff2')}@font-face{font-family:SemiSqueezed;src:url('assets/fonts/SemiSqueezedMedium.DVwdXl-1.woff2') format('woff2')}#api-exchange-mobile text{font-family:Mono,monospace;font-size:15px;fill:#111111}#api-exchange-mobile .title{font-family:SemiSqueezed,sans-serif;font-size:28px}#api-exchange-mobile .small{font-size:12px;fill:#54565d}#api-exchange-mobile .node{fill:none;stroke:#111111;stroke-width:1.2}#api-exchange-mobile .arrow{fill:none;stroke:#111111;stroke-width:1.5;marker-end:url(#mobile-head)}</style><marker id="mobile-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#111111"/></marker></defs>
+<rect width="380" height="730" fill="#d5d6db"/>
+<text x="22" y="39" class="title">The flight exchange</text><text x="22" y="64" class="small">FICTIONAL EXAMPLE / HUBERT</text>
+<rect x="22" y="88" width="336" height="86" rx="7" class="node"/><text x="38" y="116">1 · TRIPNOTE BACKEND</text><text x="38" y="143" class="small">GET /flights/482 · protected credential</text>
+<path d="M190 174V204" class="arrow"/>
+<rect x="22" y="210" width="336" height="86" rx="7" class="node"/><text x="38" y="238">2 · SKYLINE SERVICE</text><text x="38" y="265" class="small">Check request and allowed operation</text>
+<path d="M190 296V326" class="arrow"/>
+<rect x="22" y="332" width="336" height="86" rx="7" class="node"/><text x="38" y="360">3 · PERMITTED FLIGHT RECORD</text><text x="38" y="387" class="small">Other private records stay inside</text>
+<path d="M190 418V448" class="arrow"/>
+<rect x="22" y="454" width="336" height="86" rx="7" class="node"/><text x="38" y="482">4 · RESPONSE → TRIPNOTE</text><text x="38" y="509" class="small">JSON: Delayed / B12 / 7:40</text>
+<path d="M190 540V570" class="arrow"/>
+<text x="22" y="596">5 · DRAW THE FLIGHT SCREEN</text>
+<path d="M22 619H358" stroke="#111111" stroke-opacity=".28"/>
+<text x="22" y="648">WEBHOOK: REVERSE INITIATOR</text><text x="22" y="674" class="small">Airline event → TripNote callback URL</text><text x="22" y="700" class="small">Register first. Delivery can fail.</text>
+</svg>
+
+        <figcaption class="resource-scope">One worked HTTP exchange. Other APIs can compute answers, use cached results or return another format.</figcaption>
+      </figure>
+      <div class="download-row"><a href="api-flight-exchange.svg" download>Diagram SVG</a><a href="flight-response.json" download>Example JSON</a><a href="flight-request.http" download>Request shape</a><a href="REQUEST.md" download>Plain-text card</a></div>
+
+      <h2 id="terms">The four terms</h2>
+      <div class="definitions">
+        <div class="term"><h3>Request</h3><p>The message you send: method, address, required headers and any submitted content.</p></div>
+        <div class="term"><h3>Endpoint</h3><p>The address for the operation or resource you want. Here: <code>https://api.skyline.example/flights/482</code>.</p></div>
+        <div class="term"><h3>Response</h3><p>The service's HTTP status, headers and any returned content. TripNote reads the returned fields and draws its screen.</p></div>
+        <div class="term"><h3>Webhook</h3><p>A supported event causes the service to send a request to a callback URL you registered. The airline starts that notification.</p></div>
+      </div>
+
+      <h2 id="example">The worked exchange</h2>
+      <ol>
+        <li>TripNote's <strong>backend</strong> asks the SkyLine service for flight 482 using GET.</li>
+        <li>The service checks the request and whether the caller may read that flight status.</li>
+        <li>In this example it looks up the permitted flight record. Passenger names, payment details and crew schedules remain behind the service boundary.</li>
+        <li>The successful response contains these JSON fields:</li>
+      </ol>
+      <pre><code id="worked-json">{
+  "status": "Delayed",
+  "gate": "B12",
+  "departure": "7:40"
+}</code></pre>
+      <p><strong>5.</strong> TripNote reads the labels and draws the flight screen. JSON is structured text data; HTTPS protects the transport.</p>
+      <p><strong>GET</strong> asks for a current representation of a resource. Its intended meaning is read-only. <strong>POST</strong> submits content for the resource to process; it does not always mean creating a record.</p>
+      <p class="hubert-note"><strong>Access and limits</strong>A provider may use an API key, access token or another scheme. A key can identify application traffic without proving the user's identity or granting every permission. The service still checks allowed access. Keep real secrets protected on the backend. A limit of 100 requests per minute per app is this film's invented example; real quotas vary.</p>
+
+      <h2 id="codes">Read the status</h2>
+      <div class="table-scroll"><table class="rules-table"><thead><tr><th scope="col">Code</th><th scope="col">Meaning</th><th scope="col">What to check</th></tr></thead><tbody>
+        <tr><th scope="row">200</th><td>The HTTP request succeeded.</td><td>Read the documented fields. The flight can still be delayed.</td></tr>
+        <tr><th scope="row">404</th><td>The resource was not found at that address, or its existence is concealed.</td><td>Check the endpoint and identifier. This does not prove the real flight does not exist.</td></tr>
+        <tr><th scope="row">429</th><td>Too many requests in the provider's counting period.</td><td>Follow its quota and any retry guidance.</td></tr>
+      </tbody></table></div>
+
+      <h2 id="webhook">When the direction reverses</h2>
+      <p>Register a callback URL and subscribe to a supported event. When that event happens, the airline sends a notification to TripNote's backend. The backend validates the sender and handles the event before updating its own screen.</p>
+      <p>Webhooks can provide near-real-time updates. Delivery can be delayed or fail; follow the provider's security and failure-handling instructions.</p>
+      <p class="hubert-note"><strong>Keep this decision aid</strong>Identify endpoint and method, required credential and allowed permissions, response fields and error statuses. For repeated changes, check whether the service supports a suitable webhook and how it secures and retries deliveries.</p>
+
+      <h2 id="sources">Primary sources</h2>
+      <p class="resource-scope">Technical boundaries checked 5 October 2026. Original card prepared 6 October 2026.</p>
+      <ul class="source-list">
+        <li><a href="https://www.rfc-editor.org/rfc/rfc9110.html">RFC 9110: HTTP semantics</a> — GET, POST, 200 and 404.</li>
+        <li><a href="https://www.rfc-editor.org/rfc/rfc6585.html#section-4">RFC 6585: HTTP 429</a>.</li>
+        <li><a href="https://www.rfc-editor.org/rfc/rfc8259.html">RFC 8259: JSON</a>.</li>
+        <li><a href="https://www.rfc-editor.org/rfc/rfc6750.html">RFC 6750: bearer tokens</a>.</li>
+        <li><a href="https://docs.cloud.google.com/endpoints/docs/openapi/when-why-api-key">Google Cloud: API keys and authorization</a>.</li>
+        <li><a href="https://docs.github.com/en/webhooks/about-webhooks">GitHub: webhooks</a>, <a href="https://docs.github.com/en/webhooks/using-webhooks/handling-failed-webhook-deliveries">failed deliveries</a> and <a href="https://docs.github.com/en/webhooks/using-webhooks/best-practices-for-using-webhooks">handling practices</a>.</li>
+        <li><a href="https://spec.openapis.org/oas/v3.1.0.html#paths-object">OpenAPI: endpoint paths</a>.</li>
+        <li><a href="https://www.rfc-editor.org/rfc/rfc2606.html">RFC 2606: reserved example domains</a>.</li>
+      </ul>
+      <p class="resource-scope">Original Hubert diagram and explanation. The flight exchange and values are fictional teaching examples.</p>
+    </div>
+  </section></div>
+<section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="https://huberttheinventor.github.io/index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="#example" class="button button__half hover_effect" title="The worked exchange"><span>The worked exchange</span><span class="arrow">↗</span></a>
+          <a href="#sources" class="button button__half hover_effect" title="Sources and caveats"><span>Sources and caveats</span><span class="arrow">↗</span></a>
+          <a href="https://huberttheinventor.github.io/privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+<!-- Current site motion/menu scripts; no analytics or signup form is added. -->
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/splitting.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/site.js?v=2026-10-07-pieces" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>
