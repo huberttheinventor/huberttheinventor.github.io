@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en" data-reading="paper" class="reading-ready">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LOCK: the database concurrency cheat sheet, Hubert</title>
+<meta name="description" content="Companion to Hubert's film on two people buying the last ticket: row locks vs atomic updates vs unique constraints, with the SQL.">
+<meta name="robots" content="noindex,nofollow">
+<style>
+/* Structural additions use the deployed reading-plate colors and typefaces.
+   The header/article/document-cell markup is the current squash.html system.
+   No alternate palette, typeface, source art, tracker or message form. */
+#model.journalArticle__article{opacity:1}
+header .logo .line__inner{transform:none;opacity:1}
+.journalArticle__article code{background:rgba(0,0,0,.08);border-radius:4px;display:inline;font-family:Mono,ui-monospace,monospace;font-size:88%;padding:.1em .38em;white-space:normal;overflow-wrap:anywhere}
+.journalArticle__article pre{border:1px solid var(--plate-read-rule);border-radius:8px;margin:20px 0 32px;padding:20px;overflow:auto}
+.journalArticle__article pre code{background:none;font-size:15px;padding:0;white-space:pre}
+.hubert-note{background:rgba(0,0,0,.06);border-radius:10px;font-size:92%;margin:0 0 3vw;max-width:34em;padding:12px 16px}
+.hubert-note strong{display:block;font-size:78%;letter-spacing:.04em;margin-bottom:6px;text-transform:uppercase}
+.exchange{border:1px solid var(--plate-read-rule);border-radius:12px;display:block;margin:18px 0 28px;width:100%;height:auto}
+.definitions{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:34px}.definitions .term{border-top:1px solid var(--plate-read-rule);padding-top:14px}.definitions h3{font-size:32px;line-height:1.05;margin:0 0 10px}.definitions p{font-size:17px;line-height:1.5;margin:0}
+.rules-table{width:100%;border-collapse:collapse;font-size:17px}.rules-table th,.rules-table td{border-bottom:1px solid var(--plate-read-rule);padding:12px 8px;text-align:left;vertical-align:top}.rules-table th{font-family:Mono,ui-monospace,monospace;font-size:14px;color:var(--plate-read-dim)}
+.download-row{display:flex;gap:20px;flex-wrap:wrap;margin:18px 0 28px;font-family:Mono,ui-monospace,monospace;font-size:14px}.download-row a{text-decoration:underline}
+.journalArticle__article h2{font-size:48px;letter-spacing:-.02em;line-height:1;margin-top:46px;margin-bottom:18px}.source-list{font-size:16px}.source-list li{margin-bottom:8px}.resource-scope{font-size:14px;color:var(--plate-read-dim)}
+#model{scroll-margin-top:116px}.hover_effect{opacity:1!important}
+@media(max-width:600px){.definitions{grid-template-columns:1fr}.definitions h3{font-size:28px}.journalArticle__article h2{font-size:36px}.rules-table{font-size:15px}.table-scroll{overflow-x:auto}.rules-table{min-width:420px}.exchange-wide{display:none}.exchange-mobile{display:block}.hubert-note{margin-bottom:24px}}
+@media(min-width:601px){.exchange-mobile{display:none}}
+@media print{header,.topOverlay,.scanlines,.gloom,.vignette,.download-row{display:none}.main{padding-top:0}.wrapper,.section{margin:0;padding:16px}.journalArticle__article{max-width:none}.journalArticle__article h1{font-size:35px}.journalArticle__article h2{font-size:25px;margin-top:24px}.source-list{font-size:12px}.definitions{gap:10px}a{color:inherit}.exchange{max-height:320px}article,figure,pre{break-inside:avoid}}
+</style>
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-10-07-pieces" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-10-07-pieces">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/pieces.html"><span>Nº035 · Tokenization (OpenAI tiktoken, o200k_base)</span></a>
+    <a href="/squash.html"><span>Nº034 · PCA on DNA (Novembre et al., 2008)</span></a>
+    <a href="/curve.html"><span>Nº033 · Options gamma (the bend in an option's price curve)</span></a>
+    <a href="/bayes.html"><span>Nº032 · Naive Bayes spam filter (word-weight scale)</span></a>
+    <a href="/axis.html"><span>Nº031 · Training compute (semi-log axis)</span></a>
+    <a href="/dots.html"><span>Nº030 · OpenAI dots (agent permission rules)</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div><div class="gloom"></div><div class="vignette"></div>
+  <div class="wrapper"><section class="section section__lightgrey">
+    <div class="journalArticle__documentHeader">
+      <div class="journalArticle__documentCell monospace"><span>Field card</span><strong>LOCK</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>System</span><strong>Database concurrency</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>Worked example</span><strong>Seat F12, two buyers</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>Prepared</span><strong>11 October 2026</strong></div>
+    </div>
+    <div class="journalArticle__article" id="model">
+      <p class="monospace monospace__p opacity__50">LOCK / THE DATABASE CONCURRENCY CHEAT SHEET</p>
+      <h1>Database concurrency cheat sheet: locks, atomic updates, constraints</h1>
+      <p class="lead">Companion to Hubert film 16 (two people buy the last ticket, seat F12). Written 2026-10-11. SQL shown is PostgreSQL-flavoured; test on your own engine and isolation settings before relying on it.</p>
+<h2>The bug</h2>
+<p>Read, check, write is three steps. If two requests both read &quot;available&quot; before either writes &quot;sold&quot;, both pass the check and both write. That is a race condition: the gap between the check and the write is the bug.</p>
+<h2>Fix 1: pessimistic locking (lock the row)</h2>
+<pre><code>BEGIN;
+SELECT status FROM seats WHERE seat = &#x27;F12&#x27; FOR UPDATE;  -- locks the row
+-- if status = &#x27;available&#x27;:
+UPDATE seats SET status = &#x27;sold&#x27; WHERE seat = &#x27;F12&#x27;;
+COMMIT;                                                   -- releases the lock</code></pre>
+<p>A second transaction that also tries <code>SELECT ... FOR UPDATE</code> on that row waits until the first commits, then sees <code>sold</code>. Cost: waiting. Under heavy demand for one row, requests queue.</p>
+<h2>Fix 2: atomic update (remove the gap)</h2>
+<pre><code>UPDATE seats SET status = &#x27;sold&#x27;
+WHERE seat = &#x27;F12&#x27; AND status = &#x27;available&#x27;;</code></pre>
+<p>The check and the write are one statement. Read the rows-affected count: 1 means you got the seat, 0 means someone else did. Tell the second buyer it is gone.</p>
+<h2>Fix 3 (safety net): a constraint in the schema</h2>
+<pre><code>CREATE UNIQUE INDEX one_confirmed_ticket
+ON tickets (event_id, seat) WHERE status = &#x27;confirmed&#x27;;</code></pre>
+<p>Use a partial index like this if cancelled tickets may remain in the table; a plain <code>UNIQUE (event_id, seat)</code> blocks any second row for that seat. The engine refuses the second insert whatever the application does.</p>
+<h2>Which one when</h2>
+<div class="table-scroll"><table class="rules-table"><thead><tr><th>Approach</th><th>Strength</th><th>Cost</th></tr></thead><tbody><tr><td>Row lock (FOR UPDATE)</td><td>Simple to reason about, good for multi-step logic</td><td>Requests wait; hot rows queue</td></tr><tr><td>Atomic UPDATE with condition</td><td>No gap, no waiting beyond the row write</td><td>Only fits checks that fit in one statement</td></tr><tr><td>Unique / partial unique constraint</td><td>Guarantee lives in the schema</td><td>Reports violation as an error you must handle</td></tr></tbody></table></div>
+<p>Two rules that outlive this example: keep your checks inside the write, and keep the final guarantee in the schema.</p>
+<p class="resource-scope">Written 2026-10-11. Example tables: <code>seats</code> (one row per seat) and <code>tickets</code> (confirmed purchases). Under REPEATABLE READ or SERIALIZABLE the lock path can fail with a serialization error instead of waiting; retry the transaction.</p>
+    </div>
+  </section></div>
+<section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="https://huberttheinventor.github.io/index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="https://huberttheinventor.github.io/privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+<!-- Current site motion/menu scripts; no analytics or signup form is added. -->
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/splitting.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/site.js?v=2026-10-07-pieces" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>
