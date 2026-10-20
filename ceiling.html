@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en" data-reading="paper" class="reading-ready">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CEILING: the doubling time card, Hubert</title>
+<meta name="description" content="Companion to Hubert's film on Euler's number: the doubling time rule in one line, the table of rates, where e comes from, and a Python script to run it yourself.">
+<meta name="robots" content="noindex,nofollow">
+<style>
+/* Structural additions use the deployed reading-plate colors and typefaces.
+   The header/article/document-cell markup is the current squash.html system.
+   No alternate palette, typeface, source art, tracker or message form. */
+#model.journalArticle__article{opacity:1}
+header .logo .line__inner{transform:none;opacity:1}
+.journalArticle__article code{background:rgba(0,0,0,.08);border-radius:4px;display:inline;font-family:Mono,ui-monospace,monospace;font-size:88%;padding:.1em .38em;white-space:normal;overflow-wrap:anywhere}
+.journalArticle__article pre{border:1px solid var(--plate-read-rule);border-radius:8px;margin:20px 0 32px;padding:20px;overflow:auto}
+.journalArticle__article pre code{background:none;font-size:15px;padding:0;white-space:pre}
+.hubert-note{background:rgba(0,0,0,.06);border-radius:10px;font-size:92%;margin:0 0 3vw;max-width:34em;padding:12px 16px}
+.hubert-note strong{display:block;font-size:78%;letter-spacing:.04em;margin-bottom:6px;text-transform:uppercase}
+.exchange{border:1px solid var(--plate-read-rule);border-radius:12px;display:block;margin:18px 0 28px;width:100%;height:auto}
+.definitions{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:34px}.definitions .term{border-top:1px solid var(--plate-read-rule);padding-top:14px}.definitions h3{font-size:32px;line-height:1.05;margin:0 0 10px}.definitions p{font-size:17px;line-height:1.5;margin:0}
+.rules-table{width:100%;border-collapse:collapse;font-size:17px}.rules-table th,.rules-table td{border-bottom:1px solid var(--plate-read-rule);padding:12px 8px;text-align:left;vertical-align:top}.rules-table th{font-family:Mono,ui-monospace,monospace;font-size:14px;color:var(--plate-read-dim)}
+.download-row{display:flex;gap:20px;flex-wrap:wrap;margin:18px 0 28px;font-family:Mono,ui-monospace,monospace;font-size:14px}.download-row a{text-decoration:underline}
+.journalArticle__article h2{font-size:48px;letter-spacing:-.02em;line-height:1;margin-top:46px;margin-bottom:18px}.source-list{font-size:16px}.source-list li{margin-bottom:8px}.resource-scope{font-size:14px;color:var(--plate-read-dim)}
+#model{scroll-margin-top:116px}.hover_effect{opacity:1!important}
+@media(max-width:600px){.definitions{grid-template-columns:1fr}.definitions h3{font-size:28px}.journalArticle__article h2{font-size:36px}.rules-table{font-size:15px}.table-scroll{overflow-x:auto}.rules-table{min-width:0;font-size:14px}.rules-table th,.rules-table td{padding:10px 4px}.exchange-wide{display:none}.exchange-mobile{display:block}.hubert-note{margin-bottom:24px}}
+@media(min-width:601px){.exchange-mobile{display:none}}
+@media print{header,.topOverlay,.scanlines,.gloom,.vignette,.download-row{display:none}.main{padding-top:0}.wrapper,.section{margin:0;padding:16px}.journalArticle__article{max-width:none}.journalArticle__article h1{font-size:35px}.journalArticle__article h2{font-size:25px;margin-top:24px}.source-list{font-size:12px}.definitions{gap:10px}a{color:inherit}.exchange{max-height:320px}article,figure,pre{break-inside:avoid}}
+</style>
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-10-07-pieces" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-10-07-pieces">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/pieces.html"><span>Nº035 · Tokenization (OpenAI tiktoken, o200k_base)</span></a>
+    <a href="/squash.html"><span>Nº034 · PCA on DNA (Novembre et al., 2008)</span></a>
+    <a href="/curve.html"><span>Nº033 · Options gamma (the bend in an option's price curve)</span></a>
+    <a href="/bayes.html"><span>Nº032 · Naive Bayes spam filter (word-weight scale)</span></a>
+    <a href="/axis.html"><span>Nº031 · Training compute (semi-log axis)</span></a>
+    <a href="/dots.html"><span>Nº030 · OpenAI dots (agent permission rules)</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div><div class="gloom"></div><div class="vignette"></div>
+  <div class="wrapper"><section class="section section__lightgrey">
+    <div class="journalArticle__documentHeader">
+      <div class="journalArticle__documentCell monospace"><span>Field card</span><strong>CEILING</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>System</span><strong>Compound growth</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>Worked example</span><strong>1 euro at 100 %, split n ways</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>Prepared</span><strong>20 October 2026</strong></div>
+    </div>
+    <div class="journalArticle__article" id="model">
+      <p class="monospace monospace__p opacity__50">CEILING / THE DOUBLING TIME CARD</p>
+      <h1>The doubling time card</h1>
+<p>The rule in one line: anything that grows at a steady rate r % and compounds all the time doubles in about <strong>69.3 ÷ r</strong> units of time.</p>
+<pre><code>doubling time  T = ln 2 / (r/100) = 69.3 / r        (continuous compounding)
+paid once per period:  T = ln 2 / ln(1 + r/100)     (a little longer; the "rule of 72" approximates this one)</code></pre>
+<p>Where 69.3 comes from: ln 2 = 0.6931..., the natural logarithm of 2, which is the logarithm with base e. It is e&#x27;s logarithm because continuous growth at rate r multiplies an amount by e^(r·t) after time t, and e^(r·T) = 2 gives T = ln 2 / r.</p>
+<div class="table-scroll"><table class="rules-table"><thead><tr><th scope="col">rate r</th><th scope="col">69.3 ÷ r (continuous)</th><th scope="col">exact, paid once a year</th><th scope="col">rule of 72</th></tr></thead><tbody><tr><td>1 %</td><td>69.3</td><td>69.7</td><td>72.0</td></tr><tr><td>2 %</td><td>34.7</td><td>35.0</td><td>36.0</td></tr><tr><td>3 %</td><td>23.1</td><td>23.4</td><td>24.0</td></tr><tr><td>5 %</td><td>13.9</td><td>14.2</td><td>14.4</td></tr><tr><td>7 %</td><td>9.9</td><td>10.2</td><td>10.3</td></tr><tr><td>10 %</td><td>6.9</td><td>7.3</td><td>7.2</td></tr><tr><td>15 %</td><td>4.6</td><td>5.0</td><td>4.8</td></tr><tr><td>25 %</td><td>2.8</td><td>3.1</td><td>2.9</td></tr></tbody></table></div>
+<p>Use 69.3 when growth is continuous (populations, bacteria, a price index quoted as a continuous rate, a model&#x27;s exp()). Use 72 for money paid once a year: above about 4 % it is closer to the exact column than 69.3, it is almost exact near 8 %, and 72 divides evenly by 2, 3, 4, 6, 8, 9 and 12.</p>
+<p>Where e comes from (the film): €1 at 100 % for a year, the interest paid in n equal slices, ends at (1 + 1/n)^n.</p>
+<div class="table-scroll"><table class="rules-table"><thead><tr><th scope="col">payments per year n</th><th scope="col">(1 + 1/n)^n</th><th scope="col">still short of e by</th></tr></thead><tbody><tr><td>1 (yearly)</td><td>2.000000</td><td>0.718282</td></tr><tr><td>2</td><td>2.250000</td><td>0.468282</td></tr><tr><td>4</td><td>2.441406</td><td>0.276876</td></tr><tr><td>12 (monthly)</td><td>2.613035</td><td>0.105247</td></tr><tr><td>52 (weekly)</td><td>2.692597</td><td>0.025685</td></tr><tr><td>365 (daily)</td><td>2.714567</td><td>0.003714</td></tr><tr><td>8,760 (hourly)</td><td>2.718127</td><td>0.000155</td></tr><tr><td>31,536,000 (every second)</td><td>2.718282</td><td>0.00000004</td></tr></tbody></table></div>
+<p>e = 2.718281828459045... The total rises with every finer split and never reaches e. At any rate r the same ceiling is e^r: 7 % compounded ever more finely ends at e^0.07 = 1.0725 per year, not 1.07.</p>
+<p>Try it yourself (Python 3, no libraries):</p>
+<pre><code>from math import e, log
+
+for n in (1, 2, 12, 365, 31_536_000):
+    print(f"{n:&gt;10} payments a year: {(1 + 1/n)**n:.6f}   (e = {e:.6f})")
+
+for r in (2, 5, 7, 10):
+    print(f"{r:&gt;2}%: doubles in {log(2) / (r/100):.1f} (continuous), "
+          f"{log(2) / log(1 + r/100):.1f} (yearly), rule of 69.3 says {69.3 / r:.1f}")</code></pre>
+<p>Values computed on 2026-10-20 (Python decimal, 50 digits, for the every-second row; double precision elsewhere). Sources: e and its limit definition, Wikipedia &quot;e (mathematical constant)&quot;; rule of 72 and the 69.3 continuous form, Wikipedia &quot;Rule of 72&quot; (both read 2026-10-20 by the film&#x27;s scriptwriter).</p>
+<p>Hubert the Inventor · huberttheinventor.github.io</p>
+    </div>
+  </section></div>
+<section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="https://huberttheinventor.github.io/index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="https://huberttheinventor.github.io/privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+<!-- Current site motion/menu scripts; no analytics or signup form is added. -->
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/splitting.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/site.js?v=2026-10-07-pieces" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>
