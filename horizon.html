@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en" data-reading="paper" class="reading-ready">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HORIZON: the forecast horizon card, Hubert</title>
+<meta name="description" content="Companion to Hubert's film on why ten-day weather forecasts run out of skill: the rule in one line, the pendulum and weather numbers with sources, and a Python script to run the pendulums yourself.">
+<meta name="robots" content="noindex,nofollow">
+<style>
+/* Structural additions use the deployed reading-plate colors and typefaces.
+   The header/article/document-cell markup is the current squash.html system.
+   No alternate palette, typeface, source art, tracker or message form. */
+#model.journalArticle__article{opacity:1}
+header .logo .line__inner{transform:none;opacity:1}
+.journalArticle__article code{background:rgba(0,0,0,.08);border-radius:4px;display:inline;font-family:Mono,ui-monospace,monospace;font-size:88%;padding:.1em .38em;white-space:normal;overflow-wrap:anywhere}
+.journalArticle__article pre{border:1px solid var(--plate-read-rule);border-radius:8px;margin:20px 0 32px;padding:20px;overflow:auto}
+.journalArticle__article pre code{background:none;font-size:15px;padding:0;white-space:pre}
+.hubert-note{background:rgba(0,0,0,.06);border-radius:10px;font-size:92%;margin:0 0 3vw;max-width:34em;padding:12px 16px}
+.hubert-note strong{display:block;font-size:78%;letter-spacing:.04em;margin-bottom:6px;text-transform:uppercase}
+.exchange{border:1px solid var(--plate-read-rule);border-radius:12px;display:block;margin:18px 0 28px;width:100%;height:auto}
+.definitions{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:34px}.definitions .term{border-top:1px solid var(--plate-read-rule);padding-top:14px}.definitions h3{font-size:32px;line-height:1.05;margin:0 0 10px}.definitions p{font-size:17px;line-height:1.5;margin:0}
+.rules-table{width:100%;border-collapse:collapse;font-size:17px}.rules-table th,.rules-table td{border-bottom:1px solid var(--plate-read-rule);padding:12px 8px;text-align:left;vertical-align:top}.rules-table th{font-family:Mono,ui-monospace,monospace;font-size:14px;color:var(--plate-read-dim)}
+.download-row{display:flex;gap:20px;flex-wrap:wrap;margin:18px 0 28px;font-family:Mono,ui-monospace,monospace;font-size:14px}.download-row a{text-decoration:underline}
+.journalArticle__article h2{font-size:48px;letter-spacing:-.02em;line-height:1;margin-top:46px;margin-bottom:18px}.source-list{font-size:16px}.source-list li{margin-bottom:8px}.resource-scope{font-size:14px;color:var(--plate-read-dim)}
+#model{scroll-margin-top:116px}.hover_effect{opacity:1!important}
+@media(max-width:600px){.definitions{grid-template-columns:1fr}.definitions h3{font-size:28px}.journalArticle__article h2{font-size:36px}.rules-table{font-size:15px}.table-scroll{overflow-x:auto}.rules-table{min-width:420px}.exchange-wide{display:none}.exchange-mobile{display:block}.hubert-note{margin-bottom:24px}}
+@media(min-width:601px){.exchange-mobile{display:none}}
+@media print{header,.topOverlay,.scanlines,.gloom,.vignette,.download-row{display:none}.main{padding-top:0}.wrapper,.section{margin:0;padding:16px}.journalArticle__article{max-width:none}.journalArticle__article h1{font-size:35px}.journalArticle__article h2{font-size:25px;margin-top:24px}.source-list{font-size:12px}.definitions{gap:10px}a{color:inherit}.exchange{max-height:320px}article,figure,pre{break-inside:avoid}}
+</style>
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-10-07-pieces" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-10-07-pieces">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/pieces.html"><span>Nº035 · Tokenization (OpenAI tiktoken, o200k_base)</span></a>
+    <a href="/squash.html"><span>Nº034 · PCA on DNA (Novembre et al., 2008)</span></a>
+    <a href="/curve.html"><span>Nº033 · Options gamma (the bend in an option's price curve)</span></a>
+    <a href="/bayes.html"><span>Nº032 · Naive Bayes spam filter (word-weight scale)</span></a>
+    <a href="/axis.html"><span>Nº031 · Training compute (semi-log axis)</span></a>
+    <a href="/dots.html"><span>Nº030 · OpenAI dots (agent permission rules)</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div><div class="gloom"></div><div class="vignette"></div>
+  <div class="wrapper"><section class="section section__lightgrey">
+    <div class="journalArticle__documentHeader">
+      <div class="journalArticle__documentCell monospace"><span>Field card</span><strong>HORIZON</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>System</span><strong>Chaos and forecasting</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>Worked example</span><strong>Double pendulum, 120 degrees</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>Prepared</span><strong>20 October 2026</strong></div>
+    </div>
+    <div class="journalArticle__article" id="model">
+      <p class="monospace monospace__p opacity__50">HORIZON / THE FORECAST HORIZON CARD</p>
+      <h1>The forecast horizon card: why a better start buys so little extra time</h1>
+      <p class="lead">Companion to Hubert film 17 (differential equations, part 2: two pendulums, one hair apart). Written 2026-10-20. The weather figures are for midlatitude day-to-day weather and for deterministic forecast skill.</p>
+<h2>The rule in one line</h2>
+<p>When a starting error keeps doubling, every ten times better start buys the same few extra doublings, so the time you can predict grows only with the logarithm of your precision.</p>
+<pre><code>T = (1/λ) · ln(S / ε)      ε = starting gap, S = gap that ruins the prediction, λ = growth rate
+divide ε by 10  →  T grows by ln 10 / λ  =  3.3 doublings, every time</code></pre>
+<h2>The double pendulum</h2>
+<p>Big swings only: at small swings it moves as two simple swings mixed and the gap stays small.</p>
+<ul class="source-list">
+<li>Measured growth rate &lambda; = 7.5 &plusmn; 1.5 per second (Shinbrot et al. 1992, Am. J. Phys. 60:491: &quot;a growth of uncertainties which is exponential with exponent &lambda;=7.5&plusmn;1.5 s&minus;1&quot;).</li>
+<li>So the gap doubles every ln 2 / 7.5 &asymp; 0.09 s, and a ten times better start buys ln 10 / 7.5 &asymp; 0.3 s.</li>
+<li>Chaos needs large angles (Levien &amp; Tan 1993, Am. J. Phys. 61:1038: &quot;For large angle swings sensitive dependence on initial conditions, the signature of chaos, may be demonstrated&quot;).</li>
+</ul>
+<h2>The weather</h2>
+<ul class="source-list">
+<li>&quot;a skillful forecast lead time of midlatitude instantaneous weather is around 10 days&quot;; &quot;this number was 7 days 30 years ago&quot; (Zhang et al. 2019, J. Atmos. Sci. 76:1077, read 2026-10-19).</li>
+<li>&quot;Reducing the current-day initial-condition uncertainty by an order of magnitude extends the deterministic forecast lead times of day-to-day weather by up to 5 days&quot; (same paper).</li>
+<li>&quot;the ultimate limit of midlatitude day-to-day weather predictability is about 2 weeks&quot; (same paper).</li>
+<li>Forecasters measure the spread directly: ECMWF&#x27;s ensemble is &quot;51 forecasts&quot;, 50 with &quot;slightly altered initial conditions&quot;, &quot;up to 15 days ahead&quot; (ecmwf.int, medium-range forecasts, read 2026-10-19).</li>
+</ul>
+<p>Caveat: weather errors grow at different rates at different scales, so the 5 days is measured in forecast models, not computed from the formula above.</p>
+<h2>Try it yourself</h2>
+<p>Python 3, no libraries. Two pendulums released at 120 degrees, the upper arm nudged by 1e-9, 1e-10 and 1e-11 radians.</p>
+<pre><code>from math import sin, cos, pi
+g = 9.81  # two 1 m arms, two equal bobs
+
+def f(s):
+    a, b, wa, wb = s; d = a - b; n = 3 - cos(2 * d)
+    return (wa, wb,
+            (-g * (3 * sin(a) + sin(a - 2 * b)) - 2 * sin(d) * (wb**2 + wa**2 * cos(d))) / n,
+            2 * sin(d) * (2 * wa**2 + 2 * g * cos(a) + wb**2 * cos(d)) / n)
+
+def rk4(s, h):
+    k1 = f(s); k2 = f([x + h/2*k for x, k in zip(s, k1)])
+    k3 = f([x + h/2*k for x, k in zip(s, k2)]); k4 = f([x + h*k for x, k in zip(s, k3)])
+    return [x + h/6*(p + 2*q + 2*r + w) for x, p, q, r, w in zip(s, k1, k2, k3, k4)]
+
+for eps in (1e-9, 1e-10, 1e-11):
+    A, B, t = [2*pi/3, 2*pi/3, 0, 0], [2*pi/3 + eps, 2*pi/3, 0, 0], 0
+    while abs(A[0] - B[0]) &lt; 0.1:
+        A, B, t = rk4(A, 0.0005), rk4(B, 0.0005), t + 0.0005
+    print(f&quot;start gap {eps:.0e} rad: the arms differ by 0.1 rad after {t:.2f} s&quot;)</code></pre>
+<p>Our run (Python 3.12.10, 2026-10-19): 14.23 s, 15.04 s, 17.15 s. A thousand times better start bought under three seconds. The extra time per tenfold is uneven (0.8 s, then 2.1 s) because the growth rate changes along the path; halving the step size gave 14.23, 15.04 and 17.12 s. This pendulum grows more slowly than Shinbrot&#x27;s: going from 1e-9 to 0.1 rad is 26.6 doublings in 14.23 s, about one every half second. The rate depends on the pendulum and how high it starts; the rule does not.</p>
+<h2>The story</h2>
+<p>Around January 1961 Edward Lorenz restarted a weather simulation from a printout showing .506 for a stored .506127, and &quot;all resemblance between the two had disappeared&quot; (APS News, 2003).</p>
+<p class="resource-scope">Written 2026-10-20. Scope: midlatitude day-to-day weather and deterministic skill; ensemble and seasonal forecasts behave differently.</p>
+    </div>
+  </section></div>
+<section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="https://huberttheinventor.github.io/index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="https://huberttheinventor.github.io/privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+<!-- Current site motion/menu scripts; no analytics or signup form is added. -->
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/splitting.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/site.js?v=2026-10-07-pieces" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>
