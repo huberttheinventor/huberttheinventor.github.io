@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en" data-reading="paper" class="reading-ready">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CONVOLVE: the flip and slide card, Hubert</title>
+<meta name="description" content="Companion to Hubert's film on convolution: flip the room's answer, slide it across your sound, multiply and add up, with a symbol table, the two rooms from the film, honest caveats and a Python script to run it yourself.">
+<meta name="robots" content="noindex,nofollow">
+<style>
+/* Structural additions use the deployed reading-plate colors and typefaces.
+   The header/article/document-cell markup is the current squash.html system.
+   No alternate palette, typeface, source art, tracker or message form. */
+#model.journalArticle__article{opacity:1}
+header .logo .line__inner{transform:none;opacity:1}
+.journalArticle__article code{background:rgba(0,0,0,.08);border-radius:4px;display:inline;font-family:Mono,ui-monospace,monospace;font-size:88%;padding:.1em .38em;white-space:normal;overflow-wrap:anywhere}
+.journalArticle__article pre{border:1px solid var(--plate-read-rule);border-radius:8px;margin:20px 0 32px;padding:20px;overflow:auto}
+.journalArticle__article pre code{background:none;font-size:15px;padding:0;white-space:pre}
+.hubert-note{background:rgba(0,0,0,.06);border-radius:10px;font-size:92%;margin:0 0 3vw;max-width:34em;padding:12px 16px}
+.hubert-note strong{display:block;font-size:78%;letter-spacing:.04em;margin-bottom:6px;text-transform:uppercase}
+.exchange{border:1px solid var(--plate-read-rule);border-radius:12px;display:block;margin:18px 0 28px;width:100%;height:auto}
+.definitions{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:34px}.definitions .term{border-top:1px solid var(--plate-read-rule);padding-top:14px}.definitions h3{font-size:32px;line-height:1.05;margin:0 0 10px}.definitions p{font-size:17px;line-height:1.5;margin:0}
+.rules-table{width:100%;border-collapse:collapse;font-size:17px}.rules-table th,.rules-table td{border-bottom:1px solid var(--plate-read-rule);padding:12px 8px;text-align:left;vertical-align:top}.rules-table th{font-family:Mono,ui-monospace,monospace;font-size:14px;color:var(--plate-read-dim)}
+.download-row{display:flex;gap:20px;flex-wrap:wrap;margin:18px 0 28px;font-family:Mono,ui-monospace,monospace;font-size:14px}.download-row a{text-decoration:underline}
+.journalArticle__article h2{font-size:48px;letter-spacing:-.02em;line-height:1;margin-top:46px;margin-bottom:18px}.source-list{font-size:16px}.source-list li{margin-bottom:8px}.resource-scope{font-size:14px;color:var(--plate-read-dim)}
+#model{scroll-margin-top:116px}.hover_effect{opacity:1!important}
+@media(max-width:600px){.journalArticle__article pre{padding:14px 10px}.journalArticle__article pre code{font-size:12px}.definitions{grid-template-columns:1fr}.definitions h3{font-size:28px}.journalArticle__article h2{font-size:36px}.rules-table{font-size:15px}.table-scroll{overflow-x:auto}.rules-table{min-width:0;font-size:14px}.table-scroll .rules-table th,.table-scroll .rules-table td{padding:10px 2px}.table-scroll .rules-table th{font-size:11px}.exchange-wide{display:none}.exchange-mobile{display:block}.hubert-note{margin-bottom:24px}}
+@media(min-width:601px){.exchange-mobile{display:none}}
+@media print{header,.topOverlay,.scanlines,.gloom,.vignette,.download-row{display:none}.main{padding-top:0}.wrapper,.section{margin:0;padding:16px}.journalArticle__article{max-width:none}.journalArticle__article h1{font-size:35px}.journalArticle__article h2{font-size:25px;margin-top:24px}.source-list{font-size:12px}.definitions{gap:10px}a{color:inherit}.exchange{max-height:320px}article,figure,pre{break-inside:avoid}}
+</style>
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-10-07-pieces" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-10-07-pieces">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/pieces.html"><span>Nº035 · Tokenization (OpenAI tiktoken, o200k_base)</span></a>
+    <a href="/squash.html"><span>Nº034 · PCA on DNA (Novembre et al., 2008)</span></a>
+    <a href="/curve.html"><span>Nº033 · Options gamma (the bend in an option's price curve)</span></a>
+    <a href="/bayes.html"><span>Nº032 · Naive Bayes spam filter (word-weight scale)</span></a>
+    <a href="/axis.html"><span>Nº031 · Training compute (semi-log axis)</span></a>
+    <a href="/dots.html"><span>Nº030 · OpenAI dots (agent permission rules)</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div><div class="gloom"></div><div class="vignette"></div>
+  <div class="wrapper"><section class="section section__lightgrey">
+    <div class="journalArticle__documentHeader">
+      <div class="journalArticle__documentCell monospace"><span>Field card</span><strong>CONVOLVE</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>System</span><strong>Convolution</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>Worked example</span><strong>Cathedral and bathroom</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>Prepared</span><strong>24 October 2026</strong></div>
+    </div>
+    <div class="journalArticle__article" id="model">
+      <p class="monospace monospace__p opacity__50">CONVOLVE / THE FLIP AND SLIDE CARD</p>
+      <h1>The flip and slide card</h1>
+<p>Convolution in one picture: to hear your voice in a room, <strong>flip the room&#x27;s answer, slide it across your sound, multiply where they overlap, and add up the overlap</strong>. Each slide position gives one moment of what you would hear.</p>
+<pre><code>(f * g)(t)  =  ∫ f(τ) · g(t − τ) dτ</code></pre>
+<div class="table-scroll"><table class="rules-table"><thead><tr><th scope="col">symbol</th><th scope="col">in plain words</th></tr></thead><tbody><tr><td>f(τ)</td><td>your sound: how loud your voice was at moment τ</td></tr><tr><td>g</td><td>the room&#x27;s answer to one sharp click (its &quot;impulse response&quot;): a loud start, then a fading tail</td></tr><tr><td>t</td><td>the moment you are listening at, &quot;right now&quot;</td></tr><tr><td>t − τ</td><td>how long ago you said the bit at moment τ</td></tr><tr><td>g(t − τ)</td><td>how loud that bit&#x27;s echo still is, that long after you said it</td></tr><tr><td>∫ … dτ</td><td>add up every bit of your voice, each one weighted by its echo</td></tr></tbody></table></div>
+<p>Why the flip: every bit of your voice sets off its own copy of the room&#x27;s answer, and at any moment you hear all of those copies at once. A bit you said a moment ago is near the loud start of its echo; a bit you said long ago is out in the faded tail. Writing the room&#x27;s answer backwards, g(t − τ), puts its loud start on &quot;right now&quot; and its faded tail on &quot;long ago&quot;, so each bit of your voice is multiplied by exactly how loud its echo still is.</p>
+<p>The four moves:</p>
+<ol>
+<li><strong>Flip</strong> the room&#x27;s answer so its loud start faces &quot;now&quot; and its tail points into the past.</li>
+<li><strong>Slide</strong> it to the moment t you want to hear.</li>
+<li><strong>Multiply</strong> your sound by the flipped answer wherever they overlap.</li>
+<li><strong>Add up</strong> everything under that product. The total is one point of the output. Slide a little further and repeat.</li>
+</ol>
+<p>Which one you flip does not matter: flipping your voice instead of the room gives the same result.</p>
+<p>Two rooms, same slide (the two responses used in the film, measured 2026-10-23 with a Schroeder decay fit):</p>
+<div class="table-scroll"><table class="rules-table"><thead><tr><th scope="col">room&#x27;s answer</th><th scope="col">how long its tail rings (T20)</th><th scope="col">what the same slide gives</th></tr></thead><tbody><tr><td>a cathedral</td><td>about 3.1 s</td><td>a long, ringing echo</td></tr><tr><td>a bathroom</td><td>about 0.6 s</td><td>a quick, tight echo</td></tr></tbody></table></div>
+<p>Honest caveats:</p>
+<ul>
+<li>A hand clap is only a rough stand-in for a perfect click (no real sound is a perfect click; a brief pulse is a first approximation). Careful measurements often use a sine sweep instead. A study that measured an opera house with hand claps and a phone found its echo times agreed with published values only over part of the frequency range. A clap is still a cheap, workable way to hear a room.</li>
+<li>The film draws smooth outlines so the slide is easy to see. The real calculation runs on every sample of the sound wave, which is what produced the cathedral and bathroom audio you heard.</li>
+<li>Image and audio neural networks run the same slide, multiply and add, but their layers skip the flip (frameworks compute &quot;cross-correlation&quot;). Because the network learns its shape, it can simply learn it backwards, so nothing is lost.</li>
+</ul>
+<p>Try it yourself (Python 3 with NumPy):</p>
+<pre><code>import numpy as np
+
+voice = np.array([0.0, 1.0, 0.5, 0.8, 0.0])        # f: a tiny dry &quot;hey&quot;
+room  = np.array([1.0, 0.6, 0.35, 0.2, 0.1])       # g: the room&#x27;s answer to one click
+
+out = np.convolve(voice, room)                     # flip, slide, multiply, add up
+print(np.round(out, 3))                            # [0. 1. 1.1 1.45 0.855 0.48 0.21 0.08 0.]
+
+# one output dot by hand, at t = 3: add f[tau] * g[t - tau] over every tau
+t = 3
+dot = sum(voice[tau] * room[t - tau] for tau in range(len(voice)) if 0 &lt;= t - tau &lt; len(room))
+print(round(dot, 3), round(out[t], 3))             # 1.45 1.45
+
+# a neural-network layer slides WITHOUT the flip (cross-correlation);
+# sliding the pre-flipped shape gives exactly the convolution back
+print(np.allclose(np.correlate(voice, room[::-1], &quot;full&quot;), out))   # True
+print(len(voice), len(room), len(out))             # 5 5 9: the output is longer than the voice</code></pre>
+<p>To put a real recording in a real room&#x27;s sound: <code>ffmpeg -i dry.wav -i room-ir.wav -lavfi afir out.wav</code></p>
+<p>Output values computed 2026-10-23 (Python 3, NumPy 2.4.6). Sources: Wikipedia &quot;Convolution&quot; (definition, reflect and shift, either function may be reflected), &quot;Impulse response&quot; (a brief pulse is a first approximation; output = input convolved with the impulse response; convolving a dry signal with a space&#x27;s response), &quot;Linear time-invariant system&quot; (output as a weighted sum of shifted impulse responses), all read 2026-10-23; PyTorch <code>torch.nn.Conv1d</code> docs (2.14) (&quot;where ⋆ is the valid cross-correlation operator&quot;; learnable weights), read 2026-10-23; K. Huang, &quot;Impulse response of the Bayreuth Festspielhaus&quot;, arXiv 1703.07080 (hand claps and phone recordings used to measure a hall). Room responses: Freesound, Nox_Sound, CC0 1.0 (sounds 648945 and 585741).</p>
+<p>Hubert the Inventor · huberttheinventor.github.io</p>
+    </div>
+  </section></div>
+<section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="https://huberttheinventor.github.io/index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="https://huberttheinventor.github.io/privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+<!-- Current site motion/menu scripts; no analytics or signup form is added. -->
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/splitting.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/site.js?v=2026-10-07-pieces" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>
