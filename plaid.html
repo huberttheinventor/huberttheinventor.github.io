@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en" data-reading="paper" class="reading-ready">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PLAID: the plaid layer card, Hubert</title>
+<meta name="description" content="Companion to Hubert&#x27;s film on SVD: any grid of numbers is a stack of plaid layers, strongest first, with a symbol table, what a photo costs layer by layer, the same idea in LoRA, and a NumPy script to run it yourself.">
+<meta name="robots" content="noindex,nofollow">
+<style>
+/* Structural additions use the deployed reading-plate colors and typefaces.
+   The header/article/document-cell markup is the current squash.html system.
+   No alternate palette, typeface, source art, tracker or message form. */
+#model.journalArticle__article{opacity:1}
+header .logo .line__inner{transform:none;opacity:1}
+.journalArticle__article code{background:rgba(0,0,0,.08);border-radius:4px;display:inline;font-family:Mono,ui-monospace,monospace;font-size:88%;padding:.1em .38em;white-space:normal;overflow-wrap:anywhere}
+.journalArticle__article pre{border:1px solid var(--plate-read-rule);border-radius:8px;margin:20px 0 32px;padding:20px;overflow:auto}
+.journalArticle__article pre code{background:none;font-size:15px;padding:0;white-space:pre}
+.hubert-note{background:rgba(0,0,0,.06);border-radius:10px;font-size:92%;margin:0 0 3vw;max-width:34em;padding:12px 16px}
+.hubert-note strong{display:block;font-size:78%;letter-spacing:.04em;margin-bottom:6px;text-transform:uppercase}
+.exchange{border:1px solid var(--plate-read-rule);border-radius:12px;display:block;margin:18px 0 28px;width:100%;height:auto}
+.definitions{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:34px}.definitions .term{border-top:1px solid var(--plate-read-rule);padding-top:14px}.definitions h3{font-size:32px;line-height:1.05;margin:0 0 10px}.definitions p{font-size:17px;line-height:1.5;margin:0}
+.rules-table{width:100%;border-collapse:collapse;font-size:17px}.rules-table th,.rules-table td{border-bottom:1px solid var(--plate-read-rule);padding:12px 8px;text-align:left;vertical-align:top}.rules-table th{font-family:Mono,ui-monospace,monospace;font-size:14px;color:var(--plate-read-dim)}
+.download-row{display:flex;gap:20px;flex-wrap:wrap;margin:18px 0 28px;font-family:Mono,ui-monospace,monospace;font-size:14px}.download-row a{text-decoration:underline}
+.journalArticle__article h2{font-size:48px;letter-spacing:-.02em;line-height:1;margin-top:46px;margin-bottom:18px}.source-list{font-size:16px}.source-list li{margin-bottom:8px}.resource-scope{font-size:14px;color:var(--plate-read-dim)}
+#model{scroll-margin-top:116px}.hover_effect{opacity:1!important}
+@media(max-width:600px){.journalArticle__article pre{padding:14px 10px}.journalArticle__article pre code{font-size:12px}.definitions{grid-template-columns:1fr}.definitions h3{font-size:28px}.journalArticle__article h2{font-size:36px}.rules-table{font-size:15px}.table-scroll{overflow-x:auto}.rules-table{min-width:0;font-size:14px}.table-scroll .rules-table th,.table-scroll .rules-table td{padding:10px 2px}.table-scroll .rules-table th{font-size:11px}.exchange-wide{display:none}.exchange-mobile{display:block}.hubert-note{margin-bottom:24px}}
+@media(min-width:601px){.exchange-mobile{display:none}}
+@media print{header,.topOverlay,.scanlines,.gloom,.vignette,.download-row{display:none}.main{padding-top:0}.wrapper,.section{margin:0;padding:16px}.journalArticle__article{max-width:none}.journalArticle__article h1{font-size:35px}.journalArticle__article h2{font-size:25px;margin-top:24px}.source-list{font-size:12px}.definitions{gap:10px}a{color:inherit}.exchange{max-height:320px}article,figure,pre{break-inside:avoid}}
+</style>
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-10-07-pieces" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-10-07-pieces">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/pieces.html"><span>Nº035 · Tokenization (OpenAI tiktoken, o200k_base)</span></a>
+    <a href="/squash.html"><span>Nº034 · PCA on DNA (Novembre et al., 2008)</span></a>
+    <a href="/curve.html"><span>Nº033 · Options gamma (the bend in an option's price curve)</span></a>
+    <a href="/bayes.html"><span>Nº032 · Naive Bayes spam filter (word-weight scale)</span></a>
+    <a href="/axis.html"><span>Nº031 · Training compute (semi-log axis)</span></a>
+    <a href="/dots.html"><span>Nº030 · OpenAI dots (agent permission rules)</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div><div class="gloom"></div><div class="vignette"></div>
+  <div class="wrapper"><section class="section section__lightgrey">
+    <div class="journalArticle__documentHeader">
+      <div class="journalArticle__documentCell monospace"><span>Field card</span><strong>PLAID</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>System</span><strong>SVD (singular value decomposition)</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>Worked example</span><strong>Einstein, 1921</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>Prepared</span><strong>24 October 2026</strong></div>
+    </div>
+    <div class="journalArticle__article" id="model">
+      <p class="monospace monospace__p opacity__50">PLAID / THE PLAID LAYER CARD</p>
+      <h1>The plaid layer card</h1>
+<p>SVD (singular value decomposition) in one picture: <strong>any grid of numbers is a stack of plaid layers, strongest first.</strong> One layer is one list running down times one list running across: every cell gets its row's number times its column's number, which draws a plaid. Keep the strongest k layers and you have the closest copy any k layers can make.</p>
+<pre style="white-space:pre-wrap"><code style="white-space:pre-wrap">A  =  σ₁ u₁ v₁ᵀ  +  σ₂ u₂ v₂ᵀ  +  σ₃ u₃ v₃ᵀ  +  …        (σ₁ ≥ σ₂ ≥ σ₃ ≥ … ≥ 0)</code></pre>
+<div class="table-scroll"><table class="rules-table"><thead><tr><th scope="col">symbol</th><th scope="col">in plain words</th></tr></thead><tbody><tr><td>A</td><td>the grid: a grey photo, one brightness number per pixel</td></tr><tr><td>uᵢ</td><td>the list running down (one number per row)</td></tr><tr><td>vᵢ</td><td>the list running across (one number per column)</td></tr><tr><td>σᵢ</td><td>the layer's strength; SVD sorts the layers so it only ever shrinks</td></tr><tr><td>σᵢ uᵢ vᵢᵀ</td><td>one plaid layer: cell (row, column) = σᵢ × u's row number × v's column number</td></tr></tbody></table></div>
+<h2>What a photo costs, layer by layer</h2>
+<p>Photo: Albert Einstein, 1921, by Ferdinand Schmutzer (public domain, Wikimedia Commons), cropped to a grey square <strong>900 × 900 pixels = 810,000 numbers</strong>. One plaid costs 900 + 900 + 1 = 1,801 numbers.</p>
+<div class="table-scroll"><table class="rules-table"><thead><tr><th scope="col">layers kept (k)</th><th scope="col">numbers stored, k × 1,801</th><th scope="col">share of the 810,000</th><th scope="col">error left*</th><th scope="col">what you see</th></tr></thead><tbody><tr><td>1</td><td>1,801</td><td>0.22%</td><td>0.282</td><td>a plaid: rough light and dark only</td></tr><tr><td>5</td><td>9,005</td><td>1.11%</td><td>0.183</td><td>a head shape</td></tr><tr><td>20</td><td>36,020</td><td><strong>4.45%</strong></td><td>0.103</td><td>streaky, ghosted, but clearly him</td></tr><tr><td>50</td><td>90,050</td><td>11.12%</td><td>0.071</td><td>clean</td></tr></tbody></table></div>
+<p>* error left = size of (photo − copy) ÷ size of photo, both measured as the square root of the sum of squared cells (Frobenius norm).</p>
+<p><strong>Size matters.</strong> The cost of k layers is k(m + n + 1) numbers while the photo is m × n, so the share shrinks as the photo grows. The same 20 layers cost <strong>7.82%</strong> of a 512 × 512 photo (NASA portrait of Eileen Collins, public domain), and <strong>4.45%</strong> of the 900 × 900 one. "Under five percent" is true here for a photo about 900 pixels a side, not for every photo.</p>
+<p><strong>Why so few layers are enough.</strong> Photos are full of smooth, repeating patches, so the strengths fall off fast: layer 20 is 44 times weaker than layer 1 on this crop. TV-style random static has no such patterns: on a 900 × 900 grid of uniform random noise (mean removed), 20 layers still leave an error of 0.958, against 0.204 for the photo with its mean removed (same error measure as the table; our NumPy test, seed 0, 2026-10-23).</p>
+<p><strong>Why the strongest k are the best k.</strong> Eckart–Young–Mirsky theorem: cutting the SVD after k layers gives the rank-k grid with the smallest error, and that error is the square root of the sum of the squares of the strengths you dropped.</p>
+<h2>Try it (NumPy)</h2>
+<pre><code>import numpy as np
+from PIL import Image
+
+# 900 x 900 grey crop of the 1921 Einstein portrait (public domain)
+A = np.asarray(Image.open(&quot;einstein.jpg&quot;).convert(&quot;L&quot;).crop((300, 60, 1200, 960)), dtype=float) / 255
+m, n = A.shape
+U, s, Vt = np.linalg.svd(A, full_matrices=False)   # s = layer strengths, biggest first
+
+for k in (1, 5, 20, 50):
+    Ak = (U[:, :k] * s[:k]) @ Vt[:k]                # stack the k strongest plaids
+    kept = k * (m + n + 1) / (m * n)                # two lists + one strength per plaid
+    err = np.linalg.norm(A - Ak) / np.linalg.norm(A)
+    print(f&quot;{k:&gt;3} layers  {kept:6.2%} of the numbers  error {err:.3f}&quot;)
+print(f&quot;strength of layer 1 vs layer 20: {s[0] / s[19]:.0f}x&quot;)</code></pre>
+<p>Output (run 2026-10-23, Python 3.12.10, NumPy 2.4.6, Pillow 12.3.0, on the 1280 × 1681 Commons copy):</p>
+<pre><code>  1 layers   0.22% of the numbers  error 0.282
+  5 layers   1.11% of the numbers  error 0.183
+ 20 layers   4.45% of the numbers  error 0.103
+ 50 layers  11.12% of the numbers  error 0.071
+strength of layer 1 vs layer 20: 44x</code></pre>
+<h2>The same idea in LoRA</h2>
+<p>A model's weights sit in grids too. LoRA (Hu et al., 2021) freezes a weight grid W₀ (d × k) and trains a change made of r plaids: ΔW = BA, with B d × r and A r × k, so the layer becomes W₀ + BA. The <code>r</code> in a LoRA config (8 by default in Hugging Face PEFT's <code>LoraConfig</code>) is the number of plaids.</p>
+<div class="table-scroll"><table class="rules-table"><thead><tr><th scope="col">weight grid</th><th scope="col">full grid</th><th scope="col">LoRA plaids r</th><th scope="col">trained numbers r × (d + k)</th><th scope="col">share</th></tr></thead><tbody><tr><td>4,096 × 4,096</td><td>16,777,216</td><td>8</td><td>65,536</td><td>0.39%</td></tr><tr><td>12,288 × 12,288 (GPT-3's width d)</td><td>150,994,944</td><td>4</td><td>98,304</td><td>0.065%</td></tr></tbody></table></div>
+<p>What LoRA does and does not do:</p>
+<ul>
+<li>It <strong>trains</strong> B and A directly with gradient descent; B starts at zero, so training starts from the original model. It never runs an SVD while training (the paper uses SVD only afterwards, to analyse the learned changes).</li>
+<li>It <strong>bets</strong> that the change a model needs is mostly a few strong layers ("low intrinsic rank", the paper's hypothesis). In the paper, "a rank as small as one suffices for adapting both Wq and Wv" on its GPT-3 test sets.</li>
+<li>It does not shrink the original model; the frozen grid is still all there.</li>
+</ul>
+<h2>Sources</h2>
+<ul class="source-list" style="overflow-wrap:anywhere">
+<li>SVD: <a href="https://en.wikipedia.org/wiki/Singular_value_decomposition">https://en.wikipedia.org/wiki/Singular_value_decomposition</a> ("Such decompositions always exist for any complex matrix"; the SVD "splits M into a sum of r rank-1 matrices"; singular values are "non-negative" and "Conventionally they are arranged in descending order").</li>
+<li>Best k layers: <a href="https://en.wikipedia.org/wiki/Low-rank_approximation">https://en.wikipedia.org/wiki/Low-rank_approximation</a> (Eckart–Young–Mirsky: the truncated SVD gives the minimum error over all rank-k matrices).</li>
+<li>LoRA: E. Hu et al., "LoRA: Low-Rank Adaptation of Large Language Models", arXiv 2106.09685 (<a href="https://arxiv.org/abs/2106.09685">https://arxiv.org/abs/2106.09685</a>): "freezes the pre-trained model weights and injects trainable rank decomposition matrices into each layer"; "During training, W0 is frozen and does not receive gradient updates, while A and B contain trainable parameters"; "zero for B, so ΔW = BA is zero at the beginning of training"; "the full rank (i.e., d) is as high as 12,288".</li>
+<li>PEFT default rank: <a href="https://huggingface.co/docs/peft/package_reference/lora">https://huggingface.co/docs/peft/package_reference/lora</a> (<code>r: int = 8</code>).</li>
+<li>Photos: <a href="https://commons.wikimedia.org/wiki/File:Einstein_1921_by_F_Schmutzer_-_restoration.jpg">https://commons.wikimedia.org/wiki/File:Einstein_1921_by_F_Schmutzer_-_restoration.jpg</a> (public domain); scikit-image <code>data.astronaut</code> (NASA, "released into the public domain").</li>
+</ul>
+<p>From @huberttheinventor · Hubert explains one maths idea inside AI per film.</p>
+<p>Hubert the Inventor · huberttheinventor.github.io</p>
+    </div>
+  </section></div>
+<section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="https://huberttheinventor.github.io/index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="https://huberttheinventor.github.io/privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+<!-- Current site motion/menu scripts; no analytics or signup form is added. -->
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/splitting.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/site.js?v=2026-10-07-pieces" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>
