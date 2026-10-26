@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en" data-reading="paper" class="reading-ready">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PLATE: the spinning plate card, Hubert</title>
+<meta name="description" content="Companion to Hubert's film on the Fourier transform: let a jet engine's shaking drip onto a spinning plate and it tips only at the speeds of the notes inside, with a worn-bearing example, a small hand check, the formula, honest limits and a NumPy check.">
+<meta name="robots" content="noindex,nofollow">
+<style>
+/* Structural additions use the deployed reading-plate colors and typefaces.
+   The header/article/document-cell markup is the current squash.html system.
+   No alternate palette, typeface, source art, tracker or message form. */
+#model.journalArticle__article{opacity:1}
+header .logo .line__inner{transform:none;opacity:1}
+.journalArticle__article code{background:rgba(0,0,0,.08);border-radius:4px;display:inline;font-family:Mono,ui-monospace,monospace;font-size:88%;padding:.1em .38em;white-space:normal;overflow-wrap:anywhere}
+.journalArticle__article pre{border:1px solid var(--plate-read-rule);border-radius:8px;margin:20px 0 32px;padding:20px;overflow:auto}
+.journalArticle__article pre code{background:none;font-size:15px;padding:0;white-space:pre}
+.hubert-note{background:rgba(0,0,0,.06);border-radius:10px;font-size:92%;margin:0 0 3vw;max-width:34em;padding:12px 16px}
+.hubert-note strong{display:block;font-size:78%;letter-spacing:.04em;margin-bottom:6px;text-transform:uppercase}
+.exchange{border:1px solid var(--plate-read-rule);border-radius:12px;display:block;margin:18px 0 28px;width:100%;height:auto}
+.definitions{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:34px}.definitions .term{border-top:1px solid var(--plate-read-rule);padding-top:14px}.definitions h3{font-size:32px;line-height:1.05;margin:0 0 10px}.definitions p{font-size:17px;line-height:1.5;margin:0}
+.rules-table{width:100%;border-collapse:collapse;font-size:17px}.rules-table th,.rules-table td{border-bottom:1px solid var(--plate-read-rule);padding:12px 8px;text-align:left;vertical-align:top}.rules-table th{font-family:Mono,ui-monospace,monospace;font-size:14px;color:var(--plate-read-dim)}
+.download-row{display:flex;gap:20px;flex-wrap:wrap;margin:18px 0 28px;font-family:Mono,ui-monospace,monospace;font-size:14px}.download-row a{text-decoration:underline}
+.journalArticle__article h2{font-size:48px;letter-spacing:-.02em;line-height:1;margin-top:46px;margin-bottom:18px}.source-list{font-size:16px}.source-list li{margin-bottom:8px}.resource-scope{font-size:14px;color:var(--plate-read-dim)}
+#model{scroll-margin-top:116px}.hover_effect{opacity:1!important}
+@media(max-width:600px){.journalArticle__article pre{padding:14px 10px}.journalArticle__article pre code{font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere}.journalArticle__article pre.scroll code{white-space:pre;overflow-wrap:normal}.definitions{grid-template-columns:1fr}.definitions h3{font-size:28px}.journalArticle__article h2{font-size:36px}.rules-table{font-size:15px}.table-scroll{overflow-x:auto}.rules-table{min-width:0;font-size:14px}.table-scroll .rules-table th,.table-scroll .rules-table td{padding:10px 2px}.table-scroll .rules-table th{font-size:11px}.exchange-wide{display:none}.exchange-mobile{display:block}.hubert-note{margin-bottom:24px}}
+@media(min-width:601px){.exchange-mobile{display:none}}
+@media print{header,.topOverlay,.scanlines,.gloom,.vignette,.download-row{display:none}.main{padding-top:0}.wrapper,.section{margin:0;padding:16px}.journalArticle__article{max-width:none}.journalArticle__article h1{font-size:35px}.journalArticle__article h2{font-size:25px;margin-top:24px}.source-list{font-size:12px}.definitions{gap:10px}a{color:inherit}.exchange{max-height:320px}article,figure,pre{break-inside:avoid}}
+</style>
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-10-07-pieces" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-10-07-pieces">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/pieces.html"><span>Nº035 · Tokenization (OpenAI tiktoken, o200k_base)</span></a>
+    <a href="/squash.html"><span>Nº034 · PCA on DNA (Novembre et al., 2008)</span></a>
+    <a href="/curve.html"><span>Nº033 · Options gamma (the bend in an option's price curve)</span></a>
+    <a href="/bayes.html"><span>Nº032 · Naive Bayes spam filter (word-weight scale)</span></a>
+    <a href="/axis.html"><span>Nº031 · Training compute (semi-log axis)</span></a>
+    <a href="/dots.html"><span>Nº030 · OpenAI dots (agent permission rules)</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div><div class="gloom"></div><div class="vignette"></div>
+  <div class="wrapper"><section class="section section__lightgrey">
+    <div class="journalArticle__documentHeader">
+      <div class="journalArticle__documentCell monospace"><span>Field card</span><strong>PLATE</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>System</span><strong>Fourier transform</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>Worked example</span><strong>Jet engine, healthy and worn</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>Prepared</span><strong>26 October 2026</strong></div>
+    </div>
+    <div class="journalArticle__article" id="model">
+      <p class="monospace monospace__p opacity__50">PLATE / THE SPINNING PLATE CARD</p>
+      <h1>The spinning plate card</h1>
+<p>The Fourier transform in one picture: <strong>let a jet engine&#x27;s shaking drip onto a spinning plate, and the plate only tips at the speeds that match the notes inside the shaking.</strong> Try every speed, plot how far it tips, and you have drawn the Fourier transform. When a bearing starts wearing out, it adds a new note, so a <strong>new spike</strong> rises where the plot was flat.</p>
+<p>The film calls the balance point the Fourier transform. Strictly, the transform is the ink&#x27;s <strong>total</strong>, and the balance point is that total divided by the record length (or by the number of drops). Dividing shrinks every spike by the same amount and moves none of them, so the picture stays the same. We treat the pen as resting in the middle before the record starts and after it ends.</p>
+<p>All engine numbers on this card come from a made-up (schematic) engine signal, labelled <strong>illustrative</strong>. No real engine speed is given: the 50 turns per second below is made up.</p>
+<h2>The picture, in plain words</h2>
+<ol>
+<li>A sensor on the engine&#x27;s casing feels it shake. That shaking (the film calls it the hum) is a handful of notes from the spinning shafts, added together into one wiggly line.</li>
+<li>The line swings a pen across a round plate that sits on a pin. The pen follows how the casing shakes: to one side of the middle, then to the other. When the casing is still, the pen rests in the middle.</li>
+<li>The plate spins at a speed you choose (turns per second). At a steady beat the pen drips one drop of ink, always the same size. Each drop stays where it lands while the plate keeps turning under the pen.</li>
+<li>After the whole record, find the plate&#x27;s balance point: the plain average of every drop&#x27;s spot.</li>
+<li>How far that balance point sits from the pin is how far the plate tips.</li>
+</ol>
+<h2>Why only the notes tip the plate</h2>
+<p>A note is a steady wiggle: out to one side, back through the middle, out to the other side, over and over.</p>
+<ul>
+<li><strong>Plate speed matches none of the notes.</strong> The out-swings and back-swings find the plate facing different ways, so ink on one side gets matched by ink as far out on the other. They cancel, and the balance point stays at the pin.</li>
+<li><strong>Plate spins exactly as fast as the front fan.</strong> Each time the fan&#x27;s note pushes the pen out, the plate faces the same way. Each time it pulls the pen back, the plate&#x27;s turned half way round, so that ink lands on the same side. The fan&#x27;s ink piles up there and the plate tips, while the other notes still cancel. For a note with swing size A, the balance point sits <strong>A ÷ 2</strong> from the pin (why half: see &quot;For the curious&quot; below).</li>
+<li><strong>The engine&#x27;s shaking is notes added together.</strong> Each note tips the plate only at its own speed (and its mirror speed), so one sweep of the dial finds them all. A note twice as big tips twice as far.</li>
+</ul>
+<h2>The engine, healthy and worn (illustrative)</h2>
+<p>The schematic engine has three usual notes: the fan (one wiggle per fan turn, size 1), double the fan&#x27;s speed (size 0.5) and the core shaft, a second shaft turning at its own speed, 1.37 × the fan&#x27;s (size 0.8). The worn bearing adds a faint knock at 3.58 × the fan&#x27;s speed (size 0.1, about 0.53% of the signal&#x27;s power). Record: 1 second, fan speed 50 turns per second (illustrative), 4,000 drops per second. Figures are our own NumPy run, 2026-10-25.</p>
+<div class="table-scroll"><table class="rules-table"><thead><tr><th scope="col">plate speed</th><th scope="col">healthy engine</th><th scope="col">worn bearing</th></tr></thead><tbody><tr><td>fan (1 ×)</td><td>0.50</td><td>0.50</td></tr><tr><td>fan × 2</td><td>0.25</td><td>0.25</td></tr><tr><td>core (1.37 ×)</td><td>0.40</td><td>0.40</td></tr><tr><td>bearing (3.58 ×)</td><td>0.002</td><td><strong>0.050</strong></td></tr><tr><td>largest elsewhere from 3.0 × to 4.2 × (leaving out ±0.06 × around the bearing speed)</td><td>0.004</td><td>0.008</td></tr></tbody></table></div>
+<p>The healthy plot has spikes at <code>fan</code>, <code>fan × 2</code> and <code>core</code>, and is flat between 3 × and 4.2 × the fan. With the worn bearing, a <strong>small new spike</strong> (0.050) stands on that flat stretch, more than six times taller than anything else in that stretch. The usual spikes do not change.</p>
+<p><strong>How to read the plot.</strong> A spike is a speed where the shaking keeps landing on one side of the plate. <strong>A new spike means something new is shaking.</strong></p>
+<p>Why 3.58: a bearing&#x27;s knock speed is set by its shape and the shaft speed, and is not a whole multiple of the shaft&#x27;s speed. For the outer ring, BPFO = (n × shaft speed ÷ 2) × (1 − (d ÷ D) × cos φ), with n balls of diameter d on a pitch circle of diameter D at contact angle φ. An example industrial ball bearing (9 balls, 7.94 mm ball, 39.04 mm pitch circle, contact angle 0) gives 4.5 × (1 − 0.2034) = 3.58 × shaft speed. That bearing is not an aircraft part; the ratio only places the schematic spike at a non-whole multiple.</p>
+<h2>A small example you can check by hand</h2>
+<p>Eight drops in a record, one per beat. Two notes: one that wiggles once per record with swing 1, and one that wiggles three times per record with swing 0.5. The pen heights are</p>
+<pre><code>g = 1.5, 0.3536, 0, −0.3536, −1.5, −0.3536, 0, 0.3536     (average 0.0000, so the pen rests in the middle)</code></pre>
+<p>Try plates turning 0 to 7 times per record (k turns per record; here time is counted in beats):</p>
+<div class="table-scroll"><table class="rules-table"><thead><tr><th scope="col">plate speed k</th><th scope="col">0</th><th scope="col">1</th><th scope="col">2</th><th scope="col">3</th><th scope="col">4</th><th scope="col">5</th><th scope="col">6</th><th scope="col">7</th></tr></thead><tbody><tr><td>how far it tips</td><td>0</td><td><strong>0.50</strong></td><td>0</td><td><strong>0.25</strong></td><td>0</td><td><strong>0.25</strong></td><td>0</td><td><strong>0.50</strong></td></tr></tbody></table></div>
+<p>Speed 1 tips 0.50 (swing 1 ÷ 2) and speed 3 tips 0.25 (swing 0.5 ÷ 2). Every other whole speed stays level. Speeds 5 and 7 are the same two notes seen from a plate spinning the other way (a real signal looks the same in the mirror), so you only need the first half. Start the record one beat later and the distances stay 0.50 and 0.25, but the direction changes (at speed 1 from 0 degrees to 45 degrees); the usual plot throws that direction away.</p>
+<h2>For the curious: the formula</h2>
+<pre><code>    balance point at speed f  =  (1 / T) × ∫ g(t) · e^(−2πi·f·t) dt      (the Fourier transform at f, divided by T)
+    with N drops              =  (1 / N) × Σ g(tₙ) · e^(−2πi·f·tₙ)</code></pre>
+<div class="table-scroll"><table class="rules-table"><thead><tr><th scope="col">symbol</th><th scope="col">in plain words</th></tr></thead><tbody><tr><td>g(t)</td><td>how far (and to which side) the shaking swings the pen at time t; 0 is the middle</td></tr><tr><td>t, T</td><td>a moment in seconds; T is the length of the whole record</td></tr><tr><td>f</td><td>how fast the plate spins, in turns per second (Hz)</td></tr><tr><td>e^(−2πi·f·t)</td><td>&quot;how far the plate has turned by time t&quot;: a marker that goes once round a circle for every turn of the plate (the minus sign says the plate turns under the pen, so seen from the plate each drop is carried backwards)</td></tr><tr><td>i</td><td>marks the second direction on the plate, at right angles to the first, so one number can hold both &quot;how far across&quot; and &quot;how far up&quot;</td></tr><tr><td>∫ ... dt, Σ</td><td>add up the drops (the integral is the same sum with the drops made tiny and endless)</td></tr><tr><td>1/T, 1/N</td><td>divide by the record length or the number of drops, which turns the total into the average</td></tr><tr><td>N, tₙ</td><td>N is the number of drops (record length × drops per second); tₙ is the moment of drop number n</td></tr></tbody></table></div>
+<p>The answer is a pair of numbers: <strong>how far</strong> the balance point is from the pin, and <strong>which way</strong> (its direction, called the phase). A spike plot normally keeps only how far.</p>
+<p>Why a note of swing A tips the plate only A ÷ 2: a steady wiggle is two half-size circles turning opposite ways. The plate catches one of them, and the other shows up at the mirror speed (the plate spinning the other way, as speeds 5 and 7 show in the small example).</p>
+<h2>Honest limits</h2>
+<ol>
+<li><strong>Vibration, not sound.</strong> The &quot;hum&quot; is the casing&#x27;s shaking, felt by a sensor on the engine (an accelerometer, or a laser in the 2025 study below), not sound picked up by a microphone.</li>
+<li><strong>The usual notes are shaft speeds and their multiples.</strong> A real engine&#x27;s predictable shaking sits at each shaft&#x27;s speed, multiples of it and some specific non-whole combinations. &quot;A handful of notes&quot; simplifies that; the plot shows a schematic three (<code>fan</code>, <code>fan × 2</code>, <code>core</code>).</li>
+<li><strong>A new spike is not always alone.</strong> A bearing&#x27;s knock speed is set by its geometry and the shaft speeds, at a non-whole multiple of shaft speed. But other sources can sit at the same speed, and the highest peak is not always the bearing&#x27;s, so real systems first take out the predictable notes. A new spike says &quot;look here&quot;, not &quot;this bearing, for certain&quot;.</li>
+<li><strong>The record length sets how sharp the spikes are.</strong> With the 1 second record, the bearing spike is about 1.2 turns per second wide at half its height. Cut the record to 0.1 s (only 5 turns of the fan) and the bearing&#x27;s spike spreads into a bump about nine to ten times wider (9.5 × measured). Its peak moves (0.074 at 183.5 turns per second, against 0.041 at the bearing speed), and the usual notes leak into the flat stretch (up to 0.057 in the healthy engine). You can no longer read off which speed it is, and one plot no longer shows a clean new spike on a flat stretch. The longer you record, the sharper the spikes. A short record gives better timing and blurrier speeds.</li>
+<li><strong>&quot;Starts wearing out&quot; means an early, measurable defect, not a failure date.</strong> A worn bearing first gets small pits on its rings and rollers (spalling). This card gives no lead time (&quot;weeks before it fails&quot;); no aircraft-engine source we read gives one.</li>
+<li><strong>Subtract the average first.</strong> If the pen rests off the middle (a sensor with an offset), the plate tips at speed 0 by that offset, whatever the notes are. Run <code>x = x - x.mean()</code> before anything else.</li>
+<li><strong>The plot drops the direction.</strong> It shows how far the plate tips, not which way. The direction says when each note started, and you need it to rebuild the signal from the numbers.</li>
+<li><strong>The picture is the maths, not a real plate.</strong> A physical plate on a pin would also wobble. This plate does only the averaging. The engine is idealised too: three usual notes plus the bearing&#x27;s, clean, lasting the whole record, with no noise.</li>
+<li><strong>The drops must come fast enough.</strong> A note faster than half the drops per second looks like a slower one (aliasing). Here 4,000 drops per second is plenty for notes up to 179 turns per second.</li>
+<li><strong>Turns per record, not per second.</strong> &quot;k turns per record&quot; is k ÷ T turns per second. An FFT only tries whole numbers</li>
+</ol>
+<pre><code>of turns per record, so a note that does not fit a whole number of turns spreads over neighbouring speeds. In the
+code below the core note (68.5 turns per second) splits into two FFT spikes of about 0.25, at 68 and 69.</code></pre>
+<h2>What NumPy&#x27;s FFT is</h2>
+<p><code>np.fft.fft(x)</code> adds up the drops for a whole row of speeds, 0, 1, 2, 3 ... turns per record, in one fast go. It returns one complex number per speed: the balance point&#x27;s <strong>sum</strong> (how far and which way). Divide by the number of drops N to get the average, and take <code>abs(...)</code> to keep only how far. That list of distances is the spike plot.</p>
+<h2>Run it yourself (NumPy)</h2>
+<pre class="scroll"><code>import numpy as np
+
+fs = 4000                                    # drops per second (one drop per tick)
+t = np.arange(fs) / fs                       # a 1 second record
+F = 50                                       # fan speed in turns per second: illustrative, not a real engine
+
+def hum(bearing):                            # the sensor&#x27;s line: fan, fan x2, core shaft, worn bearing&#x27;s knock
+    return (np.cos(2*np.pi*F*t) + 0.5*np.cos(2*np.pi*2*F*t) + 0.8*np.cos(2*np.pi*1.37*F*t)
+            + bearing*np.cos(2*np.pi*3.58*F*t))
+
+def tip(x, t, speed):                        # balance point of the ink at this plate speed
+    return abs(np.mean(x * np.exp(-2j*np.pi*speed*t)))
+
+healthy, worn = hum(0), hum(0.1)
+for name, speed in ((&quot;between&quot;, 160), (&quot;fan&quot;, F), (&quot;fan x2&quot;, 2*F), (&quot;core&quot;, 1.37*F), (&quot;bearing&quot;, 3.58*F)):
+    print(f&quot;{name:8s} {speed:6.1f} turns/s   healthy {tip(healthy, t, speed):.3f}   worn {tip(worn, t, speed):.3f}&quot;)
+
+H = abs(np.fft.fft(healthy)) / fs            # every whole speed at once (k turns per record)
+W = abs(np.fft.fft(worn)) / fs
+new = int(np.argmax((W - H)[:fs//2]))
+print(&quot;biggest new FFT spike at&quot;, new, &quot;turns/s:&quot;, round(H[new], 3), &quot;-&gt;&quot;, round(W[new], 3))
+print(&quot;core at 68.5 turns/s splits over FFT speeds 68 and 69:&quot;, W[68:70].round(3))
+
+s = slice(0, 400)                            # a 0.1 second record: only 5 turns of the fan
+near = max(tip(worn[s], t[s], f) for f in np.arange(150, 210, 0.5) if abs(f - 179) &gt; 3)
+print(&quot;0.1 s record: bearing speed tips&quot;, round(tip(worn[s], t[s], 179), 3),
+      &quot;but the smeared bump peaks elsewhere at&quot;, round(near, 3))
+
+print(&quot;pen resting off-centre by 1: speed 0 tips&quot;, round(tip(worn + 1, t, 0), 3))
+print(&quot;after subtracting the average:&quot;, round(tip((worn + 1) - (worn + 1).mean(), t, 0), 3))</code></pre>
+<p>Output, run 2026-10-25, Python 3.12.10, NumPy 2.4.6:</p>
+<pre><code>between   160.0 turns/s   healthy 0.002   worn 0.002
+fan        50.0 turns/s   healthy 0.500   worn 0.500
+fan x2    100.0 turns/s   healthy 0.250   worn 0.250
+core       68.5 turns/s   healthy 0.400   worn 0.400
+bearing   179.0 turns/s   healthy 0.002   worn 0.050
+biggest new FFT spike at 179 turns/s: 0.002 -&gt; 0.05
+core at 68.5 turns/s splits over FFT speeds 68 and 69: [0.254 0.256]
+0.1 s record: bearing speed tips 0.041 but the smeared bump peaks elsewhere at 0.074
+pen resting off-centre by 1: speed 0 tips 1.0
+after subtracting the average: 0.0</code></pre>
+<p><code>plate_card_check.py</code> (next to this card) re-runs every number on this card.</p>
+<h2>Where this is used</h2>
+<p>In 2025, engineers measured F100-PW-229 fighter jet engines on a test bench with a laser vibrometer (a laser that reads how a surface shakes, without touching it) and processed the signals with the FFT. Their abstract reports frequency features &quot;indicative of rotor imbalances, bearing wear, and structural anomalies&quot;. Prokopowicz, Ciupek, Maciąg, Gajewski, Sielicki, &quot;Advanced Spectral Diagnostics of Jet Engine Vibrations Using Non-Contact Laser Vibrometry and Fourier Methods&quot;, <em>Energies</em> 18(18):4837, 2025, DOI 10.3390/en18184837 (<a href="https://doi.org/10.3390/en18184837">https://doi.org/10.3390/en18184837</a>). We read the abstract, not the full paper.</p>
+<h2>Sources</h2>
+<ul>
+<li>Laser vibrometry and FFT on jet engines, test bench: <em>Energies</em> 2025 (above); <a href="https://ideas.repec.org/a/gam/jeners/v18y2025i18p4837-d1747291.html">https://ideas.repec.org/a/gam/jeners/v18y2025i18p4837-d1747291.html</a> and <a href="https://opus.lib.uts.edu.au/handle/10453/190757">https://opus.lib.uts.edu.au/handle/10453/190757</a> (abstracts).</li>
+<li>Engines carry vibration sensors; shaft speeds and their multiples; a defect frequency predictable from bearing geometry and rotor speeds; &quot;the peak with the highest amplitude ... is not always the one that is the bearing defect peak&quot;: US patent 4,213,114 (<a href="https://patents.google.com/patent/US4213114">https://patents.google.com/patent/US4213114</a>) and US patent 6,711,952 (<a href="https://patents.google.com/patent/US6711952">https://patents.google.com/patent/US6711952</a>).</li>
+<li>Bearing defect frequencies &quot;are not integer multiples of shaft rotational speed&quot;: <a href="https://ncd.io/blog/bearing-fault-detection-vibration-analysis/">https://ncd.io/blog/bearing-fault-detection-vibration-analysis/</a></li>
+<li>BPFO formula and the 9-ball example (3.58 × shaft speed): <a href="https://sensemore.io/tools/bearing-fault-frequency-calculator/">https://sensemore.io/tools/bearing-fault-frequency-calculator/</a></li>
+<li>Early aircraft-engine bearing wear is spalling, and its vibration is very faint against the engine&#x27;s noise: Adamenko and Drokin, PHM Society European Conference 2016, DOI 10.36001/phme.2016.v3i1.1568.</li>
+<li>Fourier transform definition; only the matching component gives a non-zero value; output carries amplitude and phase: <a href="https://en.wikipedia.org/wiki/Fourier_transform">https://en.wikipedia.org/wiki/Fourier_transform</a></li>
+<li>Short records and wide spikes: <a href="https://en.wikipedia.org/wiki/Short-time_Fourier_transform">https://en.wikipedia.org/wiki/Short-time_Fourier_transform</a>; https://en.wikipedia.org/wiki/Spectral_leakage</li>
+<li>NumPy <code>numpy.fft.fft</code>: <a href="https://numpy.org/doc/stable/reference/generated/numpy.fft.fft.html">https://numpy.org/doc/stable/reference/generated/numpy.fft.fft.html</a></li>
+<li>Aliasing: <a href="https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem">https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem</a></li>
+</ul>
+<p>From @huberttheinventor · Hubert explains one hard maths idea per film.</p>
+    </div>
+  </section></div>
+<section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="https://huberttheinventor.github.io/index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="https://huberttheinventor.github.io/privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+<!-- Current site motion/menu scripts; no analytics or signup form is added. -->
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/splitting.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/site.js?v=2026-10-07-pieces" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>
