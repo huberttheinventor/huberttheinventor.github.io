@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How a booster comes home. — Hubert's field guides</title>
+<meta name="description" content="Field guide Nº036. How a Falcon 9 booster gets from the edge of space back onto a pad: six steps (flip, boostback burn, entry burn, grid fins, landing burn, legs), what each one fixes, and the two 2015 crashes that showed where the steps break: in January the grid fins ran out of hydraulic fluid just before touchdown; in April a throttle valve reacted slower than expected and the booster tipped over on the ship. Facts from Spaceflight Now, the Planetary Society, SpacePolicyOnline, Universe Today and a paper by SpaceX's Lars Blackmore.">
+<meta name="theme-color" content="#1a1a1a">
+
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="How a booster comes home.">
+<meta property="og:description" content="The BOOSTER card: the whole return trip on one frame, pad to space to pad, six steps and the two 2015 crashes marked at the step each one broke.">
+<meta property="og:image" content="artifacts/booster-card.png">
+<meta property="og:image:alt" content="Field guide Nº036: the BOOSTER card. A dusk sky over a coast: a booster rises from a launch pad on the left edge, and comes back down a column in six poses onto a landing pad. Beside it, six black pixel boxes: 1 flip, 2 boostback burn, 3 entry burn, 4 grid fins, 5 landing burn, 6 legs, with a January 2015 crash marked at the grid fins and an April 2015 crash marked at the landing burn.">
+<meta name="twitter:card" content="summary_large_image">
+
+
+
+
+<style>
+  /* ── the steps table ──────────────────────────────────────────────────
+     Same shape as pieces.html/squash.html's tables. Facts from
+     videos/film-28-booster-landing/FACTS.md (hubert-producer), verified and
+     softened rows only, in the softened wording; the card it mirrors is
+     resource/booster-card.png in the same folder (sha256 in RESOURCE.json). */
+  .rules-table th, .rules-table td { font-variant-numeric: tabular-nums; vertical-align: top; }
+  .rules-table td:first-child { text-align: left; color: var(--plate-read-accent, #1a1a1a); font-weight: 600; white-space: nowrap; }
+  .rules-table caption {
+    caption-side: top; color: var(--plate-read-dim); font-family: Mono, ui-monospace, monospace;
+    font-size: 14px; letter-spacing: -0.048em; margin-bottom: 4px; text-align: left;
+    text-transform: uppercase;
+  }
+  .rules-table tbody td { border-bottom: 1px solid var(--plate-read-rule); padding: 8px 6px; }
+  .rules-table tbody tr:last-child td { border-bottom: none; }
+
+  @media screen and (max-width: 600px) {
+    .table-scroll {
+      margin: 0 -20px; overflow-x: auto; padding: 0 20px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .table-scroll table { min-width: 320px; }
+    .rules-table td:first-child { white-space: normal; }
+  }
+
+  /* Block quotes carry the source's own words, set apart from the plain-
+     English paraphrase around them. Used here for Musk's two 2015 posts as
+     the press quoted them. */
+  .paper-quote {
+    border-left: 2px solid rgba(0, 0, 0, .35); font-size: 92%; font-style: italic;
+    margin: 0 0 3vw; max-width: 34em; padding-left: 20px;
+  }
+  .paper-quote cite {
+    display: block; font-family: Mono, ui-monospace, monospace; font-size: 72%;
+    font-style: normal; letter-spacing: .04em; margin-top: 8px; opacity: .55;
+    text-transform: uppercase;
+  }
+  @media screen and (max-width: 600px) {
+    .paper-quote { margin-bottom: 5vh; padding-left: 14px; }
+  }
+
+  /* A caveat Hubert states explicitly, not a sourced fact — set apart so
+     the two never blur into one voice. */
+  .hubert-note {
+    background: rgba(0, 0, 0, .06); border-radius: 10px; font-size: 92%;
+    margin: 0 0 3vw; max-width: 34em; padding: 12px 16px;
+  }
+  .hubert-note strong { text-transform: uppercase; font-size: 78%; letter-spacing: .04em; opacity: .6; display: block; margin-bottom: 6px; }
+
+  /* The BOOSTER card, sent by DM to anyone who comments BOOSTER — shown on
+     top, since the page is the same artifact. It is the built card
+     (1080x1920, the film's presenter-cel look), not a mock-up. Capped narrow
+     so it reads as a card, not a hero image. */
+  .card-figure { margin: 6px 0 4vw; max-width: 380px; }
+  .card-figure img { border-radius: 14px; border: 1px solid rgba(0, 0, 0, .14); display: block; width: 100%; height: auto; }
+  .card-figure figcaption {
+    color: var(--plate-read-dim); font-family: Mono, ui-monospace, monospace; font-size: 13px;
+    letter-spacing: .01em; margin-top: 10px; opacity: .65;
+  }
+
+  /* The header is `position: fixed`, so an in-page jump lands the target
+     underneath it. Match Nº032-035's flat 116px. */
+  #guide, #steps, #crashes, #why, #scope, #sources { scroll-margin-top: 116px; }
+</style>
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-10-07-pieces" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-10-07-pieces">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/booster.html"><span>Nº036 · Falcon 9 booster landing (SpaceX)</span></a>
+    <a href="/pieces.html"><span>Nº035 · Tokenization (OpenAI tiktoken, o200k_base)</span></a>
+    <a href="/squash.html"><span>Nº034 · PCA on DNA (Novembre et al., 2008)</span></a>
+    <a href="/curve.html"><span>Nº033 · Options gamma (the bend in an option's price curve)</span></a>
+    <a href="/bayes.html"><span>Nº032 · Naive Bayes spam filter (word-weight scale)</span></a>
+    <a href="/axis.html"><span>Nº031 · Training compute (semi-log axis)</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div>
+  <div class="gloom"></div>
+  <div class="vignette"></div>
+  <div class="wrapper">
+    <section class="section section__lightgrey">
+      <div class="journalArticle__documentHeader">
+        <div class="journalArticle__documentCell monospace">
+          <span>Field guide</span><strong>Nº036</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>System</span><strong>Falcon 9 booster landing (SpaceX)</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Model</span><strong>flip &middot; boostback burn (on flights with fuel to spare) &middot; entry burn &middot; grid fins &middot; landing burn &middot; legs</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Worked example</span><strong>Jan 2015: grid fins out of hydraulic fluid &middot; Apr 2015: throttle valve slower than expected, the booster tipped over</strong>
+        </div>
+        <div class="journalArticle__documentCell monospace">
+          <span>Reading</span>
+          <span class="readingToggle" data-reading-toggle role="group" aria-label="Reading plate">
+            <button type="button" data-reading="paper" aria-pressed="true">Paper</button>
+            <button type="button" data-reading="panel" aria-pressed="false">Panel</button>
+          </span>
+        </div>
+        <div class="journalArticle__documentCell journalArticle__documentCell--brand monospace">
+          <span>Status</span>
+          <span class="journalArticle__documentStamp">Filed</span>
+        </div>
+      </div>
+
+      <div class="journalArticle__article" id="guide">
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">You commented BOOSTER — this is the whole landing on one card.</p>
+        <h1 data-splitting="lines">How a booster comes home.</h1>
+
+        <figure class="card-figure">
+          <img src="artifacts/booster-card.png" width="1080" height="1920" alt="The BOOSTER card. A dusk sky over a coast. On the left, a booster rises from a launch pad, and comes back down in six poses onto a landing pad with a ring and an X. Beside it, six black pixel boxes. 1 Flip: gas puffs turn it around. 2 Boostback burn: on flights with fuel to spare, pushes it back. 3 Entry burn: slows it down, so the air doesn't heat it as much. 4 Grid fins: criss-cross panels steer. January 2015 crash: fins ran out of hydraulic fluid; SpaceX said the next would carry more. 5 Landing burn: timed to reach zero speed at the ground. April 2015 crash: throttle valve too slow; it slid sideways and tipped over. 6 Legs swing out, so it lands upright.">
+          <figcaption>The BOOSTER card &mdash; pad to space to pad on one frame, free, no email, not a mock-up.</figcaption>
+        </figure>
+
+        <p class="lead" data-splitting>For most of the space age a rocket flew once. Reusable rockets bring the
+          booster back: the bottom stage that does the hard pushing off the pad. About two and a half minutes in, it
+          lets go of the top stage, high above the Earth and going thousands of kilometres an hour the wrong way. Six
+          steps get it from there onto a pad or a drone ship, standing upright, with no pilot.</p>
+
+        <p class="monospace monospace__p" data-splitting>Companion to the reel &middot; Watch it on
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank">@huberttheinventor</a></p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº001 · The six steps</p>
+        <h4 aria-level="2" data-splitting="lines" id="steps">What each step fixes</h4>
+        <div class="table-scroll">
+        <table class="rules-table">
+          <caption>Falcon 9 first stage, after separation &middot; sources below, read 2026-11-04</caption>
+          <tbody>
+            <tr><td>1 Flip</td><td>It is flying the wrong way, so small nitrogen gas thrusters flip it around.</td></tr>
+            <tr><td>2 Boostback burn</td><td>On flights with fuel to spare, the engines relight and push it back toward the landing site. Missions that need all their energy for the cargo skip it.</td></tr>
+            <tr><td>3 Entry burn</td><td>It drops into the air very fast, so the engines light again. This burn slows it down, so the air doesn't heat it as much.</td></tr>
+            <tr><td>4 Grid fins</td><td>Lower down, four criss-cross panels near the top bite into the air and do the steering.</td></tr>
+            <tr><td>5 Landing burn</td><td>Hovering wastes fuel every second, so it waits, then lights the engine for one last burn, timed to reach zero speed right at the ground.</td></tr>
+            <tr><td>6 Legs</td><td>The legs swing out, so it lands upright, on a pad or a drone ship far out at sea. A computer flies it: it checks where it is and how fast it's falling, then plans a new path in a fraction of a second.</td></tr>
+          </tbody>
+        </table>
+        </div>
+
+        <blockquote class="paper-quote">
+          The rocket has to hit zero velocity at exactly zero altitude.
+          <cite>Lars Blackmore (SpaceX), Autonomous Precision Landing of Space Rockets, NAE Frontiers of Engineering</cite>
+        </blockquote>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº002 · The two crashes</p>
+        <h4 aria-level="2" data-splitting="lines" id="crashes">Where the steps broke in 2015</h4>
+        <p data-splitting><strong>January 2015, the first try at landing on a ship &mdash; step 4.</strong> The booster made
+          it back to the landing ship but crashed: the grid fins ran out of hydraulic fluid just before touchdown.
+          SpaceX said the next booster would carry more fluid.</p>
+        <blockquote class="paper-quote">
+          Grid fins worked extremely well from hypersonic velocity to subsonic, but ran out of hydraulic fluid right before landing.
+          <cite>Elon Musk, as quoted by the Planetary Society, 12 Jan 2015</cite>
+        </blockquote>
+        <p data-splitting><strong>April 2015, the second try on the ship &mdash; step 5.</strong> A throttle valve reacted
+          slower than expected. The booster reached the deck still sliding sideways, wavered and tipped over.</p>
+        <blockquote class="paper-quote">
+          Cause of hard rocket landing confirmed as due to slower than expected throttle valve response.
+          <cite>Elon Musk, as quoted by Spaceflight Now, 21 Apr 2015</cite>
+        </blockquote>
+        <p data-splitting>The first booster landed intact on land on 21 December 2015 (Florida time), and the first
+          landing on a drone ship came on 8 April 2016.</p>
+
+        <p class="monospace monospace__p opacity__50" data-splitting effect__titleRandom data-small="true">Nº003 · Why bring it back</p>
+        <h4 aria-level="2" data-splitting="lines" id="why">The hardware is the expensive part</h4>
+        <p data-splitting>In December 2015 Musk put the whole rocket at about $60 million to build and the fuel for one
+          flight at about $200,000 (Spaceflight Now, 22 Dec 2015). So the hardware is what you want back.</p>
+        <div class="hubert-note">
+          <strong>Reuse still costs something</strong>
+          Parts wear out, checks take time, and fuel kept for the trip home is fuel that can't lift cargo. The first
+          booster to fly a second time, in 2017, took several months to inspect, had some hardware replaced and was
+          test-fired before it flew again (Spaceflight Now, 31 Mar 2017).
+        </div>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="scope">The honest scope</h4>
+        <p data-splitting>Every claim on this page and on the card was checked on 2026-11-04 against the press and paper
+          pages listed below; nothing comes from memory. No SpaceX, NASA or FAA page was read for it: SpaceX and Musk are
+          quoted as the press quoted them. The separation speed is given as &ldquo;thousands of kilometres an
+          hour&rdquo; because it differs from mission to mission. That the entry burn means less heating is our reading
+          of two sources (the burn slows the booster for re-entry; faster descents mean more heating), not a sentence
+          from SpaceX. Whether one or three engines fire at landing depends on the mission, so the card says
+          &ldquo;the engine&rdquo;, not a count.</p>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="next">One system, taken apart.</h4>
+        <p data-splitting>Same treatment, different machine. No pitch, no thread-bait, and an unsubscribe
+          link that works.</p>
+        <div class="buttons">
+          <a href="index.html#pricing" class="button button__big hover_effect"><span>The List</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <h4 aria-level="2" data-splitting="lines" id="sources">Sources</h4>
+        <p class="monospace monospace__p opacity__50" data-splitting>The BOOSTER card is this page: the six steps, what
+          each one fixes, and the two crashes at the step they broke, free, no email. Every source was read on
+          2026-11-04.</p>
+        <div class="buttons">
+          <a href="https://spaceflightnow.com/2015/12/22/round-trip-rocket-flight-gives-spacex-a-trifecta-of-successes/" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Spaceflight Now, 22 Dec 2015: the first landing on land</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://spaceflightnow.com/2016/04/07/timeline-for-the-falcon-9-rockets-23rd-flight/" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Spaceflight Now, 7 Apr 2016: CRS-8 flight timeline</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://spaceflightnow.com/2016/05/28/ride-aboard-the-falcon-9-rockets-first-stage-on-descent/" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Spaceflight Now, 28 May 2016: riding the first stage down</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://spaceflightnow.com/2016/05/10/companies-offer-fresh-perspectives-on-recent-rocket-landings/" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Spaceflight Now, 10 May 2016: missions without a boostback</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://spaceflightnow.com/2015/01/10/despite-botched-landing-a-lot-went-right-with-spacexs-booster-flyback/" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Spaceflight Now, 10 Jan 2015: the January crash</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://www.planetary.org/articles/20150112-reconstructing-sea-dragon" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Planetary Society, 12 Jan 2015: reconstructing the crash</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://spaceflightnow.com/2015/04/21/throttle-valve-blamed-for-falcon-9s-unsuccessful-landing/" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Spaceflight Now, 21 Apr 2015: the throttle valve</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://spacepolicyonline.com/news/second-spacex-landing-attempt-fails-but-launch-of-dragon-is-perfect/" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>SpacePolicyOnline, 14 Apr 2015: the second attempt</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://www.universetoday.com/128395/sensational-photos-show-super-smooth-droneship-touchdown-of-spacex-falcon-booster-spacex-vp-interview/" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Universe Today: the first drone ship landing (CRS-8)</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://www.nationalacademies.org/read/23659/chapter/10" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Lars Blackmore (SpaceX): Autonomous Precision Landing of Space Rockets</span> <span class="arrow">&#8599;</span></a>
+          <a href="https://spaceflightnow.com/2017/03/31/spacex-flies-rocket-for-second-time-in-historic-test-of-cost-cutting-technology/" rel="noopener noreferrer" target="_blank" class="button button__big hover_effect"><span>Spaceflight Now, 31 Mar 2017: the first reflight</span> <span class="arrow">&#8599;</span></a>
+        </div>
+
+        <hr>
+
+        <p class="monospace monospace__p opacity__50" data-small="true">The List</p>
+        <h4 aria-level="2">One a week. And the other seven, now.</h4>
+        <p>Confirm your address and the whole set arrives &mdash; all ten field guides, exactly
+          as they are on the site, nothing held back for subscribers. After that, one new system
+          taken apart every week. No pitch, no thread-bait, and an unsubscribe link that works.</p>
+
+        <form class="sub-form" action="https://huberttheinventor-ig-dm.vektor-fm.workers.dev/signup"
+              method="post">
+          <label class="monospace monospace__p" for="list-email">Email address</label>
+          <div class="field">
+            <input type="email" name="email" id="list-email" placeholder="you@example.com"
+                   required autocomplete="email" inputmode="email" spellcheck="false">
+            <input type="hidden" name="tag" value="guide-36-booster"><input type="text" name="company" value="" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
+            <button type="submit" class="monospace">Send me the set &#8599;</button>
+          </div>
+          <label class="consent monospace monospace__p">
+            <input type="checkbox" name="consent" required>
+            <span>Send me the guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. The set opens right away on the next page.</span>
+          </label>
+        </form>
+<!-- build:guidenav -->
+      <div class="guideNav">
+        <h4 aria-level="2" class="guideNav__head">Keep going</h4>
+        <div class="buttons">
+        <a href="/pieces.html" class="button button__big hover_effect"><span><em class="guideNav__kicker">Previous</em> Nº035 · Tokenization (OpenAI tiktoken, o200k_base)</span> <span class="arrow">&#8599;</span></a>
+        </div>
+        <p class="monospace monospace__p guideNav__all"><a href="/guides/">All 34 guides &#8599;</a></p>
+      </div>
+<!-- /build:guidenav -->
+      <div class="article__footer">
+          <p class="monospace monospace__p opacity__50" data-splitting><strong>An independent educational
+            breakdown.</strong> Not affiliated with, endorsed by, or produced in cooperation with SpaceX. Every claim
+            is taken from the press and paper pages listed above, read 2026-11-04; Musk is quoted as those pages quoted
+            him. The card's booster is a stylised drawing, not SpaceX artwork. Any error in the summary is mine.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="#steps" class="button button__half hover_effect" title="The six steps"><span>The six steps</span><span class="arrow">↗</span></a>
+          <a href="#scope" class="button button__half hover_effect" title="The honest scope"><span>The honest scope</span><span class="arrow">↗</span></a>
+          <a href="privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+
+
+
+
+<dialog id="list-modal" class="listModal" aria-labelledby="list-modal-title"><div class="listModal__inner" tabindex="-1" autofocus><p class="listModal__eyebrow">The List</p><h2 id="list-modal-title">Ten guides. One email.</h2><p>Every field guide on this site, sent the moment you confirm &mdash; then one new system taken apart each week.</p><p>Nothing is held back for subscribers. The guides stay free and stay here; the list is only how the next one reaches you without an algorithm getting a vote.</p><form class="sub-form" action="https://huberttheinventor-ig-dm.vektor-fm.workers.dev/signup" method="post"><label class="monospace monospace__p" for="list-email-modal">Email address</label><div class="field"><input type="email" name="email" id="list-email-modal" placeholder="you@example.com" required autocomplete="email" inputmode="email" spellcheck="false"><input type="hidden" name="tag" value="popup-booster"><input type="text" name="company" value="" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none"><button type="submit" class="monospace">Send me the set &#8599;</button></div><label class="consent monospace monospace__p"><input type="checkbox" name="consent" required><span>Send me the guides and one new one each week. I can unsubscribe at any time and my address is never shared &mdash; see the <a href="privacy.html">privacy note</a>. The set opens right away on the next page.</span></label></form><button type="button" class="listModal__close" data-close>No thanks &mdash; just reading</button></div></dialog>
+<script src="assets/js/list-modal.js" defer></script>
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/splitting.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/site.js?v=2026-10-07-pieces" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>

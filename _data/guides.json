@@ -3,6 +3,14 @@
   "cacheToken": "2026-10-07-pieces",
   "guides": [
     {
+      "n": 36,
+      "slug": "booster",
+      "headline": "How a booster comes home.",
+      "system": "Falcon 9 booster landing (SpaceX)",
+      "video": false,
+      "tags": ["engineering", "aerospace", "control"]
+    },
+    {
       "n": 35,
       "slug": "pieces",
       "headline": "What the model gets instead of letters.",
