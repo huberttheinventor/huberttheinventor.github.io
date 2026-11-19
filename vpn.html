@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en" data-reading="paper" class="reading-ready">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VPN: the VPN card, Hubert</title>
+<meta name="description" content="Companion to Hubert's film on VPNs: HTTPS seals the letter, not the address on the envelope; where the site name can leak (DNS, SNI), what a VPN changes, and what it does not."><meta name="robots" content="noindex,nofollow">
+<style>
+/* Structural additions use the deployed reading-plate colors and typefaces.
+   The header/article/document-cell markup is the current squash.html system.
+   No alternate palette, typeface, source art, tracker or message form. */
+#model.journalArticle__article{opacity:1}
+header .logo .line__inner{transform:none;opacity:1}
+.journalArticle__article code{background:rgba(0,0,0,.08);border-radius:4px;display:inline;font-family:Mono,ui-monospace,monospace;font-size:88%;padding:.1em .38em;white-space:normal;overflow-wrap:anywhere}
+.journalArticle__article pre{border:1px solid var(--plate-read-rule);border-radius:8px;margin:20px 0 32px;padding:20px;overflow:auto}
+.journalArticle__article pre code{background:none;font-size:15px;padding:0;white-space:pre}
+.hubert-note{background:rgba(0,0,0,.06);border-radius:10px;font-size:92%;margin:0 0 3vw;max-width:34em;padding:12px 16px}
+.hubert-note strong{display:block;font-size:78%;letter-spacing:.04em;margin-bottom:6px;text-transform:uppercase}
+.exchange{border:1px solid var(--plate-read-rule);border-radius:12px;display:block;margin:18px 0 28px;width:100%;height:auto}
+.definitions{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:34px}.definitions .term{border-top:1px solid var(--plate-read-rule);padding-top:14px}.definitions h3{font-size:32px;line-height:1.05;margin:0 0 10px}.definitions p{font-size:17px;line-height:1.5;margin:0}
+.rules-table{width:100%;border-collapse:collapse;font-size:17px}.rules-table th,.rules-table td{border-bottom:1px solid var(--plate-read-rule);padding:12px 8px;text-align:left;vertical-align:top}.rules-table th{font-family:Mono,ui-monospace,monospace;font-size:14px;color:var(--plate-read-dim)}
+.download-row{display:flex;gap:20px;flex-wrap:wrap;margin:18px 0 28px;font-family:Mono,ui-monospace,monospace;font-size:14px}.download-row a{text-decoration:underline}
+.journalArticle__article h2{font-size:48px;letter-spacing:-.02em;line-height:1;margin-top:46px;margin-bottom:18px}.source-list{font-size:16px}.source-list li{margin-bottom:8px}.resource-scope{font-size:14px;color:var(--plate-read-dim)}
+#model{scroll-margin-top:116px}.hover_effect{opacity:1!important}
+@media(max-width:600px){.journalArticle__article pre{padding:14px 10px}.journalArticle__article pre code{font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere}.journalArticle__article pre.scroll code{white-space:pre;overflow-wrap:normal}.definitions{grid-template-columns:1fr}.definitions h3{font-size:28px}.journalArticle__article h2{font-size:36px}.rules-table{font-size:15px}.table-scroll{overflow-x:auto}.rules-table{min-width:0;font-size:14px}.table-scroll .rules-table th,.table-scroll .rules-table td{padding:10px 2px}.table-scroll .rules-table th{font-size:11px}.exchange-wide{display:none}.exchange-mobile{display:block}.hubert-note{margin-bottom:24px}}
+@media(min-width:601px){.exchange-mobile{display:none}}
+@media print{header,.topOverlay,.scanlines,.gloom,.vignette,.download-row{display:none}.main{padding-top:0}.wrapper,.section{margin:0;padding:16px}.journalArticle__article{max-width:none}.journalArticle__article h1{font-size:35px}.journalArticle__article h2{font-size:25px;margin-top:24px}.source-list{font-size:12px}.definitions{gap:10px}a{color:inherit}.exchange{max-height:320px}article,figure,pre{break-inside:avoid}}
+</style>
+
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-10-07-pieces" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-10-07-pieces">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/booster.html"><span>Nº036 · Falcon 9 booster landing (SpaceX)</span></a>
+    <a href="/pieces.html"><span>Nº035 · Tokenization (OpenAI tiktoken, o200k_base)</span></a>
+    <a href="/squash.html"><span>Nº034 · PCA on DNA (Novembre et al., 2008)</span></a>
+    <a href="/curve.html"><span>Nº033 · Options gamma (the bend in an option's price curve)</span></a>
+    <a href="/bayes.html"><span>Nº032 · Naive Bayes spam filter (word-weight scale)</span></a>
+    <a href="/axis.html"><span>Nº031 · Training compute (semi-log axis)</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div><div class="gloom"></div><div class="vignette"></div>
+  <div class="wrapper"><section class="section section__lightgrey">
+    <div class="journalArticle__documentHeader">
+      <div class="journalArticle__documentCell monospace"><span>Field card</span><strong>VPN</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>System</span><strong>HTTPS, DNS and VPNs</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>Key picture</span><strong>An envelope in an envelope</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>Prepared</span><strong>19 November 2026</strong></div>
+    </div>
+    <div class="journalArticle__article" id="model">
+      <p class="monospace monospace__p opacity__50">VPN / THE VPN CARD</p>
+      <h1>The VPN card: what HTTPS hides, what it doesn&#x27;t, and what a VPN changes</h1>
+<p>HTTPS seals the letter. It does not seal the address on the outside of the envelope. A VPN puts the whole sealed envelope inside a second envelope, so the watcher changes: it stops being your Wi-Fi or your internet provider and becomes your VPN provider.</p>
+<h2>Who can see what</h2>
+<div class="table-scroll"><table class="rules-table"><thead><tr><th scope="col"></th><th scope="col">Content of the page (the letter)</th><th scope="col">Which site you visit (the address)</th></tr></thead><tbody><tr><td>Your Wi-Fi and your internet provider, no VPN</td><td>No, HTTPS seals it</td><td>Yes: the destination IP address, plus the site name when your device looks it up in plain DNS or names it in the TLS handshake</td></tr><tr><td>Your Wi-Fi and your internet provider, with a VPN</td><td>No</td><td>No, they only see the VPN server&#x27;s address (and when, and how much)</td></tr><tr><td>Your VPN provider</td><td>No, if the site uses HTTPS</td><td>Yes, every address you visit through it</td></tr><tr><td>The website</td><td>Yes, it is the one you are talking to</td><td>It sees the VPN&#x27;s address instead of yours, but not your login: if you are signed in, it still knows it is you</td></tr></tbody></table></div>
+<h2>1. The site name can leak before HTTPS starts: DNS</h2>
+<p>Before your browser can connect, your device asks a DNS server for the site&#x27;s address. Classic DNS is not encrypted, so anyone on the path can read the names you look up. RFC 9076 (DNS privacy considerations, section 5.1): &quot;the HTTP traffic will be encrypted, but the DNS exchange prior to it will not be.&quot;</p>
+<p>Fix: encrypted DNS, called DNS over HTTPS (RFC 8484, section 8.1: &quot;DoH encrypts DNS traffic and requires authentication of the server&quot;).</p>
+<ul><li>Chrome: Settings &gt; Privacy and security &gt; Security &gt; Use secure DNS (Google&#x27;s help page: Chrome encrypts the lookup when it is on; in automatic mode it can fall back to an unencrypted lookup if the secure one fails).</li><li>Firefox: Settings &gt; Privacy &amp; Security &gt; DNS over HTTPS (Advanced settings). Menus change between versions.</li><li>Catch: the lookup now travels to the DNS provider you pick, so that provider sees it instead of your network.</li></ul>
+<h2>2. The TLS handshake can leak it too: SNI and ECH</h2>
+<p>Many websites share one server address, so your browser names the site it wants in the first message of the TLS handshake, the Server Name Indication (RFC 6066, section 3: it exists to reach &quot;virtual&quot; servers at a single underlying network address). That first message is sent before any encryption is set up, so the name is readable. RFC 9849 calls it &quot;perhaps the most sensitive information left unencrypted in TLS 1.3&quot;.</p>
+<p>Fix: Encrypted Client Hello (ECH, RFC 9849, an Internet Standards Track document, March 2026). The client encrypts that first message. It works only when the site has published an ECH configuration (RFC 9849, section 3.2: domains that want ECH must publish it) and your browser supports it. Many sites do not yet, so do not assume it.</p>
+<h2>3. A VPN hides the destination from your network, not from the VPN provider</h2>
+<p>Your device wraps the sealed envelope, address and all, inside a new one addressed to the VPN server (a tunnel, in the sense of RFC 4301 section 4.1: the original traffic travels inside an IP tunnel). Your Wi-Fi and internet provider see only the VPN server&#x27;s address. The VPN server opens the outer layer and forwards your request, so it sees every address you visit. Before you pick one:</p>
+<ul><li>Would I trust this company with my browsing list?</li><li>What does its no-logs policy actually cover (connection times, IP addresses, DNS)?</li><li>Has an independent party audited that claim? A policy is a promise, not a measurement.</li></ul>
+<h2>4. A VPN does not make you anonymous to the website</h2>
+<p>The website sees the VPN&#x27;s address, not yours. That does not stop it recognising you by what you give it: a logged-in Google account, cookies and site logins all travel inside the tunnel. If you are signed in, it still knows it is you.</p>
+<h2>5. At work, a VPN is a door, not a disguise</h2>
+<p>A company keeps internal systems on a private network the internet cannot reach. A VPN gateway at the edge faces both sides: it checks who you are (a password, often plus a code on your phone) and, if you are allowed, opens the outer envelope and drops the original inside the private network. IPsec (RFC 4301, section 3.1) covers exactly this case, traffic &quot;between a security gateway and a host&quot;. Early VPN protocols were mainly built for business remote access (PPTP, 1996; secondary sources), which is why the same envelope trick does two different jobs.</p>
+<h2>Remember it like this</h2>
+<p>HTTPS seals the letter. A VPN hides the address from your network and shows it to the VPN provider.</p>
+<p>Sources: RFC 9076 s5.1, RFC 8484 s8.1, RFC 6066 s3, RFC 9849 intro and s3.2, RFC 4301 s3.1 and s4.1, Google Chrome Help &quot;Use secure DNS&quot;, Mozilla Support &quot;Configure DNS over HTTPS protection levels in Firefox&quot;. Checked 2026-11-19.</p>
+    </div>
+  </section></div>
+<section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="https://huberttheinventor.github.io/index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="https://huberttheinventor.github.io/privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+<!-- Current site motion/menu scripts; no analytics or signup form is added. -->
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/splitting.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/site.js?v=2026-10-07-pieces" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>
