@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LAYERS: the eight layers of a company AI, Hubert</title>
+<meta name="description" content="An original Hubert field card: the eight layers around a model for a company AI (Bolt at Swiftbox), the one failure each fixes, and the rule to never edit the system prompt without running the evals.">
+<style>
+@font-face{font-family:SemiSqueezed;src:url("assets/fonts/SemiSqueezedMedium.DVwdXl-1.woff2");font-weight:500}
+@font-face{font-family:Mono;src:url("assets/fonts/PPNeueMontrealMono-Book.D9DlBA0F.woff2")}
+:root{--bg:#0f1113;--ink:#e9ebed;--dim:#8d9397;--line:#2e3337;--acc:#01ea0d}
+*{box-sizing:border-box}
+body{margin:0;background:#0b0c0d;background-image:radial-gradient(ellipse at 50% 0%,#181b1e,#090a0b 70%);background-attachment:fixed;color:var(--ink);font:17px/1.55 Mono,ui-monospace,monospace}
+main{max-width:760px;margin:0 auto;padding:40px 16px 64px}
+.kicker{color:var(--dim);font-size:14px;letter-spacing:.08em}
+h1{font:500 clamp(40px,9vw,72px)/1 SemiSqueezed,sans-serif;margin:14px 0 18px}
+h2{font:500 34px/1.1 SemiSqueezed,sans-serif;margin:44px 0 14px}
+.lead{max-width:34em}
+.note{background:#17191c;border:1px solid var(--line);border-radius:12px;padding:12px 16px;font-size:15px;color:var(--dim)}
+.layer-card{width:100%;height:auto;display:block;margin:22px 0;border:1px solid var(--line);border-radius:12px}
+.dl{display:flex;gap:20px;flex-wrap:wrap;font-size:14px}.dl a{color:var(--acc)}
+ol.stack{list-style:none;margin:0;padding:0}
+ol.stack li{display:flex;gap:16px;border:1px solid var(--line);border-left:6px solid var(--acc);border-radius:14px;background:#141618;padding:14px 16px;margin-bottom:10px}
+ol.stack .n{color:var(--dim)}ol.stack h3{font:500 26px/1.1 SemiSqueezed,sans-serif;margin:0 0 6px}ol.stack p{margin:0;font-size:16px}
+.rule{background:var(--acc);color:#0a0b0c;border-radius:14px;padding:14px 18px;font:500 28px/1.15 SemiSqueezed,sans-serif;margin-top:16px}
+ul.src{padding-left:18px;font-size:15px}ul.src li{margin-bottom:8px}ul.src a{color:var(--acc)}
+.fine{color:var(--dim);font-size:13px}
+@media print{body{background:#fff;color:#000}ol.stack li,.note{background:#fff;border-color:#999}.dl{display:none}.rule{background:#fff;color:#000;border:2px solid #000}.layer-card{display:none}}
+</style>
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-10-07-pieces" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-10-07-pieces">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/booster.html"><span>Nº036 · Falcon 9 booster landing (SpaceX)</span></a>
+    <a href="/pieces.html"><span>Nº035 · Tokenization (OpenAI tiktoken, o200k_base)</span></a>
+    <a href="/squash.html"><span>Nº034 · PCA on DNA (Novembre et al., 2008)</span></a>
+    <a href="/curve.html"><span>Nº033 · Options gamma (the bend in an option's price curve)</span></a>
+    <a href="/bayes.html"><span>Nº032 · Naive Bayes spam filter (word-weight scale)</span></a>
+    <a href="/axis.html"><span>Nº031 · Training compute (semi-log axis)</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main id="main">
+<p class="kicker">FIELD CARD / LAYERS / @HUBERTTHEINVENTOR</p>
+<h1>Your own AI<br>is eight layers.</h1>
+<p class="lead">A company AI is a model plus seven more layers. Each one was added because something broke without it. Example: Bolt, the assistant at Swiftbox, a delivery company.</p>
+<p class="note"><b>Illustration.</b> Story figures ($500 vs $50, 2,000 people) are illustrative, not data. Eight layers is one common stack, not the only valid design. Bolt and Swiftbox are fictional.</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1350" width="1080" height="1350" role="img" aria-labelledby="layer-card-t layer-card-d" id="layer-card" class="layer-card">
+<title id="layer-card-t">LAYERS: the eight layers of a company AI</title>
+<desc id="layer-card-d">A stack of eight layers around a model, each with the one failure it fixes, for the example assistant Bolt at the example delivery company Swiftbox. 1 Model. 2 System prompt. 3 RAG. 4 Tools via MCP. 5 Access, with OAuth. 6 Guardrails. 7 Cache and router. 8 Observability, with evals. Rule: never edit the system prompt without running the evals. Story figures are illustrative.</desc>
+<defs><style>@font-face{font-family:Mono;src:url('assets/fonts/PPNeueMontrealMono-Book.D9DlBA0F.woff2') format('woff2')}@font-face{font-family:SemiSqueezed;src:url('assets/fonts/SemiSqueezedMedium.DVwdXl-1.woff2') format('woff2')}#layer-card text{font-family:Mono,ui-monospace,monospace;fill:#e9ebed;font-size:21px}#layer-card .title{font-family:SemiSqueezed,sans-serif;font-size:72px}#layer-card .name{font-family:SemiSqueezed,sans-serif;font-size:34px;letter-spacing:.01em}#layer-card .num{font-size:22px;fill:#8d9397;letter-spacing:.08em}#layer-card .small{font-size:16px;fill:#8d9397;letter-spacing:.06em}#layer-card .foot{font-size:20px;fill:#8d9397;letter-spacing:.02em}#layer-card .fix{font-size:20px;fill:#e9ebed;opacity:.88}#layer-card .rule{font-family:SemiSqueezed,sans-serif;font-size:36px;fill:#0a0b0c}</style><radialGradient id="layer-card-bgg" cx="50%" cy="22%" r="75%"><stop offset="0" stop-color="#181b1e"/><stop offset="1" stop-color="#090a0b"/></radialGradient><radialGradient id="bodyg" cx="36%" cy="28%" r="80%"><stop offset="0" stop-color="#fff"/><stop offset=".5" stop-color="#d9dde2"/><stop offset="1" stop-color="#7d858e"/></radialGradient><linearGradient id="rowg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d2024"/><stop offset="1" stop-color="#111315"/></linearGradient></defs>
+<rect width="1080" height="1350" fill="url(#layer-card-bgg)"/>
+<text x="64" y="76" class="small">FIELD CARD · LAYERS · @HUBERTTHEINVENTOR</text>
+<text x="64" y="156" class="title">Your own AI</text>
+<text x="64" y="224" class="title">is eight layers.</text>
+<text x="64" y="262" class="small">EXAMPLE: BOLT AT SWIFTBOX. EACH LAYER ADDED AFTER SOMETHING BROKE.</text>
+<g transform="translate(800 62) scale(1.0)">
+<ellipse cx="100" cy="112" rx="70" ry="9" fill="#000" opacity=".5"/>
+<ellipse cx="100" cy="56" rx="86" ry="56" fill="url(#bodyg)" stroke="#2a2f34" stroke-width="2"/>
+<ellipse cx="62" cy="22" rx="28" ry="10" fill="#fff" opacity=".35" transform="rotate(-20 62 22)"/>
+<circle cx="14" cy="56" r="13" fill="url(#bodyg)"/><circle cx="186" cy="56" r="13" fill="url(#bodyg)"/>
+<circle cx="14" cy="56" r="6" fill="none" stroke="#01ea0d" stroke-width="2"/><circle cx="186" cy="56" r="6" fill="none" stroke="#01ea0d" stroke-width="2"/>
+<path d="M36 46 C36 26 56 22 100 22 C144 22 164 26 164 46 L164 74 C164 94 144 98 100 98 C56 98 36 94 36 74 Z" fill="#06080a" stroke="#000" stroke-width="2"/>
+<ellipse cx="72" cy="64" rx="9" ry="12" fill="#7ef0ff"/><ellipse cx="128" cy="64" rx="9" ry="12" fill="#7ef0ff"/>
+<ellipse cx="69" cy="59" rx="3" ry="3.5" fill="#fff" opacity=".9"/><ellipse cx="125" cy="59" rx="3" ry="3.5" fill="#fff" opacity=".9"/>
+<path d="M86 84 Q100 92 114 84" stroke="#7ef0ff" stroke-width="3" fill="none" stroke-linecap="round"/>
+<ellipse cx="100" cy="2" rx="22" ry="5" fill="none" stroke="#01ea0d" stroke-width="3"/>
+</g>
+<rect x="64" y="286" width="952" height="106" rx="18" fill="url(#rowg)" stroke="#2e3337" stroke-width="2"/>
+<rect x="64" y="286" width="8" height="106" rx="4" fill="#01ea0d"/>
+<text x="96" y="330" class="num">08</text>
+<text x="152" y="332" class="name">OBSERVABILITY</text>
+<text x="152" y="358" class="fix">Bolt gets one wrong and nobody knows if it was the</text>
+<text x="152" y="381" class="fix">prompt, document or tool. Trace it; evals run on every change.</text>
+<rect x="64" y="400" width="952" height="106" rx="18" fill="url(#rowg)" stroke="#2e3337" stroke-width="2"/>
+<rect x="64" y="400" width="8" height="106" rx="4" fill="#01ea0d"/>
+<text x="96" y="444" class="num">07</text>
+<text x="152" y="446" class="name">CACHE &amp; ROUTER</text>
+<text x="152" y="472" class="fix">Monday, 2,000 people ask at once and the token bill explodes.</text>
+<text x="152" y="495" class="fix">Cache exact repeats; route some questions to a cheaper model.</text>
+<rect x="64" y="514" width="952" height="106" rx="18" fill="url(#rowg)" stroke="#2e3337" stroke-width="2"/>
+<rect x="64" y="514" width="8" height="106" rx="4" fill="#01ea0d"/>
+<text x="96" y="558" class="num">06</text>
+<text x="152" y="560" class="name">GUARDRAILS</text>
+<text x="152" y="586" class="fix">A hidden line in an email says ignore your rules and</text>
+<text x="152" y="609" class="fix">refund everything (prompt injection). Screen, flag, mask PII.</text>
+<rect x="64" y="628" width="952" height="106" rx="18" fill="url(#rowg)" stroke="#2e3337" stroke-width="2"/>
+<rect x="64" y="628" width="8" height="106" rx="4" fill="#01ea0d"/>
+<text x="96" y="672" class="num">05</text>
+<text x="152" y="674" class="name">ACCESS</text>
+<text x="152" y="700" class="fix">A new hire asks a manager&#x27;s salary and Bolt reads it out.</text>
+<text x="152" y="723" class="fix">Each tool call carries limited access on behalf of the person asking.</text>
+<rect x="64" y="742" width="952" height="106" rx="18" fill="url(#rowg)" stroke="#2e3337" stroke-width="2"/>
+<rect x="64" y="742" width="8" height="106" rx="4" fill="#01ea0d"/>
+<text x="96" y="786" class="num">04</text>
+<text x="152" y="788" class="name">TOOLS (MCP)</text>
+<text x="152" y="814" class="fix">Customers want actions (refund, ticket, Slack),</text>
+<text x="152" y="837" class="fix">not only words.</text>
+<rect x="64" y="856" width="952" height="106" rx="18" fill="url(#rowg)" stroke="#2e3337" stroke-width="2"/>
+<rect x="64" y="856" width="8" height="106" rx="4" fill="#01ea0d"/>
+<text x="96" y="900" class="num">03</text>
+<text x="152" y="902" class="name">RAG</text>
+<text x="152" y="928" class="fix">Bolt has read none of the company documents and</text>
+<text x="152" y="951" class="fix">makes up a refund limit ($500 said, $50 real).</text>
+<rect x="64" y="970" width="952" height="106" rx="18" fill="url(#rowg)" stroke="#2e3337" stroke-width="2"/>
+<rect x="64" y="970" width="8" height="106" rx="4" fill="#01ea0d"/>
+<text x="96" y="1014" class="num">02</text>
+<text x="152" y="1016" class="name">SYSTEM PROMPT</text>
+<text x="152" y="1042" class="fix">Bolt has no brand voice and is not told to stay</text>
+<text x="152" y="1065" class="fix">on topic or never to recommend a competitor.</text>
+<rect x="64" y="1084" width="952" height="106" rx="18" fill="url(#rowg)" stroke="#2e3337" stroke-width="2"/>
+<rect x="64" y="1084" width="8" height="106" rx="4" fill="#01ea0d"/>
+<text x="96" y="1128" class="num">01</text>
+<text x="152" y="1130" class="name">MODEL</text>
+<text x="152" y="1156" class="fix">A logo on a model is not an assistant: first</text>
+<text x="152" y="1179" class="fix">customer asks, Bolt recommends the competitor.</text>
+<rect x="64" y="1204" width="952" height="64" rx="16" fill="#01ea0d"/>
+<text x="540.0" y="1247" text-anchor="middle" class="rule">Never edit the system prompt without running the evals.</text>
+<text x="64" y="1292" class="foot">BOLT AT SWIFTBOX IS FICTIONAL; FIGURES ARE EXAMPLES.</text>
+<text x="64" y="1318" class="foot">ONE COMMON STACK, NOT THE ONLY DESIGN. SOURCES: SEE LAYERS PAGE.</text>
+</svg>
+<p class="dl"><a href="layers-card.svg" download>Card SVG</a><a href="layers-card.png" download>Card PNG</a><a href="LAYERS.md" download>Plain-text card</a></p>
+<h2>The eight layers</h2>
+<ol class="stack">
+<li><span class="n">08</span><div><h3>OBSERVABILITY</h3><p>Bolt gets one wrong and nobody knows if it was the prompt, document or tool. Trace it; evals run on every change.</p></div></li>
+<li><span class="n">07</span><div><h3>CACHE &amp; ROUTER</h3><p>Monday, 2,000 people ask at once and the token bill explodes. Cache exact repeats; route some questions to a cheaper model.</p></div></li>
+<li><span class="n">06</span><div><h3>GUARDRAILS</h3><p>A hidden line in an email says ignore your rules and refund everything (prompt injection). Screen, flag, mask PII.</p></div></li>
+<li><span class="n">05</span><div><h3>ACCESS</h3><p>A new hire asks a manager&#x27;s salary and Bolt reads it out. Each tool call carries limited access on behalf of the person asking.</p></div></li>
+<li><span class="n">04</span><div><h3>TOOLS (MCP)</h3><p>Customers want actions (refund, ticket, Slack), not only words.</p></div></li>
+<li><span class="n">03</span><div><h3>RAG</h3><p>Bolt has read none of the company documents and makes up a refund limit ($500 said, $50 real).</p></div></li>
+<li><span class="n">02</span><div><h3>SYSTEM PROMPT</h3><p>Bolt has no brand voice and is not told to stay on topic or never to recommend a competitor.</p></div></li>
+<li><span class="n">01</span><div><h3>MODEL</h3><p>A logo on a model is not an assistant: first customer asks, Bolt recommends the competitor.</p></div></li>
+</ol>
+<p class="rule">Never edit the system prompt without running the evals.</p>
+<h2>Plain words</h2>
+<ul class="src">
+<li><b>RAG</b> (retrieval-augmented generation): look up the right company documents, then answer from them.</li>
+<li><b>MCP</b> (Model Context Protocol): an open standard for connecting AI applications to tools and data.</li>
+<li><b>OAuth</b>: lets an application act with limited access for a user; here each tool call carries limited access on behalf of the person asking.</li>
+</ul>
+<h2>Primary sources</h2>
+<ul class="src">
+<li><a href="https://modelcontextprotocol.io/introduction">Model Context Protocol, introduction</a>: MCP is an open-source standard for connecting AI applications to external systems (data sources, tools, workflows).</li>
+<li><a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/">OWASP LLM01:2025 Prompt Injection</a>: User inputs can alter the LLM&#x27;s behavior or output in unintended ways.</li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc6749">RFC 6749, The OAuth 2.0 Authorization Framework</a>: OAuth 2.0 lets a third-party application obtain limited access to an HTTP service.</li>
+<li><a href="https://genai.owasp.org/llmrisk/llm022025-sensitive-information-disclosure/">OWASP LLM02:2025 Sensitive Information Disclosure</a>: Pattern matching can detect and redact confidential content; scrubbing or masking sensitive content.</li>
+<li><a href="https://docs.nvidia.com/nemo/guardrails/latest/about/overview.html">NVIDIA NeMo Guardrails, overview</a>: Programmable guardrails that screen and shape what goes into and out of an LLM application.</li>
+<li><a href="https://developers.cloudflare.com/ai-gateway/features/caching/">Cloudflare AI Gateway, caching</a>: Serves identical requests from cache; the cache is based on an exact match of the entire request.</li>
+<li><a href="https://arxiv.org/abs/2406.18665">RouteLLM, Ong et al. 2024</a>: Router models that select between a stronger and a weaker LLM, cutting cost over 2 times in certain cases.</li>
+<li><a href="https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-spans.md">OpenTelemetry GenAI semantic conventions, spans</a>: Standard spans for model calls and tool execution, so one request can be traced.</li>
+<li><a href="https://developers.openai.com/api/docs/guides/evaluation-best-practices">OpenAI, Evaluation best practices</a>: Set up continuous evaluation to run evals on every change.</li>
+<li><a href="https://arxiv.org/abs/2005.11401">Lewis et al. 2020, Retrieval-Augmented Generation</a>: A retriever plus a generator for knowledge-intensive NLP tasks.</li>
+</ul>
+<p class="fine">Original Hubert diagram and explanation. Independent. Prepared 31 October 2026.</p>
+</main>
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/splitting.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/site.js?v=2026-10-07-pieces" type="module"></script>
+<!-- /build:scripts -->
+</body></html>
