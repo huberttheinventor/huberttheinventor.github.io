@@ -14,7 +14,7 @@
 @media(max-width:600px){.journalArticle__article h1{font-size:32px}.journalArticle__article h2{font-size:30px}}
 /* Structural additions use the deployed reading-plate colors and typefaces.
    The header/article/document-cell markup is the current squash.html system.
-   No alternate palette, typeface, source art, tracker or message form. */
+   No alternate palette, typeface, source art or message form; the site-wide GoatCounter counter (script below) is the only tracker. */
 #model.journalArticle__article{opacity:1}
 header .logo .line__inner{transform:none;opacity:1}
 .journalArticle__article code{background:rgba(0,0,0,.08);border-radius:4px;display:inline;font-family:Mono,ui-monospace,monospace;font-size:88%;padding:.1em .38em;white-space:normal;overflow-wrap:anywhere}
@@ -26,7 +26,7 @@ header .logo .line__inner{transform:none;opacity:1}
 .definitions{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:34px}.definitions .term{border-top:1px solid var(--plate-read-rule);padding-top:14px}.definitions h3{font-size:32px;line-height:1.05;margin:0 0 10px}.definitions p{font-size:17px;line-height:1.5;margin:0}
 .rules-table{width:100%;border-collapse:collapse;font-size:17px}.rules-table th,.rules-table td{border-bottom:1px solid var(--plate-read-rule);padding:12px 8px;text-align:left;vertical-align:top}.rules-table th{font-family:Mono,ui-monospace,monospace;font-size:14px;color:var(--plate-read-dim)}
 .download-row{display:flex;gap:20px;flex-wrap:wrap;margin:18px 0 28px;font-family:Mono,ui-monospace,monospace;font-size:14px}.download-row a{text-decoration:underline}
-.journalArticle__article h2{font-size:48px;letter-spacing:-.02em;line-height:1;margin-top:46px;margin-bottom:18px}.source-list{font-size:16px}.source-list li{margin-bottom:8px}.resource-scope{font-size:14px;color:var(--plate-read-dim)}
+.journalArticle__article h2{font-size:48px;letter-spacing:-.02em;line-height:1;margin-top:46px;margin-bottom:18px}.source-list{font-size:16px}.source-list li{margin-bottom:8px}.resource-scope{font-size:14px;color:var(--plate-read-dim)}.journalArticle__article p,.journalArticle__article li{overflow-wrap:anywhere}
 #model{scroll-margin-top:116px}.hover_effect{opacity:1!important}
 @media(max-width:600px){.journalArticle__article pre{padding:14px 10px}.journalArticle__article pre code{font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere}.journalArticle__article pre.scroll code{white-space:pre;overflow-wrap:normal}.definitions{grid-template-columns:1fr}.definitions h3{font-size:28px}.journalArticle__article h2{font-size:36px}.rules-table{font-size:15px}.table-scroll{overflow-x:auto}.rules-table{min-width:0;font-size:14px}.table-scroll .rules-table th,.table-scroll .rules-table td{padding:10px 2px}.table-scroll .rules-table th{font-size:11px}.exchange-wide{display:none}.exchange-mobile{display:block}.hubert-note{margin-bottom:24px}}
 @media(min-width:601px){.exchange-mobile{display:none}}
@@ -142,27 +142,27 @@ header .logo .line__inner{transform:none;opacity:1}
 <figure class="card-figure"><a href="/img/macos-card.png"><img src="/img/macos-card.png" width="1080" height="1920" loading="lazy" alt="The dev-OS pick card: five rows (Unix base, Apple Silicon, the Xcode gate, one maker, the other side), the rule &#x201C;your tools, your workflow, what you&#x2019;re building&#x201D;, and the small print that speed per watt and battery are Apple&#x2019;s claims, not measured."></a><figcaption>The card from the film. <a href="/img/macos-card.png" download>Download the image</a>.</figcaption></figure>
 <h2>The five rows at a glance</h2>
 <div class="table-scroll"><table class="rules-table"><thead><tr><th scope="col">Row</th><th scope="col">The Mac side</th><th scope="col">The other side</th></tr></thead><tbody>
-<tr><td>1. Unix base</td><td>The terminal matches the Linux servers you ship to.</td><td>WSL gives Windows a real Linux kernel.</td></tr>
+<tr><td>1. Unix base</td><td>The terminal matches the Linux servers you ship to.</td><td>WSL 2 gives Windows a real Linux kernel.</td></tr>
 <tr><td>2. Apple Silicon</td><td>One chip holds the CPU, GPU and neural engine. Apple claims speed per watt and all-day battery.</td><td>Apple&#x2019;s claims are not measured here.</td></tr>
 <tr><td>3. The Xcode gate</td><td>Apple&#x2019;s dev tool only runs on macOS. To build for iPhone you need a Mac, on your desk or in the cloud.</td><td>If you do not build for Apple devices, this row does not apply.</td></tr>
 <tr><td>4. One maker</td><td>Apple builds the hardware and the software as one: a polished daily drive, less to go wrong.</td><td>This is opinion, not a measurement.</td></tr>
-<tr><td>5. The other side</td><td>Costs more. The config you pick is the config you keep. Docker runs in a Linux VM, one layer removed.</td><td>Windows wins on .NET and desktop apps. Linux owns servers and full control.</td></tr>
+<tr><td>5. The other side</td><td>Costs more. The config you pick is the config you keep. Docker runs in a Linux VM, one layer removed.</td><td>Windows suits .NET and desktop apps. Linux suits servers and full control.</td></tr>
 </tbody></table></div>
 <h2>1. Unix base</h2>
-<p>macOS has a Unix base: Apple&#x2019;s own Terminal guide calls the shell &#x201C;a user interface to the UNIX operating system&#x201D;. Most of the servers your code ships to run Linux, so the commands you type on a Mac behave much like the ones on the server. The card says &#x201C;Unix base&#x201D;, Apple&#x2019;s wording, and does not claim a current UNIX certification, because the Open Group&#x2019;s brand register did not list a current Apple product when checked.</p>
+<p>macOS has a Unix base: Apple&#x2019;s own Terminal guide calls the shell &#x201C;a user interface to the UNIX operating system&#x201D;. Linux runs about 65% of the websites whose operating system is known (W3Techs survey, 27 November 2026; a survey of websites, not of all servers), so the commands you type on a Mac are close to the ones you use on a server. The card says &#x201C;Unix base&#x201D;, Apple&#x2019;s wording, and does not claim a current UNIX certification, because the Open Group&#x2019;s brand register did not list a current Apple product when checked.</p>
 <p><strong>The other side:</strong> WSL is a feature of Windows that runs a Linux environment. WSL 2 runs a real Linux kernel inside a lightweight utility virtual machine, so a Windows developer also gets a Linux terminal. (Apple Terminal guide; Open Group brand register; Microsoft Learn, WSL)</p>
 <h2>2. Apple Silicon</h2>
 <p>Apple Silicon puts the CPU, the GPU and the Neural Engine on one chip (a system on a chip). Apple&#x2019;s claim is speed per watt and long battery life. At the 2020 launch of the M1, Apple said &#x201C;the world&#x2019;s best CPU performance per watt&#x201D; and battery life &#x201C;up to 2x longer than previous-generation Macs&#x201D;, using its own benchmarks. These are Apple&#x2019;s claims, not independent measurements, and this card does not repeat them as fact. (Apple Newsroom, November 2020)</p>
 <h2>3. The Xcode gate</h2>
-<p>Xcode, Apple&#x2019;s developer tool, is listed on the App Store as &#x201C;Only for Mac&#x201D;. If you build apps for iPhone, you need a Mac to do it, either on your desk or in the cloud on Macs you rent. Apple runs its own Xcode Cloud builds on Apple-run Macs; third-party cloud-Mac services were not checked for this card. (App Store, Xcode listing)</p>
+<p>Xcode, Apple&#x2019;s developer tool, is listed on the App Store as &#x201C;Only for Mac&#x201D;. If you build apps for iPhone, you need a Mac to do it, either on your desk or in the cloud. Apple runs its own Xcode Cloud builds on Apple-run Macs; third-party cloud-Mac services were not checked for this card. (App Store, Xcode listing)</p>
 <h2>4. One maker</h2>
 <p>Apple builds the hardware and the software together. Many developers say that makes a polished daily drive with less to go wrong. That is a widely shared opinion, not a measurement: no figures are claimed for build quality, trackpad, display or compatibility.</p>
 <h2>5. The other side</h2>
-<ul><li>Costs more, and the configuration you pick is the configuration you keep. This is a trade-off, stated without figures, and was not checked against current store pages.</li><li>Docker on a Mac runs inside a Linux virtual machine, one layer removed from the system you type in. (Docker documentation)</li><li>Windows wins on .NET and desktop apps. Linux owns servers and full control. These are the card&#x2019;s summary of where each platform is strongest, not a ranking.</li></ul>
+<ul><li>Costs more, and the configuration you pick is the configuration you keep. This is a trade-off, stated without figures, and was not checked against current store pages.</li><li>Docker on a Mac runs inside a Linux virtual machine, one layer removed from the system you type in. (Docker documentation)</li><li>Windows suits .NET and desktop apps. Linux suits servers and full control. This is the card&#x2019;s short summary of where each platform is strongest, a matter of fit rather than a ranking; the only figure behind it is the W3Techs website survey above.</li></ul>
 <h2>The rule</h2>
 <p>Your tools. Your workflow. What you&#x2019;re building. Those three decide the right OS.</p>
 <p>The small print: speed per watt and battery are Apple&#x2019;s claims, not measured. Cost and the locked config are trade-offs, not figures.</p>
-<p>Sources, read 2026-11-13: Apple Terminal user guide (support.apple.com/guide/terminal); Open Group Open Brand Register (opengroup.org/openbrand/register); Microsoft Learn, &#x201C;What is the Windows Subsystem for Linux&#x201D; (updated 2026-06-02); Apple Newsroom, &#x201C;Apple unleashes M1&#x201D; (November 2020); App Store, Xcode (apps.apple.com/us/app/xcode/id497799835); Docker Desktop documentation, virtual machine managers and Mac install. Not covered, because it was not checked: prices, benchmark comparisons, which software still lacks native Apple Silicon support. macOS, Windows, Linux, Xcode, Docker and .NET are trademarks of their owners; this card is an independent explainer and is not affiliated with or endorsed by Apple, Microsoft or Docker.</p>
+<p>Sources, read 2026-11-13: Apple Terminal user guide (support.apple.com/guide/terminal); Open Group Open Brand Register (opengroup.org/openbrand/register); W3Techs, Linux usage statistics for websites (w3techs.com/technologies/details/os-linux, read 2026-11-27); Microsoft Learn, &#x201C;What is the Windows Subsystem for Linux&#x201D; (updated 2026-06-02); Apple Newsroom, &#x201C;Apple unleashes M1&#x201D; (November 2020); App Store, Xcode (apps.apple.com/us/app/xcode/id497799835); Docker Desktop documentation, virtual machine managers and Mac install. Not covered, because it was not checked: prices, benchmark comparisons, which software still lacks native Apple Silicon support. macOS, Windows, Linux, Xcode, Docker and .NET are trademarks of their owners; this card is an independent explainer and is not affiliated with or endorsed by Apple, Microsoft or Docker.</p>
     </div>
   </section></div>
 <section class="section no__p footer section__blue" role="contentinfo">
@@ -186,7 +186,7 @@ header .logo .line__inner{transform:none;opacity:1}
   </section>
   <div class="cursor"><div class="cursor__inner"></div></div>
 </main>
-<!-- Current site motion/menu scripts; no analytics or signup form is added. -->
+<!-- Current site motion/menu scripts; the site-wide GoatCounter counter (see head) is the only analytics, and no signup form is added. -->
 <!-- build:scripts -->
 <script src="/assets/js/gsap.min.js?v=2026-10-07-pieces"></script>
 <script src="/assets/js/ScrollTrigger.min.js?v=2026-10-07-pieces"></script>
