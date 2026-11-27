@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en" data-reading="paper" class="reading-ready">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>STARS: the six-star card, Hubert</title>
+<meta name="description" content="Companion to the Hubert film on the GTA VI wanted system: the six stars, what each star state means, what the icons say the police know, the hot zone, and how to cut what they know."><meta name="robots" content="noindex,nofollow">
+<style>
+/* Structural additions use the deployed reading-plate colors and typefaces.
+   The header/article/document-cell markup is the current squash.html system.
+   No alternate palette, typeface, source art, tracker or message form. */
+#model.journalArticle__article{opacity:1}
+header .logo .line__inner{transform:none;opacity:1}
+.journalArticle__article code{background:rgba(0,0,0,.08);border-radius:4px;display:inline;font-family:Mono,ui-monospace,monospace;font-size:88%;padding:.1em .38em;white-space:normal;overflow-wrap:anywhere}
+.journalArticle__article pre{border:1px solid var(--plate-read-rule);border-radius:8px;margin:20px 0 32px;padding:20px;overflow:auto}
+.journalArticle__article pre code{background:none;font-size:15px;padding:0;white-space:pre}
+.hubert-note{background:rgba(0,0,0,.06);border-radius:10px;font-size:92%;margin:0 0 3vw;max-width:34em;padding:12px 16px}
+.hubert-note strong{display:block;font-size:78%;letter-spacing:.04em;margin-bottom:6px;text-transform:uppercase}
+.exchange{border:1px solid var(--plate-read-rule);border-radius:12px;display:block;margin:18px 0 28px;width:100%;height:auto}
+.definitions{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:34px}.definitions .term{border-top:1px solid var(--plate-read-rule);padding-top:14px}.definitions h3{font-size:32px;line-height:1.05;margin:0 0 10px}.definitions p{font-size:17px;line-height:1.5;margin:0}
+.rules-table{width:100%;border-collapse:collapse;font-size:17px}.rules-table th,.rules-table td{border-bottom:1px solid var(--plate-read-rule);padding:12px 8px;text-align:left;vertical-align:top}.rules-table th{font-family:Mono,ui-monospace,monospace;font-size:14px;color:var(--plate-read-dim)}
+.download-row{display:flex;gap:20px;flex-wrap:wrap;margin:18px 0 28px;font-family:Mono,ui-monospace,monospace;font-size:14px}.download-row a{text-decoration:underline}
+.journalArticle__article h2{font-size:48px;letter-spacing:-.02em;line-height:1;margin-top:46px;margin-bottom:18px}.source-list{font-size:16px}.source-list li{margin-bottom:8px}.resource-scope{font-size:14px;color:var(--plate-read-dim)}
+#model{scroll-margin-top:116px}.hover_effect{opacity:1!important}
+@media(max-width:600px){.journalArticle__article pre{padding:14px 10px}.journalArticle__article pre code{font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere}.journalArticle__article pre.scroll code{white-space:pre;overflow-wrap:normal}.definitions{grid-template-columns:1fr}.definitions h3{font-size:28px}.journalArticle__article h2{font-size:36px}.rules-table{font-size:15px}.table-scroll{overflow-x:auto}.rules-table{min-width:0;font-size:14px}.table-scroll .rules-table th,.table-scroll .rules-table td{padding:10px 2px}.table-scroll .rules-table th{font-size:11px}.exchange-wide{display:none}.exchange-mobile{display:block}.hubert-note{margin-bottom:24px}}
+@media(min-width:601px){.exchange-mobile{display:none}}
+@media print{header,.topOverlay,.scanlines,.gloom,.vignette,.download-row{display:none}.main{padding-top:0}.wrapper,.section{margin:0;padding:16px}.journalArticle__article{max-width:none}.journalArticle__article h1{font-size:35px}.journalArticle__article h2{font-size:25px;margin-top:24px}.source-list{font-size:12px}.definitions{gap:10px}a{color:inherit}.exchange{max-height:320px}article,figure,pre{break-inside:avoid}}
+</style>
+
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-10-07-pieces" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-10-07-pieces">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/booster.html"><span>Nº036 · Falcon 9 booster landing (SpaceX)</span></a>
+    <a href="/pieces.html"><span>Nº035 · Tokenization (OpenAI tiktoken, o200k_base)</span></a>
+    <a href="/squash.html"><span>Nº034 · PCA on DNA (Novembre et al., 2008)</span></a>
+    <a href="/curve.html"><span>Nº033 · Options gamma (the bend in an option's price curve)</span></a>
+    <a href="/bayes.html"><span>Nº032 · Naive Bayes spam filter (word-weight scale)</span></a>
+    <a href="/axis.html"><span>Nº031 · Training compute (semi-log axis)</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div><div class="gloom"></div><div class="vignette"></div>
+  <div class="wrapper"><section class="section section__lightgrey">
+    <div class="journalArticle__documentHeader">
+      <div class="journalArticle__documentCell monospace"><span>Field card</span><strong>STARS</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>System</span><strong>GTA VI wanted system</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>Key picture</span><strong>A star meter and what the police know</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>Prepared</span><strong>25 November 2026</strong></div>
+    </div>
+    <div class="journalArticle__article" id="model">
+      <p class="monospace monospace__p opacity__50">STARS / THE SIX-STAR CARD</p>
+      <h1>The six-star card: how GTA VI police keep a file on you</h1>
+<p>In GTA V, losing the police ended it. In GTA VI, the police keep notes: the wanted stars go up to six, a row of icons under them shows what the police know about you, and the colour of a star says where you stand. This card lists only what was reported before and after release. Everything here comes from press coverage and player guides; no Rockstar document was read, so none of it is an official rulebook.</p>
+<h2>The six stars at a glance</h2>
+<div class="table-scroll"><table class="rules-table"><thead><tr><th scope="col"></th><th scope="col">What it means</th><th scope="col">Status</th></tr></thead><tbody><tr><td>Six stars</td><td>The wanted meter goes up to six. GTA V stopped at five.</td><td>Shown in Rockstar&#x27;s Extended Look, as reported by two outlets</td></tr><tr><td>Hollow star</td><td>A crime was reported, and the police have not identified you.</td><td>Reported by three outlets, no Rockstar document</td></tr><tr><td>Solid white star</td><td>The police can see you.</td><td>Reported by player guides</td></tr><tr><td>Flashing white star</td><td>They lost sight of you and are searching.</td><td>Reported by player guides</td></tr><tr><td>Red star</td><td>You escaped the chase, but the crime scene is still a hot zone.</td><td>Reported by two outlets, no Rockstar document</td></tr></tbody></table></div>
+<h2>1. Six stars</h2>
+<p>GTA VI has six wanted stars. GTA V stopped at five. (allthings.how; Push Square)</p>
+<h2>2. How a crime gets reported</h2>
+<p>A crime is reported when a witness sees it, an alarm goes off or a vehicle tracker reports it. (Beebom; witness and alarm also Tech4Gamers)</p>
+<h2>3. What each star state means</h2>
+<ol><li>Hollow: a crime was reported, and you are not identified.</li><li>Solid white: the police can see you.</li><li>Flashing white: they lost sight of you and are searching.</li><li>Red: you escaped the chase, but the crime scene is still a hot zone.</li></ol>
+<p>(Beebom; Tech4Gamers; hollow and flashing also GTABase)</p>
+<h2>4. The icons under the stars: what the police know</h2>
+<p>A row of icons under the stars shows what the police know about you:</p>
+<ol><li>Camera (CCTV) footage.</li><li>Your face or description.</li><li>Your outfit.</li><li>Your vehicle.</li><li>A visible weapon.</li><li>That they are looking for a pair.</li></ol>
+<p>(Beebom; Dexerto; GTABase. Rockstar North&#x27;s Rob Nelson is quoted by Beebom as confirming the police can know your appearance, clothing and vehicle.)</p>
+<h2>5. The hot zone</h2>
+<p>The area around the crime, or around your last known location, stays hot. It shows as a red circle on the map where the police keep searching, even after the stars are gone. (Beebom; Tech4Gamers; Dexerto; GTABase)</p>
+<h2>6. Getting spotted again</h2>
+<p>If you are spotted in the hot zone, or commit another crime there, the stars come back. (Beebom; GTABase)</p>
+<h2>7. How to cut what they know</h2>
+<ul><li>Wear a mask before the crime.</li><li>Change your outfit.</li><li>Switch to a different car, or leave the old one.</li><li>Split Jason and Lucia up.</li></ul>
+<p>(Beebom; GTABase; Dexerto. The outfit point also comes from Nelson, as quoted by Beebom.)</p>
+<h2>8. What four stars looked like in the Extended Look</h2>
+<p>Reportedly, in the chase shown in the Extended Look, four stars brought cop cars, SUVs and helicopters. This comes from a single outlet (allthings.how), describing that one scene, so do not read it as a full list of what each star level sends. (allthings.how)</p>
+<h2>Remember it like this</h2>
+<p>Losing the chase does not close the file: the heat stays after the stars are gone.</p>
+<p>Sources, all read 2026-11-25: allthings.how, &quot;GTA 6 six-star wanted level: what the Netflix Extended Look confirmed&quot; (updated 2026-08-28); Push Square, &quot;Watch GTA 6 Extended Look here: 17 new things we&#x27;ve learned&quot; (2026-08-28); Beebom, &quot;GTA 6 Wanted System Explained&quot; (updated 2026-10-29); Tech4Gamers, &quot;GTA 6 Overhauls Wanted System With Multi-Colored Stars, Heat Indicators, And Smarter Police AI&quot; (2026-08-29); GTABase, &quot;GTA 6 Wanted Level Explained: Police System Guide&quot; (updated 2026-11-21); Dexerto, &quot;GTA 6 wanted system explained&quot; (2026-11-13). From Rockstar&#x27;s Extended Look (Netflix, 27 Aug 2026), Rockstar North&#x27;s Rob Nelson as quoted in previews, and player guides read 25 Nov 2026. Not covered, because the sources do not settle it: which crimes give which star, the exact units at each level. GTA is a trademark of its owner; this card is an independent explainer and is not affiliated with or endorsed by Rockstar Games or Take-Two.</p>
+    </div>
+  </section></div>
+<section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="https://huberttheinventor.github.io/index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="https://huberttheinventor.github.io/privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+<!-- Current site motion/menu scripts; no analytics or signup form is added. -->
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/splitting.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/site.js?v=2026-10-07-pieces" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>

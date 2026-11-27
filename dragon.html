@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en" data-reading="paper" class="reading-ready">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DRAGON: the fold rule card, Hubert</title>
+<meta name="description" content="Companion to Hubert&#x27;s film on the dragon curve: fold a strip of paper in half again and again, open every crease to a right angle, and one repeated rule draws the whole shape; how to fold it, count it, read it, draw it and run it, with its honest limits."><meta name="robots" content="noindex,nofollow">
+<style>
+/* Structural additions use the deployed reading-plate colors and typefaces.
+   The header/article/document-cell markup is the current squash.html system.
+   No alternate palette, typeface, source art, tracker or message form. */
+#model.journalArticle__article{opacity:1}
+header .logo .line__inner{transform:none;opacity:1}
+.journalArticle__article code{background:rgba(0,0,0,.08);border-radius:4px;display:inline;font-family:Mono,ui-monospace,monospace;font-size:88%;padding:.1em .38em;white-space:normal;overflow-wrap:anywhere}
+.journalArticle__article pre{border:1px solid var(--plate-read-rule);border-radius:8px;margin:20px 0 32px;padding:20px;overflow:auto}
+.journalArticle__article pre code{background:none;font-size:15px;padding:0;white-space:pre}
+.hubert-note{background:rgba(0,0,0,.06);border-radius:10px;font-size:92%;margin:0 0 3vw;max-width:34em;padding:12px 16px}
+.hubert-note strong{display:block;font-size:78%;letter-spacing:.04em;margin-bottom:6px;text-transform:uppercase}
+.exchange{border:1px solid var(--plate-read-rule);border-radius:12px;display:block;margin:18px 0 28px;width:100%;height:auto}
+.definitions{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:34px}.definitions .term{border-top:1px solid var(--plate-read-rule);padding-top:14px}.definitions h3{font-size:32px;line-height:1.05;margin:0 0 10px}.definitions p{font-size:17px;line-height:1.5;margin:0}
+.rules-table{width:100%;border-collapse:collapse;font-size:17px}.rules-table th,.rules-table td{border-bottom:1px solid var(--plate-read-rule);padding:12px 8px;text-align:left;vertical-align:top}.rules-table th{font-family:Mono,ui-monospace,monospace;font-size:14px;color:var(--plate-read-dim)}
+.download-row{display:flex;gap:20px;flex-wrap:wrap;margin:18px 0 28px;font-family:Mono,ui-monospace,monospace;font-size:14px}.download-row a{text-decoration:underline}
+.journalArticle__article h2{font-size:48px;letter-spacing:-.02em;line-height:1;margin-top:46px;margin-bottom:18px}.source-list{font-size:16px}.source-list li{margin-bottom:8px}.resource-scope{font-size:14px;color:var(--plate-read-dim)}
+#model{scroll-margin-top:116px}.hover_effect{opacity:1!important}
+@media(max-width:600px){.journalArticle__article pre{padding:14px 10px}.journalArticle__article pre code{font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere}.journalArticle__article pre.scroll code{white-space:pre;overflow-wrap:normal}.definitions{grid-template-columns:1fr}.definitions h3{font-size:28px}.journalArticle__article h2{font-size:36px}.rules-table{font-size:15px}.table-scroll{overflow-x:auto}.rules-table{min-width:0;font-size:14px}.table-scroll .rules-table th,.table-scroll .rules-table td{padding:10px 2px}.table-scroll .rules-table th{font-size:11px}.exchange-wide{display:none}.exchange-mobile{display:block}.hubert-note{margin-bottom:24px}}
+@media(min-width:601px){.exchange-mobile{display:none}}
+@media print{header,.topOverlay,.scanlines,.gloom,.vignette,.download-row{display:none}.main{padding-top:0}.wrapper,.section{margin:0;padding:16px}.journalArticle__article{max-width:none}.journalArticle__article h1{font-size:35px}.journalArticle__article h2{font-size:25px;margin-top:24px}.source-list{font-size:12px}.definitions{gap:10px}a{color:inherit}.exchange{max-height:320px}article,figure,pre{break-inside:avoid}}
+.journalArticle__article a{overflow-wrap:anywhere}
+</style>
+
+<!-- build:head-assets -->
+<link rel="icon" href="/img/favicon.svg?v=2026-10-07-pieces" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/00-critical.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/entry.CQSbLAcy.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/default.Z9wDiTTt.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/_slug_.DENrRFxM.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Industries.BJpTkmyx.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/Footer.MRJrKAf5.css?v=2026-10-07-pieces">
+<link rel="stylesheet" href="/assets/css/99-hubert.css?v=2026-10-07-pieces">
+
+<!-- Counting. GoatCounter: no cookies, no personal data, no full IP addresses,
+     which is why privacy.html could name it and stay honest. Disclosed there
+     BEFORE this line existed — see Nº002 / Analytics. async + no-JS-safe: the
+     site works identically if it never loads. -->
+<script data-goatcounter="https://huberttheinventor.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Without JavaScript the ported CSS leaves every [data-splitting] element at
+     opacity 0, because the reveal is animated. Show it all instead. -->
+<noscript><style>
+  .hover_effect, .splitting, [data-splitting],
+  section .banner__hero, section .banner__hero [data-splitting],
+  .homeMiniVideo video { opacity: 1 !important; }
+</style></noscript>
+<script>
+/* Reading plate. Set before first paint so the page never flashes the other
+   plate. Default is "paper" (R2); "panel" (R3) is the reader's choice and is
+   remembered in localStorage under hubert:reading — disclosed in privacy.html. */
+(function () {
+  var el = document.documentElement, k = "hubert:reading", v = "paper";
+  try { var s = localStorage.getItem(k); if (s === "paper" || s === "panel") v = s; } catch (e) {}
+  el.setAttribute("data-reading", v);
+  el.classList.add("reading-ready");
+  addEventListener("DOMContentLoaded", function () {
+    var g = document.querySelector("[data-reading-toggle]");
+    if (!g) return;
+    var bs = g.querySelectorAll("button[data-reading]");
+    function sync() {
+      var c = el.getAttribute("data-reading");
+      bs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.reading === c)); });
+    }
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        el.setAttribute("data-reading", b.dataset.reading);
+        try { localStorage.setItem(k, b.dataset.reading); } catch (e) {}
+        sync();
+      });
+    });
+    sync();
+  });
+})();
+</script>
+<!-- /build:head-assets -->
+</head>
+<body class="journal">
+<div class="topOverlay"></div>
+<!-- build:header -->
+<a class="skip-link" href="#main">Skip to the guide</a>
+<header>
+  <div class="layout cursor_disabled">
+    <div class="layout__third">
+      <a href="/" class="logo" aria-label="Hubert, home">
+        <span class="line"><span class="line__inner">
+          <svg viewBox="0 0 744 135" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="0" y="118" font-size="135" textLength="744" lengthAdjust="spacingAndGlyphs" fill="var(--primarycolor)">HUBERT</text></svg>
+        </span></span>
+      </a>
+    </div>
+    <div class="nav layout__second" role="navigation" aria-label="Main">
+      <a href="/guides/" class="hover_effect"><span>Guides</span></a>
+      <a href="/#pricing" class="start hover_effect"><span>The List</span></a>
+      <span class="rec">&#9679;</span>
+    </div>
+  </div>
+  <button class="menu" type="button" aria-controls="mobile-navigation" aria-expanded="false">Guides</button>
+</header>
+<div class="mobilenav__backdrop"></div>
+<div id="mobile-navigation" class="mobilenav" role="navigation" aria-label="Guides, mobile">
+  <div class="mobilenav__main">
+    <a href="/guides/"><span>All guides</span></a>
+    <a href="/booster.html"><span>Nº036 · Falcon 9 booster landing (SpaceX)</span></a>
+    <a href="/pieces.html"><span>Nº035 · Tokenization (OpenAI tiktoken, o200k_base)</span></a>
+    <a href="/squash.html"><span>Nº034 · PCA on DNA (Novembre et al., 2008)</span></a>
+    <a href="/curve.html"><span>Nº033 · Options gamma (the bend in an option's price curve)</span></a>
+    <a href="/bayes.html"><span>Nº032 · Naive Bayes spam filter (word-weight scale)</span></a>
+    <a href="/axis.html"><span>Nº031 · Training compute (semi-log axis)</span></a>
+    <a href="/#pricing" class="start"><span>The List</span></a>
+  </div>
+  <div class="mobilenav__social">
+    <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="monospace">Instagram &#8599;</a>
+    <a href="/privacy.html" class="monospace">Privacy note &#8599;</a>
+  </div>
+</div>
+<!-- /build:header -->
+<main class="main" id="main">
+  <div class="scanlines"></div><div class="gloom"></div><div class="vignette"></div>
+  <div class="wrapper"><section class="section section__lightgrey">
+    <div class="journalArticle__documentHeader">
+      <div class="journalArticle__documentCell monospace"><span>Field card</span><strong>DRAGON</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>System</span><strong>Paper folding and the dragon curve</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>Key picture</span><strong>A strip folded in half, again and again</strong></div>
+      <div class="journalArticle__documentCell monospace"><span>Prepared</span><strong>20 November 2026</strong></div>
+    </div>
+    <div class="journalArticle__article" id="model">
+      <p class="monospace monospace__p opacity__50">DRAGON / THE FOLD RULE CARD</p>
+      <h1>The fold rule card: the dragon curve</h1>
+<p>Fold a strip of paper in half, the same way, again and again. Open it and set every crease to a right angle (a square corner, 90 degrees). Look down at its edge: the zigzag is a <strong>dragon curve</strong>. One small rule, repeated, builds the whole shape.</p>
+<h2>The fold rule</h2>
+<ol><li>Take a long, thin strip of paper.</li><li>Fold it in half, right end over onto the left end. (Folding the other way works too: it draws the mirror image.)</li><li>Fold the folded strip in half again, the same way. Repeat until you have folded n times.</li><li>Unfold it, and open every crease to a right angle.</li></ol>
+<p>After 5 folds the paper is 32 layers thick, so 4 or 5 folds is a good place to stop by hand. The code below goes further.</p>
+<h2>Count it: n folds give 2ⁿ pieces and 2ⁿ − 1 creases</h2>
+<p>Every fold doubles the layers, and each layer becomes one piece when you unfold. The pieces sit in a row with one crease between each pair of neighbours, so there is always one crease fewer than pieces.</p>
+<div class="table-scroll"><table class="rules-table"><thead><tr><th scope="col">folds n</th><th scope="col">pieces 2ⁿ</th><th scope="col">creases 2ⁿ − 1</th></tr></thead><tbody><tr><td>1</td><td>2</td><td>1</td></tr><tr><td>2</td><td>4</td><td>3</td></tr><tr><td>3</td><td>8</td><td>7</td></tr><tr><td>4</td><td>16</td><td>15</td></tr><tr><td>5</td><td>32</td><td>31</td></tr><tr><td>10</td><td>1,024</td><td>1,023</td></tr><tr><td>16</td><td>65,536</td><td>65,535</td></tr></tbody></table></div>
+<h2>The crease list, and how to read it off your strip</h2>
+<p>Walk along the opened strip from one end. At each crease, write <strong>R</strong> if the strip turns right and <strong>L</strong> if it turns left.</p>
+<div class="table-scroll"><table class="rules-table"><thead><tr><th scope="col">folds</th><th scope="col">crease list</th></tr></thead><tbody><tr><td>1 fold</td><td><code>R</code></td></tr><tr><td>2 folds</td><td><code>RRL</code></td></tr><tr><td>3 folds</td><td><code>RRLRRLL</code></td></tr><tr><td>4 folds</td><td><code>RRLRRLL R RRLLRLL</code></td></tr></tbody></table></div>
+<p>The rule for the next list: <strong>take the old list, add a new R in the middle, then add the old list again, backwards, with every R and L swapped.</strong> The 4-fold row is spaced to show the three parts. Written as 1s and 0s (R = 1, L = 0), the 5-fold list starts 1101100111001001: mathematicians call it the regular paperfolding sequence.</p>
+<p>Your strip may not read exactly this list. Start from the other end, or turn the strip over, and you get it backwards, or with R and L swapped, or both. Every one of those readings draws the same dragon or its mirror image.</p>
+<p><strong>For coders:</strong> crease number k (counting from 1) can be read directly. Halve k until it is odd. If that odd number leaves remainder 1 when divided by 4, the crease is R; remainder 3, it is L.</p>
+<h3>3 folds, drawn</h3>
+<p>Each piece is one square of squared paper. S is the start, E the end, + a crease.</p>
+<pre class="scroll"><code>        S---+
+            |
++---+   +---+
+|   |   |
+E   +---+</code></pre>
+<h2>Why it is recursive: dragon(n) = dragon(n−1) + turn90(dragon(n−1))</h2>
+<p>Recursive means the rule uses itself on a smaller version. In the heading, turn90 means &quot;the same shape, turned a quarter turn&quot;. The dragon after n folds is <strong>the dragon after n − 1 folds, followed by a copy of it, pinned at its end point and swung a quarter turn (90 degrees).</strong> The copy is walked from its far end back, which is why the list&#x27;s second half is backwards with R and L swapped. With the lists above, starting off to the right as in the picture, the swing is anticlockwise.</p>
+<p>So each half of the dragon is a smaller dragon. Measure the straight line from a half&#x27;s start to its end: it is 0.7071 (1 ÷ √2) times as long as the whole dragon&#x27;s, and tilted 45 degrees. That is why every part looks like the whole.</p>
+<h2>Corners touch, lines never cross</h2>
+<p>Draw the dragon on squared paper, one square per piece. From 4 folds on, the path comes back to a grid point it has visited before, and two corners touch there (1 touch point at 4 folds, 335 at 10, 28,555 at 16). But:</p>
+<ul><li>no grid line is ever used twice, so no piece lies on top of another;</li><li>no point is visited more than twice;</li><li>the path turns at every crease, so when it comes back to a point it turns a corner there instead of going straight through. The two visits use two different corners of that point.</li></ul>
+<p>Round the corners a little and the two visits pull apart. That is what &quot;never crosses itself&quot; means here: corners touch, lines never cross. Our check confirms all three points for every fold count from 1 to 16 (up to 65,536 pieces). MathWorld says its &quot;right angle approximations&quot; (the square-cornered drawings at each fold count) &quot;can touch themselves at vertices&quot; (corner points).</p>
+<h2>Four dragons and the endless grid</h2>
+<p>Start four dragons at one point, heading right, up, left and down. At 16 folds each (262,144 pieces in all), no two pieces share a grid line, nothing crosses, and together they use every grid line inside a square around the start:</p>
+<div class="table-scroll"><table class="rules-table"><thead><tr><th scope="col">folds</th><th scope="col">every grid line used inside the square from (in squares, across and up, start = 0)</th></tr></thead><tbody><tr><td>8 folds each</td><td>−5 to 5</td></tr><tr><td>10 folds each</td><td>−11 to 11</td></tr><tr><td>12 folds each</td><td>−21 to 21</td></tr><tr><td>14 folds each</td><td>−43 to 43</td></tr><tr><td>16 folds each</td><td>−85 to 85</td></tr></tbody></table></div>
+<p>The square keeps growing, but at any fixed number of folds the grid further out has gaps. Only in the limit (what the shapes approach if you could fold forever) do the four dragons cover the whole endless grid. Indiana University&#x27;s maths gallery: &quot;The four dragon curves never cross themselves or each other&quot; and, &quot;when extended forever, the dragon curves would pass through every integer segment in the plane exactly once&quot; (an integer segment is one grid line between neighbouring grid points). It credits the proof to Chandler Davis and Donald Knuth (1970). We did not read their paper, only that summary.</p>
+<h2>For the curious: a finite area, an endless edge</h2>
+<p>Shrink each dragon so its two ends are 1 apart. Thicken each piece into a small diamond (a square standing on its corner, with the piece as its diagonal). Diamonds on different grid lines never overlap, and no line is used twice, so the area is exactly 1/2 at every fold count we checked (1 to 16). Wikipedia gives the same for the finished dragon: &quot;its area is 1/2&quot;.</p>
+<p>The edge of that diamond shape keeps growing: 10.87 at 8 folds, 15.69 at 10 and 46.55 at 16, about 1.2 times longer with each fold (1.197 to 1.202 times, from 8 to 16 folds). Wikipedia says the edge of the finished dragon &quot;has infinite length&quot;. It also gives that edge a fractal dimension of 2 log₂ λ ≈ 1.5236, where λ ≈ 1.6956 solves λ³ − λ² − 2 = 0. A fractal dimension is a number between 1 (a smooth line) and 2 (a filled-in area) that measures how crinkly the edge is.</p>
+<h2>Run it yourself (Python, nothing to install)</h2>
+<pre class="scroll"><code>import turtle
+
+def creases(n):                   # the crease list after n folds: R = right turn, L = left turn
+    s = &quot;&quot;
+    for _ in range(n):            # old list, a new middle R, then the old list backwards with R and L swapped
+        s = s + &quot;R&quot; + s[::-1].translate(str.maketrans(&quot;RL&quot;, &quot;LR&quot;))
+    return s
+
+for n in range(1, 5):
+    print(n, &quot;folds:&quot;, creases(n), &quot;-&gt;&quot;, len(creases(n)) + 1, &quot;pieces&quot;)
+
+n, step, r = 10, 7, 2             # folds, piece length and corner rounding, in pixels
+t = turtle.Turtle()
+t.hideturtle()
+turtle.tracer(0)                  # draw in one go; delete this line to watch it draw (slowly)
+t.forward(r)
+for c in creases(n) + &quot;.&quot;:        # &quot;.&quot; marks the end of the strip
+    t.forward(step - 2 * r)
+    if c == &quot;R&quot;: t.circle(-r, 90)    # a rounded right turn, so touching corners stay apart
+    elif c == &quot;L&quot;: t.circle(r, 90)   # a rounded left turn
+    else: t.forward(r)
+turtle.update()
+turtle.done()</code></pre>
+<p>It prints:</p>
+<pre class="scroll"><code>1 folds: R -&gt; 2 pieces
+2 folds: RRL -&gt; 4 pieces
+3 folds: RRLRRLL -&gt; 8 pieces
+4 folds: RRLRRLLRRRLLRLL -&gt; 16 pieces</code></pre>
+<p>Then a window opens with the dragon after 10 folds (1,024 pieces). It uses Python&#x27;s built-in turtle module. The corners are rounded, so where two corners touch they stay about 1.8 pixels apart instead of looking like a crossing. Change <code>n</code> to see other fold counts.</p>
+<h2>Honest limits</h2>
+<ol><li><strong>Paper is not perfect.</strong> You can only open creases to roughly 90 degrees, and thickness doubles with every fold.</li><li><strong>&quot;Never crosses&quot; does not mean &quot;never touches&quot;.</strong> Corners do touch. Drawn with sharp corners, a touch can look like a crossing; rounding the corners shows it is not.</li><li><strong>Filling the grid needs forever.</strong> At any fixed number of folds, four dragons cover a square around the start, not the whole grid.</li><li><strong>Our checks are finite.</strong> We checked up to 16 folds. The &quot;forever&quot; statements are quoted from the sources below.</li><li><strong>Two kinds of area.</strong> The 1/2 for every fold count is our diamond measure; the 1/2 and the endless edge of the finished dragon are Wikipedia&#x27;s.</li></ol>
+<p><code>dragon_card_check.py</code> (next to this card) recomputes every number on it and runs the code above.</p>
+<h2>Sources (opened 2026-11-19)</h2>
+<ul class="source-list"><li>Wikipedia, &quot;Dragon curve&quot;, <a href="https://en.wikipedia.org/wiki/Dragon_curve" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Dragon_curve</a>: &quot;Take a strip of paper and fold it in half to the right&quot;; unbending each fold into a 90-degree turn after two folds gives &quot;RRL&quot;; each iteration is the previous one, then an R, then &quot;a second copy of the previous iteration in reverse order with the L and R letters swapped&quot;; &quot;its area is 1/2&quot;; the boundary &quot;has infinite length&quot;, fractal dimension 2 log₂ λ ≈ 1.523627086202492 with λ³ − λ² − 2 = 0.</li><li>Wikipedia, &quot;Regular paperfolding sequence&quot;, <a href="https://en.wikipedia.org/wiki/Regular_paperfolding_sequence" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Regular_paperfolding_sequence</a>: the 1s and 0s (first terms 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1) and the halve-until-odd rule.</li><li>Wolfram MathWorld, &quot;Dragon Curve&quot;, <a href="https://mathworld.wolfram.com/DragonCurve.html" rel="noopener noreferrer">https://mathworld.wolfram.com/DragonCurve.html</a>: &quot;can touch themselves at vertices&quot;.</li><li>Indiana University mathematics gallery, dragon curve page, <a href="https://math.indiana.edu/research/gallery/heighway.html" rel="noopener noreferrer">https://math.indiana.edu/research/gallery/heighway.html</a>: the four-dragon quotes above; proof credited to C. Davis and D. Knuth, &quot;Number representations and dragon curves&quot;, Journal of Recreational Mathematics 3 (1970). Not read by us.</li></ul>
+<p>From @huberttheinventor · Hubert explains one hard maths idea per film.</p>
+    </div>
+  </section></div>
+<section class="section no__p footer section__blue" role="contentinfo">
+    <div class="footer__wrapper" effect__parallax data-parallax="70">
+      <div class="footer__logoStack">
+        <svg class="footer__logo footer__logo--front" viewBox="0 0 166 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hubert"><text class="logotype" x="3" y="32" font-size="36" textLength="160" lengthAdjust="spacingAndGlyphs" fill="currentColor">HUBERT</text></svg>
+      </div>
+    </div>
+    <div class="layout no__pt">
+      <div class="layout__third monospace">
+        <div class="address"> HUBERT’S FIELD GUIDES <br> @HUBERTTHEINVENTOR <br><br> INDEPENDENT. NOT AFFILIATED <br> WITH, ENDORSED BY, OR CONNECTED <br> TO ANY COMPANY NAMED IN THE <br> GUIDES. <br><br> GMT +00:00 </div>
+      </div>
+      <div class="layout__second">
+        <div class="buttons">
+          <a href="https://www.instagram.com/huberttheinventor" rel="noopener noreferrer" target="_blank" class="button button__half hover_effect" title="Hubert on Instagram"><span>Instagram</span><span class="arrow">↗</span></a>
+          <a href="https://huberttheinventor.github.io/index.html" class="button button__half hover_effect" title="Every guide"><span>Index</span><span class="arrow">↗</span></a>
+          <a href="https://huberttheinventor.github.io/privacy.html" class="button button__half hover_effect" title="Privacy Policy"><span>Privacy note</span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cursor"><div class="cursor__inner"></div></div>
+</main>
+<!-- Current site motion/menu scripts; no analytics or signup form is added. -->
+<!-- build:scripts -->
+<script src="/assets/js/gsap.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/ScrollTrigger.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/splitting.min.js?v=2026-10-07-pieces"></script>
+<script src="/assets/js/site.js?v=2026-10-07-pieces" type="module"></script>
+<!-- /build:scripts -->
+</body>
+</html>
